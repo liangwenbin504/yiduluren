@@ -1,0 +1,88 @@
+{
+  "timestamp": "2026-03-21T19:12:17.836051",
+  "completed": 20,
+  "total": 8640,
+  "matched_results": {},
+  "error_log": [
+    {
+      "ke_li_key": "甲子_子_子",
+      "error": "课经无效"
+    },
+    {
+      "ke_li_key": "甲子_子_丑",
+      "error": "课经无效"
+    },
+    {
+      "ke_li_key": "甲子_子_寅",
+      "error": "课经无效"
+    },
+    {
+      "ke_li_key": "甲子_子_卯",
+      "error": "课经无效"
+    },
+    {
+      "ke_li_key": "甲子_子_辰",
+      "error": "课经无效"
+    },
+    {
+      "ke_li_key": "甲子_子_巳",
+      "error": "课经无效"
+    },
+    {
+      "ke_li_key": "甲子_子_午",
+      "error": "课经无效"
+    },
+    {
+      "ke_li_key": "甲子_子_未",
+      "error": "课经无效"
+    },
+    {
+      "ke_li_key": "甲子_子_申",
+      "error": "课经无效"
+    },
+    {
+      "ke_li_key": "甲子_子_酉",
+      "error": "课经无效"
+    },
+    {
+      "ke_li_key": "甲子_子_戌",
+      "error": "无法解析 JSON"
+    },
+    {
+      "ke_li_key": "甲子_子_亥",
+      "error": "无法解析 JSON"
+    },
+    {
+      "ke_li_key": "甲子_丑_子",
+      "error": "课经无效"
+    },
+    {
+      "ke_li_key": "甲子_丑_丑",
+      "error": "无法解析 JSON"
+    },
+    {
+      "ke_li_key": "甲子_丑_寅",
+      "error": "无法解析 JSON"
+    },
+    {
+      "ke_li_key": "甲子_丑_卯",
+      "error": "无法解析 JSON"
+    },
+    {
+      "ke_li_key": "甲子_丑_辰",
+      "error": "课经无效"
+    },
+    {
+      "ke_li_key": "甲子_丑_巳",
+      "error": "无法解析 JSON"
+    },
+    {
+      "ke_li_key": "甲子_丑_午",
+      "error": "无法解析 JSON"
+    },
+    {
+      "ke_li_key": "甲子_丑_未",
+      "error": "课经无效"
+    }
+  ]
+}

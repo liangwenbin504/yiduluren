@@ -1,0 +1,250 @@
+﻿
+<!DOCTYPE html>
+<html xmlns:o="urn:schemas-microsoft-com:office:office" 
+      xmlns:w="urn:schemas-microsoft-com:office:word" 
+      xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>儀度六壬擇日課單</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 1.5cm 1.5cm 1.5cm 1.5cm;
+        }
+        body {
+            font-family: 楷体, 楷体_GB2312, 仿宋;
+            font-size: 15pt;
+            line-height: 2.2;
+            color: #000;
+            background: #e87f32;
+            padding: 25px;
+            writing-mode: vertical-rl;
+            direction: rtl;
+        }
+        .container {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: space-between;
+            height: 100%;
+            min-height: 850px;
+        }
+        .right-column {
+            width: 12%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-left: 15px;
+        }
+        .main-title {
+            font-family: 楷体, 隶书;
+            font-size: 32pt;
+            font-weight: bold;
+            letter-spacing: 8px;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        .middle-column {
+            width: 75%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 0 20px;
+        }
+        .content-section {
+            margin: 15px 0;
+            font-size: 14pt;
+            line-height: 2.0;
+        }
+        .content-line {
+            margin: 5px 0;
+        }
+        .highlight {
+            color: #8b0000;
+            font-weight: bold;
+        }
+        .left-column {
+            width: 13%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding-right: 15px;
+        }
+        .seal-box {
+            width: 70px;
+            height: 70px;
+            border: 2px solid #8b0000;
+            background: rgba(139, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 隶书, 楷体;
+            font-size: 14pt;
+            color: #8b0000;
+            margin-bottom: 30px;
+            writing-mode: horizontal-tb;
+            direction: ltr;
+        }
+        .note-text {
+            font-size: 12pt;
+            line-height: 2.0;
+            color: #000;
+        }
+        .calendar-table {
+            background: #f8d77a;
+            border: 2px solid #8b4513;
+            padding: 10px;
+            margin: 15px 0;
+            writing-mode: horizontal-tb;
+            direction: ltr;
+        }
+        .calendar-row {
+            display: flex;
+            justify-content: space-around;
+        }
+        .calendar-cell {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13pt;
+            font-weight: bold;
+            color: #000;
+        }
+        .calendar-cell.red {
+            color: #c41e3a;
+        }
+        .calendar-cell.blue {
+            color: #1e3a8a;
+        }
+        .bottom-text {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11pt;
+            color: #333;
+            writing-mode: horizontal-tb;
+            direction: ltr;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="right-column">
+            <div class="main-title">立碑吉日</div>
+        </div>
+        
+        <div class="middle-column">
+            <div class="content-section">
+                <div class="content-line">
+                    <span>張氏合殮佳城坐</span><span class="highlight">壬</span><span>山兼</span><span class="highlight">丙</span><span>山庚寅首座分金</span>
+                </div>
+            </div>
+            
+            <div class="calendar-table">
+                <div style="text-align: center; font-size: 14pt; font-weight: bold; margin-bottom: 8px;">擇吉</div>
+                <div class="calendar-row">
+                    <div class="calendar-cell">甲</div>
+                    <div class="calendar-cell">乙</div>
+                    <div class="calendar-cell">丙</div>
+                    <div class="calendar-cell">丁</div>
+                    <div class="calendar-cell">戊</div>
+                    <div class="calendar-cell">己</div>
+                </div>
+                <div class="calendar-row">
+                    <div class="calendar-cell">庚</div>
+                    <div class="calendar-cell">辛</div>
+                    <div class="calendar-cell">壬</div>
+                    <div class="calendar-cell">癸</div>
+                    <div class="calendar-cell red">子</div>
+                    <div class="calendar-cell blue">丑</div>
+                </div>
+                <div class="calendar-row">
+                    <div class="calendar-cell red">寅</div>
+                    <div class="calendar-cell blue">卯</div>
+                    <div class="calendar-cell">辰</div>
+                    <div class="calendar-cell">巳</div>
+                    <div class="calendar-cell red">午</div>
+                    <div class="calendar-cell blue">未</div>
+                </div>
+                <div class="calendar-row">
+                    <div class="calendar-cell">申</div>
+                    <div class="calendar-cell">酉</div>
+                    <div class="calendar-cell red">戌</div>
+                    <div class="calendar-cell blue">亥</div>
+                    <div class="calendar-cell"></div>
+                    <div class="calendar-cell"></div>
+                </div>
+            </div>
+            
+            <div class="content-section">
+                <div class="content-line">
+                    <span>中華民國玖拾玖年歲次庚寅柒月大吉</span>
+                </div>
+                <div class="content-line">
+                    <span>謹擇</span>
+                </div>
+                <div class="content-line">
+                    <span>太歲</span><span class="highlight">庚寅</span><span>年</span>
+                </div>
+                <div class="content-line">
+                    <span>太陰</span><span class="highlight">甲申</span><span>月</span>
+                </div>
+                <div class="content-line">
+                    <span>太陽</span><span class="highlight">甲子</span><span>日</span>
+                </div>
+                <div class="content-line">
+                    <span>太陰</span><span class="highlight">庚午</span><span>時</span>
+                </div>
+            </div>
+            
+            <div class="content-section">
+                <div class="content-line">
+                    <span>正堂批：期定擇吉期安葬</span>
+                </div>
+                <div class="content-line">
+                    <span>宜用</span><span class="highlight">午</span><span>時</span>
+                </div>
+                <div class="content-line">
+                    <span>合</span><span class="highlight">斗首</span><span>三元</span>
+                </div>
+                <div class="content-line">
+                    <span>龍飛鳳舞</span>
+                </div>
+                <div class="content-line">
+                    <span>富貴雙全</span>
+                </div>
+                <div class="content-line">
+                    <span>子孫昌盛</span>
+                </div>
+                <div class="content-line">
+                    <span>代代榮華</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="left-column">
+            <div class="seal-box">
+                擇<br>吉
+            </div>
+            <div class="note-text">
+                <div>風</div>
+                <div>水</div>
+                <div>師</div>
+                <div>選</div>
+                <div>日</div>
+                <div>課</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="bottom-text">
+        天一算命网 · 八字算命、周易预测、居家风水
+    </div>
+</body>
+</html>

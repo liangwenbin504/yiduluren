@@ -1,0 +1,446 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://yiduluren.com/schemas/64_ke_standard.json",
+  "title": "《六壬大全》64 课标准化数据库 Schema",
+  "description": "用于规范 64 课数据结构的 JSON Schema",
+  "version": "1.0.0",
+  
+  "definitions": {
+    "ke_ming_info": {
+      "type": "object",
+      "description": "课名信息",
+      "properties": {
+        "zheng_ming": {
+          "type": "string",
+          "description": "正名（《六壬大全》原文记载）"
+        },
+        "bie_ming": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "别名列表"
+        },
+        "pin_yin": {
+          "type": "string",
+          "description": "拼音"
+        },
+        "ying_wen": {
+          "type": "string",
+          "description": "英文名（可选）"
+        }
+      },
+      "required": ["zheng_ming"]
+    },
+    
+    "fen_lei_info": {
+      "type": "object",
+      "description": "分类信息",
+      "properties": {
+        "ji_xiong_shu_xing": {
+          "type": "string",
+          "enum": ["吉课", "凶课", "中性课"],
+          "description": "吉凶属性"
+        },
+        "suo_shu_lei_bie": {
+          "type": "string",
+          "description": "所属类别（如：九宗门类/特殊格局类）"
+        },
+        "you_xian_ji": {
+          "type": "string",
+          "enum": ["主课", "从格", "变体"],
+          "description": "优先级"
+        },
+        "ji_xiong_cheng_du": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "吉凶程度（1 最凶，10 最吉）"
+        }
+      },
+      "required": ["ji_xiong_shu_xing", "suo_shu_lei_bie"]
+    },
+    
+    "wen_xian_chu_chu": {
+      "type": "object",
+      "description": "文献出处",
+      "properties": {
+        "juan_ci": {
+          "type": "string",
+          "description": "卷次（如：卷三）"
+        },
+        "ye_ma": {
+          "type": "string",
+          "description": "页码"
+        },
+        "hang_lie": {
+          "type": "string",
+          "description": "行位置（如：第 3 行第 5 列）"
+        },
+        "zhang_jie": {
+          "type": "string",
+          "description": "章节"
+        },
+        "ban_ben": {
+          "type": "string",
+          "description": "版本信息"
+        }
+      },
+      "required": ["juan_ci"]
+    },
+    
+    "ding_yi_info": {
+      "type": "object",
+      "description": "定义信息",
+      "properties": {
+        "yuan_wen": {
+          "type": "string",
+          "description": "原文定义（完整引用）"
+        },
+        "bai_hua": {
+          "type": "string",
+          "description": "白话释义"
+        },
+        "he_xin_yao_dian": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "核心要点列表"
+        },
+        "ke_ming_shi_yi": {
+          "type": "string",
+          "description": "课名释义"
+        }
+      },
+      "required": ["yuan_wen"]
+    },
+    
+    "gou_cheng_tiao_jian": {
+      "type": "object",
+      "description": "课体构成条件",
+      "properties": {
+        "si_ke_yao_qiu": {
+          "type": "object",
+          "properties": {
+            "di_yi_ke": {"type": "string"},
+            "di_er_ke": {"type": "string"},
+            "di_san_ke": {"type": "string"},
+            "di_si_ke": {"type": "string"},
+            "zheng_ti_ge_ju": {"type": "string"}
+          }
+        },
+        "san_chuan_yao_qiu": {
+          "type": "object",
+          "properties": {
+            "chu_chuan": {"type": "string"},
+            "zhong_chuan": {"type": "string"},
+            "mo_chuan": {"type": "string"},
+            "san_chuan_zu_he": {"type": "string"},
+            "chuan_bian_gui_lv": {"type": "string"}
+          }
+        },
+        "tian_di_pan_yao_qiu": {
+          "type": "object",
+          "properties": {
+            "yue_jiang": {"type": "string"},
+            "zhan_shi": {"type": "string"},
+            "ge_ju": {"type": "string"},
+            "te_shu_wei_zhi": {"type": "string"}
+          }
+        },
+        "shen_jiang_yao_qiu": {
+          "type": "object",
+          "properties": {
+            "gui_ren": {"type": "string"},
+            "shi_er_tian_jiang": {"type": "string"},
+            "shen_sha": {"type": "string"}
+          }
+        },
+        "wu_xing_sheng_ke": {
+          "type": "object",
+          "properties": {
+            "gan_zhi_wu_xing": {"type": "string"},
+            "san_chuan_wu_xing": {"type": "string"},
+            "sheng_ke_guan_xi": {"type": "string"}
+          }
+        },
+        "te_shu_ge_ju": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ming_cheng": {"type": "string"},
+              "tiao_jian": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    
+    "ji_xiong_yuan_ze": {
+      "type": "object",
+      "description": "吉凶判断原则",
+      "properties": {
+        "ji_xiong": {
+          "type": "string",
+          "enum": ["大吉", "次吉", "小吉", "平", "小凶", "次凶", "大凶"]
+        },
+        "ying_yan_tiao_jian": {
+          "type": "object",
+          "properties": {
+            "shi_jian": {"type": "string"},
+            "fang_wei": {"type": "string"},
+            "ren_shi": {"type": "string"}
+          }
+        },
+        "zhan_duan_yao_dian": {
+          "type": "object",
+          "properties": {
+            "guan_zhi": {"type": "string"},
+            "hun_yin": {"type": "string"},
+            "cai_yun": {"type": "string"},
+            "ji_bing": {"type": "string"},
+            "guan_si": {"type": "string"},
+            "chu_xing": {"type": "string"},
+            "shi_wu": {"type": "string"},
+            "qi_ta": {"type": "string"}
+          }
+        },
+        "lei_xiang_jie_shi": {
+          "type": "object",
+          "properties": {
+            "tian_gan": {"type": "string"},
+            "di_zhi": {"type": "string"},
+            "shen_jiang": {"type": "string"},
+            "ge_ju": {"type": "string"}
+          }
+        },
+        "bian_hua_qu_shi": {
+          "type": "object",
+          "properties": {
+            "chu_chuan": {"type": "string", "description": "初传主（开始）"},
+            "zhong_chuan": {"type": "string", "description": "中传主（过程）"},
+            "mo_chuan": {"type": "string", "description": "末传主（结果）"}
+          }
+        }
+      }
+    },
+    
+    "cong_ge_info": {
+      "type": "object",
+      "description": "从格信息",
+      "properties": {
+        "cong_ge_ming": {
+          "type": "string",
+          "description": "从格名称"
+        },
+        "gou_cheng_tiao_jian": {
+          "type": "string",
+          "description": "构成条件"
+        },
+        "yu_zhu_ke_qu_bie": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "与主课的区别点列表"
+        },
+        "ji_xiong_pan_duan": {
+          "type": "string",
+          "description": "吉凶属性变化"
+        },
+        "te_shu_pan_duan_gui_ze": {
+          "type": "string",
+          "description": "特殊判断规则"
+        },
+        "ying_yan_cha_yi": {
+          "type": "string",
+          "description": "应验差异"
+        },
+        "yuan_wen_yi_ju": {
+          "type": "string",
+          "description": "原文依据"
+        },
+        "shi_fou_te_shu": {
+          "type": "boolean",
+          "description": "是否为特殊从格（如三光失明）"
+        }
+      },
+      "required": ["cong_ge_ming", "gou_cheng_tiao_jian"]
+    },
+    
+    "ke_li_pi_pei": {
+      "type": "object",
+      "description": "课例匹配信息",
+      "properties": {
+        "zong_shu": {
+          "type": "integer",
+          "description": "匹配课例总数",
+          "minimum": 0
+        },
+        "zhan_bi": {
+          "type": "number",
+          "description": "占全部课例比例（%）",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "fen_bu_te_dian": {
+          "type": "string",
+          "description": "分布特点描述"
+        },
+        "ke_li_list": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "课例 ID 列表（如：甲子_子_子）"
+        },
+        "dian_xing_ke_li": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ke_li_id": {"type": "string"},
+              "si_ke": {"type": "array"},
+              "san_chuan": {"type": "array"},
+              "pi_pei_li_you": {"type": "string"}
+            }
+          }
+        },
+        "bian_jie_ke_li": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ke_li_id": {"type": "string"},
+              "yi_wen": {"type": "string"},
+              "chu_li_fang_an": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    
+    "xiao_kan_kao_yi": {
+      "type": "object",
+      "description": "校勘与考异",
+      "properties": {
+        "ban_ben_yi_wen": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ban_ben": {"type": "string"},
+              "yuan_wen": {"type": "string"},
+              "jiao_kan_yi_jian": {"type": "string"}
+            }
+          }
+        },
+        "cun_yi_wen_ti": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "wen_ti_miao_shu": {"type": "string"},
+              "ge_jia_guan_dian": {"type": "string"},
+              "dai_kao_shi_xiang": {"type": "string"}
+            }
+          }
+        },
+        "kan_wu_ji_lu": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "yuan_wen_cuo_wu": {"type": "string"},
+              "zheng_que_ying_wei": {"type": "string"},
+              "yi_ju": {"type": "string"}
+            }
+          }
+        }
+      }
+    }
+  },
+  
+  "type": "object",
+  "properties": {
+    "ke_mu_bian_hao": {
+      "type": "string",
+      "description": "课目编号（如：KE_001）"
+    },
+    "ke_ming": {
+      "$ref": "#/definitions/ke_ming_info"
+    },
+    "fen_lei": {
+      "$ref": "#/definitions/fen_lei_info"
+    },
+    "wen_xian_chu_chu": {
+      "$ref": "#/definitions/wen_xian_chu_chu"
+    },
+    "ding_yi": {
+      "$ref": "#/definitions/ding_yi_info"
+    },
+    "gou_cheng_tiao_jian": {
+      "$ref": "#/definitions/gou_cheng_tiao_jian"
+    },
+    "ji_xiong_yuan_ze": {
+      "$ref": "#/definitions/ji_xiong_yuan_ze"
+    },
+    "cong_ge": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/cong_ge_info"
+      },
+      "description": "从格列表"
+    },
+    "ke_li_pi_pei": {
+      "$ref": "#/definitions/ke_li_pi_pei"
+    },
+    "xiao_kan_kao_yi": {
+      "$ref": "#/definitions/xiao_kan_kao_yi"
+    },
+    "shen_he_zhuang_kuang": {
+      "type": "object",
+      "properties": {
+        "zheng_li_ren": {"type": "string"},
+        "zheng_li_ri_qi": {"type": "string", "format": "date"},
+        "fu_he_ren": {"type": "string"},
+        "fu_he_ri_qi": {"type": "string", "format": "date"},
+        "fu_ze_ren": {"type": "string"},
+        "zui_zhong_que_ren_ri_qi": {"type": "string", "format": "date"}
+      }
+    },
+    "zhi_liang_ping_gu": {
+      "type": "object",
+      "properties": {
+        "zhun_que_xing": {
+          "type": "string",
+          "enum": ["优秀", "良好", "合格", "需改进"]
+        },
+        "wan_zheng_xing": {
+          "type": "string",
+          "enum": ["优秀", "良好", "合格", "需改进"]
+        },
+        "gui_fan_xing": {
+          "type": "string",
+          "enum": ["优秀", "良好", "合格", "需改进"]
+        },
+        "yuan_wen_hui_su_ce_shi": {
+          "type": "string",
+          "enum": ["100% 符合", "部分符合", "不符合"]
+        }
+      }
+    },
+    "ban_ben_hao": {
+      "type": "string",
+      "description": "数据版本号"
+    },
+    "geng_xin_ri_qi": {
+      "type": "string",
+      "format": "date",
+      "description": "更新日期"
+    }
+  },
+  
+  "required": [
+    "ke_mu_bian_hao",
+    "ke_ming",
+    "fen_lei",
+    "ding_yi",
+    "ban_ben_hao",
+    "geng_xin_ri_qi"
+  ]
+}

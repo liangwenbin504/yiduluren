@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  yiduluren-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: yiduluren-api
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      # 挂载上传目录，避免数据丢失
+      - ./uploads:/app/uploads
+      # 挂载日志目录
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+      - TZ=Asia/Shanghai
+    networks:
+      - yiduluren-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/api/', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  yiduluren-network:
+    driver: bridge

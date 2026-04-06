@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>安葬吉课</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 2cm 2cm 2cm 2cm;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "楷体", "KaiTi", "楷体_GB2312", "STKaiti", serif;
+            font-size: 22pt;
+            line-height: 2.0;
+            color: #1a1a1a;
+            background: #f5e6c8;
+            background-image: 
+                radial-gradient(ellipse at top left, rgba(255,255,255,0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom right, rgba(139,90,43,0.1) 0%, transparent 50%);
+            min-height: 100vh;
+            padding: 0cm 2cm 2cm 2cm;
+            padding-top: 0.5cm;
+            writing-mode: vertical-rl;
+            direction: rtl;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .document-container {
+            width: 100%;
+            max-width: 900px;
+            min-height: 1100px;
+            background: linear-gradient(135deg, #f8eed8 0%, #f0dbb8 50%, #e8d0a8 100%);
+            border: 3px solid #8b5a2b;
+            box-shadow: 
+                inset 0 0 30px rgba(139,90,43,0.1),
+                0 10px 40px rgba(0,0,0,0.2);
+            position: relative;
+            padding: 15px 60px 40px 60px;
+            margin-top: 0;
+        }
+        .document-container::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 2px solid #a07850;
+            pointer-events: none;
+        }
+        .main-title {
+            font-family: "隶书", "LiSu", "STLiti", "楷体", serif;
+            font-size: 36pt;
+            font-weight: bold;
+            letter-spacing: 8px;
+            color: #8b0000;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.15);
+            margin-bottom: 25px;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+        }
+        .content-section {
+            margin: 15px 0;
+            font-size: 20pt;
+            line-height: 2.2;
+        }
+        .content-line {
+            margin: 5px 0;
+        }
+        .highlight {
+            color: #8b0000;
+            font-weight: bold;
+        }
+        .pillar-section {
+            font-size: 24pt;
+            line-height: 2.5;
+            margin: 20px 0;
+        }
+        .pillar-item {
+            margin: 8px 0;
+        }
+        .seal-box {
+            position: absolute;
+            bottom: 40px;
+            left: 60px;
+            width: 70px;
+            height: 70px;
+            border: 3px solid #8b0000;
+            background: rgba(139, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "隶书", "LiSu", "STLiti", serif;
+            font-size: 18pt;
+            color: #8b0000;
+            writing-mode: horizontal-tb;
+            direction: ltr;
+            transform: rotate(-15deg);
+            letter-spacing: 2px;
+            line-height: 1.3;
+        }
+        .signature {
+            position: absolute;
+            bottom: 40px;
+            left: 150px;
+            font-size: 18pt;
+            line-height: 2.0;
+            color: #333;
+            writing-mode: horizontal-tb;
+            direction: ltr;
+        }
+        .yiji-section {
+            margin-top: 25px;
+            font-size: 18pt;
+            line-height: 2.2;
+        }
+        .yiji-title {
+            color: #8b0000;
+            font-weight: bold;
+            font-size: 20pt;
+        }
+        .divider {
+            width: 2px;
+            height: 80%;
+            background: linear-gradient(to bottom, transparent, #a07850, transparent);
+            margin: 0 30px;
+        }
+        .note-text {
+            font-size: 16pt;
+            line-height: 2.2;
+            color: #444;
+            margin-top: 20px;
+        }
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .document-container {
+                box-shadow: none;
+                border: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="document-container">
+        <div class="main-title">安葬吉课</div>
+        
+        <div class="content-section">
+            <div class="content-line">
+                <span>壬山丙向</span>
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <div class="content-line">
+                <span>仙命</span><span class="highlight">亥</span>
+            </div>
+        </div>
+        
+        <div class="pillar-section">
+            <div class="pillar-item">
+                <span>太歲</span><span class="highlight">丙午</span><span>年</span>
+            </div>
+            <div class="pillar-item">
+                <span>太陰</span><span class="highlight">己亥</span><span>月</span>
+            </div>
+            <div class="pillar-item">
+                <span>太陽</span><span class="highlight">己亥</span><span>日</span>
+            </div>
+            <div class="pillar-item">
+                <span>太陰</span><span class="highlight">甲子</span><span>時</span>
+            </div>
+        </div>
+        
+        <div class="yiji-section">
+            <div class="content-line">
+                <span class="yiji-title">宜</span>
+            </div>
+            <div class="content-line">
+                <span>上任、出行、动土、婚嫁、安葬、开业、投资、立碑、考试</span>
+            </div>
+        </div>
+        
+        <div class="yiji-section">
+            <div class="content-line">
+                <span class="yiji-title">忌</span>
+            </div>
+            <div class="content-line">
+                <span></span>
+            </div>
+        </div>
+        
+        <div class="note-text">
+            <div>地理人</div>
+            <div>清虚子</div>
+            <div>谨择</div>
+        </div>
+        
+        <div class="seal-box">
+            擇<br>吉
+        </div>
+        
+        <div class="signature">
+            <div>公元贰零贰陆年三月廿九</div>
+        </div>
+    </div>
+</body>
+</html>

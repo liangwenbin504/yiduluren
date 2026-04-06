@@ -1,0 +1,462 @@
+{
+  "words_result": [
+    {
+      "probability": {
+        "average": 0.9992866516,
+        "min": 0.998650372,
+        "variance": 4.048896471e-07
+      },
+      "words": "甲日"
+    },
+    {
+      "probability": {
+        "average": 0.9994797111,
+        "min": 0.9993162155,
+        "variance": 1.379219583e-08
+      },
+      "words": "戊寅日"
+    },
+    {
+      "probability": {
+        "average": 0.9994069934,
+        "min": 0.9989745617,
+        "variance": 1.869971697e-07
+      },
+      "words": "未时"
+    },
+    {
+      "probability": {
+        "average": 0.9989266396,
+        "min": 0.9971191883,
+        "variance": 1.649832029e-06
+      },
+      "words": "辰午申"
+    },
+    {
+      "probability": {
+        "average": 0.9985229969,
+        "min": 0.9956001043,
+        "variance": 4.271711987e-06
+      },
+      "words": "六青白"
+    },
+    {
+      "probability": {
+        "average": 0.9997106194,
+        "min": 0.9996104836,
+        "variance": 1.002717909e-08
+      },
+      "words": "午时"
+    },
+    {
+      "probability": {
+        "average": 0.9699542522,
+        "min": 0.9407148957,
+        "variance": 0.000854939979
+      },
+      "words": "酉将"
+    },
+    {
+      "probability": {
+        "average": 0.9980607033,
+        "min": 0.996494472,
+        "variance": 2.453173693e-06
+      },
+      "words": "寅将"
+    },
+    {
+      "probability": {
+        "average": 0.9920944571,
+        "min": 0.9765456319,
+        "variance": 0.0001208824906
+      },
+      "words": "丑午酉"
+    },
+    {
+      "probability": {
+        "average": 0.9885137677,
+        "min": 0.977034688,
+        "variance": 0.0001317692659
+      },
+      "words": "贵白"
+    },
+    {
+      "probability": {
+        "average": 0.9989212751,
+        "min": 0.9989212751,
+        "variance": 0
+      },
+      "words": "勾"
+    },
+    {
+      "probability": {
+        "average": 0.9996219873,
+        "min": 0.9993681312,
+        "variance": 6.44580922e-08
+      },
+      "words": "青六"
+    },
+    {
+      "probability": {
+        "average": 0.9781559706,
+        "min": 0.9289010167,
+        "variance": 0.0008219291922
+      },
+      "words": "六白贵勾"
+    },
+    {
+      "probability": {
+        "average": 0.9991455078,
+        "min": 0.9983939528,
+        "variance": 5.647900707e-07
+      },
+      "words": "午辰"
+    },
+    {
+      "probability": {
+        "average": 0.9884682298,
+        "min": 0.9745080471,
+        "variance": 7.497034676e-05
+      },
+      "words": "戌午丑酉"
+    },
+    {
+      "probability": {
+        "average": 0.9997743964,
+        "min": 0.9997743964,
+        "variance": 0
+      },
+      "words": "辰"
+    },
+    {
+      "probability": {
+        "average": 0.9871109724,
+        "min": 0.9524472952,
+        "variance": 0.0004009746772
+      },
+      "words": "午寅酉戊"
+    },
+    {
+      "probability": {
+        "average": 0.9996327162,
+        "min": 0.9996327162,
+        "variance": 0
+      },
+      "words": "空"
+    },
+    {
+      "probability": {
+        "average": 0.9992025495,
+        "min": 0.9982106686,
+        "variance": 4.135360712e-07
+      },
+      "words": "勾六朱蛇"
+    },
+    {
+      "probability": {
+        "average": 0.9996904135,
+        "min": 0.9996904135,
+        "variance": 0
+      },
+      "words": "未"
+    },
+    {
+      "probability": {
+        "average": 0.9970958829,
+        "min": 0.9931104183,
+        "variance": 8.080159205e-06
+      },
+      "words": "申酉戌"
+    },
+    {
+      "probability": {
+        "average": 0.9614053965,
+        "min": 0.9614053965,
+        "variance": 0
+      },
+      "words": "酉"
+    },
+    {
+      "probability": {
+        "average": 0.996036768,
+        "min": 0.9942985177,
+        "variance": 3.021513976e-06
+      },
+      "words": "戌亥"
+    },
+    {
+      "probability": {
+        "average": 0.9983713031,
+        "min": 0.9983713031,
+        "variance": 0
+      },
+      "words": "午"
+    },
+    {
+      "probability": {
+        "average": 0.999222517,
+        "min": 0.999222517,
+        "variance": 0
+      },
+      "words": "亥"
+    },
+    {
+      "probability": {
+        "average": 0.8925083876,
+        "min": 0.8925083876,
+        "variance": 0
+      },
+      "words": "巳"
+    },
+    {
+      "probability": {
+        "average": 0.9993058443,
+        "min": 0.9993058443,
+        "variance": 0
+      },
+      "words": "子"
+    },
+    {
+      "probability": {
+        "average": 0.9979225397,
+        "min": 0.9959505796,
+        "variance": 3.888626452e-06
+      },
+      "words": "青空"
+    },
+    {
+      "probability": {
+        "average": 0.9993171692,
+        "min": 0.998762846,
+        "variance": 3.072742061e-07
+      },
+      "words": "申未"
+    },
+    {
+      "probability": {
+        "average": 0.9997975826,
+        "min": 0.999753654,
+        "variance": 1.950428041e-09
+      },
+      "words": "子丑寅"
+    },
+    {
+      "probability": {
+        "average": 0.9689874649,
+        "min": 0.9380109906,
+        "variance": 0.0009595438023
+      },
+      "words": "贵后"
+    },
+    {
+      "probability": {
+        "average": 0.999920249,
+        "min": 0.9998619556,
+        "variance": 3.39811379e-09
+      },
+      "words": "卷五"
+    },
+    {
+      "probability": {
+        "average": 0.9998378754,
+        "min": 0.9998378754,
+        "variance": 0
+      },
+      "words": "辰"
+    },
+    {
+      "probability": {
+        "average": 0.9912832975,
+        "min": 0.9912832975,
+        "variance": 0
+      },
+      "words": "卯"
+    },
+    {
+      "probability": {
+        "average": 0.9987819791,
+        "min": 0.9987819791,
+        "variance": 0
+      },
+      "words": "寅"
+    },
+    {
+      "probability": {
+        "average": 0.9996287823,
+        "min": 0.9996287823,
+        "variance": 0
+      },
+      "words": "丑"
+    },
+    {
+      "probability": {
+        "average": 0.9711509943,
+        "min": 0.9010613561,
+        "variance": 0.00168104202
+      },
+      "words": "午巳辰卯"
+    },
+    {
+      "probability": {
+        "average": 0.9485561848,
+        "min": 0.9485561848,
+        "variance": 0
+      },
+      "words": "贵"
+    },
+    {
+      "probability": {
+        "average": 0.9975093603,
+        "min": 0.9963340759,
+        "variance": 1.784768983e-06
+      },
+      "words": "白常元阴"
+    },
+    {
+      "probability": {
+        "average": 0.9994515777,
+        "min": 0.998878181,
+        "variance": 1.813023687e-07
+      },
+      "words": "【白话提要】"
+    },
+    {
+      "probability": {
+        "average": 0.9994435906,
+        "min": 0.9973282814,
+        "variance": 3.066664647e-07
+      },
+      "words": "三光课，日辰、用神旺相，又乘吉将。日为人，辰为宅，用神为动作，三处旺"
+    },
+    {
+      "probability": {
+        "average": 0.9998083711,
+        "min": 0.9994193316,
+        "variance": 3.223105338e-08
+      },
+      "words": "请事起例断章法——课经一"
+    },
+    {
+      "probability": {
+        "average": 0.9999209642,
+        "min": 0.9997176528,
+        "variance": 5.824595473e-09
+      },
+      "words": "相，乘吉将，为三处皆有光辉，所以名叫三光。"
+    },
+    {
+      "probability": {
+        "average": 0.9986975193,
+        "min": 0.9842802286,
+        "variance": 7.97300163e-06
+      },
+      "words": "占得三光课，主光辉通达，百事吉利昌盛兴旺，都能毫不费力而成功。官职荣"
+    },
+    {
+      "probability": {
+        "average": 0.9989266992,
+        "min": 0.9710563421,
+        "variance": 2.224545824e-05
+      },
+      "words": "升，疾病安康。囚徒被释放，做买卖获得利润。如果神将都和合相生，初传与末传"
+    },
+    {
+      "probability": {
+        "average": 0.9974526763,
+        "min": 0.9686670303,
+        "variance": 5.717120075e-05
+      },
+      "words": "逢吉将，主做官高升，始终吉庆。即使年命凶煞，也不为凶。"
+    },
+    {
+      "probability": {
+        "average": 0.9968315363,
+        "min": 0.9526260495,
+        "variance": 0.0001061731309
+      },
+      "words": "这一课主吉，然而末传也是最要紧的。如果日辰居天乙后，末传囚死并乘凶将，"
+    },
+    {
+      "probability": {
+        "average": 0.9994161129,
+        "min": 0.9972586632,
+        "variance": 4.51853424e-07
+      },
+      "words": "是三光失明之象，前面即使有功德也是空欢喜，后又会抑塞难通。"
+    },
+    {
+      "probability": {
+        "average": 0.999589622,
+        "min": 0.9992955923,
+        "variance": 6.81467327e-08
+      },
+      "words": "古籍评注"
+    },
+    {
+      "probability": {
+        "average": 0.9993242025,
+        "min": 0.998410821,
+        "variance": 4.188011644e-07
+      },
+      "words": "【原文】"
+    },
+    {
+      "probability": {
+        "average": 0.9998343587,
+        "min": 0.9996075034,
+        "variance": 1.594748866e-08
+      },
+      "words": "《观月经》"
+    },
+    {
+      "probability": {
+        "average": 0.9998897314,
+        "min": 0.9996894598,
+        "variance": 1.222934465e-08
+      },
+      "words": "名开云观日"
+    },
+    {
+      "probability": {
+        "average": 0.9841415286,
+        "min": 0.7149208784,
+        "variance": 0.002698788187
+      },
+      "words": "用神如旺相，分配一光时(1)。吉将临其上，二光得礼仪(2)。"
+    },
+    {
+      "probability": {
+        "average": 0.9730843306,
+        "min": 0.6785911918,
+        "variance": 0.006075813435
+      },
+      "words": "日辰兼有炁，三光不改移(3)。求事多来速，当官职不迟④)。"
+    },
+    {
+      "probability": {
+        "average": 0.9977873564,
+        "min": 0.9551544785,
+        "variance": 7.568619185e-05
+      },
+      "words": "末传无刑害，车马镇相随。三合与六合，逍遥自在期⑤)。"
+    },
+    {
+      "probability": {
+        "average": 0.9684606791,
+        "min": 0.7458607554,
+        "variance": 0.005589800887
+      },
+      "words": "忽然刑害破，凶将家颦眉⑥)。"
+    },
+    {
+      "probability": {
+        "average": 0.9975315928,
+        "min": 0.9939312935,
+        "variance": 6.483961897e-06
+      },
+      "words": "293"
+    }
+  ],
+  "words_result_num": 57,
+  "log_id": 2035175660569665760
+}

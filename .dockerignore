@@ -1,0 +1,67 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+
+# Test files
+test_*.py
+*_test.py
+simple_*.py
+minimal_*.py
+
+# Reports
+*.md
+!README.md
+api_performance_report.*
+性能测试报告.*
+优化实施报告.*
+优化实施总结报告.*
+大六壬 API 性能测试补充报告.*
+500 错误诊断报告.*
+500 错误深度诊断报告.*
+
+# Temporary files
+*.tmp
+*.bak

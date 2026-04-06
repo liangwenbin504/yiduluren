@@ -1,0 +1,662 @@
+{
+  "metadata": {
+    "source": "《六壬大全》（钦定四库全书本）",
+    "total_kejing": 64,
+    "version": "1.0",
+    "create_date": "2026-03-15"
+  },
+  
+  "九宗门总纲": {
+    "贼克法": ["元首课", "重审课", "知一课", "比用课", "涉害课"],
+    "涉害法": ["见机课", "察微课", "缀瑕课", "复等课", "刑伤课"],
+    "遥克法": ["遥克课", "蒿矢课", "弹射课", "矢射课", "神遥课"],
+    "昴星法": ["昴星课", "虎视课", "冬蛇掩目课", "掩目课", "伏殃课"],
+    "别责法": ["别责课", "八专课", "帷薄课", "不备课", "淫泆课"],
+    "伏吟法": ["伏吟课", "自任课", "自信课", "杜传课", "孤辰课", "寡宿课", "绝情课", "无依课"],
+    "反吟法": ["反吟课", "无依课", "井栏课", "井栏射格", "无亲课", "绝情课", "冲克课"],
+    "特殊格局": ["三光课", "三阳课", "三奇课", "三合课", "六合课", "龙德课", "天赦课", "天德课", "月德课", "生气课", "青龙课", "鬼墓课", "天网课", "地网课", "斩关课", "闭口课", "冲破课", "空亡课", "死奇课"]
+  },
+
+  "课经详情": {
+    "1_元首课": {
+      "ke_name": "元首课",
+      "ke_type": "贼克法",
+      "definition": "凡一上克下，余课无克，为元首课",
+      "xiang": "象天，如君克臣，必顺其正",
+      "description": "四课中有一课上克下，其余课中无克，取上克下的上神发用",
+      "judgment": "君占则有伊尹之臣，臣占必遇唐虞之君，万事有成",
+      "features": ["一上克下", "余课无克", "九宗之元", "六十四课之首"],
+      "score": 85,
+      "level": "上吉"
+    },
+
+    "2_重审课": {
+      "ke_name": "重审课",
+      "ke_type": "贼克法",
+      "definition": "凡一下贼上，余课无克，为重审课",
+      "xiang": "象地，如臣谏君，必以下犯上",
+      "description": "四课中有一课下贼上，其余课中无克，取下贼上的上神发用",
+      "judgment": "事起女子，或家祸内生，主在下，先难后易",
+      "features": ["一下贼上", "余课无克", "以下犯上"],
+      "score": 65,
+      "level": "小吉"
+    },
+
+    "3_知一课": {
+      "ke_name": "知一课",
+      "ke_type": "比用法",
+      "definition": "凡二课相克，取与日干比和者为用",
+      "xiang": "比和为用，择善而从",
+      "description": "二课或三课有克，取与日干比和者为用神",
+      "judgment": "事贵明确，择善而从，不致迷惑",
+      "features": ["二课相克", "取比和者", "阳日用阳，阴日用阴"],
+      "score": 70,
+      "level": "中吉"
+    },
+
+    "4_比用课": {
+      "ke_name": "比用课",
+      "ke_type": "比用法",
+      "definition": "常将天日比神用，阳日用阳阴用阴",
+      "description": "取与日干阴阳比和之神为用",
+      "judgment": "事主和合，有人相助",
+      "features": ["阳日用阳神", "阴日用阴神", "比和为用"],
+      "score": 70,
+      "level": "中吉"
+    },
+
+    "5_涉害课": {
+      "ke_name": "涉害课",
+      "ke_type": "涉害法",
+      "definition": "涉害行来本家止，路逢多克为用取",
+      "description": "比用后仍有多课，计算涉害深度，取克贼最深者为用",
+      "judgment": "事主经历艰难，深浅可知，先忧后喜",
+      "features": ["涉害深浅", "取克贼最深者", "经历艰难"],
+      "score": 60,
+      "level": "吉凶参半"
+    },
+
+    "6_见机课": {
+      "ke_name": "见机课",
+      "ke_type": "涉害法",
+      "definition": "孟深仲浅季当休，复等柔辰刚日宜",
+      "description": "涉害相等，取孟上神发用",
+      "judgment": "事主见机而作，当机立断，不宜迟疑",
+      "features": ["涉害相等", "取孟上神", "见机而作"],
+      "score": 70,
+      "level": "中吉"
+    },
+
+    "7_察微课": {
+      "ke_name": "察微课",
+      "ke_type": "涉害法",
+      "definition": "无孟取仲",
+      "description": "涉害相等，无孟取仲上神发用",
+      "judgment": "事主察微知著，谨慎行事",
+      "features": ["涉害相等", "无孟取仲", "谨慎"],
+      "score": 65,
+      "level": "小吉"
+    },
+
+    "8_缀瑕课": {
+      "ke_name": "缀瑕课",
+      "ke_type": "涉害法",
+      "definition": "涉害相等，取干上神",
+      "description": "涉害相等，复等，刚日取干上神",
+      "judgment": "事有瑕疵，需修补完善",
+      "features": ["涉害复等", "刚日取干上", "有瑕疵"],
+      "score": 60,
+      "level": "吉凶参半"
+    },
+
+    "9_复等课": {
+      "ke_name": "复等课",
+      "ke_type": "涉害法",
+      "definition": "涉害俱等，取支上神",
+      "description": "涉害相等，柔日取支上神",
+      "judgment": "事有反复，等而后成",
+      "features": ["涉害俱等", "柔日取支上", "反复"],
+      "score": 55,
+      "level": "吉凶参半"
+    },
+
+    "10_刑伤课": {
+      "ke_name": "刑伤课",
+      "ke_type": "涉害法",
+      "definition": "涉害逢刑",
+      "description": "涉害课中逢三刑",
+      "judgment": "事主刑伤，有损害",
+      "features": ["涉害", "逢三刑", "刑伤"],
+      "score": 40,
+      "level": "小凶"
+    },
+
+    "11_遥克课": {
+      "ke_name": "遥克课",
+      "ke_type": "遥克法",
+      "definition": "四课无克号为遥，日与神兮递互招",
+      "description": "四课无克，取遥相克贼者为用",
+      "judgment": "事主疏远，谋望难成，宜静不宜动",
+      "features": ["四课无克", "遥相克贼", "疏远"],
+      "score": 55,
+      "level": "吉凶参半"
+    },
+
+    "12_蒿矢课": {
+      "ke_name": "蒿矢课",
+      "ke_type": "遥克法",
+      "definition": "神遥克日曰蒿矢",
+      "description": "取上神遥克日干者为用",
+      "judgment": "如箭在弦，事有惊扰，先凶后吉",
+      "features": ["神遥克日", "如箭在弦", "惊扰"],
+      "score": 50,
+      "level": "吉凶参半"
+    },
+
+    "13_弹射课": {
+      "ke_name": "弹射课",
+      "ke_type": "遥克法",
+      "definition": "日遥克神曰弹射",
+      "description": "取日干遥克上神者为用",
+      "judgment": "事主主动出击，可成，但力量不足",
+      "features": ["日遥克神", "主动出击", "力弱"],
+      "score": 60,
+      "level": "小吉"
+    },
+
+    "14_矢射课": {
+      "ke_name": "矢射课",
+      "ke_type": "遥克法",
+      "definition": "遥克有克",
+      "description": "遥克课中有克贼",
+      "judgment": "如矢射物，事有所中",
+      "features": ["遥克", "有克贼", "所中"],
+      "score": 55,
+      "level": "吉凶参半"
+    },
+
+    "15_神遥课": {
+      "ke_name": "神遥课",
+      "ke_type": "遥克法",
+      "definition": "神将遥克",
+      "description": "神将遥相克贼",
+      "judgment": "事主遥远，难以成就",
+      "features": ["神将遥克", "遥远"],
+      "score": 50,
+      "level": "吉凶参半"
+    },
+
+    "16_昴星课": {
+      "ke_name": "昴星课",
+      "ke_type": "昴星法",
+      "definition": "无遥无克昴星穷，阳仰阴俯酉位中",
+      "description": "四课无克无遥，取昴星酉宫之神为用",
+      "judgment": "事主困顿，宜守不宜进",
+      "features": ["无遥无克", "取酉宫", "困顿"],
+      "score": 45,
+      "level": "吉凶参半"
+    },
+
+    "17_虎视课": {
+      "ke_name": "虎视课",
+      "ke_type": "昴星法",
+      "definition": "刚日先辰而后日",
+      "description": "昴星课刚日，先取辰上神，后取日上神",
+      "judgment": "如虎视眈眈，事有威严，但凶险",
+      "features": ["昴星刚日", "先辰后日", "虎视"],
+      "score": 55,
+      "level": "吉凶参半"
+    },
+
+    "18_冬蛇掩目课": {
+      "ke_name": "冬蛇掩目课",
+      "ke_type": "昴星法",
+      "definition": "柔日先日而后辰",
+      "description": "昴星课柔日，先取日上神，后取辰上神",
+      "judgment": "如蛇冬眠，事主潜伏，不宜动作",
+      "features": ["昴星柔日", "先日后辰", "潜伏"],
+      "score": 50,
+      "level": "吉凶参半"
+    },
+
+    "19_掩目课": {
+      "ke_name": "掩目课",
+      "ke_type": "昴星法",
+      "definition": "昴星无克",
+      "description": "昴星课无克贼",
+      "judgment": "如被掩目，事不明朗",
+      "features": ["昴星", "无克", "不明"],
+      "score": 45,
+      "level": "吉凶参半"
+    },
+
+    "20_伏殃课": {
+      "ke_name": "伏殃课",
+      "ke_type": "昴星法",
+      "definition": "昴星逢凶",
+      "description": "昴星课逢凶神恶将",
+      "judgment": "祸殃潜伏，凶险异常",
+      "features": ["昴星", "逢凶", "伏殃"],
+      "score": 30,
+      "level": "中凶"
+    },
+
+    "21_别责课": {
+      "ke_name": "别责课",
+      "ke_type": "别责法",
+      "definition": "四课不全三课备，无遥无克别责例",
+      "description": "四课只有三课，无遥无克，刚日取干合，柔日取支三合",
+      "judgment": "事主另辟蹊径，别求他法",
+      "features": ["四课不全", "三课备", "别求他法"],
+      "score": 60,
+      "level": "小吉"
+    },
+
+    "22_八专课": {
+      "ke_name": "八专课",
+      "ke_type": "八专法",
+      "definition": "两课无克号八专",
+      "description": "四课只有两课，无克",
+      "judgment": "事主专一，但力量不足",
+      "features": ["四课两课", "无克", "专一"],
+      "score": 55,
+      "level": "吉凶参半"
+    },
+
+    "23_帷薄课": {
+      "ke_name": "帷薄课",
+      "ke_type": "八专法",
+      "definition": "八专无克",
+      "description": "八专课无克贼",
+      "judgment": "如处帷薄之中，事不明朗",
+      "features": ["八专", "无克", "帷薄"],
+      "score": 50,
+      "level": "吉凶参半"
+    },
+
+    "24_不备课": {
+      "ke_name": "不备课",
+      "ke_type": "八专法",
+      "definition": "四课不全",
+      "description": "四课不备，有缺失",
+      "judgment": "事不周全，有缺陷",
+      "features": ["四课不全", "不备", "缺陷"],
+      "score": 50,
+      "level": "吉凶参半"
+    },
+
+    "25_淫泆课": {
+      "ke_name": "淫泆课",
+      "ke_type": "八专法",
+      "definition": "八专淫泆",
+      "description": "八专课逢淫泆之神",
+      "judgment": "事主淫泆，不正",
+      "features": ["八专", "淫泆", "不正"],
+      "score": 35,
+      "level": "小凶"
+    },
+
+    "26_伏吟课": {
+      "ke_name": "伏吟课",
+      "ke_type": "伏吟法",
+      "definition": "月将等于占时",
+      "description": "天地盘相同，神将伏而不动",
+      "judgment": "事主伏而不动，宜静不宜动",
+      "features": ["月将=占时", "天地盘同", "伏而不动"],
+      "score": 50,
+      "level": "吉凶参半"
+    },
+
+    "27_自任课": {
+      "ke_name": "自任课",
+      "ke_type": "伏吟法",
+      "definition": "伏吟自刑",
+      "description": "伏吟课自刑",
+      "judgment": "事主自任，劳心费力",
+      "features": ["伏吟", "自刑", "自任"],
+      "score": 45,
+      "level": "吉凶参半"
+    },
+
+    "28_自信课": {
+      "ke_name": "自信课",
+      "ke_type": "伏吟法",
+      "definition": "伏吟有克",
+      "description": "伏吟课有克贼",
+      "judgment": "事主自信，可成",
+      "features": ["伏吟", "有克", "自信"],
+      "score": 55,
+      "level": "吉凶参半"
+    },
+
+    "29_杜传课": {
+      "ke_name": "杜传课",
+      "ke_type": "伏吟法",
+      "definition": "伏吟杜塞",
+      "description": "伏吟课杜塞不通",
+      "judgment": "事主杜塞，传而不通",
+      "features": ["伏吟", "杜塞", "不通"],
+      "score": 40,
+      "level": "小凶"
+    },
+
+    "30_孤辰课": {
+      "ke_name": "孤辰课",
+      "ke_type": "伏吟法",
+      "definition": "孤辰寡宿",
+      "description": "伏吟逢孤辰",
+      "judgment": "事主孤独，无助",
+      "features": ["伏吟", "孤辰", "孤独"],
+      "score": 35,
+      "level": "小凶"
+    },
+
+    "31_寡宿课": {
+      "ke_name": "寡宿课",
+      "ke_type": "伏吟法",
+      "definition": "寡宿临身",
+      "description": "伏吟逢寡宿",
+      "judgment": "事主寡宿，孤单",
+      "features": ["伏吟", "寡宿", "孤单"],
+      "score": 35,
+      "level": "小凶"
+    },
+
+    "32_绝情课": {
+      "ke_name": "绝情课",
+      "ke_type": "伏吟法",
+      "definition": "伏吟绝情",
+      "description": "伏吟课无情义",
+      "judgment": "事主绝情，无恩义",
+      "features": ["伏吟", "绝情", "无义"],
+      "score": 30,
+      "level": "中凶"
+    },
+
+    "33_无依课": {
+      "ke_name": "无依课",
+      "ke_type": "伏吟法",
+      "definition": "无依无靠",
+      "description": "伏吟课无依靠",
+      "judgment": "事主无依，孤立无援",
+      "features": ["伏吟", "无依", "孤立"],
+      "score": 30,
+      "level": "中凶"
+    },
+
+    "34_反吟课": {
+      "ke_name": "反吟课",
+      "ke_type": "反吟法",
+      "definition": "月将冲占时",
+      "description": "天地盘对冲，神将反复不定",
+      "judgment": "事主反复无常，进退两难",
+      "features": ["月将冲占时", "天地盘冲", "反复"],
+      "score": 45,
+      "level": "小凶"
+    },
+
+    "35_井栏课": {
+      "ke_name": "井栏课",
+      "ke_type": "反吟法",
+      "definition": "反吟无克别有井栏名",
+      "description": "反吟课无克，取井栏射",
+      "judgment": "如处井中，视野受限",
+      "features": ["反吟", "无克", "井栏"],
+      "score": 40,
+      "level": "小凶"
+    },
+
+    "36_井栏射格": {
+      "ke_name": "井栏射格",
+      "ke_type": "反吟法",
+      "definition": "井栏射",
+      "description": "井栏课射格",
+      "judgment": "如射井中，力不能及",
+      "features": ["井栏", "射格", "不及"],
+      "score": 40,
+      "level": "小凶"
+    },
+
+    "37_无亲课": {
+      "ke_name": "无亲课",
+      "ke_type": "反吟法",
+      "definition": "反吟无亲",
+      "description": "反吟课无亲缘",
+      "judgment": "事主无亲，孤立",
+      "features": ["反吟", "无亲", "孤立"],
+      "score": 35,
+      "level": "小凶"
+    },
+
+    "38_冲克课": {
+      "ke_name": "冲克课",
+      "ke_type": "反吟法",
+      "definition": "反吟冲克",
+      "description": "反吟课有冲克",
+      "judgment": "事主冲克，不和",
+      "features": ["反吟", "冲克", "不和"],
+      "score": 40,
+      "level": "小凶"
+    },
+
+    "39_三光课": {
+      "ke_name": "三光课",
+      "ke_type": "吉格",
+      "definition": "三传皆吉神旺相",
+      "description": "三传得贵人、青龙、太常等吉将，且旺相",
+      "judgment": "万事亨通，光明磊落",
+      "features": ["三传吉将", "旺相", "亨通"],
+      "score": 92,
+      "level": "上吉"
+    },
+
+    "40_三阳课": {
+      "ke_name": "三阳课",
+      "ke_type": "吉格",
+      "definition": "三传皆阳",
+      "description": "三传皆阳神，且得地得时",
+      "judgment": "阳气昌盛，事主光明",
+      "features": ["三传皆阳", "得地得时", "昌盛"],
+      "score": 90,
+      "level": "上吉"
+    },
+
+    "41_三奇课": {
+      "ke_name": "三奇课",
+      "ke_type": "吉格",
+      "definition": "乙丙丁或甲戊庚",
+      "description": "三传得乙丙丁三奇或甲戊庚三奇",
+      "judgment": "奇事出现，转危为安",
+      "features": ["三奇", "乙丙丁", "甲戊庚"],
+      "score": 88,
+      "level": "上吉"
+    },
+
+    "42_三合课": {
+      "ke_name": "三合课",
+      "ke_type": "吉格",
+      "definition": "三传三合局",
+      "description": "三传成三合局",
+      "judgment": "事主和合，众人相助",
+      "features": ["三传", "三合局", "和合"],
+      "score": 85,
+      "level": "上吉"
+    },
+
+    "43_六合课": {
+      "ke_name": "六合课",
+      "ke_type": "吉格",
+      "definition": "三传六合",
+      "description": "三传成六合",
+      "judgment": "事主和合，谋事可成",
+      "features": ["三传", "六合", "和合"],
+      "score": 85,
+      "level": "上吉"
+    },
+
+    "44_龙德课": {
+      "ke_name": "龙德课",
+      "ke_type": "吉格",
+      "definition": "太岁或月将发用",
+      "description": "太岁、月将、天乙贵人发用",
+      "judgment": "龙德在上，贵人扶持",
+      "features": ["太岁", "月将", "贵人"],
+      "score": 95,
+      "level": "上上大吉"
+    },
+
+    "45_天赦课": {
+      "ke_name": "天赦课",
+      "ke_type": "吉格",
+      "definition": "春戊寅夏甲午秋戊申冬甲子",
+      "description": "得天赦日发用",
+      "judgment": "天赦罪过，逢凶化吉",
+      "features": ["天赦日", "赦罪", "化吉"],
+      "score": 93,
+      "level": "上上大吉"
+    },
+
+    "46_天德课": {
+      "ke_name": "天德课",
+      "ke_type": "吉格",
+      "definition": "天德贵人发用",
+      "description": "天德贵人临身发用",
+      "judgment": "天德临身，贵人扶持",
+      "features": ["天德", "贵人", "扶持"],
+      "score": 88,
+      "level": "上吉"
+    },
+
+    "47_月德课": {
+      "ke_name": "月德课",
+      "ke_type": "吉格",
+      "definition": "月德贵人发用",
+      "description": "月德贵人临身发用",
+      "judgment": "月德入课，和顺吉祥",
+      "features": ["月德", "和顺", "吉祥"],
+      "score": 88,
+      "level": "上吉"
+    },
+
+    "48_生气课": {
+      "ke_name": "生气课",
+      "ke_type": "吉格",
+      "definition": "生气发用",
+      "description": "生气之神发用",
+      "judgment": "生气入课，生机勃勃",
+      "features": ["生气", "生机", "活力"],
+      "score": 78,
+      "level": "中吉"
+    },
+
+    "49_青龙课": {
+      "ke_name": "青龙课",
+      "ke_type": "吉格",
+      "definition": "青龙发用",
+      "description": "青龙吉将发用",
+      "judgment": "青龙入课，喜庆临门",
+      "features": ["青龙", "喜庆", "财禄"],
+      "score": 78,
+      "level": "中吉"
+    },
+
+    "50_鬼墓课": {
+      "ke_name": "鬼墓课",
+      "ke_type": "凶格",
+      "definition": "凡日辰墓神，及日鬼发用，为鬼墓课",
+      "description": "鬼者贼也，阳见阳阴见阴为鬼。墓者蒙昧也。鬼主伤残，墓主闭塞不通",
+      "judgment": "凡人占鬼入传，及传墓不吉，非官讼必疾病",
+      "xiang_yue": "五行克贼，死墓之乡，人丁多耗，家宅不昌，行人可至，病者如狂，谋为迟滞，捕盗深藏",
+      "features": ["日鬼", "墓神", "发用", "凶险"],
+      "special_cases": [
+        {"name": "墓神覆日", "condition": "日上得日墓", "meaning": "主人昏晦"},
+        {"name": "干墓临支", "condition": "辰上得日墓", "meaning": "主宅倾颓"},
+        {"name": "干支乘墓", "condition": "日上日墓 + 辰上辰墓", "meaning": "人宅俱不利"},
+        {"name": "干支坐墓", "condition": "日下日墓 + 辰下辰墓", "meaning": "自招其祸"},
+        {"name": "干支互换坐墓", "condition": "日上辰墓 + 辰上日墓", "meaning": "彼此招晦"},
+        {"name": "墓门开格", "condition": "日辰墓乘蛇虎加卯酉", "meaning": "主丧事"},
+        {"name": "传墓入墓", "condition": "寅加酉巳加子申加卯亥加午", "meaning": "自明投暗"},
+        {"name": "墓加长生", "condition": "未加亥戌加寅丑加巳辰加申", "meaning": "旧事再发"}
+      ],
+      "score": 25,
+      "level": "大凶"
+    },
+
+    "51_天网课": {
+      "ke_name": "天网课",
+      "ke_type": "凶格",
+      "definition": "魁罡加日辰",
+      "description": "天魁天罡加临日辰",
+      "judgment": "如罗网罩身，事主困顿",
+      "features": ["魁罡", "加日辰", "困顿"],
+      "score": 35,
+      "level": "中凶"
+    },
+
+    "52_地网课": {
+      "ke_name": "地网课",
+      "ke_type": "凶格",
+      "definition": "岁煞加日辰",
+      "description": "岁煞、月煞加临日辰",
+      "judgment": "如入地网，难以脱身",
+      "features": ["岁煞", "月煞", "难脱"],
+      "score": 30,
+      "level": "中凶"
+    },
+
+    "53_斩关课": {
+      "ke_name": "斩关课",
+      "ke_type": "吉凶参半",
+      "definition": "魁罡加日辰发用",
+      "description": "天魁天罡发用，有克贼",
+      "judgment": "事主突破难关，先难后易",
+      "features": ["魁罡", "发用", "突破"],
+      "score": 60,
+      "level": "吉凶参半"
+    },
+
+    "54_闭口课": {
+      "ke_name": "闭口课",
+      "ke_type": "凶格",
+      "definition": "旬尾加旬首",
+      "description": "旬尾之神加临旬首",
+      "judgment": "事主闭塞，言而有阻",
+      "features": ["旬尾", "旬首", "闭塞"],
+      "score": 40,
+      "level": "小凶"
+    },
+
+    "55_冲破课": {
+      "ke_name": "冲破课",
+      "ke_type": "凶格",
+      "definition": "岁破月破发用",
+      "description": "岁破、月破之神发用",
+      "judgment": "事主破败，谋事难成",
+      "features": ["岁破", "月破", "破败"],
+      "score": 30,
+      "level": "中凶"
+    },
+
+    "56_空亡课": {
+      "ke_name": "空亡课",
+      "ke_type": "凶格",
+      "definition": "旬空发用",
+      "description": "旬中空亡之神发用",
+      "judgment": "事主落空，谋而无成",
+      "features": ["旬空", "落空", "无成"],
+      "score": 25,
+      "level": "大凶"
+    },
+
+    "57_死奇课": {
+      "ke_name": "死奇课",
+      "ke_type": "凶格",
+      "definition": "死气发用",
+      "description": "死气、死神发用",
+      "judgment": "事主死丧，大凶",
+      "features": ["死气", "死神", "死丧"],
+      "score": 20,
+      "level": "上凶"
+    }
+  }
+}

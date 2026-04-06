@@ -1,0 +1,8 @@
+flask==2.3.3
+flask-cors==4.0.0
+requests==2.31.0
+waitress==3.0.2
+reportlab==4.4.10
+PyPDF2==3.0.1
+fpdf2==2.8.7
+Pillow==12.1.1

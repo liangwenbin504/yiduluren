@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大六壬API测试页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "SimSun", sans-serif;
+            background: linear-gradient(180deg, #e0f7fa 0%, #b2ebf2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 标题 */
+        .header {
+            text-align: center;
+            background: linear-gradient(180deg, #4dd0e1 0%, #26c6da 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #000;
+            font-size: 36px;
+            font-weight: 900;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);
+            font-family: "HanyiGuli", "STLiti", "LiSu", "隶书", "Kaiti", "Microsoft YaHei", sans-serif;
+            letter-spacing: 2px;
+        }
+
+        /* 输入区域 */
+        .input-section {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .input-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .input-group label {
+            color: #e65100;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .select-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 120px;
+        }
+
+        .custom-select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid #ffb74d;
+            border-radius: 5px;
+            font-size: 16px;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .custom-select:focus {
+            outline: none;
+            border-color: #ff9800;
+            box-shadow: 0 0 10px rgba(255, 152, 0, 0.3);
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-start {
+            background: linear-gradient(180deg, #2196f3 0%, #1e88e5 100%);
+            color: white;
+        }
+
+        .btn-start:hover {
+            background: linear-gradient(180deg, #42a5f5 0%, #42a5f5 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        /* 核心区域 */
+        .core-section {
+            background: linear-gradient(180deg, #fce4ec 0%, #f8bbd9 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 1fr 0.7fr 1fr;
+            gap: 20px;
+        }
+
+        .core-panel {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 250px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .core-panel-title {
+            color: #000;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f48fb1;
+        }
+
+        /* 天地盘统一布局 - 贵人盘在外圈动态定位 */
+        .guiren-outer-wrapper {
+            display: grid;
+            grid-template-columns: repeat(6, 36px);
+            grid-template-rows: repeat(6, 36px);
+            gap: 0;
+            padding: 0;
+            background: rgba(76, 175, 80, 0.05);
+            border: 1px solid #4caf50;
+            max-width: 216px;
+            min-width: 216px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 216px;
+        }
+
+        .guiren-outer-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border: 1px dashed #4caf50;
+            margin: 0;
+        }
+
+        .guiren-outer-label {
+            font-size: 0;
+            opacity: 0;
+            visibility: hidden;
+            display: none;
+        }
+
+        .guiren-outer-value {
+            font-size: 11px;
+            color: #2e7d32;
+            font-weight: 700;
+            white-space: nowrap;
+            padding: 3px 6px;
+            background: rgba(232, 245, 233, 0.95);
+            border-radius: 4px;
+            border: 1px solid #a5d6a7;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .tiandi-inner-wrapper {
+            position: absolute;
+            top: calc(36px + 0px);
+            left: calc(36px + 0px);
+            display: grid;
+            grid-template-columns: repeat(4, 36px);
+            grid-template-rows: repeat(4, 36px);
+            gap: 0;
+            padding: 0;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 6px;
+            width: 144px;
+            height: 144px;
+        }
+
+        .tiandi-grid {
+            display: contents;
+        }
+
+        .tiandi-cell {
+            padding: 2px;
+            background: linear-gradient(180deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 4px;
+            border: 1px solid #90caf9;
+            font-size: 12px;
+            font-weight: bold;
+            color: #1565c0;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            gap: 1px;
+        }
+
+        .tiandi-cell .shensha {
+            font-size: 8px;
+            color: #1976d2;
+            font-weight: 600;
+        }
+
+        .guiren-outer-placeholder {
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .guiren-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            background: linear-gradient(180deg, #f1f8e9 0%, #dcedc8 100%);
+            border-radius: 5px;
+            border: 1px solid #c5e1a5;
+            font-size: 14px;
+        }
+
+        .guiren-label {
+            font-weight: bold;
+            color: #33691e;
+        }
+
+        .guiren-value {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        /* 四课 - 传统排法从右到左（第一课→第二课→第三课→第四课） */
+        .sicols-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 7px;
+            direction: rtl;
+        }
+
+        .sicol-item {
+            direction: ltr;
+            padding: 10px;
+            background: linear-gradient(180deg, #fff9c4 0%, #fff59d 100%);
+            border-radius: 6px;
+            border: 2px solid #fdd835;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+        }
+
+        .sicol-ganzhi {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .sicol-guiren {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 8px;
+            background: linear-gradient(180deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-radius: 4px;
+            border: 1px solid #a5d6a7;
+            min-width: 35px;
+        }
+
+        .sicol-guiren-label {
+            font-size: 8px;
+            color: #2e7d32;
+            font-weight: 500;
+            margin-bottom: 1px;
+        }
+
+        .sicol-guiren-value {
+            font-size: 10px;
+            color: #1b5e20;
+            font-weight: bold;
+        }
+
+        .sicol-item .sicol-top {
+            font-size: 17px;
+            font-weight: bold;
+            color: #c62828;
+        }
+
+        .sicol-item .sicol-bottom {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+
+        .sicol-label {
+            font-size: 16px;
+            color: #f57f17;
+            font-weight: bold;
+            writing-mode: vertical-rl;
+        }
+
+        /* 三传 */
+        .sanchuan-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sanchuan-item {
+            padding: 12px;
+            background: linear-gradient(180deg, #c8e6c9 0%, #a5d6a7 100%);
+            border-radius: 8px;
+            border: 2px solid #66bb6a;
+            text-align: center;
+        }
+
+        .sanchuan-label {
+            font-size: 14px;
+            color: #2e7d32;
+            margin-bottom: 5px;
+        }
+
+        .sanchuan-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1b5e20;
+        }
+
+        /* 三传完整布局：六亲 → 日干 → 地支 → 贵人神煞 */
+        .sanchuan-complete {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: flex-start;
+        }
+
+        .sanchuan-liuqin {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1565c0;
+            min-width: 50px;
+            text-align: center;
+            padding: 5px 10px;
+            background: linear-gradient(180deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 5px;
+            border: 1px solid #90caf9;
+        }
+
+        .sanchuan-rigan {
+            font-size: 18px;
+            font-weight: bold;
+            color: #c62828;
+            min-width: 40px;
+            text-align: center;
+            padding: 5px 10px;
+            background: linear-gradient(180deg, #ffebee 0%, #ffcdd2 100%);
+            border-radius: 5px;
+            border: 1px solid #ef9a9a;
+        }
+
+        .sanchuan-dizhi {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2e7d32;
+            min-width: 50px;
+            text-align: center;
+            padding: 5px 10px;
+            background: linear-gradient(180deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-radius: 5px;
+            border: 1px solid #a5d6a7;
+        }
+
+        .sanchuan-guiren {
+            font-size: 16px;
+            font-weight: bold;
+            color: #f57f17;
+            min-width: 80px;
+            text-align: center;
+            padding: 5px 10px;
+            background: linear-gradient(180deg, #fff3e0 0%, #ffe0b2 100%);
+            border-radius: 5px;
+            border: 1px solid #ffcc80;
+            margin-left: auto;
+        }
+
+        /* 月将和时辰信息 */
+        .yuejiang-shichen-info {
+            text-align: center;
+            font-weight: bold;
+            color: #c62828;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        /* 错误信息 */
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border-left: 4px solid #c62828;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .core-section {
+                grid-template-columns: 1fr;
+            }
+
+            .input-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>大六壬API测试页面</h1>
+        </div>
+
+        <!-- 输入区域 -->
+        <div class="input-section">
+            <div class="input-row">
+                <div class="input-group">
+                    <label>天干：</label>
+                    <div class="select-wrapper">
+                        <select class="custom-select" id="tianGanSelect">
+                            <option value="甲">甲</option>
+                            <option value="乙">乙</option>
+                            <option value="丙">丙</option>
+                            <option value="丁">丁</option>
+                            <option value="戊">戊</option>
+                            <option value="己">己</option>
+                            <option value="庚">庚</option>
+                            <option value="辛">辛</option>
+                            <option value="壬">壬</option>
+                            <option value="癸">癸</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>地支：</label>
+                    <div class="select-wrapper">
+                        <select class="custom-select" id="diZhiSelect">
+                            <option value="子">子</option>
+                            <option value="丑">丑</option>
+                            <option value="寅">寅</option>
+                            <option value="卯">卯</option>
+                            <option value="辰">辰</option>
+                            <option value="巳">巳</option>
+                            <option value="午">午</option>
+                            <option value="未">未</option>
+                            <option value="申">申</option>
+                            <option value="酉">酉</option>
+                            <option value="戌">戌</option>
+                            <option value="亥">亥</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>月将：</label>
+                    <div class="select-wrapper">
+                        <select class="custom-select" id="yueJiangSelect">
+                            <option value="子">子</option>
+                            <option value="丑">丑</option>
+                            <option value="寅">寅</option>
+                            <option value="卯">卯</option>
+                            <option value="辰">辰</option>
+                            <option value="巳">巳</option>
+                            <option value="午">午</option>
+                            <option value="未">未</option>
+                            <option value="申">申</option>
+                            <option value="酉">酉</option>
+                            <option value="戌">戌</option>
+                            <option value="亥">亥</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>时地支：</label>
+                    <div class="select-wrapper">
+                        <select class="custom-select" id="shiZhiSelect">
+                            <option value="子">子</option>
+                            <option value="丑">丑</option>
+                            <option value="寅">寅</option>
+                            <option value="卯">卯</option>
+                            <option value="辰">辰</option>
+                            <option value="巳">巳</option>
+                            <option value="午">午</option>
+                            <option value="未">未</option>
+                            <option value="申">申</option>
+                            <option value="酉">酉</option>
+                            <option value="戌">戌</option>
+                            <option value="亥">亥</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-start" id="btnSubmit">确定</button>
+            </div>
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+        </div>
+
+        <!-- 核心区域 -->
+        <div class="core-section">
+            <!-- 天地盘区域 -->
+            <div class="core-panel">
+                <h3 class="core-panel-title">天地盘区域</h3>
+                <!-- 贵人盘包裹天盘（外圈） -->
+                <div class="guiren-outer-wrapper">
+                    <!-- 天盘在内（被贵人盘包裹） -->
+                    <div class="tiandi-inner-wrapper">
+                        <div class="tiandi-grid" id="tiandiGrid">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 四课区域 -->
+            <div class="core-panel">
+                <h3 class="core-panel-title">四课区域</h3>
+                
+                <!-- 月将和时辰信息 -->
+                <div class="yuejiang-shichen-info" id="yuejiangShichenInfo">
+                    月将：--  时辰：--
+                </div>
+                
+                <div class="sicols-grid">
+                    <!-- 第一课（最右，传统排法从右到左） -->
+                    <div class="sicol-item">
+                        <div class="sicol-guiren" id="sicol1Guiren">--</div>
+                        <div class="sicol-ganzhi">
+                            <div class="sicol-top" id="sicol1Top">--</div>
+                            <div class="sicol-bottom" id="sicol1Bottom">--</div>
+                        </div>
+                    </div>
+                    <!-- 第二课 -->
+                    <div class="sicol-item">
+                        <div class="sicol-guiren" id="sicol2Guiren">--</div>
+                        <div class="sicol-ganzhi">
+                            <div class="sicol-top" id="sicol2Top">--</div>
+                            <div class="sicol-bottom" id="sicol2Bottom">--</div>
+                        </div>
+                    </div>
+                    <!-- 第三课 -->
+                    <div class="sicol-item">
+                        <div class="sicol-guiren" id="sicol3Guiren">--</div>
+                        <div class="sicol-ganzhi">
+                            <div class="sicol-top" id="sicol3Top">--</div>
+                            <div class="sicol-bottom" id="sicol3Bottom">--</div>
+                        </div>
+                    </div>
+                    <!-- 第四课（最左） -->
+                    <div class="sicol-item">
+                        <div class="sicol-guiren" id="sicol4Guiren">--</div>
+                        <div class="sicol-ganzhi">
+                            <div class="sicol-top" id="sicol4Top">--</div>
+                            <div class="sicol-bottom" id="sicol4Bottom">--</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 三传区域 -->
+            <div class="core-panel">
+                <h3 class="core-panel-title">三传区域</h3>
+                <div class="sanchuan-list">
+                    <!-- 初传 -->
+                    <div class="sanchuan-item">
+                        <div class="sanchuan-label">初传</div>
+                        <div class="sanchuan-complete">
+                            <div class="sanchuan-liuqin" id="chuanchuLiuqin">--</div>
+                            <div class="sanchuan-rigan" id="chuanchuRigan">--</div>
+                            <div class="sanchuan-dizhi" id="chuanchuDizhi">--</div>
+                            <div class="sanchuan-guiren" id="chuanchuGuiren">--</div>
+                        </div>
+                    </div>
+                    <!-- 中传 -->
+                    <div class="sanchuan-item">
+                        <div class="sanchuan-label">中传</div>
+                        <div class="sanchuan-complete">
+                            <div class="sanchuan-liuqin" id="zhongchuanLiuqin">--</div>
+                            <div class="sanchuan-rigan" id="zhongchuanRigan">--</div>
+                            <div class="sanchuan-dizhi" id="zhongchuanDizhi">--</div>
+                            <div class="sanchuan-guiren" id="zhongchuanGuiren">--</div>
+                        </div>
+                    </div>
+                    <!-- 末传 -->
+                    <div class="sanchuan-item">
+                        <div class="sanchuan-label">末传</div>
+                        <div class="sanchuan-complete">
+                            <div class="sanchuan-liuqin" id="mochuanLiuqin">--</div>
+                            <div class="sanchuan-rigan" id="mochuanRigan">--</div>
+                            <div class="sanchuan-dizhi" id="mochuanDizhi">--</div>
+                            <div class="sanchuan-guiren" id="mochuanGuiren">--</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API基础URL - 大六壬API接口服务
+        const API_BASE_URL = 'http://localhost:5000/api'; // 这里需要根据实际的大六壬API接口地址进行修改
+
+        // 初始化事件监听
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('btnSubmit').addEventListener('click', submitForm);
+        });
+
+        // 提交表单
+        async function submitForm() {
+            try {
+                // 显示加载状态
+                showLoading(true);
+                // 隐藏错误信息
+                document.getElementById('errorMessage').style.display = 'none';
+
+                // 获取表单数据
+                const tianGan = document.getElementById('tianGanSelect').value;
+                const diZhi = document.getElementById('diZhiSelect').value;
+                const yueJiang = document.getElementById('yueJiangSelect').value;
+                const shiZhi = document.getElementById('shiZhiSelect').value;
+
+                console.log('提交参数:', { tianGan, diZhi, yueJiang, shiZhi });
+
+                // 验证输入参数
+                if (!tianGan || !diZhi || !yueJiang || !shiZhi) {
+                    throw new Error('请选择完整的参数');
+                }
+
+                // 调用大六壬API - 使用宗门九课起课
+                const response = await fetch(`${API_BASE_URL}/qike`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ri_gan: tianGan,
+                        ri_zhi: diZhi,
+                        yue_jiang: yueJiang,
+                        shi_chen: shiZhi
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP错误! 状态码: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('API响应结果:', result);
+
+                // 验证响应数据格式
+                if (!result || typeof result !== 'object') {
+                    throw new Error('API返回数据格式异常');
+                }
+
+                if (result.success) {
+                    // 验证数据结构
+                    if (!result.si_ke || !result.sanchuan) {
+                        throw new Error('API返回数据结构异常');
+                    }
+                    // 构建符合显示函数要求的数据结构
+                    const displayData = {
+                        yueJiang: result.yue_jiang,
+                        shiChen: result.shi_chen,
+                        tianPan: result.tiandi_pan,
+                        siKe: {
+                            ke1: {
+                                top: result.si_ke[0] ? result.si_ke[0].top : '--',
+                                bottom: result.si_ke[0] ? result.si_ke[0].bottom : '--',
+                                guiren: result.si_ke[0] ? result.si_ke[0].tianJiang : '--'
+                            },
+                            ke2: {
+                                top: result.si_ke[1] ? result.si_ke[1].top : '--',
+                                bottom: result.si_ke[1] ? result.si_ke[1].bottom : '--',
+                                guiren: result.si_ke[1] ? result.si_ke[1].tianJiang : '--'
+                            },
+                            ke3: {
+                                top: result.si_ke[2] ? result.si_ke[2].top : '--',
+                                bottom: result.si_ke[2] ? result.si_ke[2].bottom : '--',
+                                guiren: result.si_ke[2] ? result.si_ke[2].tianJiang : '--'
+                            },
+                            ke4: {
+                                top: result.si_ke[3] ? result.si_ke[3].top : '--',
+                                bottom: result.si_ke[3] ? result.si_ke[3].bottom : '--',
+                                guiren: result.si_ke[3] ? result.si_ke[3].tianJiang : '--'
+                            }
+                        },
+                        sanChuan: {
+                            chuChuan: {
+                                tiangan: '--',
+                                dizhi: result.sanchuan.chuChuan || '--',
+                                liuqin: result.sanchuan.liuqin ? result.sanchuan.liuqin[0] : '--',
+                                guiren: result.sanchuan.tianJiang ? result.sanchuan.tianJiang[0] : '--'
+                            },
+                            zhongChuan: {
+                                tiangan: '--',
+                                dizhi: result.sanchuan.zhongChuan || '--',
+                                liuqin: result.sanchuan.liuqin ? result.sanchuan.liuqin[1] : '--',
+                                guiren: result.sanchuan.tianJiang ? result.sanchuan.tianJiang[1] : '--'
+                            },
+                            moChuan: {
+                                tiangan: '--',
+                                dizhi: result.sanchuan.moChuan || '--',
+                                liuqin: result.sanchuan.liuqin ? result.sanchuan.liuqin[2] : '--',
+                                guiren: result.sanchuan.tianJiang ? result.sanchuan.tianJiang[2] : '--'
+                            }
+                        }
+                    };
+                    // 更新六壬区域显示
+                    updateLiuRenDisplay(displayData);
+                } else {
+                    throw new Error(result.error || 'API返回错误');
+                }
+            } catch (error) {
+                console.error('提交失败:', error);
+                showError(`错误：${error.message}`);
+            } finally {
+                // 隐藏加载状态
+                showLoading(false);
+            }
+        }
+
+        // 显示错误信息
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+
+        // 显示加载状态
+        function showLoading(loading) {
+            const btnSubmit = document.getElementById('btnSubmit');
+            if (loading) {
+                btnSubmit.disabled = true;
+                btnSubmit.textContent = '计算中...';
+            } else {
+                btnSubmit.disabled = false;
+                btnSubmit.textContent = '确定';
+            }
+        }
+
+        // 更新六壬区域显示
+        function updateLiuRenDisplay(data) {
+            try {
+                // 验证数据完整性
+                if (!data) {
+                    throw new Error('数据为空');
+                }
+
+                // 更新月将时辰信息
+                document.getElementById('yuejiangShichenInfo').textContent = 
+                    `月将：${data.yueJiang || '--'}  时辰：${data.shiChen || '--'}`;
+
+                // 更新天地盘
+                updateTianDiPan(data.tianPan);
+
+                // 更新四课
+                updateSiKe(data.siKe);
+
+                // 更新三传
+                updateSanChuan(data.sanChuan);
+            } catch (error) {
+                console.error('更新显示失败:', error);
+                showError(`显示错误：${error.message}`);
+            }
+        }
+
+        // 更新天地盘显示
+        function updateTianDiPan(tianPan) {
+            try {
+                const tiandiGrid = document.getElementById('tiandiGrid');
+                tiandiGrid.innerHTML = '';
+
+                // 传统大六壬地盘方位：上南下北，左东右西
+                // 正确布局：
+                // 第一行：巳午未申（南方火位）
+                // 第二行：辰· ·酉
+                // 第三行：卯· ·戌
+                // 第四行：寅丑子亥（北方水位）
+                const diPanOrder = [
+                    ['巳', '午', '未', '申'],
+                    ['辰', '', '', '酉'],
+                    ['卯', '', '', '戌'],
+                    ['寅', '丑', '子', '亥']
+                ];
+
+                for (let row = 0; row < 4; row++) {
+                    for (let col = 0; col < 4; col++) {
+                        const diZhi = diPanOrder[row][col];
+                        if (!diZhi) {
+                            // 占位单元格
+                            const cell = document.createElement('div');
+                            cell.className = 'tiandi-cell placeholder';
+                            tiandiGrid.appendChild(cell);
+                        } else {
+                            const cell = document.createElement('div');
+                            cell.className = 'tiandi-cell';
+                            
+                            const tianZhi = tianPan && typeof tianPan === 'object' ? (tianPan[diZhi] || '--') : '--';
+                            cell.innerHTML = `
+                                <div class="shensha">${diZhi}</div>
+                                <div>${tianZhi}</div>
+                            `;
+                            tiandiGrid.appendChild(cell);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('更新天地盘失败:', error);
+                showError(`天地盘显示错误：${error.message}`);
+            }
+        }
+
+        // 更新四课显示
+        function updateSiKe(siKe) {
+            try {
+                // 验证四课数据
+                if (!siKe || typeof siKe !== 'object') {
+                    throw new Error('四课数据格式异常');
+                }
+
+                // 由于使用了direction: rtl，四课显示顺序是从右到左
+                // 第一课在最右，第四课在最左
+                // 更新第一课（最右）
+                document.getElementById('sicol1Top').textContent = siKe.ke1 && siKe.ke1.top ? siKe.ke1.top : '--';
+                document.getElementById('sicol1Bottom').textContent = siKe.ke1 && siKe.ke1.bottom ? siKe.ke1.bottom : '--';
+                document.getElementById('sicol1Guiren').textContent = siKe.ke1 && siKe.ke1.guiren ? siKe.ke1.guiren : '--';
+
+                // 更新第二课
+                document.getElementById('sicol2Top').textContent = siKe.ke2 && siKe.ke2.top ? siKe.ke2.top : '--';
+                document.getElementById('sicol2Bottom').textContent = siKe.ke2 && siKe.ke2.bottom ? siKe.ke2.bottom : '--';
+                document.getElementById('sicol2Guiren').textContent = siKe.ke2 && siKe.ke2.guiren ? siKe.ke2.guiren : '--';
+
+                // 更新第三课
+                document.getElementById('sicol3Top').textContent = siKe.ke3 && siKe.ke3.top ? siKe.ke3.top : '--';
+                document.getElementById('sicol3Bottom').textContent = siKe.ke3 && siKe.ke3.bottom ? siKe.ke3.bottom : '--';
+                document.getElementById('sicol3Guiren').textContent = siKe.ke3 && siKe.ke3.guiren ? siKe.ke3.guiren : '--';
+
+                // 更新第四课（最左）
+                document.getElementById('sicol4Top').textContent = siKe.ke4 && siKe.ke4.top ? siKe.ke4.top : '--';
+                document.getElementById('sicol4Bottom').textContent = siKe.ke4 && siKe.ke4.bottom ? siKe.ke4.bottom : '--';
+                document.getElementById('sicol4Guiren').textContent = siKe.ke4 && siKe.ke4.guiren ? siKe.ke4.guiren : '--';
+            } catch (error) {
+                console.error('更新四课失败:', error);
+                showError(`四课显示错误：${error.message}`);
+            }
+        }
+
+        // 更新三传显示
+        function updateSanChuan(sanChuan) {
+            try {
+                // 验证三传数据
+                if (!sanChuan || typeof sanChuan !== 'object') {
+                    throw new Error('三传数据格式异常');
+                }
+
+                // 更新初传
+                document.getElementById('chuanchuLiuqin').textContent = sanChuan.chuChuan && sanChuan.chuChuan.liuqin ? sanChuan.chuChuan.liuqin : '--';
+                document.getElementById('chuanchuRigan').textContent = sanChuan.chuChuan && sanChuan.chuChuan.tiangan ? sanChuan.chuChuan.tiangan : '--';
+                document.getElementById('chuanchuDizhi').textContent = sanChuan.chuChuan && sanChuan.chuChuan.dizhi ? sanChuan.chuChuan.dizhi : '--';
+                document.getElementById('chuanchuGuiren').textContent = sanChuan.chuChuan && sanChuan.chuChuan.guiren ? sanChuan.chuChuan.guiren : '--';
+
+                // 更新中传
+                document.getElementById('zhongchuanLiuqin').textContent = sanChuan.zhongChuan && sanChuan.zhongChuan.liuqin ? sanChuan.zhongChuan.liuqin : '--';
+                document.getElementById('zhongchuanRigan').textContent = sanChuan.zhongChuan && sanChuan.zhongChuan.tiangan ? sanChuan.zhongChuan.tiangan : '--';
+                document.getElementById('zhongchuanDizhi').textContent = sanChuan.zhongChuan && sanChuan.zhongChuan.dizhi ? sanChuan.zhongChuan.dizhi : '--';
+                document.getElementById('zhongchuanGuiren').textContent = sanChuan.zhongChuan && sanChuan.zhongChuan.guiren ? sanChuan.zhongChuan.guiren : '--';
+
+                // 更新末传
+                document.getElementById('mochuanLiuqin').textContent = sanChuan.moChuan && sanChuan.moChuan.liuqin ? sanChuan.moChuan.liuqin : '--';
+                document.getElementById('mochuanRigan').textContent = sanChuan.moChuan && sanChuan.moChuan.tiangan ? sanChuan.moChuan.tiangan : '--';
+                document.getElementById('mochuanDizhi').textContent = sanChuan.moChuan && sanChuan.moChuan.dizhi ? sanChuan.moChuan.dizhi : '--';
+                document.getElementById('mochuanGuiren').textContent = sanChuan.moChuan && sanChuan.moChuan.guiren ? sanChuan.moChuan.guiren : '--';
+            } catch (error) {
+                console.error('更新三传失败:', error);
+                showError(`三传显示错误：${error.message}`);
+            }
+        }
+    </script>
+</body>
+</html>

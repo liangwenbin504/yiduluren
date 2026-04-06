@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>六壬模块测试</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .button:hover {
+            background: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>六壬模块测试</h1>
+    
+    <div class="test-section">
+        <h2>测试1: 大六壬排盘</h2>
+        <button class="button" onclick="testDaliurenPaiPan()">测试排盘</button>
+        <div id="test1Result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>测试2: 天地盘API</h2>
+        <button class="button" onclick="testTiandiPanAPI()">测试天地盘API</button>
+        <div id="test2Result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>测试3: 四课API</h2>
+        <button class="button" onclick="testSiKeAPI()">测试四课API</button>
+        <div id="test3Result" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>测试4: 三传API</h2>
+        <button class="button" onclick="testSanChuanAPI()">测试三传API</button>
+        <div id="test4Result" class="result"></div>
+    </div>
+
+    <script>
+        // API 基础配置
+        const API_BASE_URL = 'http://localhost:5000/api';
+        
+        function logResult(id, message, isError = false) {
+            const element = document.getElementById(id);
+            if (isError) {
+                element.innerHTML = `<div class="error">${message}</div>`;
+            } else {
+                element.innerHTML = `<pre>${JSON.stringify(message, null, 2)}</pre>`;
+            }
+        }
+        
+        // 测试1: 大六壬排盘
+        async function testDaliurenPaiPan() {
+            try {
+                logResult('test1Result', '正在测试大六壬排盘...');
+                
+                // 模拟前端调用大六壬排盘
+                const year = 2026;
+                const month = 3;
+                const day = 28;
+                const hour = 19;
+                
+                // 计算日干支（简化版）
+                const dayGan = '乙';
+                const dayZhi = '未';
+                
+                // 调用排盘函数
+                if (typeof daliurenPaiPan === 'function') {
+                    const result = await daliurenPaiPan(year, month, day, hour, dayGan, dayZhi);
+                    logResult('test1Result', {
+                        success: true,
+                        message: '大六壬排盘成功',
+                        result: result
+                    });
+                } else {
+                    logResult('test1Result', 'daliurenPaiPan 函数未定义', true);
+                }
+            } catch (error) {
+                logResult('test1Result', `测试失败: ${error.message}`, true);
+            }
+        }
+        
+        // 测试2: 天地盘API
+        async function testTiandiPanAPI() {
+            try {
+                logResult('test2Result', '正在测试天地盘API...');
+                
+                const response = await fetch(`${API_BASE_URL}/daliuren/tiandi_pan?yuejiang=亥&shichen=寅`);
+                const data = await response.json();
+                
+                logResult('test2Result', {
+                    success: true,
+                    message: '天地盘API测试成功',
+                    data: data
+                });
+            } catch (error) {
+                logResult('test2Result', `测试失败: ${error.message}`, true);
+            }
+        }
+        
+        // 测试3: 四课API
+        async function testSiKeAPI() {
+            try {
+                logResult('test3Result', '正在测试四课API...');
+                
+                const response = await fetch(`${API_BASE_URL}/daliuren/si_ke`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ri_gan: '乙',
+                        ri_zhi: '未',
+                        yuejiang: '亥',
+                        shichen: '寅'
+                    })
+                });
+                const data = await response.json();
+                
+                logResult('test3Result', {
+                    success: true,
+                    message: '四课API测试成功',
+                    data: data
+                });
+            } catch (error) {
+                logResult('test3Result', `测试失败: ${error.message}`, true);
+            }
+        }
+        
+        // 测试4: 三传API
+        async function testSanChuanAPI() {
+            try {
+                logResult('test4Result', '正在测试三传API...');
+                
+                const response = await fetch(`${API_BASE_URL}/daliuren/san_chuan`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ri_gan: '乙',
+                        ri_zhi: '未',
+                        yue_jiang: '亥',
+                        shi_chen: '寅'
+                    })
+                });
+                const data = await response.json();
+                
+                logResult('test4Result', {
+                    success: true,
+                    message: '三传API测试成功',
+                    data: data
+                });
+            } catch (error) {
+                logResult('test4Result', `测试失败: ${error.message}`, true);
+            }
+        }
+    </script>
+</body>
+</html>

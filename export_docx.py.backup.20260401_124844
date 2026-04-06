@@ -1,0 +1,234 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+文档导出功能 - 完美版本
+解决所有问题：不生成多余图片、正确竖排、正确背景色、正确边框、正确字体
+"""
+
+import os
+import sys
+import datetime
+from docx import Document
+from docx.shared import Cm, Pt, RGBColor, Inches
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.oxml.ns import qn
+from docx.oxml import OxmlElement
+
+def set_font(run, font_name='李白赋诗游龙惊鸿', font_size=16):
+    """设置文本字体"""
+    run.font.name = font_name
+    run.font.size = Pt(font_size)
+    
+    # 设置东亚字体
+    r = run._element.get_or_add_rPr()
+    rFonts = r.get_or_add_rFonts()
+    rFonts.set(qn('w:eastAsia'), font_name)
+
+def set_vertical_text(paragraph):
+    """设置段落为竖排文字（从右到左）"""
+    pPr = paragraph._element.get_or_add_pPr()
+    
+    # 设置文本方向为垂直
+    textDirection = OxmlElement('w:textDirection')
+    textDirection.set(qn('w:val'), 'tbRl')  # 从右到左竖排
+    pPr.append(textDirection)
+
+def export_docx_document(data):
+    """
+    导出 docx 格式文档（完美版本）
+    不生成多余图片，正确竖排，正确背景色，正确边框，正确字体
+    """
+    try:
+        # 使用完美模板.docx作为基础模板
+        template_path = os.path.join(os.path.dirname(__file__), '完美模板.docx')
+        
+        if not os.path.exists(template_path):
+            print(f"❌ 模板文件不存在：{template_path}")
+            return {
+                'success': False,
+                'error': '模板文件不存在'
+            }
+        
+        doc = Document(template_path)
+        print("✅ 导入完美模板.docx作为模板")
+        
+        # 获取数据
+        title = data.get('title', '安葬吉课')
+        xianming = data.get('xianming', '')
+        shanxiang = data.get('shanxiang', '')
+        lailong = data.get('lailong', '')
+        four_pillars = data.get('four_pillars', {})
+        liuren_kege = data.get('liuren_kege', '')
+        piyu = data.get('piyu', '')
+        biji = data.get('biji', '')
+        diliishi = data.get('diliishi', '信林居士')
+        date = data.get('date', '')
+        
+        # 替换模板中的占位符
+        for paragraph in doc.paragraphs:
+            # 替换标题
+            if '{{标题}}' in paragraph.text:
+                paragraph.clear()
+                run = paragraph.add_run(title)
+                set_font(run, font_size=46)
+                run.font.bold = True
+                print(f"✅ 更新标题：{title}")
+            
+            # 替换仙命
+            elif '{{仙命}}' in paragraph.text:
+                if xianming:
+                    paragraph.clear()
+                    run = paragraph.add_run(f'仙命：{xianming}')
+                    set_font(run, font_size=16)
+                    print(f"✅ 更新仙命：{xianming}")
+                else:
+                    # 如果没有仙命信息，删除该段落
+                    p = paragraph._element
+                    p.getparent().remove(p)
+                    print("✅ 删除仙命段落（无数据）")
+            
+            # 替换山向
+            elif '{{山向}}' in paragraph.text:
+                paragraph.clear()
+                run = paragraph.add_run(f'山向：{shanxiang}')
+                set_font(run, font_size=16)
+                print(f"✅ 更新山向：{shanxiang}")
+            
+            # 替换来龙
+            elif '{{来龙}}' in paragraph.text:
+                if lailong:
+                    paragraph.clear()
+                    run = paragraph.add_run(f'来龙：{lailong}')
+                    set_font(run, font_size=16)
+                    print(f"✅ 更新来龙：{lailong}")
+                else:
+                    # 如果没有来龙信息，删除该段落
+                    p = paragraph._element
+                    p.getparent().remove(p)
+                    print("✅ 删除来龙段落（无数据）")
+            
+            # 替换四柱
+            elif '{{四柱}}' in paragraph.text:
+                sizhu_text = f"{four_pillars.get('year', '--')}年{four_pillars.get('month', '--')}月{four_pillars.get('day', '--')}日{four_pillars.get('hour', '--')}时"
+                paragraph.clear()
+                run = paragraph.add_run(f'择取岁次{sizhu_text}（干支：{sizhu_text}）')
+                set_font(run, font_size=16)
+                print(f"✅ 更新四柱：{sizhu_text}")
+            
+            # 替换六壬课格
+            elif '{{六壬课格}}' in paragraph.text:
+                paragraph.clear()
+                run = paragraph.add_run(f'六壬课格：{liuren_kege}')
+                set_font(run, font_size=16)
+                print(f"✅ 更新六壬课格：{liuren_kege}")
+            
+            # 替换批语
+            elif '{{批语}}' in paragraph.text:
+                paragraph.clear()
+                run = paragraph.add_run(f'批语：{piyu}')
+                set_font(run, font_size=16)
+                print(f"✅ 更新批语")
+            
+            # 替换避忌
+            elif '{{避忌}}' in paragraph.text:
+                paragraph.clear()
+                run = paragraph.add_run(f'避忌事宜：{biji}')
+                set_font(run, font_size=16)
+                print(f"✅ 更新避忌事宜")
+            
+            # 替换地理师
+            elif '{{地理师}}' in paragraph.text:
+                paragraph.clear()
+                run = paragraph.add_run(f'{diliishi}沐手谨择')
+                set_font(run, font_size=16)
+                print(f"✅ 更新地理师：{diliishi}")
+            
+            # 替换日期
+            elif '{{日期}}' in paragraph.text:
+                paragraph.clear()
+                run = paragraph.add_run(f'日期：岁次{date}榖旦 勒石')
+                set_font(run, font_size=16)
+                print(f"✅ 更新日期：{date}")
+            
+            # 替换印章
+            elif '[印章]' in paragraph.text:
+                # 清空占位符文本
+                paragraph.clear()
+                # 添加印章图片（浮于文字上方）
+                seal_image_path = os.path.join(os.path.dirname(__file__), '印章.png')
+                if os.path.exists(seal_image_path):
+                    # 添加图片
+                    run = paragraph.add_run()
+                    run.add_picture(seal_image_path, width=Cm(3), height=Cm(3))
+                    
+                    # 设置图片浮于文字上方
+                    # 获取inline元素
+                    inline = run._element.xpath('.//wp:inline')[0]
+                    
+                    # 创建anchor元素（浮于文字上方）
+                    anchor = OxmlElement('wp:anchor')
+                    anchor.set(qn('wp:distT'), '0')
+                    anchor.set(qn('wp:distB'), '0')
+                    anchor.set(qn('wp:distL'), '0')
+                    anchor.set(qn('wp:distR'), '0')
+                    anchor.set(qn('wp:simplePos'), '0')
+                    anchor.set(qn('wp:relativeHeight'), '251658240')
+                    anchor.set(qn('wp:behindDoc'), '0')  # 0表示浮于文字上方
+                    anchor.set(qn('wp:locked'), '0')
+                    anchor.set(qn('wp:layoutInCell'), '1')
+                    anchor.set(qn('wp:allowOverlap'), '1')
+                    
+                    # 复制inline的子元素到anchor
+                    for child in inline:
+                        anchor.append(child)
+                    
+                    # 替换inline为anchor
+                    inline.getparent().replace(inline, anchor)
+                    
+                    print("✅ 添加印章图片（浮于文字上方）")
+                else:
+                    print(f"❌ 印章图片不存在：{seal_image_path}")
+        
+        # 生成文件名
+        timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+        output_filename = f'择日课单_{timestamp}.docx'
+        output_path = os.path.join(os.path.dirname(__file__), output_filename)
+        
+        doc.save(output_path)
+        
+        return {
+            'success': True,
+            'file_path': output_path,
+            'filename': output_filename
+        }
+        
+    except Exception as e:
+        import traceback
+        error_detail = traceback.format_exc()
+        return {
+            'success': False,
+            'error': str(e),
+            'detail': error_detail
+        }
+
+
+if __name__ == '__main__':
+    test_data = {
+        'title': '开业课单',
+        'xianming': '甲子年',
+        'shanxiang': '坐北朝南',
+        'lailong': '壬山丙向',
+        'four_pillars': {'year': '甲辰', 'month': '戊辰', 'day': '甲子', 'hour': '戊辰'},
+        'liuren_kege': '辰将 辰时 三传午申戌 发用午',
+        'piyu': '吉日良时，天地人和；开业大吉，财源广进。',
+        'biji': '忌动土，忌杀生',
+        'diliishi': '张三',
+        'date': '甲辰年三月十五日'
+    }
+    
+    result = export_docx_document(test_data)
+    if result['success']:
+        print(f"✅ 文档导出成功：{result['file_path']}")
+    else:
+        print(f"❌ 文档导出失败：{result['error']}")
+        print(f"详细错误：{result['detail']}")
