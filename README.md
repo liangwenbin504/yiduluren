@@ -82,7 +82,7 @@
 
 1. **克隆项目**
 ```bash
-git clone https://github.com/your-username/yiduluren.git
+git clone https://github.com/liangwenbin504/yiduluren.git
 cd yiduluren
 ```
 
@@ -204,7 +204,7 @@ yiduluren/
 ## 📞 联系方式
 
 如有问题或建议，欢迎：
-- 提交 [Issue](https://github.com/your-username/yiduluren/issues)
+- 提交 [Issue](https://github.com/liangwenbin504/yiduluren/issues)
 - 发送邮件至项目维护者
 
 ---

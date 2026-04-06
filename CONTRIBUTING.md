@@ -8,7 +8,7 @@
 
 如果您发现了 bug 或有功能建议：
 
-1. 在 [Issues](https://github.com/your-username/yiduluren/issues) 页面搜索是否已有相关问题
+1. 在 [Issues](https://github.com/liangwenbin504/yiduluren/issues) 页面搜索是否已有相关问题
 2. 如果没有，创建新的 Issue，详细描述：
    - 问题的详细描述
    - 复现步骤
@@ -20,7 +20,7 @@
 
 1. **Fork 项目**
    ```bash
-   git clone https://github.com/your-username/yiduluren.git
+   git clone https://github.com/liangwenbin504/yiduluren.git
    ```
 
 2. **创建分支**
