@@ -91,12 +91,75 @@ logs/
 *.tmp
 *.temp
 *.bak
+*.backup
+
+# Test and debug files
+test_*.py
+check_*.py
+debug_*.py
+diagnose_*.py
+fix_*.py
+simple_*.py
+quick_*.py
+compare_*.py
+generate_*.py
+analyze_*.py
+convert_*.py
+extract_*.py
+find_*.py
+merge_*.py
+progress_*.py
+remove_*.py
+set_*.py
+task_*.py
+template_*.py
+time_*.py
+update_*.py
+verify_*.py
+validate_*.py
+
+# Test HTML files
+test_*.html
+
+# Temporary DOCX/PPTX/PDF
+*.docx
+!templates/*.docx
+!完美模板.docx
+!模板*.docx
+*.pptx
+!templates/*.pptx
+*.pdf
+!1《仪度六壬选日要诀》注解1.pdf
+!2《仪度六壬选日要诀》注解2.pdf
+!template_form.pdf
+
+# Temporary images
+t*.jpg
+t*.png
+!seal.png
+!sizhu_custom.png
+
+# Temporary data
+data_backup/
+
+# Script and batch files
+*.bat
+*.ps1
+*.sh
+!start.bat
+!start_api_server.bat
+!start_app.bat
+!start_date_selector.bat
+!start_enhanced_gui.bat
+!start_openclaw.bat
+!start_qike_gui.bat
+!start_server.bat
+!docker-deploy.bat
+!install-docker.bat
+!run_auto_test.bat
 
 # Output files
 batch_output/
-*.docx
-!模板*.docx
-!完美模板.docx
 
 # Extracted images
 extracted_images/
@@ -118,3 +181,10 @@ __pycache__/
 # Local configuration
 local_config.json
 secrets.json
+openclaw_config.json
+
+# Trae IDE
+.trae/
+
+# Archive directory (for old files)
+archive/
