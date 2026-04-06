@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大六壬宗门九课测试页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "SimSun", sans-serif;
+            background: linear-gradient(180deg, #e0f7fa 0%, #b2ebf2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            background: linear-gradient(180deg, #4dd0e1 0%, #26c6da 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #000;
+            font-size: 36px;
+            font-weight: 900;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);
+            font-family: "HanyiGuli", "STLiti", "LiSu", "隶书", "Kaiti", "Microsoft YaHei", sans-serif;
+            letter-spacing: 2px;
+        }
+
+        .input-section {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .input-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .input-group label {
+            color: #e65100;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .select-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 120px;
+        }
+
+        .custom-select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid #ffb74d;
+            border-radius: 5px;
+            font-size: 16px;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .custom-select:focus {
+            outline: none;
+            border-color: #ff9800;
+            box-shadow: 0 0 10px rgba(255, 152, 0, 0.3);
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-start {
+            background: linear-gradient(180deg, #2196f3 0%, #1e88e5 100%);
+            color: white;
+        }
+
+        .btn-start:hover {
+            background: linear-gradient(180deg, #42a5f5 0%, #42a5f5 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border-left: 4px solid #c62828;
+        }
+
+        .result-section {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .result-title {
+            color: #e65100;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .result-content {
+            background: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>大六壬宗门九课测试页面</h1>
+        </div>
+
+        <!-- 输入区域 -->
+        <div class="input-section">
+            <div class="input-row">
+                <div class="input-group">
+                    <label>天干：</label>
+                    <div class="select-wrapper">
+                        <select class="custom-select" id="tianGanSelect">
+                            <option value="甲">甲</option>
+                            <option value="乙">乙</option>
+                            <option value="丙">丙</option>
+                            <option value="丁">丁</option>
+                            <option value="戊">戊</option>
+                            <option value="己">己</option>
+                            <option value="庚">庚</option>
+                            <option value="辛">辛</option>
+                            <option value="壬">壬</option>
+                            <option value="癸">癸</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>地支：</label>
+                    <div class="select-wrapper">
+                        <select class="custom-select" id="diZhiSelect">
+                            <option value="子">子</option>
+                            <option value="丑">丑</option>
+                            <option value="寅">寅</option>
+                            <option value="卯">卯</option>
+                            <option value="辰">辰</option>
+                            <option value="巳">巳</option>
+                            <option value="午">午</option>
+                            <option value="未">未</option>
+                            <option value="申">申</option>
+                            <option value="酉">酉</option>
+                            <option value="戌">戌</option>
+                            <option value="亥">亥</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>月将：</label>
+                    <div class="select-wrapper">
+                        <select class="custom-select" id="yueJiangSelect">
+                            <option value="子">子</option>
+                            <option value="丑">丑</option>
+                            <option value="寅">寅</option>
+                            <option value="卯">卯</option>
+                            <option value="辰">辰</option>
+                            <option value="巳">巳</option>
+                            <option value="午">午</option>
+                            <option value="未">未</option>
+                            <option value="申">申</option>
+                            <option value="酉">酉</option>
+                            <option value="戌">戌</option>
+                            <option value="亥">亥</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>时地支：</label>
+                    <div class="select-wrapper">
+                        <select class="custom-select" id="shiZhiSelect">
+                            <option value="子">子</option>
+                            <option value="丑">丑</option>
+                            <option value="寅">寅</option>
+                            <option value="卯">卯</option>
+                            <option value="辰">辰</option>
+                            <option value="巳">巳</option>
+                            <option value="午">午</option>
+                            <option value="未">未</option>
+                            <option value="申">申</option>
+                            <option value="酉">酉</option>
+                            <option value="戌">戌</option>
+                            <option value="亥">亥</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-start" id="btnSubmit">确定</button>
+            </div>
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+        </div>
+
+        <!-- 结果区域 -->
+        <div class="result-section">
+            <h3 class="result-title">API响应结果</h3>
+            <div id="resultContent" class="result-content">请点击确定按钮获取数据</div>
+        </div>
+    </div>
+
+    <script>
+        // API基础URL - 大六壬API接口服务
+        const API_BASE_URL = 'http://localhost:5000/api';
+
+        // 初始化事件监听
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('btnSubmit').addEventListener('click', submitForm);
+        });
+
+        // 提交表单
+        async function submitForm() {
+            try {
+                // 显示加载状态
+                const btnSubmit = document.getElementById('btnSubmit');
+                btnSubmit.disabled = true;
+                btnSubmit.textContent = '计算中...';
+                
+                // 隐藏错误信息
+                document.getElementById('errorMessage').style.display = 'none';
+
+                // 获取表单数据
+                const tianGan = document.getElementById('tianGanSelect').value;
+                const diZhi = document.getElementById('diZhiSelect').value;
+                const yueJiang = document.getElementById('yueJiangSelect').value;
+                const shiZhi = document.getElementById('shiZhiSelect').value;
+
+                console.log('提交参数:', { tianGan, diZhi, yueJiang, shiZhi });
+
+                // 验证输入参数
+                if (!tianGan || !diZhi || !yueJiang || !shiZhi) {
+                    throw new Error('请选择完整的参数');
+                }
+
+                // 调用大六壬API - 使用宗门九课起课
+                const response = await fetch(`${API_BASE_URL}/qike`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ri_gan: tianGan,
+                        ri_zhi: diZhi,
+                        yue_jiang: yueJiang,
+                        shi_chen: shiZhi
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP错误! 状态码: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('API响应结果:', result);
+
+                // 显示结果
+                document.getElementById('resultContent').textContent = JSON.stringify(result, null, 2);
+
+                if (!result.success) {
+                    throw new Error(result.error || 'API返回错误');
+                }
+            } catch (error) {
+                console.error('提交失败:', error);
+                const errorElement = document.getElementById('errorMessage');
+                errorElement.textContent = `错误：${error.message}`;
+                errorElement.style.display = 'block';
+            } finally {
+                // 隐藏加载状态
+                const btnSubmit = document.getElementById('btnSubmit');
+                btnSubmit.disabled = false;
+                btnSubmit.textContent = '确定';
+            }
+        }
+    </script>
+</body>
+</html>

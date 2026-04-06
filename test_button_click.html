@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>按钮点击测试</title>
+</head>
+<body>
+    <button class="btn btn-start" id="btnSubmit">确定</button>
+    <div id="output"></div>
+
+    <script>
+        console.log('页面加载完成');
+        
+        // 初始化事件监听
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM加载完成');
+            const button = document.getElementById('btnSubmit');
+            console.log('找到按钮元素:', button);
+            
+            if (button) {
+                button.addEventListener('click', function() {
+                    console.log('按钮被点击了！');
+                    document.getElementById('output').textContent = '按钮被点击了！';
+                });
+                console.log('事件监听器已添加');
+            } else {
+                console.error('未找到按钮元素');
+            }
+        });
+    </script>
+</body>
+</html>

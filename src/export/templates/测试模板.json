@@ -1,0 +1,75 @@
+{
+  "font": {
+    "name": "宋体",
+    "size": 14,
+    "color": [
+      0,
+      0,
+      0
+    ],
+    "bold": false,
+    "italic": false
+  },
+  "heading": {
+    "h1": {
+      "font": "黑体",
+      "size": 24,
+      "color": [
+        255,
+        0,
+        0
+      ],
+      "bold": true
+    },
+    "h2": {
+      "font": "微软雅黑",
+      "size": 16,
+      "color": [
+        139,
+        0,
+        0
+      ],
+      "bold": true
+    }
+  },
+  "paragraph": {
+    "alignment": "left",
+    "space_before": 0,
+    "space_after": 10,
+    "line_spacing": 1.5
+  },
+  "image": {
+    "width": 5.0,
+    "alignment": "center",
+    "wrap_style": "inline"
+  },
+  "header": {
+    "text": "仪度六壬择日系统",
+    "font": "微软雅黑",
+    "size": 10,
+    "color": [
+      0,
+      0,
+      0
+    ],
+    "alignment": "center"
+  },
+  "footer": {
+    "text": "第 {page} 页，共 {pages} 页",
+    "font": "微软雅黑",
+    "size": 9,
+    "color": [
+      102,
+      102,
+      102
+    ],
+    "alignment": "center"
+  },
+  "page": {
+    "orientation": "portrait",
+    "margin_top": 1.0,
+    "margin_bottom": 1.0,
+    "margin_left": 1.0,
+    "margin_right": 1.0
+  }
+}

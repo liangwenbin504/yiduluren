@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宗门九课起课法 - HTML 演示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: '微软雅黑', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .result-section {
+            margin-top: 30px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .result-section.show {
+            display: block;
+        }
+        
+        .result-title {
+            font-size: 24px;
+            color: #667eea;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1.5fr 5fr 4fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .result-card {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-width: 0;
+        }
+        
+        .result-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 15px;
+            white-space: nowrap;
+        }
+        
+        .result-item {
+            margin-bottom: 6px;
+            padding: 6px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+        
+        .result-item strong {
+            color: #667eea;
+        }
+        
+        /* 三传占更大宽度 */
+        .result-card:nth-child(4) {
+            grid-column: span 1;
+        }
+        
+        .sike-list, .sanchuan-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .sike-list li, .sanchuan-list li {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 10px;
+            margin-bottom: 4px;
+            border-radius: 5px;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #667eea;
+            display: none;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .error.show {
+            display: block;
+        }
+        
+        .api-info {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        
+        .api-info h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .api-info code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #c7254e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔮 宗门九课起课法</h1>
+            <p>大六壬九宗门起课法演示系统</p>
+        </div>
+        
+        <div class="content">
+            <div class="form-section">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ri_gan">日干</label>
+                        <select id="ri_gan">
+                            <option value="甲">甲</option>
+                            <option value="乙">乙</option>
+                            <option value="丙">丙</option>
+                            <option value="丁">丁</option>
+                            <option value="戊">戊</option>
+                            <option value="己">己</option>
+                            <option value="庚">庚</option>
+                            <option value="辛">辛</option>
+                            <option value="壬">壬</option>
+                            <option value="癸">癸</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ri_zhi">日支</label>
+                        <select id="ri_zhi">
+                            <option value="子">子</option>
+                            <option value="丑">丑</option>
+                            <option value="寅">寅</option>
+                            <option value="卯">卯</option>
+                            <option value="辰">辰</option>
+                            <option value="巳">巳</option>
+                            <option value="午">午</option>
+                            <option value="未">未</option>
+                            <option value="申">申</option>
+                            <option value="酉">酉</option>
+                            <option value="戌">戌</option>
+                            <option value="亥">亥</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="yue_jiang">月将</label>
+                        <select id="yue_jiang">
+                            <option value="子">子</option>
+                            <option value="丑">丑</option>
+                            <option value="寅">寅</option>
+                            <option value="卯">卯</option>
+                            <option value="辰">辰</option>
+                            <option value="巳">巳</option>
+                            <option value="午">午</option>
+                            <option value="未">未</option>
+                            <option value="申">申</option>
+                            <option value="酉">酉</option>
+                            <option value="戌">戌</option>
+                            <option value="亥">亥</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="shi_chen">时辰</label>
+                        <select id="shi_chen">
+                            <option value="子">子</option>
+                            <option value="丑">丑</option>
+                            <option value="寅">寅</option>
+                            <option value="卯">卯</option>
+                            <option value="辰">辰</option>
+                            <option value="巳">巳</option>
+                            <option value="午">午</option>
+                            <option value="未">未</option>
+                            <option value="申">申</option>
+                            <option value="酉">酉</option>
+                            <option value="戌">戌</option>
+                            <option value="亥">亥</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="btn" onclick="qike()">🔮 起课</button>
+            </div>
+            
+            <div class="loading" id="loading">
+                正在起课，请稍候...
+            </div>
+            
+            <div class="error" id="error"></div>
+            
+            <div class="result-section" id="result">
+                <h2 class="result-title">📊 起课结果</h2>
+                
+                <div class="result-grid">
+                    <div class="result-card">
+                        <h3>📅 基本信息</h3>
+                        <div class="result-item"><strong>日干支：</strong><span id="res_ri_gan_zhi"></span></div>
+                        <div class="result-item"><strong>月将：</strong><span id="res_yue_jiang"></span></div>
+                        <div class="result-item"><strong>时辰：</strong><span id="res_shi_chen"></span></div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h3>🎯 九宗门起法</h3>
+                        <div class="result-item"><strong>起法：</strong><span id="res_qi_fa"></span></div>
+                        <div class="result-item"><strong>课体：</strong><span id="res_ke_ti"></span></div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h3>📖 四课</h3>
+                        <ul class="sike-list" id="res_sike"></ul>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h3>📜 三传</h3>
+                        <ul class="sanchuan-list" id="res_sanchuan"></ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="api-info">
+                <h3>🔌 API 使用说明</h3>
+                <p>本系统提供 HTTP API 接口，可在您的 HTML 项目中直接调用：</p>
+                <p style="margin-top: 10px;"><strong>API 地址：</strong><code>http://localhost:5000/api/qike</code></p>
+                <p style="margin-top: 10px;"><strong>请求方式：</strong><code>GET</code> 或 <code>POST</code></p>
+                <p style="margin-top: 10px;"><strong>参数说明：</strong></p>
+                <ul style="margin-left: 20px; margin-top: 5px;">
+                    <li><code>ri_gan</code> - 日干（甲、乙、丙、丁...）</li>
+                    <li><code>ri_zhi</code> - 日支（子、丑、寅、卯...）</li>
+                    <li><code>yue_jiang</code> - 月将（子、丑、寅、卯...）</li>
+                    <li><code>shi_chen</code> - 时辰（子、丑、寅、卯...）</li>
+                </ul>
+                <p style="margin-top: 10px;"><strong>示例：</strong></p>
+                <code style="display: block; margin-top: 10px; padding: 10px; background: #f8f9fa;">
+                    http://localhost:5000/api/qike?ri_gan=甲&ri_zhi=子&yue_jiang=丑&shi_chen=子
+                </code>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // API 服务器地址
+        const API_BASE = 'http://localhost:5000';
+        
+        /**
+         * 起课函数
+         */
+        async function qike() {
+            // 获取输入值
+            const ri_gan = document.getElementById('ri_gan').value;
+            const ri_zhi = document.getElementById('ri_zhi').value;
+            const yue_jiang = document.getElementById('yue_jiang').value;
+            const shi_chen = document.getElementById('shi_chen').value;
+            
+            // 显示加载状态
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('result').classList.remove('show');
+            document.getElementById('error').classList.remove('show');
+            
+            try {
+                // 调用 API
+                const url = `${API_BASE}/api/qike?ri_gan=${ri_gan}&ri_zhi=${ri_zhi}&yue_jiang=${yue_jiang}&shi_chen=${shi_chen}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayResult(data.data);
+                } else {
+                    showError(data.error || '起课失败');
+                }
+            } catch (error) {
+                showError('无法连接到 API 服务器，请确保 http_api_server.py 已启动');
+                console.error('Error:', error);
+            } finally {
+                document.getElementById('loading').classList.remove('show');
+            }
+        }
+        
+        /**
+         * 显示结果
+         */
+        function displayResult(data) {
+            // 基本信息
+            document.getElementById('res_ri_gan_zhi').textContent = data.ri_gan + data.ri_zhi;
+            document.getElementById('res_yue_jiang').textContent = data.yue_jiang;
+            document.getElementById('res_shi_chen').textContent = data.shi_chen;
+            
+            // 九宗门起法
+            document.getElementById('res_qi_fa').textContent = data.sanchuan.起法 || '';
+            document.getElementById('res_ke_ti').textContent = data.sanchuan.课体 || '';
+            
+            // 四课
+            const sikeList = document.getElementById('res_sike');
+            sikeList.innerHTML = '';
+            data.sike.forEach((ke, index) => {
+                const li = document.createElement('li');
+                const keName = ke[0];
+                const shang = ke[1];
+                const xia = ke[2];
+                const tianJiang = ke[3] || '';
+                li.textContent = `${keName}：上${shang} 下${xia}`;
+                if (tianJiang) {
+                    li.textContent += ` (${tianJiang})`;
+                }
+                sikeList.appendChild(li);
+            });
+            
+            // 三传
+            const sanchuanList = document.getElementById('res_sanchuan');
+            sanchuanList.innerHTML = '';
+            const chuanNames = ['初传', '中传', '末传'];
+            const sanChuan = data.sanchuan.三传 || [];
+            const sanChuanTianJiang = data.sanchuan.三传天将 || [];
+            const sanChuanGanZhi = data.sanchuan.三传干支 || [];
+            const sanChuanLiuQin = data.sanchuan.三传六亲 || [];
+            const sanChuanKongWang = data.sanchuan.三传空亡 || [];
+            
+            // 调试信息
+            console.log('三传数据:', data.sanchuan);
+            console.log('三传天将:', sanChuanTianJiang);
+            
+            sanChuan.forEach((chuan, index) => {
+                const li = document.createElement('li');
+                const tianJiang = sanChuanTianJiang[index] || '';
+                const ganzhi = sanChuanGanZhi[index] || chuan;
+                const liuQin = sanChuanLiuQin[index] || '';
+                // 空亡数据保留但不显示
+                // const kongWang = sanChuanKongWang[index] || '';
+                
+                // 构建显示文本：六亲 + 干支 + 天将
+                let displayText = `${chuanNames[index]}: `;
+                
+                // 添加六亲（放在天干之前）
+                if (liuQin) {
+                    displayText += `[${liuQin}]`;
+                }
+                
+                // 添加干支（空亡的地支也有遁干）
+                displayText += ganzhi;
+                
+                // 添加天将
+                if (tianJiang) {
+                    displayText += ` (${tianJiang})`;
+                }
+                
+                // 不显示空亡标记（根据新规则）
+                // if (kongWang) {
+                //     displayText += ` [${kongWang}]`;
+                // }
+                
+                li.textContent = displayText;
+                sanchuanList.appendChild(li);
+            });
+            
+            // 显示结果区域
+            document.getElementById('result').classList.add('show');
+        }
+        
+        /**
+         * 显示错误
+         */
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = '❌ ' + message;
+            errorDiv.classList.add('show');
+        }
+        
+        // 页面加载完成后自动起课一次（示例）
+        window.onload = function() {
+            // 可以取消注释下面这行来自动起课
+            // qike();
+        };
+    </script>
+</body>
+</html>

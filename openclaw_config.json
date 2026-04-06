@@ -1,0 +1,48 @@
+{
+  "gateway": {
+    "bind": "loopback",
+    "port": 18789,
+    "auth": {
+      "mode": "password",
+      "password": "openclaw-local-token-123456"
+    },
+    "http": {
+      "endpoints": {
+        "chatCompletions": {
+          "enabled": true
+        }
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "synthetic/test"
+      }
+    }
+  },
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "synthetic": {
+        "api": "synthetic",
+        "models": [
+          {
+            "id": "test",
+            "name": "OpenClaw Local Test",
+            "reasoning": false,
+            "input": ["text"],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 32768,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  }
+}

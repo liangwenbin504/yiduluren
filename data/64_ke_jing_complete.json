@@ -1,0 +1,273 @@
+{
+  "1_元首课": {
+    "ke_name": "元首课",
+    "ke_type": "贼克法",
+    "definition": "一上克下曰元首",
+    "description": "四课中有一课上克下，其余课中无克，取上克下的上神发用",
+    "judgment": "事起男子，或天灾自至，主要在上",
+    "score": 75,
+    "level": "中吉"
+  },
+  "2_重审课": {
+    "ke_name": "重审课",
+    "ke_type": "贼克法",
+    "definition": "一下贼上曰重审",
+    "description": "四课中有一课下贼上，其余课中无克，取下贼上的上神发用",
+    "judgment": "事起女子，或家祸内生，主在下",
+    "score": 65,
+    "level": "小吉"
+  },
+  "3_知一课": {
+    "ke_name": "知一课",
+    "ke_type": "比用法",
+    "definition": "取与日干比者为用",
+    "description": "二课相克，取与日干比和者为用神",
+    "judgment": "事贵明确，择善而从",
+    "score": 70,
+    "level": "中吉"
+  },
+  "4_涉害课": {
+    "ke_name": "涉害课",
+    "ke_type": "涉害法",
+    "definition": "涉害行来本家止，路逢多克为用取",
+    "description": "比用后仍有多课，计算涉害深度，取克贼最深者为用",
+    "judgment": "事主经历艰难，深浅可知",
+    "score": 60,
+    "level": "吉凶参半"
+  },
+  "5_见机课": {
+    "ke_name": "见机课",
+    "ke_type": "涉害法",
+    "definition": "孟深仲浅季当休",
+    "description": "涉害相等，取孟上神发用",
+    "judgment": "事主见机而作，当机立断",
+    "score": 70,
+    "level": "中吉"
+  },
+  "6_察微课": {
+    "ke_name": "察微课",
+    "ke_type": "涉害法",
+    "definition": "无孟取仲",
+    "description": "涉害相等，无孟取仲上神发用",
+    "judgment": "事主察微知著，谨慎行事",
+    "score": 65,
+    "level": "小吉"
+  },
+  "7_遥克课": {
+    "ke_name": "遥克课",
+    "ke_type": "遥克法",
+    "definition": "四课无克号为遥",
+    "description": "四课无克，取遥相克贼者为用",
+    "judgment": "事主疏远，谋望难成",
+    "score": 55,
+    "level": "吉凶参半"
+  },
+  "8_蒿矢课": {
+    "ke_name": "蒿矢课",
+    "ke_type": "遥克法",
+    "definition": "神遥克日曰蒿矢",
+    "description": "取上神遥克日干者为用",
+    "judgment": "如箭在弦，事有惊扰",
+    "score": 50,
+    "level": "吉凶参半"
+  },
+  "9_弹射课": {
+    "ke_name": "弹射课",
+    "ke_type": "遥克法",
+    "definition": "日遥克神曰弹射",
+    "description": "取日干遥克上神者为用",
+    "judgment": "事主主动出击，可成",
+    "score": 60,
+    "level": "小吉"
+  },
+  "10_昴星课": {
+    "ke_name": "昴星课",
+    "ke_type": "昴星法",
+    "definition": "无遥无克昴星穷",
+    "description": "四课无克无遥，取昴星酉宫之神为用",
+    "judgment": "事主困顿，宜守不宜进",
+    "score": 45,
+    "level": "吉凶参半"
+  },
+  "11_虎视课": {
+    "ke_name": "虎视课",
+    "ke_type": "昴星法",
+    "definition": "刚日先辰而后日",
+    "description": "昴星课刚日，先取辰上神，后取日上神",
+    "judgment": "如虎视眈眈，事有威严",
+    "score": 55,
+    "level": "吉凶参半"
+  },
+  "12_冬蛇掩目课": {
+    "ke_name": "冬蛇掩目课",
+    "ke_type": "昴星法",
+    "definition": "柔日先日而后辰",
+    "description": "昴星课柔日，先取日上神，后取辰上神",
+    "judgment": "如蛇冬眠，事主潜伏",
+    "score": 50,
+    "level": "吉凶参半"
+  },
+  "13_别责课": {
+    "ke_name": "别责课",
+    "ke_type": "别责法",
+    "definition": "四课不全三课备，无遥无克别责例",
+    "description": "四课只有三课，无遥无克，刚日取干合，柔日取支三合",
+    "judgment": "事主另辟蹊径，别求他法",
+    "score": 60,
+    "level": "小吉"
+  },
+  "14_八专课": {
+    "ke_name": "八专课",
+    "ke_type": "八专法",
+    "definition": "两课无克号八专",
+    "description": "四课只有两课，无克，阳日顺数三位，阴日逆数三位",
+    "judgment": "事主专一，但力量不足",
+    "score": 55,
+    "level": "吉凶参半"
+  },
+  "15_伏吟课": {
+    "ke_name": "伏吟课",
+    "ke_type": "伏吟法",
+    "definition": "月将等于占时",
+    "description": "天地盘相同，神将伏而不动",
+    "judgment": "事主伏而不动，宜静不宜动",
+    "score": 50,
+    "level": "吉凶参半"
+  },
+  "16_反吟课": {
+    "ke_name": "反吟课",
+    "ke_type": "反吟法",
+    "definition": "月将冲占时",
+    "description": "天地盘对冲，神将反复不定",
+    "judgment": "事主反复无常，进退两难",
+    "score": 45,
+    "level": "小凶"
+  },
+  "17_三光课": {
+    "ke_name": "三光课",
+    "ke_type": "吉格",
+    "definition": "三传皆吉神",
+    "description": "三传得贵人、青龙、太常等吉将，且旺相",
+    "judgment": "万事亨通，光明磊落",
+    "score": 92,
+    "level": "上吉"
+  },
+  "18_三阳课": {
+    "ke_name": "三阳课",
+    "ke_type": "吉格",
+    "definition": "三传皆阳",
+    "description": "三传皆阳神，且得地得时",
+    "judgment": "阳气昌盛，事主光明",
+    "score": 90,
+    "level": "上吉"
+  },
+  "19_三奇课": {
+    "ke_name": "三奇课",
+    "ke_type": "吉格",
+    "definition": "乙丙丁或甲戊庚",
+    "description": "三传得乙丙丁三奇或甲戊庚三奇",
+    "judgment": "奇事出现，转危为安",
+    "score": 88,
+    "level": "上吉"
+  },
+  "20_六合课": {
+    "ke_name": "六合课",
+    "ke_type": "吉格",
+    "definition": "三传合局",
+    "description": "三传成三合局或六合",
+    "judgment": "事主和合，谋事可成",
+    "score": 85,
+    "level": "上吉"
+  },
+  "21_龙德课": {
+    "ke_name": "龙德课",
+    "ke_type": "吉格",
+    "definition": "太岁或月将发用",
+    "description": "太岁、月将、天乙贵人发用",
+    "judgment": "龙德在上，贵人扶持",
+    "score": 95,
+    "level": "上上大吉"
+  },
+  "22_天赦课": {
+    "ke_name": "天赦课",
+    "ke_type": "吉格",
+    "definition": "春戊寅夏甲午秋戊申冬甲子",
+    "description": "得天赦日发用",
+    "judgment": "天赦罪过，逢凶化吉",
+    "score": 93,
+    "level": "上上大吉"
+  },
+  "23_鬼墓课": {
+    "ke_name": "鬼墓课",
+    "ke_type": "凶格",
+    "definition": "凡日辰墓神，及日鬼发用，为鬼墓课",
+    "description": "鬼者贼也，阳见阳阴见阴为鬼。墓者蒙昧也。鬼主伤残，墓主闭塞不通，暗昧不振",
+    "judgment": "凡人占鬼入传，及传墓不吉，非官讼必疾病。辰未为日墓暗中有明，丑戌为夜墓昏昧自甚",
+    "xiang_yue": "五行克贼，死墓之乡，人丁多耗，家宅不昌，行人可至，病者如狂，谋为迟滞，捕盗深藏",
+    "score": 25,
+    "level": "大凶"
+  },
+  "24_天网课": {
+    "ke_name": "天网课",
+    "ke_type": "凶格",
+    "definition": "魁罡加日辰",
+    "description": "天魁天罡加临日辰",
+    "judgment": "如罗网罩身，事主困顿",
+    "score": 35,
+    "level": "中凶"
+  },
+  "25_地网课": {
+    "ke_name": "地网课",
+    "ke_type": "凶格",
+    "definition": "岁煞加日辰",
+    "description": "岁煞、月煞加临日辰",
+    "judgment": "如入地网，难以脱身",
+    "score": 30,
+    "level": "中凶"
+  },
+  "26_斩关课": {
+    "ke_name": "斩关课",
+    "ke_type": "吉凶参半",
+    "definition": "魁罡加日辰发用",
+    "description": "天魁天罡发用，有克贼",
+    "judgment": "事主突破难关，先难后易",
+    "score": 60,
+    "level": "吉凶参半"
+  },
+  "27_闭口课": {
+    "ke_name": "闭口课",
+    "ke_type": "凶格",
+    "definition": "旬尾加旬首",
+    "description": "旬尾之神加临旬首",
+    "judgment": "事主闭塞，言而有阻",
+    "score": 40,
+    "level": "小凶"
+  },
+  "28_冲破课": {
+    "ke_name": "冲破课",
+    "ke_type": "凶格",
+    "definition": "岁破月破发用",
+    "description": "岁破、月破之神发用",
+    "judgment": "事主破败，谋事难成",
+    "score": 30,
+    "level": "中凶"
+  },
+  "29_空亡课": {
+    "ke_name": "空亡课",
+    "ke_type": "凶格",
+    "definition": "旬空发用",
+    "description": "旬中空亡之神发用",
+    "judgment": "事主落空，谋而无成",
+    "score": 25,
+    "level": "大凶"
+  },
+  "30_死奇课": {
+    "ke_name": "死奇课",
+    "ke_type": "凶格",
+    "definition": "死气发用",
+    "description": "死气、死神发用",
+    "judgment": "事主死丧，大凶",
+    "score": 20,
+    "level": "上凶"
+  }
+}

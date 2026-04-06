@@ -1,0 +1,2089 @@
+{
+  "timestamp": "2026-03-21T19:11:09.799674",
+  "completed": 45,
+  "total": 8640,
+  "matched_results": {
+    "甲子_子_子": {
+      "ri_gan_zhi": "甲子",
+      "yue": "子",
+      "shi": "子",
+      "yue_jiang": "丑",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "子"
+      },
+      "matched_ke_jing": [
+        "比用课",
+        "度厄课",
+        "连珠课",
+        "三光课",
+        "四顺格",
+        "时泰课",
+        "天心课",
+        "天狱课",
+        "死奇课",
+        "侵害课",
+        "天恩未定课",
+        "天狱清平课",
+        "三阳不泰课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 13,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "伏吟课"
+        ],
+        "confidence_scores": [
+          90
+        ],
+        "primary_ke_jing": "伏吟课",
+        "reasoning": "由于日、月、时均为子，形成了典型的伏吟格局，代表事物发展停滞或者循环往复的情况。"
+      },
+      "match_time": "2026-03-21T18:50:56.175245"
+    },
+    "甲子_子_丑": {
+      "ri_gan_zhi": "甲子",
+      "yue": "子",
+      "shi": "丑",
+      "yue_jiang": "丑",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "丑"
+      },
+      "matched_ke_jing": [
+        "伏吟课",
+        "富贵课",
+        "玄胎课",
+        "三光课",
+        "四顺格",
+        "时泰课",
+        "天恩课",
+        "天心课",
+        "引从课",
+        "孤寡课",
+        "天恩未定课",
+        "天狱清平课",
+        "三阳不泰课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "伏吟课",
+      "duanyu": {
+        "duanyu": [
+          "伏吟者，伏而不动",
+          "事主迟滞，宜静不宜动",
+          "病主缠绵，讼主久拖",
+          "唯利守成，不利进取"
+        ],
+        "summary": "伏吟为下吉课，主迟滞不动",
+        "score": 35,
+        "level": "下吉"
+      },
+      "ke_ti_count": 13,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "伏吟课"
+        ],
+        "confidence_scores": [
+          70
+        ],
+        "primary_ke_jing": "伏吟课",
+        "reasoning": "由于月将与时辰均为丑，暗示可能存在伏吟状态，即天盘地盘重叠，表示事物处于静止或变化较小的状态。但是请注意，此结论是在缺乏完整四课三传信息基础上做出的推测。"
+      },
+      "match_time": "2026-03-21T18:51:18.475515"
+    },
+    "甲子_子_寅": {
+      "ri_gan_zhi": "甲子",
+      "yue": "子",
+      "shi": "寅",
+      "yue_jiang": "丑",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "寅"
+      },
+      "matched_ke_jing": [
+        "比用课",
+        "连珠课",
+        "三光课",
+        "四顺格",
+        "时泰课",
+        "天心课",
+        "盘珠课",
+        "回环课",
+        "孤寡课",
+        "天恩未定课",
+        "天狱清平课",
+        "三阳不泰课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 12,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "元首课"
+        ],
+        "confidence_scores": [
+          70
+        ],
+        "primary_ke_jing": "元首课",
+        "reasoning": "基于给定的日干支、月、时及月将信息，虽然无法完全确定，但'元首课'常用于表示事物的新开始或发展趋势，符合甲子日带来的新气象。"
+      },
+      "match_time": "2026-03-21T18:51:47.650411"
+    },
+    "甲子_子_卯": {
+      "ri_gan_zhi": "甲子",
+      "yue": "子",
+      "shi": "卯",
+      "yue_jiang": "丑",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "卯"
+      },
+      "matched_ke_jing": [
+        "比用课",
+        "三光课",
+        "三阳课",
+        "四顺格",
+        "时泰课",
+        "天心课",
+        "天恩未定课",
+        "天狱清平课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 8,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "元首课"
+        ],
+        "confidence_scores": [
+          70
+        ],
+        "primary_ke_jing": "元首课",
+        "reasoning": "基于给定的日干支、月、时及月将信息，'元首课'作为常见且广泛适用的一种课型被选中。但由于缺少完整信息，此判断具有一定的不确定性。"
+      },
+      "match_time": "2026-03-21T18:52:16.170386"
+    },
+    "甲子_子_辰": {
+      "ri_gan_zhi": "甲子",
+      "yue": "子",
+      "shi": "辰",
+      "yue_jiang": "丑",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "辰"
+      },
+      "matched_ke_jing": [
+        "元首课",
+        "始入课",
+        "和美课",
+        "三交课",
+        "轩盖课",
+        "三光课",
+        "四顺格",
+        "时泰课",
+        "天心课",
+        "引从课",
+        "侵害课",
+        "乘轩落马课",
+        "天恩未定课",
+        "天狱清平课",
+        "三阳不泰课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 15,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "时泰课"
+        ],
+        "confidence_scores": [
+          85
+        ],
+        "primary_ke_jing": "时泰课",
+        "reasoning": "根据给定的时间条件（甲子日、子月、辰时、丑月将），虽然缺少具体的占问背景，但基于辰时与丑月将之间可能存在的一种较为和谐的关系，以及对于积极结果的假设，选择了代表时机良好、事情顺利发展的'时泰课'作为最匹配选项。"
+      },
+      "match_time": "2026-03-21T18:52:38.687846"
+    },
+    "甲子_子_巳": {
+      "ri_gan_zhi": "甲子",
+      "yue": "子",
+      "shi": "巳",
+      "yue_jiang": "丑",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "巳"
+      },
+      "matched_ke_jing": [
+        "和美课",
+        "全局课",
+        "三光课",
+        "三阳课",
+        "四顺格",
+        "时泰课",
+        "天恩课",
+        "天心课",
+        "天恩未定课",
+        "天狱清平课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 10,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "合欢课"
+        ],
+        "confidence_scores": [
+          90
+        ],
+        "primary_ke_jing": "合欢课",
+        "reasoning": "此课例中日干甲与第四课己相合，象征着和谐共处、相互支持的良好局面，符合合欢课的基本特征。"
+      },
+      "match_time": "2026-03-21T18:53:03.571387"
+    },
+    "甲子_子_午": {
+      "ri_gan_zhi": "甲子",
+      "yue": "子",
+      "shi": "午",
+      "yue_jiang": "丑",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "午"
+      },
+      "matched_ke_jing": [
+        "比用课",
+        "和美课",
+        "三光课",
+        "四顺格",
+        "时泰课",
+        "天恩课",
+        "天心课",
+        "盘珠课",
+        "回环课",
+        "孤寡课",
+        "侵害课",
+        "天恩未定课",
+        "天狱清平课",
+        "三阳不泰课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 14,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "涉害课"
+        ],
+        "confidence_scores": [
+          75
+        ],
+        "primary_ke_jing": "涉害课",
+        "reasoning": "基于'午时'与'甲子日'之间的天克地冲关系，以及'丑'作为月将的影响，此组合暗示着既有挑战也有机会克服困难的情形，符合'涉害课'的特点。"
+      },
+      "match_time": "2026-03-21T18:53:24.278905"
+    },
+    "甲子_子_未": {
+      "ri_gan_zhi": "甲子",
+      "yue": "子",
+      "shi": "未",
+      "yue_jiang": "丑",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "未"
+      },
+      "matched_ke_jing": [
+        "反吟课",
+        "比用课",
+        "度厄课",
+        "玄胎课",
+        "三光课",
+        "三阳课",
+        "四顺格",
+        "时泰课",
+        "天恩课",
+        "天心课",
+        "盘珠课",
+        "回环课",
+        "孤寡课",
+        "天恩未定课",
+        "天狱清平课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "反吟课",
+      "duanyu": {
+        "duanyu": [
+          "反吟者，反复无常",
+          "事有反复，去而复来",
+          "冲则动，动则变",
+          "吉凶不定，变化多端"
+        ],
+        "summary": "反吟为中平课，主反复变化",
+        "score": 45,
+        "level": "中平"
+      },
+      "ke_ti_count": 15,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "时泰课"
+        ],
+        "confidence_scores": [
+          90
+        ],
+        "primary_ke_jing": "时泰课",
+        "reasoning": "考虑到日干甲木在子月得到充分支持，但遇到未时土性的克制，形成了一个总体有利但稍有波折的情境，与时泰课所描述的状态相吻合。"
+      },
+      "match_time": "2026-03-21T18:53:47.980575"
+    },
+    "甲子_子_申": {
+      "ri_gan_zhi": "甲子",
+      "yue": "子",
+      "shi": "申",
+      "yue_jiang": "丑",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "申"
+      },
+      "matched_ke_jing": [
+        "比用课",
+        "三光课",
+        "四顺格",
+        "时泰课",
+        "天心课",
+        "盘珠课",
+        "回环课",
+        "孤寡课",
+        "侵害课",
+        "天恩未定课",
+        "天狱清平课",
+        "三阳不泰课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 12,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "涉害课"
+        ],
+        "confidence_scores": [
+          90
+        ],
+        "primary_ke_jing": "涉害课",
+        "reasoning": "由于日干甲木虽在子月得令但受到申时金的克制，同时月将丑土也对甲木有制约作用，整个格局呈现出一种既有矛盾又有平衡的状态，符合‘涉害课’的特征。"
+      },
+      "match_time": "2026-03-21T18:54:15.191187"
+    },
+    "甲子_子_酉": {
+      "ri_gan_zhi": "甲子",
+      "yue": "子",
+      "shi": "酉",
+      "yue_jiang": "丑",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "酉"
+      },
+      "matched_ke_jing": [
+        "元首课",
+        "始入课",
+        "全局课",
+        "三光课",
+        "三阳课",
+        "四顺格",
+        "时泰课",
+        "天心课",
+        "盘珠课",
+        "回环课",
+        "天狱课",
+        "死奇课",
+        "天恩未定课",
+        "天狱清平课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 14,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "时泰课"
+        ],
+        "confidence_scores": [
+          85
+        ],
+        "primary_ke_jing": "时泰课",
+        "reasoning": "根据提供的信息，甲子日配以子月表现出了一种内在的协调性；同时，酉时象征着秋收冬藏之间的平稳过渡，与时泰课所描述的时间流转中的安定和平顺相符。"
+      },
+      "match_time": "2026-03-21T18:54:45.214002"
+    },
+    "甲子_子_戌": {
+      "ri_gan_zhi": "甲子",
+      "yue": "子",
+      "shi": "戌",
+      "yue_jiang": "丑",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "戌"
+      },
+      "matched_ke_jing": [
+        "重审课",
+        "玄胎课",
+        "三光课",
+        "四顺格",
+        "时泰课",
+        "天恩课",
+        "天心课",
+        "引从课",
+        "天恩未定课",
+        "天狱清平课",
+        "三阳不泰课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 11,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "涉害课"
+        ],
+        "confidence_scores": [
+          90
+        ],
+        "primary_ke_jing": "涉害课",
+        "reasoning": "根据提供的日干支、月、时及月将信息，此情形下天地盘间可能存在一定的冲突或不和谐因素，故而选择了代表遇到困难或挑战需克服的'涉害课'作为最匹配项。"
+      },
+      "match_time": "2026-03-21T18:55:06.016758"
+    },
+    "甲子_子_亥": {
+      "ri_gan_zhi": "甲子",
+      "yue": "子",
+      "shi": "亥",
+      "yue_jiang": "丑",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "亥"
+      },
+      "matched_ke_jing": [
+        "重审课",
+        "和美课",
+        "三光课",
+        "三阳课",
+        "四顺格",
+        "时泰课",
+        "天心课",
+        "天狱课",
+        "死奇课",
+        "天恩未定课",
+        "天狱清平课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 11,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "涉害课"
+        ],
+        "confidence_scores": [
+          85
+        ],
+        "primary_ke_jing": "涉害课",
+        "reasoning": "基于甲子日代表的新起点以及子月亥时带来的流动性与变化性，加上月将丑土对水势的制约作用，推测此局面下可能存在一定障碍或挑战，故选用'涉害课'作为最匹配的课经。"
+      },
+      "match_time": "2026-03-21T18:55:31.804246"
+    },
+    "甲子_丑_子": {
+      "ri_gan_zhi": "甲子",
+      "yue": "丑",
+      "shi": "子",
+      "yue_jiang": "子",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "子"
+      },
+      "matched_ke_jing": [
+        "伏吟课",
+        "富贵课",
+        "玄胎课",
+        "三光课",
+        "四顺格",
+        "时泰课",
+        "天恩课",
+        "引从课",
+        "孤寡课",
+        "天恩未定课",
+        "天狱清平课",
+        "三阳不泰课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "伏吟课",
+      "duanyu": {
+        "duanyu": [
+          "伏吟者，伏而不动",
+          "事主迟滞，宜静不宜动",
+          "病主缠绵，讼主久拖",
+          "唯利守成，不利进取"
+        ],
+        "summary": "伏吟为下吉课，主迟滞不动",
+        "score": 35,
+        "level": "下吉"
+      },
+      "ke_ti_count": 12,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "伏吟课"
+        ],
+        "confidence_scores": [
+          70
+        ],
+        "primary_ke_jing": "伏吟课",
+        "reasoning": "基于给定的日干支甲子、月丑及时子条件下，初步判断可能存在‘伏吟’现象，即天盘地盘相同或相近的情况。但请注意，此结论需结合实际四课进一步验证。"
+      },
+      "match_time": "2026-03-21T18:55:55.938385"
+    },
+    "甲子_丑_丑": {
+      "ri_gan_zhi": "甲子",
+      "yue": "丑",
+      "shi": "丑",
+      "yue_jiang": "子",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "丑"
+      },
+      "matched_ke_jing": [
+        "比用课",
+        "连珠课",
+        "三光课",
+        "四顺格",
+        "时泰课",
+        "天心课",
+        "盘珠课",
+        "回环课",
+        "孤寡课",
+        "天恩未定课",
+        "天狱清平课",
+        "三阳不泰课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 12,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "八专课"
+        ],
+        "confidence_scores": [
+          90
+        ],
+        "primary_ke_jing": "八专课",
+        "reasoning": "此课例中三传存在重复的地支'丑'，符合八专课特征，表明情况较为特殊且集中。"
+      },
+      "match_time": "2026-03-21T18:56:33.829292"
+    },
+    "甲子_丑_寅": {
+      "ri_gan_zhi": "甲子",
+      "yue": "丑",
+      "shi": "寅",
+      "yue_jiang": "子",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "寅"
+      },
+      "matched_ke_jing": [
+        "比用课",
+        "三光课",
+        "三阳课",
+        "四顺格",
+        "时泰课",
+        "天恩未定课",
+        "天狱清平课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 7,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "时泰课"
+        ],
+        "confidence_scores": [
+          75
+        ],
+        "primary_ke_jing": "时泰课",
+        "reasoning": "考虑到甲木处于旺盛状态，并且得到月建与月将的支持，整体形势较好，符合'时泰课'所描述的顺境特征。"
+      },
+      "match_time": "2026-03-21T18:56:56.078686"
+    },
+    "甲子_丑_卯": {
+      "ri_gan_zhi": "甲子",
+      "yue": "丑",
+      "shi": "卯",
+      "yue_jiang": "子",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "卯"
+      },
+      "matched_ke_jing": [
+        "元首课",
+        "始入课",
+        "和美课",
+        "三交课",
+        "轩盖课",
+        "三光课",
+        "四顺格",
+        "时泰课",
+        "引从课",
+        "侵害课",
+        "乘轩落马课",
+        "天恩未定课",
+        "天狱清平课",
+        "三阳不泰课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 14,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "亨通课"
+        ],
+        "confidence_scores": [
+          75
+        ],
+        "primary_ke_jing": "亨通课",
+        "reasoning": "基于给定的日干支、月、时及月将信息，虽然缺少完整的四课三传细节，但从五行相生的角度看，此局面下木得水生，预示着良好的发展趋势，故选取象征事业顺利、生活富足的'亨通课'作为匹配。"
+      },
+      "match_time": "2026-03-21T18:57:32.124052"
+    },
+    "甲子_丑_辰": {
+      "ri_gan_zhi": "甲子",
+      "yue": "丑",
+      "shi": "辰",
+      "yue_jiang": "子",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "辰"
+      },
+      "matched_ke_jing": [
+        "和美课",
+        "全局课",
+        "三光课",
+        "三阳课",
+        "四顺格",
+        "时泰课",
+        "天恩课",
+        "天恩未定课",
+        "天狱清平课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 9,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "元首课"
+        ],
+        "confidence_scores": [
+          75
+        ],
+        "primary_ke_jing": "元首课",
+        "reasoning": "基于甲子日以及辰时的特点，元首课体现了新的开端或领导性的概念，与所提供的时间框架较为契合。"
+      },
+      "match_time": "2026-03-21T18:57:56.564094"
+    },
+    "甲子_丑_巳": {
+      "ri_gan_zhi": "甲子",
+      "yue": "丑",
+      "shi": "巳",
+      "yue_jiang": "子",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "巳"
+      },
+      "matched_ke_jing": [
+        "比用课",
+        "和美课",
+        "三光课",
+        "四顺格",
+        "时泰课",
+        "天恩课",
+        "盘珠课",
+        "回环课",
+        "孤寡课",
+        "侵害课",
+        "天恩未定课",
+        "天狱清平课",
+        "三阳不泰课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 13,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "元首课"
+        ],
+        "confidence_scores": [
+          70
+        ],
+        "primary_ke_jing": "元首课",
+        "reasoning": "鉴于提供的信息较少，选择了较为通用且正面含义较强的'元首课'作为主要参考。如果需要更准确的分析，请提供更多相关信息。"
+      },
+      "match_time": "2026-03-21T18:58:15.575083"
+    },
+    "甲子_丑_午": {
+      "ri_gan_zhi": "甲子",
+      "yue": "丑",
+      "shi": "午",
+      "yue_jiang": "子",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "午"
+      },
+      "matched_ke_jing": [
+        "反吟课",
+        "比用课",
+        "度厄课",
+        "玄胎课",
+        "三光课",
+        "三阳课",
+        "四顺格",
+        "时泰课",
+        "天恩课",
+        "盘珠课",
+        "回环课",
+        "孤寡课",
+        "天恩未定课",
+        "天狱清平课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "反吟课",
+      "duanyu": {
+        "duanyu": [
+          "反吟者，反复无常",
+          "事有反复，去而复来",
+          "冲则动，动则变",
+          "吉凶不定，变化多端"
+        ],
+        "summary": "反吟为中平课，主反复变化",
+        "score": 45,
+        "level": "中平"
+      },
+      "ke_ti_count": 14,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "涉害课"
+        ],
+        "confidence_scores": [
+          50
+        ],
+        "primary_ke_jing": "涉害课",
+        "reasoning": "由于提供的信息较为有限，难以确定确切的课经类型。'涉害课'常用于没有明显特征的情况，此处作为默认选项。"
+      },
+      "match_time": "2026-03-21T18:58:38.201641"
+    },
+    "甲子_丑_申": {
+      "ri_gan_zhi": "甲子",
+      "yue": "丑",
+      "shi": "申",
+      "yue_jiang": "子",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "申"
+      },
+      "matched_ke_jing": [
+        "元首课",
+        "始入课",
+        "全局课",
+        "三光课",
+        "三阳课",
+        "四顺格",
+        "时泰课",
+        "盘珠课",
+        "回环课",
+        "天狱课",
+        "死奇课",
+        "天恩未定课",
+        "天狱清平课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 13,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "伏吟课"
+        ],
+        "confidence_scores": [
+          90
+        ],
+        "primary_ke_jing": "伏吟课",
+        "reasoning": "日干支（甲子）与月将（子）相同，且存在相克关系，表明事物处于停滞或反复状态，符合伏吟课的特点。"
+      },
+      "match_time": "2026-03-21T18:59:24.962967"
+    },
+    "甲子_丑_酉": {
+      "ri_gan_zhi": "甲子",
+      "yue": "丑",
+      "shi": "酉",
+      "yue_jiang": "子",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "酉"
+      },
+      "matched_ke_jing": [
+        "重审课",
+        "玄胎课",
+        "三光课",
+        "四顺格",
+        "时泰课",
+        "天恩课",
+        "引从课",
+        "天恩未定课",
+        "天狱清平课",
+        "三阳不泰课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 10,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "元首课"
+        ],
+        "confidence_scores": [
+          60
+        ],
+        "primary_ke_jing": "元首课",
+        "reasoning": "考虑到'甲子'作为日干支代表着新的周期开始，且没有更多上下文信息指出存在明显的困境或挑战，选择'元首课'作为初步匹配，该课经象征着领导力与新的开端。然而，由于缺乏更详细的占问背景，此结论具有一定的不确定性。"
+      },
+      "match_time": "2026-03-21T18:59:45.558897"
+    },
+    "甲子_丑_戌": {
+      "ri_gan_zhi": "甲子",
+      "yue": "丑",
+      "shi": "戌",
+      "yue_jiang": "子",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "戌"
+      },
+      "matched_ke_jing": [
+        "重审课",
+        "和美课",
+        "三光课",
+        "三阳课",
+        "四顺格",
+        "时泰课",
+        "天狱课",
+        "死奇课",
+        "天恩未定课",
+        "天狱清平课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 10,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "元首课"
+        ],
+        "confidence_scores": [
+          50
+        ],
+        "primary_ke_jing": "元首课",
+        "reasoning": "基于给定的日干支甲子、丑月、戌时及子为月将的基础信息，在缺乏进一步详细资料的情况下，'元首课'作为初步考虑的一种可能性。此结论仅供参考，实际应用中还需结合完整六壬排盘信息综合判断。"
+      },
+      "match_time": "2026-03-21T19:00:39.761542"
+    },
+    "甲子_寅_子": {
+      "ri_gan_zhi": "甲子",
+      "yue": "寅",
+      "shi": "子",
+      "yue_jiang": "亥",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "子"
+      },
+      "matched_ke_jing": [
+        "比用课",
+        "连珠课",
+        "三光课",
+        "四顺格",
+        "时泰课",
+        "盘珠课",
+        "回环课",
+        "天恩未定课",
+        "天狱清平课",
+        "三阳不泰课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 10,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "元首课"
+        ],
+        "confidence_scores": [
+          75
+        ],
+        "primary_ke_jing": "元首课",
+        "reasoning": "基于现有信息，选择了较为通用且适用于多种情况下的'元首课'作为主要参考课经。但请注意，此建议基于有限的数据做出，实际应用时需结合更多具体情况进行综合判断。"
+      },
+      "match_time": "2026-03-21T19:01:35.172346"
+    },
+    "甲子_寅_丑": {
+      "ri_gan_zhi": "甲子",
+      "yue": "寅",
+      "shi": "丑",
+      "yue_jiang": "亥",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "丑"
+      },
+      "matched_ke_jing": [
+        "比用课",
+        "三光课",
+        "三阳课",
+        "四顺格",
+        "时泰课",
+        "天恩未定课",
+        "天狱清平课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 7,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "涉害课"
+        ],
+        "confidence_scores": [
+          70
+        ],
+        "primary_ke_jing": "涉害课",
+        "reasoning": "基于给定的日干支甲子、月寅、时丑及月将亥的信息，推测可能存在某些冲突或不利因素，但具体情况需进一步分析确认。"
+      },
+      "match_time": "2026-03-21T19:02:02.677821"
+    },
+    "甲子_寅_寅": {
+      "ri_gan_zhi": "甲子",
+      "yue": "寅",
+      "shi": "寅",
+      "yue_jiang": "亥",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "寅"
+      },
+      "matched_ke_jing": [
+        "元首课",
+        "始入课",
+        "和美课",
+        "三交课",
+        "轩盖课",
+        "三光课",
+        "四顺格",
+        "时泰课",
+        "引从课",
+        "侵害课",
+        "乘轩落马课",
+        "天恩未定课",
+        "天狱清平课",
+        "三阳不泰课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 14,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "荣华课"
+        ],
+        "confidence_scores": [
+          75
+        ],
+        "primary_ke_jing": "荣华课",
+        "reasoning": "根据给定的日干支（甲子）、月份（寅）及时辰（寅），加上月将位置（亥），可以推测出整体格局倾向于正向发展，类似于‘荣华课’所描述的情景。然而，由于缺乏更详细的天盘地盘信息，此结论存在一定不确定性。"
+      },
+      "match_time": "2026-03-21T19:02:28.083775"
+    },
+    "甲子_寅_卯": {
+      "ri_gan_zhi": "甲子",
+      "yue": "寅",
+      "shi": "卯",
+      "yue_jiang": "亥",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "卯"
+      },
+      "matched_ke_jing": [
+        "和美课",
+        "全局课",
+        "三光课",
+        "三阳课",
+        "四顺格",
+        "时泰课",
+        "天恩课",
+        "天恩未定课",
+        "天狱清平课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 9,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "元首课"
+        ],
+        "confidence_scores": [
+          60
+        ],
+        "primary_ke_jing": "元首课",
+        "reasoning": "由于缺乏更详细的天盘、地盘及天地盘间关系的具体信息，根据现有资料推断，此情况可能符合'元首课'的基础定义。"
+      },
+      "match_time": "2026-03-21T19:02:52.742917"
+    },
+    "甲子_寅_巳": {
+      "ri_gan_zhi": "甲子",
+      "yue": "寅",
+      "shi": "巳",
+      "yue_jiang": "亥",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "巳"
+      },
+      "matched_ke_jing": [
+        "反吟课",
+        "比用课",
+        "度厄课",
+        "玄胎课",
+        "三光课",
+        "三阳课",
+        "四顺格",
+        "时泰课",
+        "天恩课",
+        "天心课",
+        "盘珠课",
+        "回环课",
+        "天恩未定课",
+        "天狱清平课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 14,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "亨通课"
+        ],
+        "confidence_scores": [
+          90
+        ],
+        "primary_ke_jing": "亨通课",
+        "reasoning": "甲子日生于寅月得力，加之巳时助其生长，整体呈现积极向上的态势，适合用亨通课来描述这种顺畅的发展情况。"
+      },
+      "match_time": "2026-03-21T19:03:48.310088"
+    },
+    "甲子_寅_午": {
+      "ri_gan_zhi": "甲子",
+      "yue": "寅",
+      "shi": "午",
+      "yue_jiang": "亥",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "午"
+      },
+      "matched_ke_jing": [
+        "比用课",
+        "三光课",
+        "四顺格",
+        "时泰课",
+        "盘珠课",
+        "回环课",
+        "侵害课",
+        "天恩未定课",
+        "天狱清平课",
+        "三阳不泰课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 10,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "涉害课"
+        ],
+        "confidence_scores": [
+          50
+        ],
+        "primary_ke_jing": "涉害课",
+        "reasoning": "基于通常情况下，当遇到复杂的生克关系且有明显的伤害或阻碍特征时，'涉害课'是比较常见的选择之一。但请注意，这仅是一个基于有限信息的假设性结论。"
+      },
+      "match_time": "2026-03-21T19:04:10.356935"
+    },
+    "甲子_寅_未": {
+      "ri_gan_zhi": "甲子",
+      "yue": "寅",
+      "shi": "未",
+      "yue_jiang": "亥",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "未"
+      },
+      "matched_ke_jing": [
+        "元首课",
+        "始入课",
+        "全局课",
+        "三光课",
+        "三阳课",
+        "四顺格",
+        "时泰课",
+        "盘珠课",
+        "回环课",
+        "天狱课",
+        "死奇课",
+        "天恩未定课",
+        "天狱清平课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 13,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "和美课"
+        ],
+        "confidence_scores": [
+          75
+        ],
+        "primary_ke_jing": "和美课",
+        "reasoning": "根据给定的日干支甲子、月寅、时辰未及月将亥，结合大六壬理论，选择了象征和谐美好状态的'和美课'作为匹配度较高的选项。但由于缺乏完整信息，此判断仅供参考。"
+      },
+      "match_time": "2026-03-21T19:04:26.907985"
+    },
+    "甲子_寅_申": {
+      "ri_gan_zhi": "甲子",
+      "yue": "寅",
+      "shi": "申",
+      "yue_jiang": "亥",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "申"
+      },
+      "matched_ke_jing": [
+        "重审课",
+        "玄胎课",
+        "三光课",
+        "四顺格",
+        "时泰课",
+        "天恩课",
+        "引从课",
+        "天恩未定课",
+        "天狱清平课",
+        "三阳不泰课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 10,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "亨通课"
+        ],
+        "confidence_scores": [
+          75
+        ],
+        "primary_ke_jing": "亨通课",
+        "reasoning": "基于现有信息，虽然存在一定的挑战（如时辰申金克制日干甲），但也有不少积极因素（如月建寅木和月将亥水的支持）。亨通课反映了这样一个过程：尽管开始时会遇到障碍，但经过一番努力后仍可达到良好的结局。"
+      },
+      "match_time": "2026-03-21T19:05:19.930096"
+    },
+    "甲子_寅_酉": {
+      "ri_gan_zhi": "甲子",
+      "yue": "寅",
+      "shi": "酉",
+      "yue_jiang": "亥",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "酉"
+      },
+      "matched_ke_jing": [
+        "重审课",
+        "和美课",
+        "三光课",
+        "三阳课",
+        "四顺格",
+        "时泰课",
+        "天心课",
+        "天狱课",
+        "死奇课",
+        "天恩未定课",
+        "天狱清平课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 11,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "涉害课"
+        ],
+        "confidence_scores": [
+          75
+        ],
+        "primary_ke_jing": "涉害课",
+        "reasoning": "基于提供的日干支、月及时间信息，考虑到既有外部压力（酉金克甲木）又有内在支持（亥水生甲木），'涉害课'较好地体现了这种既面临挑战又存有望改善的情境。"
+      },
+      "match_time": "2026-03-21T19:05:50.481028"
+    },
+    "甲子_寅_戌": {
+      "ri_gan_zhi": "甲子",
+      "yue": "寅",
+      "shi": "戌",
+      "yue_jiang": "亥",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "戌"
+      },
+      "matched_ke_jing": [
+        "比用课",
+        "度厄课",
+        "连珠课",
+        "三光课",
+        "四顺格",
+        "时泰课",
+        "天心课",
+        "天狱课",
+        "死奇课",
+        "侵害课",
+        "天恩未定课",
+        "天狱清平课",
+        "三阳不泰课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 13,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "亨通课"
+        ],
+        "confidence_scores": [
+          85
+        ],
+        "primary_ke_jing": "亨通课",
+        "reasoning": "根据给定的日干支（甲子）、月份（寅）、时辰（戌）及月将（亥），整体呈现水木相生之势，尽管有土性的时辰带来一定制约，但仍倾向于事物能够顺利发展，符合'亨通课'的基本特征。"
+      },
+      "match_time": "2026-03-21T19:06:21.732415"
+    },
+    "甲子_寅_亥": {
+      "ri_gan_zhi": "甲子",
+      "yue": "寅",
+      "shi": "亥",
+      "yue_jiang": "亥",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "亥"
+      },
+      "matched_ke_jing": [
+        "伏吟课",
+        "富贵课",
+        "玄胎课",
+        "三光课",
+        "四顺格",
+        "时泰课",
+        "天恩课",
+        "天心课",
+        "引从课",
+        "天恩未定课",
+        "天狱清平课",
+        "三阳不泰课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "伏吟课",
+      "duanyu": {
+        "duanyu": [
+          "伏吟者，伏而不动",
+          "事主迟滞，宜静不宜动",
+          "病主缠绵，讼主久拖",
+          "唯利守成，不利进取"
+        ],
+        "summary": "伏吟为下吉课，主迟滞不动",
+        "score": 35,
+        "level": "下吉"
+      },
+      "ke_ti_count": 12,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "伏吟课"
+        ],
+        "confidence_scores": [
+          90
+        ],
+        "primary_ke_jing": "伏吟课",
+        "reasoning": "根据提供的日干支、月、时及月将信息，特别是月将与时辰相同的特点，符合伏吟课的特征，表示事物发展缓慢或停滞，内部存在矛盾。"
+      },
+      "match_time": "2026-03-21T19:06:45.831976"
+    },
+    "甲子_卯_子": {
+      "ri_gan_zhi": "甲子",
+      "yue": "卯",
+      "shi": "子",
+      "yue_jiang": "戌",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "子"
+      },
+      "matched_ke_jing": [
+        "比用课",
+        "三光课",
+        "三阳课",
+        "四顺格",
+        "时泰课",
+        "天恩未定课",
+        "天狱清平课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 7,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "涉害课"
+        ],
+        "confidence_scores": [
+          70
+        ],
+        "primary_ke_jing": "涉害课",
+        "reasoning": "基于子时与戌月将之间可能存在冲突（子水克戌土）的假设，推测可能是涉害课。但由于缺乏完整四课信息，此结论具有一定不确定性。"
+      },
+      "match_time": "2026-03-21T19:07:21.117053"
+    },
+    "甲子_卯_丑": {
+      "ri_gan_zhi": "甲子",
+      "yue": "卯",
+      "shi": "丑",
+      "yue_jiang": "戌",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "丑"
+      },
+      "matched_ke_jing": [
+        "元首课",
+        "始入课",
+        "和美课",
+        "三交课",
+        "轩盖课",
+        "三光课",
+        "四顺格",
+        "时泰课",
+        "引从课",
+        "侵害课",
+        "乘轩落马课",
+        "天恩未定课",
+        "天狱清平课",
+        "三阳不泰课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 14,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "荣华课"
+        ],
+        "confidence_scores": [
+          50
+        ],
+        "primary_ke_jing": "荣华课",
+        "reasoning": "基于日干甲子处于月建卯下，且时支丑土能生助甲木，推测整体运势较为顺畅积极，故初步判断为'荣华课'。但由于缺乏更详细的四柱信息，此结论仅供参考。"
+      },
+      "match_time": "2026-03-21T19:07:44.239343"
+    },
+    "甲子_卯_寅": {
+      "ri_gan_zhi": "甲子",
+      "yue": "卯",
+      "shi": "寅",
+      "yue_jiang": "戌",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "寅"
+      },
+      "matched_ke_jing": [
+        "和美课",
+        "全局课",
+        "三光课",
+        "三阳课",
+        "四顺格",
+        "时泰课",
+        "天恩课",
+        "天恩未定课",
+        "天狱清平课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 9,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "元首课"
+        ],
+        "confidence_scores": [
+          85
+        ],
+        "primary_ke_jing": "元首课",
+        "reasoning": "基于提供的基本信息（日干支甲子、月卯、时寅、月将戌），在没有更多具体情境描述的情况下选择了较为通用的'元首课'作为初步匹配结果。此课经适用于多种场合，特别是当所问之事处于初期阶段时更为合适。"
+      },
+      "match_time": "2026-03-21T19:08:17.936437"
+    },
+    "甲子_卯_卯": {
+      "ri_gan_zhi": "甲子",
+      "yue": "卯",
+      "shi": "卯",
+      "yue_jiang": "戌",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "卯"
+      },
+      "matched_ke_jing": [
+        "比用课",
+        "和美课",
+        "三光课",
+        "四顺格",
+        "时泰课",
+        "天恩课",
+        "盘珠课",
+        "回环课",
+        "侵害课",
+        "天恩未定课",
+        "天狱清平课",
+        "三阳不泰课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 12,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "元首课"
+        ],
+        "confidence_scores": [
+          70
+        ],
+        "primary_ke_jing": "元首课",
+        "reasoning": "基于甲子日及戌月将的位置关系，初步推测可能形成以元首为主的格局，代表新的开始或处于主导地位。"
+      },
+      "match_time": "2026-03-21T19:08:42.652401"
+    },
+    "甲子_卯_辰": {
+      "ri_gan_zhi": "甲子",
+      "yue": "卯",
+      "shi": "辰",
+      "yue_jiang": "戌",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "辰"
+      },
+      "matched_ke_jing": [
+        "反吟课",
+        "比用课",
+        "度厄课",
+        "玄胎课",
+        "三光课",
+        "三阳课",
+        "四顺格",
+        "时泰课",
+        "天恩课",
+        "盘珠课",
+        "回环课",
+        "天恩未定课",
+        "天狱清平课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 13,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "元首课"
+        ],
+        "confidence_scores": [
+          70
+        ],
+        "primary_ke_jing": "元首课",
+        "reasoning": "基于提供的有限信息，考虑到这是甲子日且处于春季，选择了'元首课'作为可能适用的类型，因为它适合描述新的开始或领导角色的情境。但由于缺乏更详细的盘面信息，这个匹配度仅为中等。"
+      },
+      "match_time": "2026-03-21T19:09:09.700446"
+    },
+    "甲子_卯_巳": {
+      "ri_gan_zhi": "甲子",
+      "yue": "卯",
+      "shi": "巳",
+      "yue_jiang": "戌",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "巳"
+      },
+      "matched_ke_jing": [
+        "比用课",
+        "三光课",
+        "四顺格",
+        "时泰课",
+        "盘珠课",
+        "回环课",
+        "侵害课",
+        "天恩未定课",
+        "天狱清平课",
+        "三阳不泰课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 10,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "荣华课"
+        ],
+        "confidence_scores": [
+          75
+        ],
+        "primary_ke_jing": "荣华课",
+        "reasoning": "基于现有信息，甲子日配以卯月显示出较强的生命力和发展潜力（如同树木生长），但戌月将和巳时之间存在一定的制约关系，暗示着虽然整体上呈现良好态势，但也需警惕可能出现的问题。"
+      },
+      "match_time": "2026-03-21T19:09:31.881594"
+    },
+    "甲子_卯_申": {
+      "ri_gan_zhi": "甲子",
+      "yue": "卯",
+      "shi": "申",
+      "yue_jiang": "戌",
+      "gan_zhi_info": {
+        "year_gan_zhi": "",
+        "month_gan_zhi": "",
+        "day_gan_zhi": "甲子",
+        "hour_gan_zhi": "申"
+      },
+      "matched_ke_jing": [
+        "重审课",
+        "和美课",
+        "三光课",
+        "三阳课",
+        "四顺格",
+        "时泰课",
+        "天狱课",
+        "死奇课",
+        "天恩未定课",
+        "天狱清平课"
+      ],
+      "notes": "",
+      "primary_ke_jing": "元首课",
+      "duanyu": {
+        "duanyu": [
+          "元首入课，万事亨通",
+          "一上克下，顺其正理",
+          "君占则有伊尹之臣",
+          "臣占必遇唐虞之君",
+          "九宗之元，六十四课之首"
+        ],
+        "summary": "元首为上吉课，主顺正亨通",
+        "score": 85,
+        "level": "上吉"
+      },
+      "ke_ti_count": 10,
+      "qwen_matched": {
+        "matched_ke_jing": [
+          "涉害课"
+        ],
+        "confidence_scores": [
+          75
+        ],
+        "primary_ke_jing": "涉害课",
+        "reasoning": "根据提供的信息，虽然无法完全确认，但考虑到甲子日配以申时及戌月将，可能存在一定的相害或冲突情况，因此初步推测可能是‘涉害课’。"
+      },
+      "match_time": "2026-03-21T19:11:09.798673"
+    }
+  },
+  "error_log": [
+    {
+      "ke_li_key": "甲子_丑_未",
+      "error": "课经无效：遥克课",
+      "timestamp": "2026-03-21T18:59:07.001327"
+    },
+    {
+      "ke_li_key": "甲子_丑_亥",
+      "error": "课经无效：连珠课",
+      "timestamp": "2026-03-21T19:01:03.671764"
+    },
+    {
+      "ke_li_key": "甲子_寅_辰",
+      "error": "课经无效：闭口课",
+      "timestamp": "2026-03-21T19:03:17.712524"
+    },
+    {
+      "ke_li_key": "甲子_卯_午",
+      "error": "课经无效：遥克课",
+      "timestamp": "2026-03-21T19:10:11.456285"
+    },
+    {
+      "ke_li_key": "甲子_卯_未",
+      "error": "课经无效：闭口课",
+      "timestamp": "2026-03-21T19:10:43.241602"
+    }
+  ]
+}

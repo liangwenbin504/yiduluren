@@ -1,0 +1,182 @@
+[
+  {
+    "ke_li_key": "甲子_子_子",
+    "bifa_match": {
+      "total_rules": 19,
+      "matched_count": 1,
+      "matched_rules": [
+        {
+          "rule_id": 5,
+          "rule_name": "六阳数足须公用",
+          "matched": true,
+          "matched_patterns": [
+            "六阳格"
+          ],
+          "reasoning": "日干甲(阳)、日支子(阳)皆阳，符合六阳格"
+        }
+      ]
+    }
+  },
+  {
+    "ke_li_key": "甲子_子_丑",
+    "bifa_match": {
+      "total_rules": 19,
+      "matched_count": 1,
+      "matched_rules": [
+        {
+          "rule_id": 5,
+          "rule_name": "六阳数足须公用",
+          "matched": true,
+          "matched_patterns": [
+            "六阳格"
+          ],
+          "reasoning": "日干甲(阳)、日支子(阳)皆阳，符合六阳格"
+        }
+      ]
+    }
+  },
+  {
+    "ke_li_key": "甲子_子_寅",
+    "bifa_match": {
+      "total_rules": 19,
+      "matched_count": 1,
+      "matched_rules": [
+        {
+          "rule_id": 5,
+          "rule_name": "六阳数足须公用",
+          "matched": true,
+          "matched_patterns": [
+            "六阳格"
+          ],
+          "reasoning": "日干甲(阳)、日支子(阳)皆阳，符合六阳格"
+        }
+      ]
+    }
+  },
+  {
+    "ke_li_key": "甲子_子_卯",
+    "bifa_match": {
+      "total_rules": 19,
+      "matched_count": 1,
+      "matched_rules": [
+        {
+          "rule_id": 5,
+          "rule_name": "六阳数足须公用",
+          "matched": true,
+          "matched_patterns": [
+            "六阳格"
+          ],
+          "reasoning": "日干甲(阳)、日支子(阳)皆阳，符合六阳格"
+        }
+      ]
+    }
+  },
+  {
+    "ke_li_key": "甲子_子_辰",
+    "bifa_match": {
+      "total_rules": 19,
+      "matched_count": 1,
+      "matched_rules": [
+        {
+          "rule_id": 5,
+          "rule_name": "六阳数足须公用",
+          "matched": true,
+          "matched_patterns": [
+            "六阳格"
+          ],
+          "reasoning": "日干甲(阳)、日支子(阳)皆阳，符合六阳格"
+        }
+      ]
+    }
+  },
+  {
+    "ke_li_key": "甲子_子_巳",
+    "bifa_match": {
+      "total_rules": 19,
+      "matched_count": 1,
+      "matched_rules": [
+        {
+          "rule_id": 5,
+          "rule_name": "六阳数足须公用",
+          "matched": true,
+          "matched_patterns": [
+            "六阳格"
+          ],
+          "reasoning": "日干甲(阳)、日支子(阳)皆阳，符合六阳格"
+        }
+      ]
+    }
+  },
+  {
+    "ke_li_key": "甲子_子_午",
+    "bifa_match": {
+      "total_rules": 19,
+      "matched_count": 1,
+      "matched_rules": [
+        {
+          "rule_id": 5,
+          "rule_name": "六阳数足须公用",
+          "matched": true,
+          "matched_patterns": [
+            "六阳格"
+          ],
+          "reasoning": "日干甲(阳)、日支子(阳)皆阳，符合六阳格"
+        }
+      ]
+    }
+  },
+  {
+    "ke_li_key": "甲子_子_未",
+    "bifa_match": {
+      "total_rules": 19,
+      "matched_count": 1,
+      "matched_rules": [
+        {
+          "rule_id": 5,
+          "rule_name": "六阳数足须公用",
+          "matched": true,
+          "matched_patterns": [
+            "六阳格"
+          ],
+          "reasoning": "日干甲(阳)、日支子(阳)皆阳，符合六阳格"
+        }
+      ]
+    }
+  },
+  {
+    "ke_li_key": "甲子_子_申",
+    "bifa_match": {
+      "total_rules": 19,
+      "matched_count": 1,
+      "matched_rules": [
+        {
+          "rule_id": 5,
+          "rule_name": "六阳数足须公用",
+          "matched": true,
+          "matched_patterns": [
+            "六阳格"
+          ],
+          "reasoning": "日干甲(阳)、日支子(阳)皆阳，符合六阳格"
+        }
+      ]
+    }
+  },
+  {
+    "ke_li_key": "甲子_子_酉",
+    "bifa_match": {
+      "total_rules": 19,
+      "matched_count": 1,
+      "matched_rules": [
+        {
+          "rule_id": 5,
+          "rule_name": "六阳数足须公用",
+          "matched": true,
+          "matched_patterns": [
+            "六阳格"
+          ],
+          "reasoning": "日干甲(阳)、日支子(阳)皆阳，符合六阳格"
+        }
+      ]
+    }
+  }
+]

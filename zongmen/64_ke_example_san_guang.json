@@ -1,0 +1,178 @@
+{
+  "$schema": "./64_ke_database_schema.json",
+  "ke_mu_bian_hao": "KE_012",
+  "ke_ming": {
+    "zheng_ming": "三光课",
+    "bie_ming": ["三光格", "三光并照"],
+    "pin_yin": "Sān Guāng Kè",
+    "ying_wen": "Three Lights Formation"
+  },
+  "fen_lei": {
+    "ji_xiong_shu_xing": "吉课",
+    "suo_shu_lei_bie": "特殊格局类",
+    "you_xian_ji": "主课",
+    "ji_xiong_cheng_du": 8
+  },
+  "wen_xian_chu_chu": {
+    "juan_ci": "卷四",
+    "ye_ma": "第 15-16 页",
+    "hang_lie": "第 3 行至第 10 行",
+    "zhang_jie": "特殊格局章·三光课",
+    "ban_ben": "清·康熙刻本"
+  },
+  "ding_yi": {
+    "yuan_wen": "《六壬大全》卷四：\n「三光课者，谓干支上神得旺相，又三传皆阳，或三传皆阴，或三传皆木，或三传皆火，或三传皆土，或三传皆金，或三传皆水，名曰三光。大抵此课最吉，凡占皆遂。」",
+    "bai_hua": "三光课是指：日干和日支的上神得旺相之气，并且三传都是阳支，或都是阴支，或都属同一五行（木火土金水任何一种）。这样的课式称为三光。总体来说此课最吉利，凡占问事情都能遂愿。",
+    "he_xin_yao_dian": [
+      "干支上神得旺相",
+      "三传纯一（纯阳、纯阴或纯五行）",
+      "大抵最吉，凡占皆遂"
+    ],
+    "ke_ming_shi_yi": "三光，指日干、日支、三传三者皆得光明旺相之气，故称三光。"
+  },
+  "gou_cheng_tiao_jian": {
+    "si_ke_yao_qiu": {
+      "di_yi_ke": "日干上神得旺相",
+      "di_er_ke": "日支上神得旺相",
+      "di_san_ke": "无特殊要求",
+      "di_si_ke": "无特殊要求",
+      "zheng_ti_ge_ju": "干支上神皆处旺相之地"
+    },
+    "san_chuan_yao_qiu": {
+      "chu_chuan": "无特殊要求",
+      "zhong_chuan": "无特殊要求",
+      "mo_chuan": "无特殊要求",
+      "san_chuan_zu_he": "三传必须纯一，满足以下条件之一：\n1. 三传皆阳支（子寅辰午申戌）\n2. 三传皆阴支（丑卯巳未酉亥）\n3. 三传皆属同一五行（三合局）",
+      "chuan_bian_gui_lv": "三传发用后自然形成纯一格局"
+    },
+    "tian_di_pan_yao_qiu": {
+      "yue_jiang": "无特殊要求",
+      "zhan_shi": "无特殊要求",
+      "ge_ju": "干支上神处旺相之地",
+      "te_shu_wei_zhi": "无"
+    },
+    "shen_jiang_yao_qiu": {
+      "gui_ren": "无特殊要求",
+      "shi_er_tian_jiang": "无特殊要求",
+      "shen_sha": "喜见德神、禄神、马星等吉神"
+    },
+    "wu_xing_sheng_ke": {
+      "gan_zhi_wu_xing": "干支上神与日干相生或比和",
+      "san_chuan_wu_xing": "三传五行纯一",
+      "sheng_ke_guan_xi": "三传生扶日干或与日干比和为吉"
+    },
+    "te_shu_ge_ju": [
+      {
+        "ming_cheng": "三光并照",
+        "tiao_jian": "三传纯阳且干支上神皆旺相"
+      },
+      {
+        "ming_cheng": "三光会合",
+        "tiao_jian": "三传三合局且干支上神得地"
+      }
+    ]
+  },
+  "ji_xiong_yuan_ze": {
+    "ji_xiong": "大吉",
+    "ying_yan_tiao_jian": {
+      "shi_jian": "旬内或月内应验",
+      "fang_wei": "南方、东方为吉",
+      "ren_shi": "官职、求财、婚姻皆吉"
+    },
+    "zhan_duan_yao_dian": {
+      "guan_zhi": "官职高升，求谋得遂",
+      "hun_yin": "婚姻和合，百年好合",
+      "cai_yun": "财运亨通，生意兴隆",
+      "ji_bing": "疾病易愈，无大碍",
+      "guan_si": "官司得理，诉讼获胜",
+      "chu_xing": "出行顺利，一路平安",
+      "shi_wu": "失物可寻，行人即至",
+      "qi_ta": "凡占皆遂，诸事吉利"
+    },
+    "lei_xiang_jie_shi": {
+      "tian_gan": "天干主外，得旺相主外缘佳",
+      "di_zhi": "地支主内，得旺相主内助有力",
+      "shen_jiang": "吉神加临更增其吉",
+      "ge_ju": "三光会合主光明普照"
+    },
+    "bian_hua_qu_shi": {
+      "chu_chuan": "初传主开始，光明初现",
+      "zhong_chuan": "中传主过程，发展顺利",
+      "mo_chuan": "末传主结果，圆满成就"
+    }
+  },
+  "cong_ge": [
+    {
+      "cong_ge_ming": "三光失明",
+      "gou_cheng_tiao_jian": "虽有三传纯一之象，但干支上神失陷或处死绝之地，或三传虽纯一但空亡",
+      "yu_zhu_ke_qu_bie": [
+        "主课三光：干支上神旺相，三传纯一 → 大吉",
+        "从格三光失明：干支上神失陷，或三传空亡 → 吉中藏凶"
+      ],
+      "ji_xiong_pan_duan": "表面吉利，实则凶险，或先吉后凶",
+      "te_shu_pan_duan_gui_ze": "不可作吉断，当详察干支上神及三传空亡情况",
+      "ying_yan_cha_yi": "占事初看似成，实则多阻，或成而复败",
+      "yuan_wen_yi_ju": "《六壬大全》卷四：「若三传虽纯，而干支上神失陷，或值空亡，名曰三光失明，吉中藏凶。」",
+      "shi_fou_te_shu": true
+    },
+    {
+      "cong_ge_ming": "三光不全",
+      "gou_cheng_tiao_jian": "三传纯一但缺一（如两传纯一，一传不纯），或干支上神一旺一衰",
+      "yu_zhu_ke_qu_bie": [
+        "主课三光：条件完全具备 → 大吉",
+        "从格三光不全：条件部分具备 → 次吉"
+      ],
+      "ji_xiong_pan_duan": "次吉，有小成但难圆满",
+      "te_shu_pan_duan_gui_ze": "可作吉断，但程度减等",
+      "ying_yan_cha_yi": "占事可成，但难尽如人意",
+      "yuan_wen_yi_ju": "《六壬大全》卷四：「三传纯一而干支上神一旺一衰，或三传缺而不全，名曰三光不全，次吉。」",
+      "shi_fou_te_shu": false
+    }
+  ],
+  "ke_li_pi_pei": {
+    "zong_shu": 0,
+    "zhan_bi": 0,
+    "fen_bu_te_dian": "待匹配 720 课例后统计",
+    "ke_li_list": [],
+    "dian_xing_ke_li": [],
+    "bian_jie_ke_li": []
+  },
+  "xiao_kan_kao_yi": {
+    "ban_ben_yi_wen": [
+      {
+        "ban_ben": "康熙刻本",
+        "yuan_wen": "三光课者，谓干支上神得旺相",
+        "jiao_kan_yi_jian": "各版本一致"
+      },
+      {
+        "ban_ben": "乾隆刻本",
+        "yuan_wen": "三光课者，谓干支上神旺相",
+        "jiao_kan_yi_jian": "无「得」字，义同"
+      }
+    ],
+    "cun_yi_wen_ti": [
+      {
+        "wen_ti_miao_shu": "三光是否必须同时满足干支上神旺相和三传纯一",
+        "ge_jia_guan_dian": "甲说：必须同时满足；乙说：满足其一即可",
+        "dai_kao_shi_xiang": "待考原文上下文义"
+      }
+    ],
+    "kan_wu_ji_lu": []
+  },
+  "shen_he_zhuang_kuang": {
+    "zheng_li_ren": "待填写",
+    "zheng_li_ri_qi": "2026-03-20",
+    "fu_he_ren": "待填写",
+    "fu_he_ri_qi": "待填写",
+    "fu_ze_ren": "待填写",
+    "zui_zhong_que_ren_ri_qi": "待填写"
+  },
+  "zhi_liang_ping_gu": {
+    "zhun_que_xing": "待评估",
+    "wan_zheng_xing": "待评估",
+    "gui_fan_xing": "待评估",
+    "yuan_wen_hui_su_ce_shi": "待测试"
+  },
+  "ban_ben_hao": "v1.0.0-draft",
+  "geng_xin_ri_qi": "2026-03-20"
+}
