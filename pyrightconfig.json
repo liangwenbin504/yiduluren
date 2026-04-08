@@ -1,0 +1,12 @@
+{
+  "exclude": [
+    "openclaw",
+    "node_modules",
+    "__pycache__",
+    ".git",
+    "*.pyc",
+    "data/raw",
+    "docs",
+    "core_modules/data"
+  ]
+}
