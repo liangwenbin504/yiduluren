@@ -3,278 +3,292 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>网络恢复模块测试</title>
-    <script src="network_recovery.js"></script>
+    <title>网络恢复功能测试</title>
     <style>
         body {
-            font-family: 'Microsoft YaHei', sans-serif;
-            max-width: 800px;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            max-width: 900px;
             margin: 50px auto;
             padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: #f5f5f5;
         }
         .container {
-            background: rgba(255, 255, 255, 0.1);
+            background: white;
             padding: 30px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         h1 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .test-section {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        .test-section h2 {
-            margin-top: 0;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
             padding-bottom: 10px;
         }
+        .status-box {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border-left: 4px solid;
+        }
+        .status-online {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        .status-offline {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        .status-checking {
+            background: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
         button {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            border: none;
+            background: #4CAF50;
             color: white;
-            padding: 12px 24px;
+            padding: 10px 20px;
+            border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
             margin: 5px;
-            transition: transform 0.2s;
+            font-size: 14px;
         }
         button:hover {
-            transform: scale(1.05);
+            background: #45a049;
         }
-        button:active {
-            transform: scale(0.95);
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
         }
-        .status {
-            margin-top: 10px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 5px;
-            min-height: 40px;
-        }
-        .log {
-            background: rgba(0, 0, 0, 0.5);
+        .log-container {
+            background: #1e1e1e;
+            color: #d4d4d4;
             padding: 15px;
             border-radius: 5px;
             max-height: 300px;
             overflow-y: auto;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
+            font-family: 'Consolas', monospace;
+            font-size: 13px;
+            margin: 20px 0;
         }
-        .log-item {
+        .log-entry {
             margin: 5px 0;
-            padding: 5px;
-            border-left: 3px solid #f5576c;
-            padding-left: 10px;
+            padding: 3px 0;
         }
-        .network-status {
-            text-align: center;
+        .log-success { color: #4ec9b0; }
+        .log-error { color: #f48771; }
+        .log-info { color: #9cdcfe; }
+        .log-warning { color: #dcdcaa; }
+        .instance-info {
+            background: #e3f2fd;
             padding: 15px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
         }
-        .online {
-            background: rgba(76, 175, 80, 0.3);
-            border: 2px solid #4caf50;
-        }
-        .offline {
-            background: rgba(244, 67, 54, 0.3);
-            border: 2px solid #f44336;
+        .instance-info code {
+            background: #fff;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', monospace;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🚀 网络请求恢复模块测试</h1>
+        <h1>📡 网络恢复功能测试</h1>
         
-        <div id="networkStatus" class="network-status online">
-            🟢 网络在线
+        <div class="instance-info">
+            <h3>📦 实例状态</h3>
+            <p>window.networkRecovery 是否存在: <code id="instanceExists">检查中...</code></p>
+            <p>实例配置: <code id="instanceConfig">-</code></p>
+        </div>
+        
+        <div id="statusBox" class="status-box status-checking">
+            <strong>网络状态:</strong> <span id="networkStatus">检查中...</span>
         </div>
         
         <div class="test-section">
-            <h2>📊 队列状态</h2>
-            <div id="queueStatus">点击按钮测试</div>
-            <button onclick="showQueueStatus()">查看队列状态</button>
-            <button onclick="clearQueue()">清空队列</button>
-            <button onclick="clearCache()">清空缓存</button>
+            <h3>🧪 功能测试</h3>
+            <button onclick="testNetworkStatus()">测试网络状态检测</button>
+            <button onclick="testSuccessfulRequest()">测试成功请求</button>
+            <button onclick="testFailedRequest()">测试失败请求（模拟）</button>
+            <button onclick="testRetryMechanism()">测试重试机制</button>
+            <button onclick="clearLogs()">清空日志</button>
         </div>
         
         <div class="test-section">
-            <h2>🧪 功能测试</h2>
-            <button onclick="testSuccess()">✅ 成功请求</button>
-            <button onclick="testNetworkError()">🔴 网络错误</button>
-            <button onclick="testTimeout()">⏱️ 超时请求</button>
-            <button onclick="testIdempotency()">🔄 幂等性测试</button>
-        </div>
-        
-        <div class="test-section">
-            <h2>📝 日志输出</h2>
-            <div id="log" class="log"></div>
+            <h3>📊 测试日志</h3>
+            <div id="logContainer" class="log-container">
+                <div class="log-entry log-info">[系统] 测试页面已加载</div>
+            </div>
         </div>
     </div>
-    
+
+    <script src="network_recovery.js"></script>
     <script>
-        // 初始化网络恢复模块
-        const networkRecovery = new NetworkRequestRecovery({
-            maxRetries: 3,
-            retryInterval: 2000,
-            exponentialBackoff: true,
-            timeout: 5000,
-            enableQueue: true,
-            enableIdempotency: true,
-            debug: false
-        });
-        
-        // 设置回调
-        networkRecovery.setCallbacks({
-            onQueued: (data) => {
-                addLog(`📦 请求已入队：${data.requestId}, 队列长度：${data.queueLength}`);
-                updateNetworkStatus();
-            },
-            onRetry: (data) => {
-                addLog(`🔄 重试请求：${data.requestId} (第${data.retryCount}次，延迟${Math.round(data.delay)}ms)`);
-            },
-            onSuccess: (data) => {
-                addLog(`✅ 请求成功：${data.requestId}, 重试次数：${data.retries}`);
-            },
-            onError: (data) => {
-                addLog(`❌ 请求失败：${data.requestId}, 错误：${data.error.message}`);
-            },
-            onRecover: (data) => {
-                addLog(`🟢 网络已恢复`);
-                updateNetworkStatus();
-            },
-            onOffline: (data) => {
-                addLog(`🔴 网络已断开`);
-                updateNetworkStatus();
-            }
-        });
-        
-        // 更新网络状态显示
-        function updateNetworkStatus() {
-            const statusEl = document.getElementById('networkStatus');
-            const queueStatusEl = document.getElementById('queueStatus');
-            
-            if (networkRecovery.isOnline) {
-                statusEl.textContent = '🟢 网络在线';
-                statusEl.className = 'network-status online';
-            } else {
-                statusEl.textContent = '🔴 网络断开';
-                statusEl.className = 'network-status offline';
-            }
-            
-            showQueueStatus();
-        }
-        
-        // 显示队列状态
-        function showQueueStatus() {
-            const status = networkRecovery.getQueueStatus();
-            document.getElementById('queueStatus').innerHTML = `
-                <strong>队列长度:</strong> ${status.queueLength}<br>
-                <strong>处理中:</strong> ${status.processingCount}<br>
-                <strong>已完成:</strong> ${status.completedCount}<br>
-                <strong>网络状态:</strong> ${status.isOnline ? '🟢 在线' : '🔴 断开'}
-            `;
-        }
-        
-        // 清空队列
-        function clearQueue() {
-            networkRecovery.clearQueue();
-            addLog('🗑️ 队列已清空');
-            showQueueStatus();
-        }
-        
-        // 清空缓存
-        function clearCache() {
-            networkRecovery.clearCompletedCache();
-            addLog('🗑️ 缓存已清空');
-        }
-        
-        // 添加日志
-        function addLog(message) {
-            const logEl = document.getElementById('log');
+        function log(message, type = 'info') {
+            const container = document.getElementById('logContainer');
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
             const timestamp = new Date().toLocaleTimeString();
-            const logItem = document.createElement('div');
-            logItem.className = 'log-item';
-            logItem.textContent = `[${timestamp}] ${message}`;
-            logEl.appendChild(logItem);
-            logEl.scrollTop = logEl.scrollHeight;
+            entry.textContent = `[${timestamp}] ${message}`;
+            container.appendChild(entry);
+            container.scrollTop = container.scrollHeight;
         }
         
-        // 测试成功请求
-        async function testSuccess() {
-            addLog('📡 发送成功请求测试...');
+        function updateStatus(status, isOnline) {
+            const box = document.getElementById('statusBox');
+            const statusText = document.getElementById('networkStatus');
+            
+            box.className = 'status-box';
+            if (isOnline === true) {
+                box.classList.add('status-online');
+            } else if (isOnline === false) {
+                box.classList.add('status-offline');
+            } else {
+                box.classList.add('status-checking');
+            }
+            
+            statusText.textContent = status;
+        }
+        
+        function checkInstance() {
+            const exists = typeof window.networkRecovery !== 'undefined';
+            document.getElementById('instanceExists').textContent = exists ? '✅ 存在' : '❌ 不存在';
+            
+            if (exists) {
+                const config = {
+                    maxRetries: window.networkRecovery.config.maxRetries,
+                    retryInterval: window.networkRecovery.config.retryInterval,
+                    debug: window.networkRecovery.config.debug
+                };
+                document.getElementById('instanceConfig').textContent = JSON.stringify(config);
+                log('NetworkRecovery 实例已找到', 'success');
+            } else {
+                log('NetworkRecovery 实例未找到！', 'error');
+            }
+            
+            return exists;
+        }
+        
+        function testNetworkStatus() {
+            log('开始测试网络状态检测...', 'info');
+            
+            if (!checkInstance()) {
+                log('测试失败：实例不存在', 'error');
+                return;
+            }
+            
+            const isOnline = window.networkRecovery.isOnline;
+            log(`当前网络状态: ${isOnline ? '在线 ✅' : '离线 ❌'}`, isOnline ? 'success' : 'error');
+            updateStatus(isOnline ? '在线' : '离线', isOnline);
+            
+            log(`队列长度: ${window.networkRecovery.requestQueue.length}`, 'info');
+            log(`最大重试: ${window.networkRecovery.config.maxRetries}`, 'info');
+        }
+        
+        async function testSuccessfulRequest() {
+            log('开始测试成功请求...', 'info');
+            
+            if (!checkInstance()) {
+                log('测试失败：实例不存在', 'error');
+                return;
+            }
+            
             try {
-                const result = await networkRecovery.request({
-                    url: 'https://jsonplaceholder.typicode.com/todos/1',
+                updateStatus('测试中...', null);
+                const data = await window.networkRecovery.request({
+                    url: 'https://jsonplaceholder.typicode.com/posts/1',
                     method: 'GET'
                 });
-                addLog('✅ 请求成功：' + JSON.stringify(result));
+                log('请求成功！获取到数据:', 'success');
+                log(`标题: ${data.title}`, 'success');
+                updateStatus('在线', true);
             } catch (error) {
-                addLog('❌ 请求失败：' + error.message);
+                log(`请求失败: ${error.message}`, 'error');
+                updateStatus('离线', false);
             }
         }
         
-        // 测试网络错误
-        async function testNetworkError() {
-            addLog('📡 发送网络错误请求测试...');
+        async function testFailedRequest() {
+            log('开始测试失败请求（模拟错误URL）...', 'info');
+            
+            if (!checkInstance()) {
+                log('测试失败：实例不存在', 'error');
+                return;
+            }
+            
             try {
-                const result = await networkRecovery.request({
-                    url: 'http://invalid-url-test.local/api/test',
+                updateStatus('测试中...', null);
+                const response = await window.networkRecovery.request({
+                    url: 'https://this-url-does-not-exist-12345.com/api',
                     method: 'GET'
                 });
-                addLog('✅ 请求成功：' + JSON.stringify(result));
+                log('请求意外成功', 'warning');
             } catch (error) {
-                addLog('❌ 请求最终失败：' + error.message);
+                log(`预期的失败: ${error.message}`, 'warning');
+                log('重试机制应该已启动', 'info');
             }
         }
         
-        // 测试超时请求
-        async function testTimeout() {
-            addLog('📡 发送超时请求测试...');
-            try {
-                const result = await networkRecovery.request({
-                    url: 'https://httpstat.us/200?sleep=10000',
-                    method: 'GET'
-                });
-                addLog('✅ 请求成功：' + JSON.stringify(result));
-            } catch (error) {
-                addLog('❌ 请求超时：' + error.message);
+        async function testRetryMechanism() {
+            log('开始测试重试机制...', 'info');
+            
+            if (!checkInstance()) {
+                log('测试失败：实例不存在', 'error');
+                return;
             }
-        }
-        
-        // 测试幂等性
-        async function testIdempotency() {
-            addLog('🔄 测试幂等性 - 发送 3 个相同的请求...');
+            
+            log('将发送多个请求测试并发重试...', 'info');
             
             const promises = [];
             for (let i = 0; i < 3; i++) {
-                promises.push(networkRecovery.request({
-                    url: 'https://jsonplaceholder.typicode.com/todos/1',
-                    method: 'GET'
-                }));
+                promises.push(
+                    window.networkRecovery.request({
+                        url: 'https://jsonplaceholder.typicode.com/posts/' + (i + 1),
+                        method: 'GET'
+                    })
+                        .then(d => {
+                            log(`请求 ${i + 1} 成功: ${d.title.substring(0, 30)}...`, 'success');
+                        })
+                        .catch(e => {
+                            log(`请求 ${i + 1} 失败: ${e.message}`, 'error');
+                        })
+                );
             }
             
-            const results = await Promise.all(promises);
-            addLog(`✅ 收到 ${results.length} 个响应，其中 ${results.filter((r, i, arr) => arr.indexOf(r) === i).length} 个是唯一的`);
+            await Promise.all(promises);
+            log('所有并发请求完成', 'info');
         }
         
-        // 监听网络状态变化
-        window.addEventListener('online', updateNetworkStatus);
-        window.addEventListener('offline', updateNetworkStatus);
+        function clearLogs() {
+            document.getElementById('logContainer').innerHTML = '<div class="log-entry log-info">[系统] 日志已清空</div>';
+        }
         
-        // 初始化
-        updateNetworkStatus();
-        addLog('🚀 网络恢复模块测试页面已加载');
+        window.addEventListener('load', () => {
+            log('页面加载完成，开始检查实例...', 'info');
+            setTimeout(() => {
+                checkInstance();
+                testNetworkStatus();
+            }, 500);
+        });
+        
+        window.addEventListener('online', () => {
+            log('浏览器检测到网络已连接', 'success');
+            updateStatus('在线', true);
+        });
+        
+        window.addEventListener('offline', () => {
+            log('浏览器检测到网络已断开', 'error');
+            updateStatus('离线', false);
+        });
     </script>
 </body>
 </html>
