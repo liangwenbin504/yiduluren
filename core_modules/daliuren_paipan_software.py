@@ -264,7 +264,7 @@ class DaLiuRenPaipanSoftware:
     
     def _get_xun_kong(self, ri_ganzhi: str) -> str:
         """获取旬空"""
-        from data.斗首择日规则 import TIANGAN, DIZHI
+        from core_modules.data.斗首择日规则 import TIANGAN, DIZHI
         
         # 计算旬首
         gan_index = TIANGAN.index(ri_ganzhi[0])

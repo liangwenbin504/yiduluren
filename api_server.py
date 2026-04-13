@@ -9,12 +9,19 @@ import io
 import sys
 import os
 
-_log_file = open('api_server.log', 'w', encoding='utf-8')
+# 定义项目根目录（必须在其他代码之前）
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+# PythonAnywhere 环境下不使用文件日志，直接输出到控制台
+# _log_file = open('api_server.log', 'w', encoding='utf-8')
 
 def log_print(msg):
+    """日志输出函数 - PythonAnywhere环境下直接输出到控制台"""
     print(msg)
-    _log_file.write(str(msg) + '\n')
-    _log_file.flush()
+    # PythonAnywhere 会自动捕获 print 输出到日志文件
+    # if '_log_file' in globals():
+    #     _log_file.write(str(msg) + '\n')
+    #     _log_file.flush()
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
@@ -107,9 +114,9 @@ def fix_document_seal_after_export(doc_path):
         traceback.print_exc()
         return False
 
-# 添加核心模块路径
+# 添加核心模块路径（只从 engine/ 目录导入）
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'engine'))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'core_modules'))
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'core_modules', 'engine'))
 
 app = Flask(__name__)
 CORS(app)
@@ -165,6 +172,13 @@ except Exception as e:
     DaLiuRenLuMaGuiRen = None
 
 try:
+    from engine.kekeduanyu import KeKeDuanyu
+    print("✅ kekeduanyu 导入成功")
+except Exception as e:
+    print(f"❌ kekeduanyu 导入失败: {e}")
+    KeKeDuanyu = None
+
+try:
     from gui_ren_engine import GuiRenCalculator
     print("✅ gui_ren_engine 导入成功")
 except Exception as e:
@@ -202,19 +216,34 @@ except Exception as e:
     LiuRenKetiDuanyu_Instance = None
 
 try:
-    from ai_evaluation import AIEvaluation
+    from engine.ai_evaluation import AIEvaluation
     print("✅ ai_evaluation 导入成功")
-    AIEvaluation_Instance = AIEvaluation(enable_ai=False)
+    # 通义千问 API Key 配置
+    QWEN_API_KEY = "***REMOVED***"
+    AIEvaluation_Instance = AIEvaluation(enable_ai=True, api_key=QWEN_API_KEY)
+    print(f"✅ 通义千问AI评价已启用: {AIEvaluation_Instance.ai_available}")
 except Exception as e:
     print(f"❌ ai_evaluation 导入失败: {e}")
     AIEvaluation_Instance = None
+
+# ==================== 全局辅助函数 ====================
+def arrange_tiandi_pan(yuejiang, shichen):
+    """默认天地盘布局函数"""
+    return {'天盘': {}, '地盘': {}}
+
+# 尝试导入完整的天地盘布局生成器
+try:
+    from src.utils.dizhi_layout_generator import arrange_tiandi_pan as import_arrange_tiandi_pan
+    arrange_tiandi_pan = import_arrange_tiandi_pan
+except ImportError:
+    pass
 
 # ==================== API端点 ====================
 
 @app.route('/')
 def index():
     """首页"""
-    return send_from_directory('.', '主界面.html')
+    return send_from_directory('.', 'index.html')
 
 @app.route('/<path:filename>')
 def serve_static(filename):
@@ -222,10 +251,12 @@ def serve_static(filename):
     try:
         import urllib.parse
         filename = urllib.parse.unquote(filename)
-        if os.path.exists(filename):
-            return send_from_directory('.', filename)
+        # 使用 PROJECT_ROOT 绝对路径
+        file_path = os.path.join(PROJECT_ROOT, filename)
+        if os.path.exists(file_path):
+            return send_from_directory(PROJECT_ROOT, filename)
         else:
-            return jsonify({'error': 'File not found'}), 404
+            return jsonify({'error': 'File not found', 'path': file_path}), 404
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -338,9 +369,62 @@ def doushou_full_analyze():
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
+def calculate_mubiao_bonus(mubiao, doushou_result, daliuren_result, luma_guiren_info, mountain):
+    """计算目标匹配奖励分数和仪度六壬综合评分
+    mubiao: 目标列表 ['求官', '求财', '求富贵', '求子', '求学问', '求婚姻']
+    doushou_result: 斗首分析结果
+    daliuren_result: 大六壬结果 (sizhu_result)
+    luma_guiren_info: 禄马贵人信息
+    mountain: 坐山
+    返回: (bonus_score, matched_mubiao_list, yidu_score_result)
+    """
+    bonus = 0
+    matched = []
+    yidu_score_result = None
+
+    if not KeKeDuanyu:
+        return 0, [], None
+
+    yidu_score_result = KeKeDuanyu.analyze_yidu_score(
+        mountain=mountain,
+        sizhu=daliuren_result,
+        doushou_result=doushou_result,
+        luma_guiren_info=luma_guiren_info,
+        mubiao=mubiao
+    )
+
+    bonus = yidu_score_result.get('综合评分', 0)
+    matched = []
+
+    if mubiao:
+        doushou_patterns = doushou_result.get('课格格局', [])
+        doushou_pattern_str = ' '.join(doushou_patterns) if doushou_patterns else ''
+
+        for m in mubiao:
+            if m == '求官':
+                if '禄马贵人' in yidu_score_result.get('评价', '') or '官' in doushou_pattern_str:
+                    matched.append('求官')
+            elif m == '求财':
+                if '武财' in doushou_pattern_str or '财' in doushou_pattern_str:
+                    matched.append('求财')
+            elif m == '求富贵':
+                if yidu_score_result.get('综合评分', 0) >= 40:
+                    matched.append('求富贵')
+            elif m == '求子':
+                if yidu_score_result.get('综合评分', 0) >= 30:
+                    matched.append('求子')
+            elif m == '求学问' or m == '求文昌':
+                if '朱雀' in str(yidu_score_result.get('课传美格', [])):
+                    matched.append('求学问')
+            elif m == '求婚姻':
+                if yidu_score_result.get('综合评分', 0) >= 30:
+                    matched.append('求婚姻')
+
+    return bonus, matched, yidu_score_result
+
 @app.route('/api/doushou/full_range_analyze', methods=['POST'])
 def doushou_full_range_analyze():
-    """完整日期范围分析"""
+    """完整日期范围分析 - 使用测试成功的逻辑"""
     try:
         data = request.json
         
@@ -349,11 +433,11 @@ def doushou_full_range_analyze():
         end_date_str = data.get('end_date', '2026-12-31')
         min_daliuren_score = data.get('min_daliuren_score', 70)
         max_results = data.get('max_results', 10)
-        
+        mubiao = data.get('mubiao', [])
+
         log_print(f"[DEBUG] 完整日期范围分析: {start_date_str} 至 {end_date_str}")
         log_print(f"[DEBUG] 坐山: {mountain}")
-        log_print(f"[DEBUG] DouhouKegeAnalyzer: {DouhouKegeAnalyzer}")
-        log_print(f"[DEBUG] get_sizhu: {get_sizhu}")
+        log_print(f"[DEBUG] 用户目标: {mubiao}")
         
         from datetime import datetime, timedelta
         try:
@@ -362,14 +446,49 @@ def doushou_full_range_analyze():
         except Exception as e:
             return jsonify({'error': f'日期格式错误: {e}'}), 400
         
-        results = []
-        current_date = start_date
-        total_days = 0
-        total_candidates = 0
+        # 初始化
+        douhou_analyzer = DouhouKegeAnalyzer()
+        sike_calc = SiKeSanChuanCalculator()
+        kejing_scorer = KeJingScoring()
+        yanqin_analyzer = YanQinAnalyzer()
+        luma_guiren_calc = DaLiuRenLuMaGuiRen()
         
+        # 完整的天地盘函数
+        def arrange_tiandi_pan_local(yuejiang: str, shichen: str) -> dict:
+            DIZHI_LOCAL = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥']
+            shi_index = DIZHI_LOCAL.index(shichen)
+            yuejiang_index = DIZHI_LOCAL.index(yuejiang)
+            zi_position = (shi_index - yuejiang_index) % 12
+            tian_pan = []
+            for i in range(12):
+                tian_index = (i - zi_position) % 12
+                tian_pan.append(DIZHI_LOCAL[tian_index])
+            result = {}
+            for i in range(12):
+                result[DIZHI_LOCAL[i]] = tian_pan[i]
+            return result
+        
+        # 节气日期
+        ZHONGQI_DATES = [
+            (1, 20, '子'),
+            (2, 19, '亥'),
+            (3, 21, '戌'),
+            (4, 20, '酉'),
+            (5, 21, '申'),
+            (6, 21, '未'),
+            (7, 23, '午'),
+            (8, 23, '巳'),
+            (9, 23, '辰'),
+            (10, 24, '卯'),
+            (11, 22, '寅'),
+            (12, 22, '丑'),
+        ]
+        
+        # 时辰列表
         shichen_list = ['子', '丑', '寅', '卯', '辰', '巳', 
                        '午', '未', '申', '酉', '戌', '亥']
         
+        # 时辰映射
         shichen_map = {
             23: '子', 0: '子',
             1: '丑', 2: '丑',
@@ -385,228 +504,171 @@ def doushou_full_range_analyze():
             21: '亥', 22: '亥'
         }
         
+        # 月柱六相优先级
+        LIUXIANG_PRIORITY = {
+            '武财': 5,
+            '元辰': 4,
+            '廉贞': 3,
+            '贪官': 2,
+            '破鬼': 1
+        }
+        
+        results = []
+        current_date = start_date
+        total_days = 0
+        total_candidates = 0
+        total_shichen = 0
         first_iteration = True
+        mountain_char = mountain[0] if mountain else '子'
+        
+        log_print(f"[DEBUG] 开始筛选...")
         
         while current_date <= end_date:
-            total_days += 1
             date_str = current_date.strftime('%Y-%m-%d')
             
             for shichen in shichen_list:
                 try:
+                    # 获取四柱
                     year = current_date.year
                     month = current_date.month
                     day = current_date.day
                     hour = shichen_list.index(shichen) * 2
+                    shichen_for_sizhu = shichen_map.get(hour, '午')
+                    sizhu_result = get_sizhu(year, month, day, shichen_for_sizhu)
                     
-                    if get_sizhu:
-                        shichen_for_sizhu = shichen_map.get(hour, '午')
-                        sizhu_result = get_sizhu(year, month, day, shichen_for_sizhu)
-                        if first_iteration:
-                            log_print(f"[DEBUG] 第一个四柱: {sizhu_result}")
-                    else:
-                        log_print(f"[WARN] get_sizhu 未加载，使用默认四柱")
-                        sizhu_result = {
-                            '年柱': '甲子',
-                            '月柱': '丙寅',
-                            '日柱': '甲子',
-                            '时柱': '甲子'
-                        }
+                    # 斗首分析
+                    doushou_result = douhou_analyzer.analyze_kege(mountain_char, sizhu_result)
+                    doushou_score = doushou_result.get('综合评分', 50)
+                    doushou_patterns = doushou_result.get('课格格局', [])
+                    doushou_duanyu = doushou_result.get('吉凶断语', [])
                     
-                    mountain_char = mountain[0] if mountain else '子'
+                    liuxiang_analysis = doushou_result.get('六相六替分析', {})
+                    sizhu_liuxiang = liuxiang_analysis.get('四柱六相', {})
+                    yuezhu_info = sizhu_liuxiang.get('月柱', {})
+                    yuezhu_liuxiang = yuezhu_info.get('六相', '')
+                    yuezhu_liuxiang_priority = LIUXIANG_PRIORITY.get(yuezhu_liuxiang, 0)
                     
-                    doushou_score = 50
-                    doushou_patterns = []
-                    doushou_duanyu = []
-                    yuezhu_liuxiang = ''
-                    yuezhu_liuxiang_priority = 0
-                    
-                    is_qualified = False
-                    qualification_status = ''
-                    qualification_score = 0
-                    ri_luma_guiren_in_sanchuan = False
-                    luma_result = None
-                    luma_guiren_info = {}
-                    
-                    LIUXIANG_PRIORITY = {
-                        '武财': 5,
-                        '元辰': 4,
-                        '廉贞': 3,
-                        '贪官': 2,
-                        '破鬼': 1
-                    }
-                    
-                    if DouhouKegeAnalyzer:
-                        analyzer = DouhouKegeAnalyzer()
-                        doushou_result = analyzer.analyze_kege(mountain_char, sizhu_result)
-                        if first_iteration:
-                            log_print(f"[DEBUG] 斗首分析结果: {doushou_result}")
-                        doushou_score = doushou_result.get('综合评分', 50)
-                        doushou_patterns = doushou_result.get('课格格局', [])
-                        doushou_duanyu = doushou_result.get('吉凶断语', [])
-                        
-                        liuxiang_analysis = doushou_result.get('六相六替分析', {})
-                        sizhu_liuxiang = liuxiang_analysis.get('四柱六相', {})
-                        yuezhu_info = sizhu_liuxiang.get('月柱', {})
-                        yuezhu_liuxiang = yuezhu_info.get('六相', '')
-                        yuezhu_liuxiang_priority = LIUXIANG_PRIORITY.get(yuezhu_liuxiang, 0)
-                        
-                        if first_iteration:
-                            log_print(f"[DEBUG] 第一个斗首评分: {doushou_score}, 月柱六相: {yuezhu_liuxiang}")
-                    else:
-                        log_print(f"[WARN] DouhouKegeAnalyzer 未加载")
-                    
+                    # 大六壬评分
                     daliuren_score = 50
                     daliuren_keti = '--'
                     daliuren_detail = None
                     luma_guiren_info = None
+                    is_daxiong = False
+                    is_qualified = False
+                    qualification_status = ''
                     
-                    if SiKeSanChuanCalculator and KeJingScoring:
-                        try:
-                            sike_calc = SiKeSanChuanCalculator()
-                            kejing_scorer = KeJingScoring()
-                            
-                            ri_gan = sizhu_result.get('日柱', '甲子')[0]
-                            ri_zhi = sizhu_result.get('日柱', '甲子')[1]
-                            yue_zhi_for_yuejiang = sizhu_result.get('月柱', '甲子')[1]
-                            
-                            from data.斗首择日规则 import DIZHI
-                            from src.utils.dizhi_layout_generator import arrange_tiandi_pan
-                            
-                            ZHONGQI_DATES = [
-                                (1, 20, '子'),
-                                (2, 19, '亥'),
-                                (3, 21, '戌'),
-                                (4, 20, '酉'),
-                                (5, 21, '申'),
-                                (6, 21, '未'),
-                                (7, 23, '午'),
-                                (8, 23, '巳'),
-                                (9, 23, '辰'),
-                                (10, 24, '卯'),
-                                (11, 22, '寅'),
-                                (12, 22, '丑'),
-                            ]
-                            
-                            yuejiang = '子'
-                            for m, d, yj in ZHONGQI_DATES:
-                                if (current_date.month > m) or (current_date.month == m and current_date.day >= d):
-                                    yuejiang = yj
-                            
-                            tiandi_pan = arrange_tiandi_pan(yuejiang, shichen)
-                            
-                            sike = sike_calc.qi_sike(ri_gan, ri_zhi, tiandi_pan)
-                            sanchuan = sike_calc.fa_sanchuan(sike, ri_gan, ri_zhi, tiandi_pan)
-                            
-                            keti = sanchuan.get('课体', '')
-                            daliuren_keti = keti
-                            
-                            keti_name = keti.replace('课', '') if keti else ''
-                            kejing_score = kejing_scorer.calculate_score(keti_name) * 10
-                            
-                            daliuren_detail = {
-                                '课体': keti,
-                                '三传': sanchuan,
-                                '起法': sanchuan.get('起法', '')
-                            }
-                            
-                            luma_score = 0
-                            sanchuan_luma_score = 0
-                            if DaLiuRenLuMaGuiRen:
-                                try:
-                                    luma_calc = DaLiuRenLuMaGuiRen()
-                                    nian_gan = sizhu_result.get('年柱', '甲子')[0]
-                                    nian_zhi = sizhu_result.get('年柱', '甲子')[1]
-                                    yue_gan = sizhu_result.get('月柱', '甲子')[0]
-                                    yue_zhi = sizhu_result.get('月柱', '甲子')[1]
-                                    
-                                    luma_result = luma_calc.analyze_full_with_sanchuan(
-                                        mountain_char, shichen,
-                                        nian_gan, nian_zhi,
-                                        yue_gan, yue_zhi,
-                                        ri_gan, ri_zhi,
-                                        sanchuan,
-                                        current_date.year, current_date.month, current_date.day
-                                    )
-                                    luma_score = luma_result.get('score', 0)
-                                    sanchuan_result = luma_result.get('sanchuan_result', {})
-                                    sanchuan_luma_score = sanchuan_result.get('sanchuan_score', 0) if sanchuan_result else 0
-                                    is_qualified = luma_result.get('is_qualified', False)
-                                    qualification_status = luma_result.get('qualification_status', '')
-                                    qualification_score = luma_result.get('qualification_score', 0)
-                                    ri_luma_guiren_in_sanchuan = luma_result.get('ri_luma_guiren_in_sanchuan', False)
-                                    double_qualified_count = luma_result.get('double_qualified_count', 0)
-                                    double_qualified_items = luma_result.get('double_qualified_items', [])
-                                    single_qualified_items = luma_result.get('single_qualified_items', [])
-                                    ri_double_qualified_detail = luma_result.get('ri_double_qualified_detail', {})
-                                    luma_guiren_info = {
-                                        'qualified_count': luma_result.get('qualified_count', 0),
-                                        'status': luma_result.get('status', ''),
-                                        'nian_qualified': luma_result.get('nian_result', {}).get('pillar_qualified', False),
-                                        'yue_qualified': luma_result.get('yue_result', {}).get('pillar_qualified', False),
-                                        'ri_qualified': luma_result.get('ri_result', {}).get('pillar_qualified', False),
-                                        'ben_shan_ji': luma_result.get('ben_shan_result', {}).get('has_ben_shan_ji', False),
-                                        'sanchuan_luma': sanchuan_result.get('sanchuan_status', '') if sanchuan_result else '',
-                                        'sanchuan_found_count': sanchuan_result.get('found_count', 0) if sanchuan_result else 0,
-                                        'is_qualified': is_qualified,
-                                        'qualification_status': qualification_status,
-                                        'ri_luma_guiren_in_sanchuan': ri_luma_guiren_in_sanchuan,
-                                        'double_qualified_count': double_qualified_count,
-                                        'double_qualified_items': double_qualified_items,
-                                        'single_qualified_items': single_qualified_items,
-                                        'ri_double_qualified_detail': ri_double_qualified_detail
-                                    }
-                                    if first_iteration:
-                                        log_print(f"[DEBUG] 禄马贵人评分: {luma_score}, 三传禄马: {sanchuan_luma_score}, 合格: {is_qualified}, 状态: {qualification_status}")
-                                except Exception as e:
-                                    log_print(f"[WARN] 禄马贵人计算失败: {e}")
-                            
-                            daliuren_score = luma_result.get('combined_score', 50) if luma_result else 50
-                            
-                            if first_iteration:
-                                log_print(f"[DEBUG] 第一个大六壬评分: {daliuren_score}, 课体: {keti}, 课格分: {kejing_score:.1f}, 禄马分: {luma_score}")
-                        except Exception as e:
-                            log_print(f"[WARN] 大六壬计算失败: {e}")
-                            import traceback
-                            traceback.print_exc()
-                    else:
-                        if first_iteration:
-                            log_print(f"[DEBUG] 大六壬评分使用默认值: {daliuren_score}")
+                    ri_gan = sizhu_result.get('日柱', '甲子')[0]
+                    ri_zhi = sizhu_result.get('日柱', '甲子')[1]
                     
+                    # 计算月将
+                    yuejiang = '子'
+                    for m, d, yj in ZHONGQI_DATES:
+                        if (current_date.month > m) or (current_date.month == m and current_date.day >= d):
+                            yuejiang = yj
+                    
+                    # 天地盘
+                    tiandi_pan = arrange_tiandi_pan_local(yuejiang, shichen)
+                    
+                    # 四课三传
+                    sike = sike_calc.qi_sike(ri_gan, ri_zhi, tiandi_pan)
+                    sanchuan = sike_calc.fa_sanchuan(sike, ri_gan, ri_zhi, tiandi_pan)
+                    keti = sanchuan.get('课体', '')
+                    daliuren_keti = keti
+                    
+                    # 课经评分
+                    keti_name = keti.replace('课', '') if keti else ''
+                    kejing_score = kejing_scorer.calculate_score(keti_name) * 10
+                    
+                    daliuren_detail = {
+                        '课体': keti,
+                        '三传': sanchuan,
+                        '起法': sanchuan.get('起法', '')
+                    }
+                    
+                    # 禄马贵人评分
+                    nian_gan = sizhu_result.get('年柱', '甲子')[0]
+                    nian_zhi = sizhu_result.get('年柱', '甲子')[1]
+                    yue_gan = sizhu_result.get('月柱', '甲子')[0]
+                    yue_zhi = sizhu_result.get('月柱', '甲子')[1]
+                    shi_gan = sizhu_result.get('时柱', '甲子')[0]
+                    shi_zhi = sizhu_result.get('时柱', '甲子')[1]
+                    
+                    new_score_result = luma_guiren_calc.calculate_new_score(
+                        mountain_char, shichen,
+                        nian_gan, nian_zhi,
+                        yue_gan, yue_zhi,
+                        ri_gan, ri_zhi,
+                        shi_gan, shi_zhi,
+                        sanchuan,
+                        [keti] if keti else None
+                    )
+                    
+                    daliuren_score = new_score_result['final_score']
+                    is_daxiong = new_score_result['is_daxiong']
+                    is_qualified = not is_daxiong and daliuren_score >= min_daliuren_score
+                    qualification_status = new_score_result['status']
+                    
+                    luma_guiren_info = {
+                        'qualified_count': new_score_result['pillar_qualified_count'],
+                        'status': new_score_result['status'],
+                        'nian_qualified': new_score_result['nian_qualified'],
+                        'yue_qualified': new_score_result['yue_qualified'],
+                        'ri_qualified': new_score_result['ri_qualified'],
+                        'shi_qualified': new_score_result['shi_qualified'],
+                        'sanchuan_luma_count': new_score_result['sanchuan_luma_count'],
+                        'sanchuan_qualified': new_score_result['sanchuan_qualified'],
+                        'is_qualified': is_qualified,
+                        'qualification_status': qualification_status,
+                        'ri_luma_guiren_in_sanchuan': new_score_result['sanchuan_luma_count'] >= 1,
+                        'double_qualified_count': new_score_result['pillar_qualified_count'],
+                        'ke_ti_level': new_score_result['ke_ti_level'],
+                        'ke_ti_deduction': new_score_result['ke_ti_deduction'],
+                        'is_daxiong': is_daxiong
+                    }
+                    
+                    # 演禽评分
                     yanqin_score = 50
                     yanqin_info = '--'
+                    year_zhi = sizhu_result.get('年柱', '甲子')[1]
+                    month_zhi = sizhu_result.get('月柱', '甲子')[1]
+                    day_zhi = sizhu_result.get('日柱', '甲子')[1]
+                    hour_zhi = sizhu_result.get('时柱', '甲子')[1]
                     
-                    if YanQinAnalyzer:
-                        try:
-                            yanqin_analyzer = YanQinAnalyzer()
-                            year_zhi = sizhu_result.get('年柱', '甲子')[1]
-                            month_zhi = sizhu_result.get('月柱', '甲子')[1]
-                            day_zhi = sizhu_result.get('日柱', '甲子')[1]
-                            hour_zhi = sizhu_result.get('时柱', '甲子')[1]
-                            
-                            yanqin_result = yanqin_analyzer.analyze_four_qin(year_zhi, month_zhi, day_zhi, hour_zhi)
-                            if yanqin_result:
-                                yanqin_score = yanqin_result.get('综合评分', 50)
-                                yanqin_info = f"{yanqin_result.get('四禽禽星', {}).get('日禽星', '--')}"
-                                if first_iteration:
-                                    log_print(f"[DEBUG] 第一个演禽评分: {yanqin_score}, 四禽: {yanqin_result.get('四禽')}")
-                        except Exception as e:
-                            log_print(f"[WARN] 演禽计算失败: {e}")
-                            import traceback
-                            traceback.print_exc()
-                    else:
-                        log_print(f"[WARN] YanQinAnalyzer 未加载")
+                    yanqin_result = yanqin_analyzer.analyze_four_qin(year_zhi, month_zhi, day_zhi, hour_zhi)
+                    if yanqin_result:
+                        yanqin_score = yanqin_result.get('综合评分', 50)
+                        yanqin_info = f"{yanqin_result.get('四禽禽星', {}).get('日禽星', '--')}"
                     
-                    first_iteration = False
+                    # 第一个日期的调试信息
+                    if first_iteration:
+                        log_print(f"[DEBUG] 第一个日期: {date_str} {shichen}")
+                        log_print(f"  - 斗首评分: {doushou_score}")
+                        log_print(f"  - 大六壬评分: {daliuren_score}, 课体: {keti}")
+                        log_print(f"  - 演禽评分: {yanqin_score}")
+                        first_iteration = False
                     
+                    # 计算总分
                     total_score = (doushou_score + daliuren_score + yanqin_score) / 3
                     
+                    # 筛选条件
                     doushou_ok = doushou_score >= 50
-                    daliuren_qualified = is_qualified
-                    yanqin_ok = yanqin_score >= 70
+                    daliuren_ok = daliuren_score >= min_daliuren_score
+                    yanqin_ok = yanqin_score >= 50
                     
-                    if doushou_ok and daliuren_qualified and yanqin_ok:
+                    if is_daxiong:
+                        continue
+                    
+                    if doushou_ok and daliuren_ok and yanqin_ok:
                         total_candidates += 1
-                        
+
+                        mubiao_bonus = 0
+                        matched_mubiao = []
+                        yidu_score_result = None
+                        if mubiao:
+                            mubiao_bonus, matched_mubiao, yidu_score_result = calculate_mubiao_bonus(
+                                mubiao, doushou_result, sizhu_result, luma_guiren_info, mountain
+                            )
+
                         results.append({
                             'date': date_str,
                             'shichen': shichen,
@@ -623,22 +685,44 @@ def doushou_full_range_analyze():
                             'mountain': mountain,
                             'yuezhu_liuxiang': yuezhu_liuxiang,
                             'yuezhu_liuxiang_priority': yuezhu_liuxiang_priority,
-                            'is_qualified': daliuren_qualified,
+                            'is_qualified': daliuren_ok,
                             'qualification_status': qualification_status,
-                            'ri_luma_guiren_in_sanchuan': ri_luma_guiren_in_sanchuan,
-                            'luma_guiren_info': luma_guiren_info
+                            'ri_luma_guiren_in_sanchuan': new_score_result['sanchuan_luma_count'] >= 1,
+                            'luma_guiren_info': luma_guiren_info,
+                            'mubiao_bonus': mubiao_bonus,
+                            'matched_mubiao': matched_mubiao,
+                            'yidu_score': yidu_score_result
                         })
+                        
+                        log_print(f"✅ 找到吉期: {date_str} {shichen} - 斗首: {doushou_score}, 六壬: {daliuren_score}, 演禽: {yanqin_score}, 总分: {total_score:.1f}")
+                    
+                    total_shichen += 1
+                
                 except Exception as e:
-                    log_print(f"[ERROR] 处理 {date_str} {shichen} 时出错: {e}")
+                    log_print(f"❌ 处理 {date_str} {shichen} 时出错: {e}")
                     import traceback
                     traceback.print_exc()
                     continue
             
+            total_days += 1
             current_date += timedelta(days=1)
         
-        log_print(f"[DEBUG] 共遍历 {total_days} 天，找到 {total_candidates} 个候选日课")
-        
-        results.sort(key=lambda x: (-x['yuezhu_liuxiang_priority'], -x['doushou_score'], x['date'], -x['total_score']))
+        log_print(f"[DEBUG] 共遍历: {total_days} 天, {total_shichen} 个时辰")
+        log_print(f"[DEBUG] 找到候选: {total_candidates} 个吉期")
+        log_print(f"[DEBUG] 结果数: {len(results)}")
+
+        def sort_key(x):
+            has_mubiao = len(x.get('matched_mubiao', [])) > 0 if mubiao else False
+            return (
+                -x['yuezhu_liuxiang_priority'],
+                -x['doushou_score'],
+                -int(has_mubiao),
+                -x.get('mubiao_bonus', 0),
+                x['date'],
+                -x['total_score']
+            )
+
+        results.sort(key=sort_key)
         results = results[:max_results]
         
         return jsonify({
@@ -647,9 +731,10 @@ def doushou_full_range_analyze():
             'total_days': total_days,
             'total_candidates': total_candidates,
             'filter_rules': {
-                '六壬合格标准': '双重达标：日柱禄马贵人必须同时到山到向且发出三传 [v3.0]',
-                '斗首不凶即可': True,
-                '演禽必须为吉': True,
+                '六壬评分标准': f'大六壬评分 >= {min_daliuren_score}（满分100：四柱禄马贵人全到山到向+三传禄马贵人之二；每少一项扣3分）',
+                '课体扣分规则': '上上吉/上吉/中吉课不扣分，小吉课扣5分，平课扣15分（最终<=70），小凶课扣35分，中凶课扣40分（最终<=50），大凶课直接排除',
+                '斗首评分标准': '斗首评分 >= 50（不凶即可）',
+                '演禽评分标准': '演禽评分 >= 50（放宽条件）',
                 '月柱六相优先': '武财>元辰>廉贞>贪官>破鬼'
             },
             'score_weights': {
@@ -660,7 +745,8 @@ def doushou_full_range_analyze():
             'timestamp': datetime.now().isoformat()
         })
     except Exception as e:
-        print(f"[ERROR] 完整日期范围分析失败: {e}")
+        log_print(f"[ERROR] 完整日期范围分析失败: {e}")
+        import traceback
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
@@ -866,7 +952,7 @@ def _traditional_duanyu_handler():
         print(f"📌 演禽: {yanqin}")
         
         # 生成综合断语
-        traditional_duanyu_text = AIEvaluation_Instance._generate_traditional_duanyu(data)
+        traditional_duanyu_text = AIEvaluation_Instance.generate_traditional_evaluation(data)
         
         print(f"📌 生成的传统断语长度: {len(traditional_duanyu_text)}")
         print(f"📌 传统断语预览: {traditional_duanyu_text[:200]}")

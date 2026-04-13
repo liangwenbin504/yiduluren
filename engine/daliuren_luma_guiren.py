@@ -271,9 +271,191 @@ class DaLiuRenLuMaGuiRen:
             count += 1
         if ri_guiren and ri_guiren in chuan_list:
             count += 1
-        
+
         return count
-    
+
+    def get_taiyang_position(self, gregorian_month: int, day: int) -> str:
+        """
+        根据日期获取太阳/月将所在宫位
+
+        太阳即月将，按二十四节气中气过宫来论：
+        - 小寒（1月5日）后：子（神后）
+        - 大寒（1月20日）后：丑（大吉）
+        - 立春（2月4日）后：寅月开始，但雨水前仍是子将
+        - 雨水（2月19日）后：亥（登明）
+        - 春分（3月21日）后：戌（河魁）
+        - 谷雨（4月20日）后：酉（从魁）
+        - 小满（5月21日）后：申（传送）
+        - 夏至（6月21日）后：未（小吉）
+        - 大暑（7月23日）后：午（胜光）
+        - 处暑（8月23日）后：巳（太乙）
+        - 秋分（9月23日）后：辰（天罡）
+        - 霜降（10月24日）后：卯（太冲）
+        - 小雪（11月22日）后：寅（功曹）
+        - 冬至（12月22日）后：子（神后）
+
+        参数:
+            gregorian_month: 公历月份（1-12）
+            day: 日期
+
+        返回:
+            太阳/月将所在宫位
+        """
+        return self.get_yuejiang_by_date(2026, gregorian_month, day)
+
+    def gregorian_month_to_yueling(self, gregorian_month: int) -> str:
+        """
+        将公历月份转换为节气月地支
+
+        十二节气月与公历月份的对应关系：
+        - 公历1月（小寒后）-> 丑月
+        - 公历2月（立春后）-> 寅月
+        - 公历3月（惊蛰后）-> 卯月
+        - 公历4月（清明后）-> 辰月
+        - 公历5月（立夏后）-> 巳月
+        - 公历6月（芒种后）-> 午月
+        - 公历7月（小暑后）-> 未月
+        - 公历8月（立秋后）-> 申月
+        - 公历9月（白露后）-> 酉月
+        - 公历10月（寒露后）-> 戌月
+        - 公历11月（立冬后）-> 亥月
+        - 公历12月（大雪后）-> 子月
+
+        参数:
+            gregorian_month: 公历月份（1-12）
+
+        返回:
+            节气月地支
+        """
+        YUELING_LIST = ['寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥', '子', '丑']
+        return YUELING_LIST[(gregorian_month - 2 + 12) % 12]
+
+    def check_taiyang_luma_guiren(self, mountain: str, shan_jia: str, xiang_shou: str,
+                                   nian_zhi: str, yue_zhi: str, ri_zhi: str, shi_zhi: str,
+                                   gregorian_month: int = None) -> Dict:
+        """
+        检查太阳带禄马贵人到山到向
+
+        梁老师注解：
+        1. 太阳带贵人：如甲山以未为贵人，每年午月，太阳在未宫
+        2. 太阳带禄神：如甲山以寅为禄，每年亥月，太阳在寅宫
+        3. 太阳带太岁：太阳在某宫，该宫地支年即为太岁年
+
+        参数:
+            mountain: 坐山
+            shan_jia: 山家
+            xiang_shou: 向首
+            nian_zhi, yue_zhi, ri_zhi, shi_zhi: 年月日时地支
+            gregorian_month: 公历月份（1-12），用于计算月将/太阳
+        """
+        if not gregorian_month:
+            gregorian_month = 6
+        taiyang = self.get_taiyang_position(gregorian_month, 15)
+
+        mountain_lu = self.LU.get(mountain, '')
+        mountain_guiren_list = self.BEN_SHAN_GUIREN.get(mountain, [])
+
+        results = {
+            'taiyang': taiyang,
+            'taiyang_to_shan': taiyang == shan_jia,
+            'taiyang_to_xiang': taiyang == xiang_shou,
+            'taiyang_lu': taiyang == mountain_lu,
+            'taiyang_guiren': taiyang in mountain_guiren_list,
+            'taiyang_ma': False,
+            'taiyang_is_taisui': False,
+            'taisui_zhi': '',
+            'bonus_score': 0,
+            'descriptions': []
+        }
+
+        if results['taiyang_to_shan']:
+            results['descriptions'].append(f'太阳带{taiyang}到山')
+        if results['taiyang_to_xiang']:
+            results['descriptions'].append(f'太阳带{taiyang}到向')
+        if results['taiyang_lu']:
+            results['descriptions'].append(f'太阳带{taiyang}禄神到山/向（{mountain}山禄在{taiyang}）')
+        if results['taiyang_guiren']:
+            guiren_name = mountain_guiren_list[0] if mountain_guiren_list else taiyang
+            results['descriptions'].append(f'太阳带{taiyang}贵人到山/向（{mountain}山贵人在{taiyang}）')
+
+        for dz in [nian_zhi, yue_zhi, ri_zhi, shi_zhi]:
+            if dz == taiyang:
+                results['taiyang_is_taisui'] = True
+                results['taisui_zhi'] = taiyang
+                results['descriptions'].append(f'太阳在{taiyang}宫，{taiyang}年即为太岁年（太阳带太岁）')
+                break
+
+        if results['taiyang_lu'] or results['taiyang_guiren']:
+            results['bonus_score'] += 10
+        if results['taiyang_is_taisui']:
+            results['bonus_score'] += 15
+
+        return results
+
+    def check_taisui_luma_guiren(self, mountain: str, shan_jia: str, xiang_shou: str,
+                                  nian_zhi: str, yue_zhi: str, ri_zhi: str) -> Dict:
+        """
+        检查太岁月建禄马贵人到山到向（以地支论）
+
+        梁老师注解：
+        本日、本山向的禄马贵即是大岁和月建，专以地支来论
+        如甲山以寅为禄，那么大岁和月建的地支就用寅
+        如甲山以丑未为贵人，大岁和月建的地支就用丑未
+
+        参数:
+            mountain: 坐山
+            shan_jia: 山家
+            xiang_shou: 向首
+            nian_zhi, yue_zhi, ri_zhi: 年月日地支
+
+        返回:
+            太岁月建禄马贵人判定结果
+        """
+        mountain_lu = self.LU.get(mountain, '')
+        mountain_guiren_list = self.BEN_SHAN_GUIREN.get(mountain, [])
+
+        results = {
+            'taisui_zhi': nian_zhi,
+            'yuejian_zhi': yue_zhi,
+            'taisui_lu_to_shan': nian_zhi == mountain_lu and mountain_lu == shan_jia,
+            'taisui_lu_to_xiang': nian_zhi == mountain_lu and mountain_lu == xiang_shou,
+            'taisui_guiren_to_shan': nian_zhi in mountain_guiren_list and nian_zhi == shan_jia,
+            'taisui_guiren_to_xiang': nian_zhi in mountain_guiren_list and nian_zhi == xiang_shou,
+            'yuejian_lu_to_shan': yue_zhi == mountain_lu and mountain_lu == shan_jia,
+            'yuejian_lu_to_xiang': yue_zhi == mountain_lu and mountain_lu == xiang_shou,
+            'yuejian_guiren_to_shan': yue_zhi in mountain_guiren_list and yue_zhi == shan_jia,
+            'yuejian_guiren_to_xiang': yue_zhi in mountain_guiren_list and yue_zhi == xiang_shou,
+            'bonus_score': 0,
+            'descriptions': []
+        }
+
+        if results['taisui_lu_to_shan']:
+            results['descriptions'].append(f'太岁{nian_zhi}带{mountain}山禄到山')
+            results['bonus_score'] += 10
+        if results['taisui_lu_to_xiang']:
+            results['descriptions'].append(f'太岁{nian_zhi}带{mountain}山禄到向')
+            results['bonus_score'] += 10
+        if results['taisui_guiren_to_shan']:
+            results['descriptions'].append(f'太岁{nian_zhi}带{mountain}山贵人到山')
+            results['bonus_score'] += 10
+        if results['taisui_guiren_to_xiang']:
+            results['descriptions'].append(f'太岁{nian_zhi}带{mountain}山贵人到向')
+            results['bonus_score'] += 10
+        if results['yuejian_lu_to_shan']:
+            results['descriptions'].append(f'月建{yue_zhi}带{mountain}山禄到山')
+            results['bonus_score'] += 5
+        if results['yuejian_lu_to_xiang']:
+            results['descriptions'].append(f'月建{yue_zhi}带{mountain}山禄到向')
+            results['bonus_score'] += 5
+        if results['yuejian_guiren_to_shan']:
+            results['descriptions'].append(f'月建{yue_zhi}带{mountain}山贵人到山')
+            results['bonus_score'] += 5
+        if results['yuejian_guiren_to_xiang']:
+            results['descriptions'].append(f'月建{yue_zhi}带{mountain}山贵人到向')
+            results['bonus_score'] += 5
+
+        return results
+
     def calculate_new_score(self, mountain: str, shichen: str,
                             nian_gan: str, nian_zhi: str,
                             yue_gan: str, yue_zhi: str,
@@ -359,7 +541,7 @@ class DaLiuRenLuMaGuiRen:
         # 5. 最终得分
         final_score = base_score - ke_ti_deduction
         final_score = max(30, min(100, final_score))  # 最低30分
-        
+
         # 6. 生成状态描述
         if pillar_qualified_count == 4 and sanchuan_qualified:
             status = '满分：年月日时禄马贵人皆到山到向，三传禄马贵人俱全'
@@ -367,7 +549,7 @@ class DaLiuRenLuMaGuiRen:
             status = '平课：禄马贵人不到山不到向，三传无禄马贵人'
         else:
             status = f'{pillar_qualified_count}柱合格，三传禄马贵人{sanchuan_luma_count}个'
-        
+
         return {
             'base_score': round(base_score, 1),
             'ke_ti_deduction': ke_ti_deduction,
@@ -382,7 +564,9 @@ class DaLiuRenLuMaGuiRen:
             'nian_qualified': nian_qualified,
             'yue_qualified': yue_qualified,
             'ri_qualified': ri_qualified,
-            'shi_qualified': shi_qualified
+            'shi_qualified': shi_qualified,
+            'taiyang_bonus': 0,
+            'taisui_bonus': 0
         }
     
     def get_keti_deduction(self, ke_ti_name: str) -> Tuple[int, str, bool]:

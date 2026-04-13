@@ -3,7 +3,7 @@
 实现天地盘、四课、三传等核心功能
 """
 
-from core_modules.data.斗首择日规则 import (
+from data.斗首择日规则 import (
     TIANGAN, DIZHI, JIGONG, YUEJIANG, JIEQI_YUEJIANG,
     DIZHI_CHONG, LU, YIMA, GUIREN, TIANJIANG
 )

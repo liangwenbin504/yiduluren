@@ -3,7 +3,7 @@
 实现山家五行、天干化气、番化五行等核心功能
 """
 
-from core_modules.data.constants import (
+from data.constants import (
     TIANGAN, DIZHI, TWENTY_FOUR_MOUNTAINS,
     SHANJIA_WUXING, TIANGAN_HUAQI, DOUSHOU_FIVE_STARS,
     WUXING_SHENG, WUXING_KE

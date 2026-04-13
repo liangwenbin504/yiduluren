@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 斗首五行定义验证测试
@@ -9,7 +9,7 @@ import sys
 import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
-from data.斗首择日规则 import SHANJIA_WUXING, TIANGAN_HUAQI
+from core_modules.data.斗首择日规则 import SHANJIA_WUXING, TIANGAN_HUAQI
 
 def verify_shanjia_wuxing():
     """验证山家五行"""

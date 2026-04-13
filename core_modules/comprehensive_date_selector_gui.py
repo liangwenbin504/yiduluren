@@ -15,8 +15,9 @@ from datetime import datetime, timedelta
 from typing import Dict, List
 
 # 添加路径
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src', 'engine'))
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'engine'))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 try:
     import tkinter as tk
@@ -31,6 +32,8 @@ from engine.douhou_engine import DouShouCalculator
 from engine.ke_ti_judge import KeTiJudgeCalculator
 from engine.precise_calendar import PreciseCalendar, get_sizhu_accurate
 from engine.long_de_ke_selector import LongDeKeSelector
+from engine.complete_qi_ke_engine import CompleteQiKeEngine
+from core_modules.data.斗首择日规则 import DIZHI
 
 
 class ComprehensiveDateSelectorGUI:
@@ -64,6 +67,7 @@ class ComprehensiveDateSelectorGUI:
         self.douhou_calc = DouShouCalculator()
         self.ke_ti_judge = KeTiJudgeCalculator()
         self.long_de_selector = LongDeKeSelector()
+        self.qi_ke_engine = CompleteQiKeEngine()
         
         # 创建界面
         self._create_menu()
@@ -162,11 +166,11 @@ class ComprehensiveDateSelectorGUI:
         # 六壬吉课筛选
         ttk.Label(step3_frame, text="六壬吉课:").grid(row=0, column=4, padx=5)
         self.liuren_combo = ttk.Combobox(step3_frame, values=self.LIUREN_JI_KE, width=12, state="readonly")
-        self.liuren_combo.set('龙德课')
+        self.liuren_combo.set('全部')
         self.liuren_combo.grid(row=0, column=5, padx=5)
         
         # 其他选项
-        self.long_de_var = tk.BooleanVar(value=True)
+        self.long_de_var = tk.BooleanVar(value=False)
         ttk.Checkbutton(step3_frame, text="仅龙德课", variable=self.long_de_var).grid(row=0, column=6, padx=10)
         
         # ===== 执行按钮 =====
@@ -327,6 +331,7 @@ class ComprehensiveDateSelectorGUI:
         try:
             total_days = (end_date - start_date).days + 1
             qualified_count = 0
+            total_ke_count = 0
             
             current_date = start_date
             day_count = 0
@@ -384,81 +389,115 @@ class ComprehensiveDateSelectorGUI:
                 # 2. 获取四柱
                 sizhu = get_sizhu_accurate(year, month, day, 12, city_name='北京')
                 
-                # 3. 检查六壬课体
+                # 3. 获取日干支、月将、太岁
                 ri_ganzhi = sizhu['日柱']
                 ri_gan = ri_ganzhi[0]
                 ri_zhi = ri_ganzhi[1]
-                yue_jiang = self.calendar.get_month_ganzhi(year, month, day)[1]
-                tai_sui = self.calendar.get_year_ganzhi(year, month, day)[1]
                 
-                # 简化的三传
-                sanchuan = {'初传': yue_jiang, '中传': '', '末传': ''}
+                # 获取年支（太岁）
+                year_ganzhi = sizhu['年柱']
+                tai_sui = year_ganzhi[1]
                 
-                # 检查龙德课
-                is_long_de, long_de_type = self.long_de_selector.is_long_de_ke(
-                    ri_ganzhi, yue_jiang, tai_sui, sanchuan
-                )
+                # 获取月将（根据节气）
+                try:
+                    yue_jiang = self.calendar.get_month_ganzhi(year, month, day)[1]
+                except:
+                    # 简化：根据月份估算月将
+                    lunar_month = month
+                    yue_jiang_index = (12 - lunar_month) % 12
+                    yue_jiang = DIZHI[yue_jiang_index]
                 
-                # 筛选龙德课
-                if only_long_de and not is_long_de:
-                    current_date += timedelta(days=1)
-                    continue
-                
-                # 确定课体名称（简化）
-                if is_long_de:
-                    ke_ti_name = long_de_type
-                else:
-                    # 根据日干和月将简单判断
-                    ke_ti_name = '普通课'
-                
-                # 筛选六壬吉课
-                if liuren_ke != '全部' and liuren_ke not in ke_ti_name:
-                    current_date += timedelta(days=1)
-                    continue
-                
-                # 5. 综合评分
-                total_score = kege_score
-                
-                # 6. 获取吉神
-                ji_shen = self._get_ji_shen(year, month, day)
-                
-                # 7. 添加到结果
-                weekday = self._get_weekday(current_date)
-                sizhu_str = f"{sizhu['年柱']} {sizhu['月柱']} {sizhu['日柱']} {sizhu['时柱']}"
-                
-                recommendation = self._get_recommendation(total_score)
-                
-                result = {
-                    '序号': qualified_count + 1,
-                    'date': current_date,
-                    '日期': current_date.strftime('%Y-%m-%d'),
-                    '星期': weekday,
-                    '四柱': sizhu_str,
-                    '斗首课格': kege_name,
-                    '评分': kege_score,
-                    '六壬课体': ke_ti_name,
-                    '吉神': ji_shen,
-                    '推荐': recommendation,
-                    'detail': {
-                        'sizhu': sizhu,
-                        'douhou': douhou_result,
-                        'liuren': ke_ti,
-                        'long_de': long_de_type if is_long_de else None
+                # 4. 遍历12个时辰，使用完整起课引擎
+                for shi_chen in DIZHI:
+                    total_ke_count += 1
+                    
+                    try:
+                        # 使用完整起课引擎计算三传
+                        qi_ke_result = self.qi_ke_engine.qi_ke(
+                            ri_gan_zhi=ri_ganzhi,
+                            yue_jiang=yue_jiang,
+                            shi_chen=shi_chen,
+                            lunar_month=month,
+                            nian_zhi=tai_sui
+                        )
+                        
+                        sanchuan = qi_ke_result.get('三传', {})
+                        ke_ti_list = qi_ke_result.get('课体', [])
+                        
+                    except Exception as e:
+                        # 如果起课失败，跳过此时辰
+                        continue
+                    
+                    # 检查龙德课
+                    is_long_de, long_de_type = self.long_de_selector.is_long_de_ke(
+                        ri_ganzhi, yue_jiang, tai_sui, sanchuan
+                    )
+                    
+                    # 筛选龙德课
+                    if only_long_de and not is_long_de:
+                        continue
+                    
+                    # 确定课体名称
+                    if is_long_de:
+                        ke_ti_name = long_de_type
+                    elif ke_ti_list:
+                        ke_ti_name = ke_ti_list[0] if isinstance(ke_ti_list, list) else str(ke_ti_list)
+                    else:
+                        ke_ti_name = '普通课'
+                    
+                    # 筛选六壬吉课
+                    if liuren_ke != '全部' and liuren_ke not in ke_ti_name:
+                        continue
+                    
+                    # 5. 综合评分
+                    total_score = kege_score
+                    if is_long_de:
+                        total_score += 1.0  # 龙德课加分
+                    
+                    # 6. 获取吉神
+                    ji_shen = self._get_ji_shen(year, month, day)
+                    
+                    # 7. 添加到结果
+                    weekday = self._get_weekday(current_date)
+                    sizhu_str = f"{sizhu['年柱']} {sizhu['月柱']} {sizhu['日柱']} {sizhu['时柱']}"
+                    
+                    recommendation = self._get_recommendation(total_score)
+                    
+                    result = {
+                        '序号': qualified_count + 1,
+                        'date': current_date,
+                        '日期': current_date.strftime('%Y-%m-%d'),
+                        '星期': weekday,
+                        '四柱': sizhu_str,
+                        '斗首课格': kege_name,
+                        '评分': total_score,
+                        '六壬课体': ke_ti_name,
+                        '吉神': ji_shen,
+                        '推荐': recommendation,
+                        '时辰': shi_chen,
+                        '三传': sanchuan,
+                        'detail': {
+                            'sizhu': sizhu,
+                            'douhou': douhou_result,
+                            'liuren': ke_ti_list,
+                            'long_de': long_de_type if is_long_de else None
+                        }
                     }
-                }
-                
-                self.results.append(result)
-                qualified_count += 1
-                
-                # 更新 UI（使用 after 方法）
-                self.root.after(0, self._add_result_to_tree, result)
+                    
+                    self.results.append(result)
+                    qualified_count += 1
+                    
+                    # 更新 UI（使用 after 方法）
+                    self.root.after(0, self._add_result_to_tree, result)
                 
                 current_date += timedelta(days=1)
             
             # 完成
-            self.root.after(0, self._selection_complete, qualified_count)
+            self.root.after(0, self._selection_complete, qualified_count, total_ke_count)
             
         except Exception as e:
+            import traceback
+            traceback.print_exc()
             self.root.after(0, self._selection_error, str(e))
     
     def _add_result_to_tree(self, result):
@@ -476,18 +515,18 @@ class ComprehensiveDateSelectorGUI:
         )
         self.result_tree.insert('', tk.END, values=values)
     
-    def _selection_complete(self, count):
+    def _selection_complete(self, count, total_ke_count=0):
         """择日完成"""
         self.start_btn.config(state='normal')
         self.stop_btn.config(state='disabled')
         self.progress_var.set(100)
         self.progress_label.config(text="完成")
-        self.status_label.config(text=f"共找到 {count} 个符合条件的日期")
+        self.status_label.config(text=f"共遍历{total_ke_count}课，筛选出{count}个吉课")
         
         if count > 0:
-            messagebox.showinfo("完成", f"择日完成！\n共找到 {count} 个符合条件的日期")
+            messagebox.showinfo("完成", f"择日完成！\n共遍历{total_ke_count}课，筛选出{count}个吉课")
         else:
-            messagebox.showwarning("完成", "未找到符合条件的日期\n请放宽筛选条件")
+            messagebox.showwarning("完成", f"未找到符合条件的日期\n共遍历{total_ke_count}课\n请放宽筛选条件")
     
     def _selection_error(self, error_msg):
         """择日错误"""

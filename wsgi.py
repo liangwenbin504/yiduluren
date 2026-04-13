@@ -7,12 +7,12 @@
 import os
 import sys
 
-# 添加项目路径
+# 添加项目路径（优先从 engine/ 目录导入）
 project_home = os.path.dirname(os.path.abspath(__file__))
 if project_home not in sys.path:
     sys.path.insert(0, project_home)
+    sys.path.insert(0, os.path.join(project_home, 'engine'))
     sys.path.insert(0, os.path.join(project_home, 'core_modules'))
-    sys.path.insert(0, os.path.join(project_home, 'core_modules', 'engine'))
 
 # 设置环境变量
 os.environ['PYTHONUNBUFFERED'] = '1'
