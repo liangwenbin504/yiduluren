@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from lunardate import LunarDate
 import chinese_calendar
 
-from data.斗首择日规则 import TIANGAN, DIZHI, LU, YIMA, GUIREN
+from core_modules.data.斗首择日规则 import TIANGAN, DIZHI, LU, YIMA, GUIREN
 from engine.douhou_engine import DouShouCalculator
 
 

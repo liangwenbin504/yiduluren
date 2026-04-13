@@ -10,7 +10,7 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # 从斗首择日规则导入所有常量
-from data.斗首择日规则 import *
+from core_modules.data.斗首择日规则 import *
 
 # 为了向后兼容，保留原有导出格式
 __all__ = [

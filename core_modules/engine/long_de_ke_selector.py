@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 from complete_qi_ke_engine import CompleteQiKeEngine
 from ke_ti_judge_pro import KeTiJudgeProfessional
-from data.斗首择日规则 import TIANGAN, DIZHI
+from core_modules.data.斗首择日规则 import TIANGAN, DIZHI
 
 # 六十甲子工具类
 class LiuShiJiaZi:

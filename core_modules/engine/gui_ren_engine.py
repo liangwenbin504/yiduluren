@@ -6,10 +6,26 @@
 import sys
 import os
 
-parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, parent_dir)
+# 先定义默认值
+DIZHI = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥']
+GUIREN = {}
+TIANJIANG = []
 
-from data.斗首择日规则 import DIZHI, GUIREN, TIANJIANG
+# 动态导入：尝试多种路径
+try:
+    from data.斗首择日规则 import DIZHI as IMPORTED_DIZHI, GUIREN as IMPORTED_GUIREN, TIANJIANG as IMPORTED_TIANJIANG
+    DIZHI = IMPORTED_DIZHI
+    GUIREN = IMPORTED_GUIREN
+    TIANJIANG = IMPORTED_TIANJIANG
+except ImportError:
+    try:
+        from core_modules.data.斗首择日规则 import DIZHI as IMPORTED_DIZHI, GUIREN as IMPORTED_GUIREN, TIANJIANG as IMPORTED_TIANJIANG
+        DIZHI = IMPORTED_DIZHI
+        GUIREN = IMPORTED_GUIREN
+        TIANJIANG = IMPORTED_TIANJIANG
+    except ImportError:
+        # 使用默认值
+        pass
 
 
 class GuiRenCalculator:

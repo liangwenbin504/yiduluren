@@ -9,7 +9,7 @@ import os
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, parent_dir)
 
-from data.斗首择日规则 import (
+from core_modules.data.斗首择日规则 import (
     TIANGAN, DIZHI, JIGONG, YUEJIANG, JIEQI_YUEJIANG,
     DIZHI_CHONG, LU, YIMA, GUIREN, TIANJIANG
 )

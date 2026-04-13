@@ -9,12 +9,34 @@ import sys
 import os
 from typing import Dict, List, Tuple, Optional
 
-# 添加父目录到路径
-parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, parent_dir)
+# 先定义默认值
+GuiRenCalculator = None
 
-from core_modules.engine.gui_ren_engine import GuiRenCalculator
-from src.utils.dizhi_layout_generator import arrange_tiandi_pan
+# 完整的天地盘函数
+def arrange_tiandi_pan(yuejiang, shichen):
+    DIZHI_LOCAL = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥']
+    shi_index = DIZHI_LOCAL.index(shichen)
+    yuejiang_index = DIZHI_LOCAL.index(yuejiang)
+    zi_position = (shi_index - yuejiang_index) % 12
+    tian_pan = []
+    for i in range(12):
+        tian_index = (i - zi_position) % 12
+        tian_pan.append(DIZHI_LOCAL[tian_index])
+    result = {}
+    for i in range(12):
+        result[DIZHI_LOCAL[i]] = tian_pan[i]
+    return result
+
+# 动态导入：尝试多种路径
+try:
+    from gui_ren_engine import GuiRenCalculator as ImportedGuiRenCalculator
+    GuiRenCalculator = ImportedGuiRenCalculator
+except ImportError:
+    try:
+        from core_modules.engine.gui_ren_engine import GuiRenCalculator as ImportedGuiRenCalculator
+        GuiRenCalculator = ImportedGuiRenCalculator
+    except ImportError:
+        pass
 
 
 class DaLiuRenLuMaGuiRen:
@@ -144,7 +166,7 @@ class DaLiuRenLuMaGuiRen:
     }
     
     def __init__(self):
-        self.gui_ren_calc = GuiRenCalculator()
+        self.gui_ren_calc = GuiRenCalculator() if GuiRenCalculator else None
     
     def get_shan_jia(self, mountain: str) -> str:
         """获取山家（斗首体系）"""
@@ -164,6 +186,8 @@ class DaLiuRenLuMaGuiRen:
     
     def get_guiren_zhi(self, tian_gan: str, tiandi_pan: Dict, shichen: str) -> Optional[str]:
         """获取贵人位置"""
+        if not self.gui_ren_calc:
+            return None
         try:
             guiren_info = self.gui_ren_calc.arrange_gui_ren_pan(
                 tian_gan, {'天地对应': tiandi_pan}, shichen
@@ -176,6 +200,250 @@ class DaLiuRenLuMaGuiRen:
             pass
         return None
     
+    def check_pillar_all_qualified(self, tian_gan: str, di_zhi: str,
+                                    tiandi_pan: Dict, shichen: str,
+                                    shan_jia: str, xiang_shou: str) -> bool:
+        """
+        检查某柱的禄、马、贵人是否至少有一个到山或到向
+        
+        调整：每柱只要禄、马、贵人中有一个到山或到向，该柱就算合格
+        （原要求三个都到太严格，导致几乎没有合格课）
+        
+        参数:
+            tian_gan: 天干
+            di_zhi: 地支
+            tiandi_pan: 天地盘
+            shichen: 时辰
+            shan_jia: 山家
+            xiang_shou: 向首
+        
+        返回:
+            True 如果禄、马、贵人至少有一个到山或到向
+        """
+        lu_zhi = self.get_lu_zhi(tian_gan)
+        ma_zhi = self.get_ma_zhi(di_zhi)
+        guiren_zhi = self.get_guiren_zhi(tian_gan, tiandi_pan, shichen)
+        
+        # 禄到山或到向
+        lu_qualified = (lu_zhi == shan_jia or lu_zhi == xiang_shou) if lu_zhi else False
+        
+        # 马到山或到向
+        ma_qualified = (ma_zhi == shan_jia or ma_zhi == xiang_shou) if ma_zhi else False
+        
+        # 贵人到山或到向
+        guiren_qualified = (guiren_zhi == shan_jia or guiren_zhi == xiang_shou) if guiren_zhi else False
+        
+        # 只要有一个到山或到向就算合格
+        return lu_qualified or ma_qualified or guiren_qualified
+    
+    def check_sanchuan_luma_guiren_count(self, sanchuan: Dict,
+                                          ri_gan: str, ri_zhi: str,
+                                          tiandi_pan: Dict = None, shichen: str = None) -> int:
+        """
+        检查三传中禄马贵人的数量
+        
+        用户要求：三传中至少要有禄、马、贵人中的两个
+        
+        参数:
+            sanchuan: 三传信息
+            ri_gan: 日干
+            ri_zhi: 日支
+            tiandi_pan: 天地盘
+            shichen: 时辰
+        
+        返回:
+            三传中禄马贵人的数量（0-3）
+        """
+        chuan_list = [
+            sanchuan.get('初传', ''),
+            sanchuan.get('中传', ''),
+            sanchuan.get('末传', '')
+        ]
+        
+        ri_lu = self.get_lu_zhi(ri_gan)
+        ri_ma = self.get_ma_zhi(ri_zhi)
+        ri_guiren = self.get_guiren_zhi(ri_gan, tiandi_pan, shichen) if tiandi_pan and shichen else None
+        
+        count = 0
+        if ri_lu and ri_lu in chuan_list:
+            count += 1
+        if ri_ma and ri_ma in chuan_list:
+            count += 1
+        if ri_guiren and ri_guiren in chuan_list:
+            count += 1
+        
+        return count
+    
+    def calculate_new_score(self, mountain: str, shichen: str,
+                            nian_gan: str, nian_zhi: str,
+                            yue_gan: str, yue_zhi: str,
+                            ri_gan: str, ri_zhi: str,
+                            shi_gan: str, shi_zhi: str,
+                            sanchuan: Dict = None,
+                            ke_ti_list: List = None) -> Dict:
+        """
+        按新规则计算评分
+        
+        评分规则：
+        1. 年月日时禄马贵人全到山或全到向且发出三传（禄马贵人之二必占）为100分
+        2. 少一项扣分，依次相减
+        3. 虽是吉课但禄马贵人不到山也不到向，又不发出三传为平课60分
+        4. 之后根据大六壬课体课格的吉凶又依次减分
+        
+        参数:
+            mountain: 坐山
+            shichen: 时辰
+            nian_gan, nian_zhi: 年柱
+            yue_gan, yue_zhi: 月柱
+            ri_gan, ri_zhi: 日柱
+            shi_gan, shi_zhi: 时柱
+            sanchuan: 三传信息
+            ke_ti_list: 课体列表
+        
+        返回:
+            评分结果
+        """
+        shan_jia = self.get_shan_jia(mountain)
+        xiang_shou = self.get_xiang_shou(mountain)
+        tiandi_pan = arrange_tiandi_pan('亥', shichen)
+        
+        # 1. 检查四柱禄马贵人是否都到山到向
+        nian_qualified = self.check_pillar_all_qualified(
+            nian_gan, nian_zhi, tiandi_pan, shichen, shan_jia, xiang_shou
+        )
+        yue_qualified = self.check_pillar_all_qualified(
+            yue_gan, yue_zhi, tiandi_pan, shichen, shan_jia, xiang_shou
+        )
+        ri_qualified = self.check_pillar_all_qualified(
+            ri_gan, ri_zhi, tiandi_pan, shichen, shan_jia, xiang_shou
+        )
+        shi_qualified = self.check_pillar_all_qualified(
+            shi_gan, shi_zhi, tiandi_pan, shichen, shan_jia, xiang_shou
+        ) if shi_gan and shi_zhi else False
+        
+        pillar_qualified_count = sum([nian_qualified, yue_qualified, ri_qualified, shi_qualified])
+        
+        # 2. 检查三传禄马贵人数量
+        sanchuan_luma_count = 0
+        sanchuan_qualified = False
+        if sanchuan:
+            sanchuan_luma_count = self.check_sanchuan_luma_guiren_count(
+                sanchuan, ri_gan, ri_zhi, tiandi_pan, shichen
+            )
+            # 三传中至少2个禄马贵人
+            sanchuan_qualified = sanchuan_luma_count >= 2
+        
+        # 3. 计算基础评分
+        # 满分条件：4柱合格 + 三传至少2个禄马贵人
+        # 平课条件：0柱合格 + 三传0个禄马贵人
+        
+        # 满足的项数：四柱合格数 + (三传合格 ? 1 : 0)
+        satisfied_items = pillar_qualified_count + (1 if sanchuan_qualified else 0)
+        
+        # 每项扣分：3分（用户要求）
+        item_deduction = 3
+        
+        # 基础得分 = 100 - (5 - 满足项数) * 3
+        base_score = 100 - (5 - satisfied_items) * item_deduction
+        base_score = max(60, min(100, base_score))  # 限制在60-100之间
+        
+        # 4. 课体课格扣分
+        ke_ti_deduction = 0
+        ke_ti_level = '未知'
+        is_daxiong = False
+        
+        if ke_ti_list:
+            ke_ti_name = ke_ti_list[0] if isinstance(ke_ti_list, list) else str(ke_ti_list)
+            ke_ti_deduction, ke_ti_level, is_daxiong = self.get_keti_deduction(ke_ti_name)
+        
+        # 5. 最终得分
+        final_score = base_score - ke_ti_deduction
+        final_score = max(30, min(100, final_score))  # 最低30分
+        
+        # 6. 生成状态描述
+        if pillar_qualified_count == 4 and sanchuan_qualified:
+            status = '满分：年月日时禄马贵人皆到山到向，三传禄马贵人俱全'
+        elif pillar_qualified_count == 0 and sanchuan_luma_count == 0:
+            status = '平课：禄马贵人不到山不到向，三传无禄马贵人'
+        else:
+            status = f'{pillar_qualified_count}柱合格，三传禄马贵人{sanchuan_luma_count}个'
+        
+        return {
+            'base_score': round(base_score, 1),
+            'ke_ti_deduction': ke_ti_deduction,
+            'ke_ti_level': ke_ti_level,
+            'final_score': round(final_score, 1),
+            'status': status,
+            'is_daxiong': is_daxiong,
+            'pillar_qualified_count': pillar_qualified_count,
+            'sanchuan_luma_count': sanchuan_luma_count,
+            'sanchuan_qualified': sanchuan_qualified,
+            'satisfied_items': satisfied_items,
+            'nian_qualified': nian_qualified,
+            'yue_qualified': yue_qualified,
+            'ri_qualified': ri_qualified,
+            'shi_qualified': shi_qualified
+        }
+    
+    def get_keti_deduction(self, ke_ti_name: str) -> Tuple[int, str, bool]:
+        """
+        根据课体名称获取扣分
+        
+        返回: (扣分, 课体等级, 是否大凶课)
+        """
+        # 上上吉课
+        shangshangji = ['三光课', '富贵课', '龙德课', '三奇课', '六仪课', '时泰课']
+        # 上吉课
+        shangji = ['元首课', '连珠课', '重审课', '比用课', '涉害课', '遥克课', '昴星课', '别责课', '八专课']
+        # 中吉课
+        zhongji = ['和美课', '斩关课', '游子课', '长庚课', '玄胎课', '回环课']
+        # 小吉课
+        xiaoji = ['进连珠', '退连珠', '间传课', '交车课', '交车合', '交车害']
+        # 平课
+        pingke = ['普通课', '无特殊课体', '伏吟课', '反吟课']
+        # 小凶课
+        xiaoxiong = ['芜淫课', '解离课', '度厄课', '无禄课', '绝嗣课']
+        # 中凶课
+        zhongxiong = '孤辰课', '寡宿课', '刑伤课', '二烦课', '三烦课'
+        # 大凶课
+        daxiong = ['九丑课', '天祸课', '天寇课', '天罗地网', '死奇课', '魄化课', '飞魂课', '丧吊课']
+        
+        ke_ti_lower = ke_ti_name.lower()
+        
+        for name in shangshangji:
+            if name in ke_ti_name or ke_ti_lower in name.lower():
+                return 0, '上上吉课', False
+        
+        for name in shangji:
+            if name in ke_ti_name or ke_ti_lower in name.lower():
+                return 0, '上吉课', False
+        
+        for name in zhongji:
+            if name in ke_ti_name or ke_ti_lower in name.lower():
+                return 0, '中吉课', False
+        
+        for name in xiaoji:
+            if name in ke_ti_name or ke_ti_lower in name.lower():
+                return 5, '小吉课', False
+        
+        for name in pingke:
+            if name in ke_ti_name or ke_ti_lower in name.lower():
+                return 10, '平课', False
+        
+        for name in xiaoxiong:
+            if name in ke_ti_name or ke_ti_lower in name.lower():
+                return 35, '小凶课', False
+        
+        for name in zhongxiong:
+            if name in ke_ti_name or ke_ti_lower in name.lower():
+                return 40, '中凶课', False
+        
+        for name in daxiong:
+            if name in ke_ti_name or ke_ti_lower in name.lower():
+                return 30, '大凶课', True
+        
+        return 0, '未知', False
+
     def check_single_pillar(self, tian_gan: str, di_zhi: str, 
                            tiandi_pan: Dict, shichen: str,
                            shan_jia: str, xiang_shou: str,
@@ -385,19 +653,27 @@ class DaLiuRenLuMaGuiRen:
             ri_result['pillar_qualified']
         ])
         
-        # 评分
+        # 评分（按用户要求：禄马贵人到山或到向=70分）
         if not ri_result['pillar_qualified']:
             score = 50
             status = '平课（日柱禄马贵人未到山到向）'
-        elif qualified_count >= 3:
-            score = 100
-            status = '上吉课（年月日禄马贵人皆到山到向）'
-        elif qualified_count >= 2:
-            score = 80
-            status = '中吉课（两柱禄马贵人到山到向）'
         else:
-            score = 60
-            status = '吉课（仅日柱禄马贵人到山到向）'
+            # 日柱禄马贵人到山到向 = 70分（基础分）
+            score = 70
+            status = '吉课（日柱禄马贵人到山到向）'
+            
+            # 年柱禄马贵人到山到向加分
+            if nian_result['pillar_qualified']:
+                score += 10
+            
+            # 月柱禄马贵人到山到向加分
+            if yue_result['pillar_qualified']:
+                score += 10
+            
+            if qualified_count >= 3:
+                status = '上吉课（年月日禄马贵人皆到山到向）'
+            elif qualified_count >= 2:
+                status = '中吉课（两柱禄马贵人到山到向）'
         
         # 本山本向吉课加分
         if ben_shan_result['has_ben_shan_ji']:
@@ -542,18 +818,44 @@ class DaLiuRenLuMaGuiRen:
         
         has_luma_guiren = found_count >= 1
         
-        if found_count == 0:
-            sanchuan_score = 0
+        # 三传评分（按用户要求：发出三传额外加分）
+        sanchuan_score = 0
+        
+        # 日柱禄马贵人发出三传：每项+10分
+        if ri_lu_in_sanchuan:
+            sanchuan_score += 10
+        if ri_ma_in_sanchuan:
+            sanchuan_score += 10
+        if ri_guiren_in_sanchuan:
+            sanchuan_score += 10
+        
+        # 年柱禄马贵人发出三传：每项+5分
+        if nian_lu_in_sanchuan:
+            sanchuan_score += 5
+        if nian_ma_in_sanchuan:
+            sanchuan_score += 5
+        if nian_guiren_in_sanchuan:
+            sanchuan_score += 5
+        
+        # 月柱禄马贵人发出三传：每项+5分
+        if yue_lu_in_sanchuan:
+            sanchuan_score += 5
+        if yue_ma_in_sanchuan:
+            sanchuan_score += 5
+        if yue_guiren_in_sanchuan:
+            sanchuan_score += 5
+        
+        # 最高100分
+        sanchuan_score = min(100, sanchuan_score)
+        
+        if sanchuan_score == 0:
             sanchuan_status = '三传无禄马贵人'
-        elif found_count == 1:
-            sanchuan_score = 30
-            sanchuan_status = '三传有一吉（禄或马或贵人）'
-        elif found_count == 2:
-            sanchuan_score = 60
+        elif sanchuan_score >= 30:
+            sanchuan_status = '三传禄马贵人俱全'
+        elif sanchuan_score >= 20:
             sanchuan_status = '三传有二吉'
         else:
-            sanchuan_score = 100
-            sanchuan_status = '三传禄马贵人俱全'
+            sanchuan_status = '三传有一吉'
         
         return {
             'sanchuan': sanchuan,

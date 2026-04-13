@@ -4,7 +4,7 @@
 """
 
 from datetime import datetime
-from data.斗首择日规则 import TIANGAN, DIZHI, LU, YIMA, GUIREN
+from core_modules.data.斗首择日规则 import TIANGAN, DIZHI, LU, YIMA, GUIREN
 from engine.douhou_engine import DouShouCalculator
 from engine.lunar_converter import solar_to_lunar as convert_to_lunar
 import math
