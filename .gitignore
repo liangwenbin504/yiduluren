@@ -60,3 +60,13 @@ index.html.backup_*
 
 # Source utils (use core_modules instead)
 src/utils/
+
+# Large data files (keep small JSON files only)
+*.pdf
+720_ke_li*.json
+*matched*.json
+*results*.json
+zongmen/bifa_matched*
+zongmen/local_rules_matched*
+zongmen/data/8640_ke_ge_matched*
+zongmen/data/720_ke_li*
