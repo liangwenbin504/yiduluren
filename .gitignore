@@ -1,190 +1,62 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
-
-# C extensions
-*.so
-
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# PyInstaller
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-
-# Translations
-*.mo
-*.pot
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
+# Backup files
+*.backup*
+*.bak
+*.zip
 *~
 
-# macOS
+# Test files
+test_*.py
+*_test.py
+full_test.py
+quick_test.py
+simple_test.py
+
+# Backup directories
+backup_*/
+src_copy/
+test_deploy/
+test_deploy2/
+
+# Generated files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
 .DS_Store
-.AppleDouble
-.LSOverride
-
-# Windows
 Thumbs.db
-ehthumbs.db
-Desktop.ini
 
-# Node modules
-node_modules/
-
-# Log files
-*.log
-logs/
-
-# Database
-*.db
-*.sqlite3
+# Deploy files
+deploy.zip
+core_modules.zip
+yiduluren_deploy.zip
+*.deploy*
 
 # Temporary files
 *.tmp
 *.temp
-*.bak
-*.backup
+*.log
 
-# Test and debug files
-test_*.py
-check_*.py
-debug_*.py
-diagnose_*.py
-fix_*.py
-simple_*.py
-quick_*.py
-compare_*.py
-generate_*.py
-analyze_*.py
-convert_*.py
-extract_*.py
-find_*.py
-merge_*.py
-progress_*.py
-remove_*.py
-set_*.py
-task_*.py
-template_*.py
-time_*.py
-update_*.py
-verify_*.py
-validate_*.py
+# Documentation (not needed for deployment)
+*部署*.md
+*说明*.md
+*文档*.md
 
-# Test HTML files
-test_*.html
+# PythonAnywhere specific
+api_server.py.backup_static
 
-# Temporary DOCX/PPTX/PDF
-*.docx
-!templates/*.docx
-!完美模板.docx
-!模板*.docx
-*.pptx
-!templates/*.pptx
-*.pdf
-!1《仪度六壬选日要诀》注解1.pdf
-!2《仪度六壬选日要诀》注解2.pdf
-!template_form.pdf
+# JS/HTML backups
+*.backup_*
+network_recovery.js.backup_instance
+index_clean.html
+index.html.backup_*
 
-# Temporary images
-t*.jpg
-t*.png
-!seal.png
-!sizhu_custom.png
-
-# Temporary data
-data_backup/
-
-# Script and batch files
-*.bat
-*.ps1
-*.sh
-!start.bat
-!start_api_server.bat
-!start_app.bat
-!start_date_selector.bat
-!start_enhanced_gui.bat
-!start_openclaw.bat
-!start_qike_gui.bat
-!start_server.bat
-!docker-deploy.bat
-!install-docker.bat
-!run_auto_test.bat
-
-# Output files
-batch_output/
-
-# Extracted images
-extracted_images/
-
-# API server log
-api_server.log
-debug.log
-
-# Python cache
-*.pyc
-__pycache__/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# pyenv
-.python-version
-
-# Local configuration
-local_config.json
-secrets.json
-openclaw_config.json
-
-# Trae IDE
-.trae/
-
-# Archive directory (for old files)
-archive/
+# Source utils (use core_modules instead)
+src/utils/
