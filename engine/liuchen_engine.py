@@ -205,6 +205,13 @@ class LiuChenEngine:
             return self._mk('先吉后凶', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                             f'末传{mo}为日干长生，然逢空亡，见生不生，救神空亡，反成凶咎',
                             'L235"救神空亡为墓门开大凶"; CASE-壬占汇选-0369')
+        # 【指南深读 第五轮】末传空亡 且 中传=日干官鬼（初末逢空，独存中传，鬼临中途结局落空）
+        #   → 文书得罪/事败于中途（ZN-章奏-五"初末逢空，独存中传，岁破为鬼……
+        #   恐得罪于君相，于公不利"——癸卯日三传酉丑巳，末巳空、中传丑=癸之官鬼）
+        if mo in kong and zhong_wx and KE.get(zhong_wx) == gw:
+            return self._mk('中鬼末空', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                            f'末传{mo}空亡而中传{zhong}为日干官鬼，初末逢空独存中鬼，事败于中途，恐得罪于人',
+                            'ZN-章奏-五"初末逢空，独存中传，岁破为鬼…恐得罪于君相"')
 
         # ───────────────────────────
         # 【功名】（前程仕进·邵公断案60案深读增强 2026-08-18）
@@ -436,6 +443,20 @@ class LiuChenEngine:
                 return self._mk('得官赴任', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'官星{gan_shang}临身，主得官赴任',
                                 '§前程仕进03·089"日上官星作贵"')
+            # ②a 【指南深读 第五轮】官星发用 + 干支阴神（课2/课4上神）克官星 → 官受制凶
+            #   （ZN-仕宦-二十三"忌日之阴阳制官，须防陈王田姓人为祟"——丁巳日初传亥=官鬼，
+            #   干阴丑土克亥水，官受制而迁擢随罢）
+            if guan_xing_fa_yong and sike and len(sike) >= 4 and chu_wx:
+                _yin_ke_guan = False
+                for _k in (sike[1], sike[3]):
+                    _ys = str(_k[1]) if isinstance(_k, (list, tuple)) and len(_k) > 1 else str(_k.get('上神', ''))
+                    if _ys and KE.get(ZHI_WX.get(_ys, '')) == chu_wx:
+                        _yin_ke_guan = True
+                        break
+                if _yin_ke_guan:
+                    return self._mk('阴阳制官', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'官星{chu}发用而干支阴神克官，官受制于人，迁擢随罢，须防人祟',
+                                    'ZN-仕宦-二十三"忌日之阴阳制官，须防陈王田姓人为祟"')
             # ② 官星发用 + 得地 → 得官升迁（原有；加禄临干强化）
             #   【指南深读 2026-08-18】守卫：末传=日墓 → 不判升迁吉，落"功名难久"凶
             #   （ZN-仕宦-五"干支乘墓，禄马空陷……不能久任"）
