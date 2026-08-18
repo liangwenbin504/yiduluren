@@ -1683,14 +1683,34 @@ def extract_gongming_valence(ri_gan: str, ri_zhi: str, sanchuan_dizhi: List[str]
     tj_at = [tj[i] if i < len(tj) else None for i in range(len(sc))]
 
     # ---- X1: 朱雀值鬼防黜落（L4575：朱雀临官鬼克日干则防被免职）----
+    # 【BUG-FIX 2026-08-18 案例实证】§03·055 庚日 末巳作朱雀，"一为长生，双为官星
+    # 学堂，故主科甲"（弃武从文得科甲=吉）——朱雀乘官鬼但该支为日干长生位=
+    # 长生学堂（文印吉），非防黜落。仅当朱雀乘鬼且非长生位才判凶。
     for i, z in enumerate(sc):
         if tj_at[i] == '朱雀' and ZHI_WX.get(z) == gg_wx:
-            return {"score": -5, "level": "凶-朱雀值鬼防黜落",
-                    "details": [f"朱雀乘官鬼({z})现传→防黜落/去官"], "fired": "X1"}
+            _cs = _gan_changsheng(rgwx)
+            _cs_vals = _cs.get('长生', ())
+            _cs_vals = _cs_vals if isinstance(_cs_vals, (tuple, list, set)) else (_cs_vals,)
+            if z not in _cs_vals:
+                return {"score": -5, "level": "凶-朱雀值鬼防黜落",
+                        "details": [f"朱雀乘官鬼({z})现传→防黜落/去官"], "fired": "X1"}
+            # 朱雀乘鬼但=长生学堂 → 不判凶（记录层提示）
+            return {"score": 0, "level": "吉-朱雀乘长生学堂(记录)",
+                    "details": [f"朱雀乘官星({z})但为日干长生学堂→文印吉（记录层）"],
+                    "fired": "X1y"}
 
     # ---- X2: 墓绝亏官爵（L4575：凡占墓绝亏官爵）----
+    # 【BUG-FIX 2026-08-18 案例实证】§03·052 癸日 末传巳（墓绝）但乘贵人=
+    # "日贵在末传，先晦后明准拟登科"（吉）——墓绝乘贵人/生干=先凶后吉，
+    # 非亏官爵。仅当墓绝乘凶将或空亡才判凶。
     if _wei_in_sc(mu_zhi, sc) or _wei_in_sc(jue_zhi, sc):
         hit = mu_zhi if _wei_in_sc(mu_zhi, sc) else (jue_zhi[0] if isinstance(jue_zhi, (tuple, list)) else jue_zhi)
+        _hit_idx = next((i for i, z in enumerate(sc) if z == hit), -1)
+        _hit_tj = tj_at[_hit_idx] if _hit_idx >= 0 else ''
+        if _hit_tj in ('贵人', '青龙', '六合', '太常', '天后', '太阴'):
+            return {"score": 0, "level": "平-墓绝乘吉将(记录)",
+                    "details": [f"三传见墓/绝({hit})但乘吉将{_hit_tj}→先晦后明（记录层）"],
+                    "fired": "X2y"}
         return {"score": -3, "level": "凶-墓绝亏官爵",
                 "details": [f"三传见日墓/绝({hit})→功名亏损"],
                 "fired": "X2"}

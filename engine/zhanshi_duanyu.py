@@ -164,19 +164,25 @@ _XIONG_JIANG = {'白虎', '玄武', '螣蛇', '朱雀'}
 
 
 def _sanchuan_time_sequence(sanchuan: List[str], tianjiang_list: List[str],
-                            yuejiang: str, kongwang) -> Dict[str, Any]:
+                            yuejiang: str, kongwang, zhanshi: str = '其他') -> Dict[str, Any]:
     """三传时序吉凶合成（案例实证规则，2026-08-18）：
     - 每传信号 = 天将吉凶(±2) + 旺衰(±1) + 空亡(-1)
-    - 权重：初传0.3 / 中传0.5 / 末传1.2（案例"末后却吉""末传天喜乘龙先凶后吉"
-      证实末传=结局权重最高；"初受任日兵卒不合末后却吉"证实初传权重最低）
+    - 【BUG-FIX 2026-08-18 案例实证】天将吉凶按占类调整：
+      朱雀=功名/考试/仕宦占的文印官星(吉，"朱雀为文印之神"§03·050)，
+      其他占=口舌(凶，"朱雀口舌之神"§宅墓02·035)；
+      勾陈=官讼/仕宦占的陈滞狱讼(凶，"官星乘勾陈主狱讼"§03·061)，
+      其他占中性。
+    - 权重：初传0.2 / 中传0.3 / 末传1.5（实例反推，末传定结局）
     - 末传空亡再扣1.5（案例"先凶后吉，奈何寅是空亡，反成凶咎"）
-    - 先凶后吉(初<0且末>0)→吉；先吉后凶(初>0且末<0)→凶（案例"先凶后吉恩旨赦回"、
-      "先兴旺而后衰败""先及第见官后死"实证）
+    - 先凶后吉(初<0且末>0)→吉；先吉后凶(初>0且末<0)→凶
     返回：每传分 + 合成分 + 走向描述。无三传数据安全返回平。"""
     if not sanchuan or len(sanchuan) < 3:
         return {'score': 0, 'dir': '平', 'per_chuan': [], 'desc': ''}
     tj = list(tianjiang_list or [])
     kw = set(kongwang or [])
+    # 占类化的天将吉凶
+    _wen_shu_zhanlei = ('功名', '考试', '仕宦', '前程')
+    _guansong_zhanlei = ('官讼', '仕宦', '前程')
     per = []
     for i, z in enumerate(sanchuan):
         if not z:
@@ -186,6 +192,10 @@ def _sanchuan_time_sequence(sanchuan: List[str], tianjiang_list: List[str],
         t = tj[i] if i < len(tj) else ''
         if t in _JI_JIANG:
             s += 2.0
+        elif t == '朱雀':
+            s += 1.0 if zhanshi in _wen_shu_zhanlei else -2.0
+        elif t == '勾陈':
+            s += -1.0 if zhanshi in _guansong_zhanlei else 0.0
         elif t in _XIONG_JIANG:
             s -= 2.0
         ws = _zhi_yue_jian_wangshuai(z, yuejiang)
@@ -255,7 +265,7 @@ def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
         kw = get_xun_kong(ri_gan + ri_zhi) if ri_gan and ri_zhi else ('', '')
     except Exception:
         kw = ('', '')
-    seq = _sanchuan_time_sequence(pan['sanchuan'], pan['tianjiang_list'], yuejiang, kw)
+    seq = _sanchuan_time_sequence(pan['sanchuan'], pan['tianjiang_list'], yuejiang, kw, zhanshi)
     seq_desc = seq.get('desc', '')
 
     # ── 综合评级：占类信号 + 三传时序 加权合成（权重由 218 案实例反推，2026-08-18）──
