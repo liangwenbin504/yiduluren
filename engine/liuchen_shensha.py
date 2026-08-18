@@ -103,6 +103,25 @@ def wang_shuai(wx: str = '', yuejiang: str = '') -> str:
     return ''
 
 
+def tai_sui(year: str = '') -> str:
+    """太岁（占课年支）——'太岁发用作日破'（ZN-疾病-二）、'太岁克日，君上不喜'
+    （ZN-占讼-二十一）、'朱雀乘太岁克日；太岁君也'（ZN-章奏-五）。"""
+    if not year:
+        return ''
+    year = str(year).strip()
+    if len(year) >= 2 and year[-1] in '子丑寅卯辰巳午未申酉戌亥':
+        return year[-1]
+    return ''
+
+
+def sui_po(year: str = '') -> str:
+    """岁破（太岁之冲）——'岁破为鬼'（ZN-章奏-五）、'岁破发用'（ZN-占讼-四）。"""
+    ts = tai_sui(year)
+    chong = {'子': '午', '午': '子', '丑': '未', '未': '丑', '寅': '申', '申': '寅',
+             '卯': '酉', '酉': '卯', '辰': '戌', '戌': '辰', '巳': '亥', '亥': '巳'}
+    return chong.get(ts, '')
+
+
 if __name__ == '__main__':
     # 自检：古籍案例验证
     assert you_du('辛') == '寅', '丙辛日游都=寅（庄公远案）'
