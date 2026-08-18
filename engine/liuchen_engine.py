@@ -298,6 +298,54 @@ class LiuChenEngine:
                 return self._mk('财局空陷', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'三传{chu}·{zhong}·{mo}财局而末传{mo}空亡，传课纯财印爻被克，虚设难迁',
                                 'ZN-仕宦-二十四"传将递生空亡…难以迁转"')
+            # ⑥f 【指南深读 第三轮】干上神=日干绝地 → 贵德临身/德丧禄绝分判
+            #   （ZN-选举-七"贵德财马临身，且居太岁之位，必应今年甲榜"——干上巳=癸德亦=癸绝；
+            #    ZN-仕宦-十一"干支乘死绝，德丧禄绝…必主去位"——干上申=甲绝=官鬼）
+            _DE_ZHI = {'甲': '寅', '乙': '申', '丙': '巳', '丁': '亥', '戊': '巳',
+                       '己': '亥', '庚': '申', '辛': '午', '壬': '巳', '癸': '巳'}
+            if gan_shang == jue_zhi:
+                if gan_shang == _DE_ZHI.get(ri_gan, ''):
+                    return self._mk('贵德临身', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'干上神{gan_shang}为日德临身，贵德财马临身，必应今科甲榜',
+                                    'ZN-选举-七"贵德财马临身，且居太岁之位，必应今年甲榜"')
+                return self._mk('德丧禄绝', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干上神{gan_shang}为日干绝地，干支乘死绝，德丧禄绝，朝官必主去位',
+                                'ZN-仕宦-十一"干支乘死绝，德丧禄绝…必主去位"')
+            # ⑥g2 【指南深读 第三轮】返吟 + 初传=日德（德入天门发用）→ 必中高魁
+            #   （ZN-选举-五"戊日返吟是德入天门发用，丑未两贵相加…必中高魁"；
+            #   守卫：干上=日绝先判（德丧禄绝凶优先，仕宦十一））
+            if fan_yin and chu == _DE_ZHI.get(ri_gan, ''):
+                return self._mk('德入天门', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'返吟课初传{chu}为日德入天门发用，德贵相加，必中高魁',
+                                'ZN-选举-五"返吟是德入天门发用，丑未两贵相加…必中高魁"')
+            # ⑥g3 【指南深读 第三轮】循环格 + 末传=日禄 → 德禄入末，功名吉
+            #   （ZN-选举-一"末传德禄驿马，干支交车生合…必中高魁"）
+            #   守卫：官星临身（§072 催官符先成后败）或禄临支（权摄食禄 §067）不判
+            if xun_huan and lu_zhi and mo == lu_zhi and not guan_lin_shen and \
+                    not (lu_zhi and zhi_shang == lu_zhi):
+                return self._mk('德禄入末', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'循环格而末传{mo}为日禄，末传德禄驿马，干支交车生合，功名顺遂',
+                                'ZN-选举-一"末传德禄驿马…必中高魁"')
+            # ⑥g4 【指南深读 第三轮】干上=日墓 且 支上=日支绝地 → 干墓支绝，凶
+            #   （ZN-仕宦-十九"干墓支绝…必解任去"——甲午日干上未=甲墓、支上亥=午之绝）
+            _rz_wx = ZHI_WX.get(ri_zhi, '')
+            _zhi_jue_d = WX_JUE.get(_rz_wx, '')
+            if gan_shang == mu_zhi and _zhi_jue_d and zhi_shang == _zhi_jue_d:
+                return self._mk('干墓支绝', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干上{gan_shang}为日墓，支上{zhi_shang}为日支绝地，干墓支绝，功名非久远之象',
+                                'ZN-仕宦-十九"干墓支绝…必解任去"')
+            # ⑥g5 【指南深读 第三轮】支上神=官星：=贵人 → 官星临支吉（ZN-仕宦-二十九
+            #   "亥贵作官星临支"）；非贵人 → 鬼临三四凶（ZN-仕宦-二十一"鬼临三四必主他非退位"）
+            #   守卫（官星临支）：干支自刑（§062/081自满失宠）与赘婿（§065）不判吉
+            if zhi_shang and _shi_shen(zhi_shang, ri_gan) == '官鬼':
+                if zhi_shang in gui_zhi_set and not zi_xing and \
+                        not (gan_shang == ri_zhi and ri_zhi and KE.get(gw) == ZHI_WX.get(ri_zhi, '')):
+                    return self._mk('官星临支', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'支上神{zhi_shang}为官星又系贵人，官星临支，功名先推之征',
+                                    'ZN-仕宦-二十九"亥贵作官星临支"')
+                return self._mk('鬼临三四', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'支上神{zhi_shang}为日干官鬼，鬼临三四课，必主他非退位',
+                                'ZN-仕宦-二十一"鬼临三四，必主他非退位"')
             # ⑦ 干支自刑 → 自满失宠（§057"干支自刑主自满"；置于禄/贵之前——§057禄临干
             #   但自刑仍断"升转则未"，自刑优先）
             if zi_xing:
@@ -313,6 +361,8 @@ class LiuChenEngine:
                                 '§前程仕进03·065"支来就干为干所克…课名赘婿所以无正居也"')
             # ⑦c 顾祖课（初传=干上神且传退入支）→ 仕途受阻（§074"日上发传退入支上又是顾祖
             #   …仕途必定受阻"、§097"顾祖传空前程镜中花"）——课体级凶象，优先于官星吉
+            #   【指南深读 第三轮 回滚】循环格守卫已撤——§087 顾祖传空（邵公凶）与
+            #   ZN-仕宦-二十"格合周遍"（陈公献吉）同构冲突，以已深读疏正（邵公）体系为准
             if gu_zu:
                 return self._mk('顾祖受阻', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'初传{chu}退入支上，顾祖课，仕途受阻，升转无望',
@@ -400,7 +450,9 @@ class LiuChenEngine:
                                     'CASE-壬占汇选-0162"禄马如此且乘天后恩泽青龙吉将相并安得不中"')
                 # 【指南深读 第二轮】贵空但初传生日干（印绶发用）→ 起官有期吉
                 #   （ZN-仕宦-二十七"虎马丁神发用，作岁君生日，四墓覆生，已废复兴之象起官何疑"）
-                if chu_wx and SHENG.get(chu_wx) == gw:
+                #   【指南深读 第三轮】守卫：初传乘白虎（虎发用）→ 不判起官——ZN-仕宦-二十六
+                #   （己未日酉将辰时初巳乘白虎）"月建虎马发用…贵临空害，居官难以久任"凶
+                if chu_wx and SHENG.get(chu_wx) == gw and chu_tj != '白虎':
                     return self._mk('起官有期', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                     f'干上贵人{gan_shang}空亡，然初传{chu}生日干，印绶发用作岁君生日，已废复兴，起官有期',
                                     'ZN-仕宦-二十七"虎马丁神发用，作岁君生日，四墓覆生，已废复兴之象起官何疑"')
@@ -458,13 +510,21 @@ class LiuChenEngine:
                 return self._mk('末龙入相', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'末传{mo}乘青龙（月将青龙），片言入相，功名有成',
                                 'ZN-仕宦-十"末传月将青龙片言入相"; ZN-仕宦-十三"喜末传月将青龙"')
+            # ⑬d 【指南深读 第三轮】末传=贵人且乘贵人 → 贵临末传，功名吉
+            #   （ZN-仕宦-十八"贵德官星临年，月将青龙居丁…应未年高第"——末传亥=丁贵乘贵人）
+            if mo in gui_zhi_set and mo_tj == '贵人':
+                return self._mk('贵临末传', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'末传{mo}为日贵人又乘贵人，贵德临末，应期高第',
+                                'ZN-仕宦-十八"贵德官星临年…应未年甲榜"')
             # ⑬b 幕贵临干（干上神=贵人且不空=科名第一吉神）→ 先晦后明登科
             #   （§052"太阴乘卯作幕贵加日干…先晦后明准拟登科"、§061"官星作幕贵今年必高中"；
             #   刘评"幕贵乃科名第一吉神"；守卫：传不空、非铸印破模——§050铸印破模凶不判吉）
             #   【指南深读 第二轮】守卫：干上神=日墓（幕贵即墓=干墓支绝）→ 不判吉
             #   （ZN-仕宦-十九"干墓支绝……必解任去"——干上未=甲之墓亦=幕贵）
+            #   【指南深读 第三轮】守卫：八专课（自他处发用）→ 不判幕贵吉
+            #   （ZN-仕宦-八"日比虎刃自他处发用……干支年命俱见罗网，恐不能也"）
             if gan_shang in gui_zhi_set and gan_shang not in kong and \
-               not (chu in kong and zhong in kong) and gan_shang != mu_zhi:
+               not (chu in kong and zhong in kong) and gan_shang != mu_zhi and '八专' not in keti:
                 if mo == cs_zhi or mo_shi == '吉':
                     return self._mk('先晦后明', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                     f'幕贵{gan_shang}临干，科名第一吉神，先晦后明，准拟登科',
@@ -1126,10 +1186,24 @@ class LiuChenEngine:
                                 f'课传贵人{_gui_cnt}处，贵多不贵，过房子不合留，然本命行年自有子',
                                 '§胎产子息07·129"三传贵人太多，所以贵多不贵…年三十二上自有子"')
             # 三传克日 → 难产；三传克支 → 伤母（L229）
-            if mo_wx and KE.get(mo_wx) == gw:
+            #   【指南深读 第三轮】守卫：中传=子孙（胎神乘旺气）→ 不判产难
+            #   （ZN-孕产-二"月建重叠，作胎神乘旺气……母子清吉"——中传子=辛之子孙）
+            if mo_wx and KE.get(mo_wx) == gw and _shi_shen(zhong, ri_gan) != '子孙':
                 return self._mk('产难母伤', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'三传克日干，产难，须防伤母',
                                 'L229"三传克日难产三传克支伤母"')
+            # 【指南深读 第三轮】中传=日干官鬼（死气）→ 子息有损，凶
+            #   （ZN-孕产-三"女子死者，作死气日鬼也"——中传酉=乙之官鬼）
+            if zhong_wx and KE.get(zhong_wx) == gw:
+                return self._mk('子息有损', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'中传{zhong}为日干官鬼死气，女子死者作死气日鬼，子息有损',
+                                'ZN-孕产-三"女子死者，作死气日鬼也"')
+            # 【指南深读 第三轮】干上神=卯（震=长男）→ 生男吉
+            #   （ZN-孕产-五"干上卯属震，长男之象……生贵儿必矣"）
+            if gan_shang == '卯':
+                return self._mk('生男之祥', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干上神卯属震，长男之象，生贵儿必矣，生必顺利',
+                                'ZN-孕产-五"干上卯属震，长男之象…生贵儿必矣"')
             # 支辰上神生日上神 → 顺而易生（L223）
             if gan_shang and zhi_shang and SHENG.get(ZHI_WX.get(zhi_shang, '')) == ZHI_WX.get(gan_shang, ''):
                 return self._mk('顺产易生', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
@@ -1141,7 +1215,13 @@ class LiuChenEngine:
                                 f'末传{mo}为日长生，母无恙，产亦易，母子俱安',
                                 'CASE-壬占汇选-0104"支辰又乘亥水长生故母无恙产亦易也"')
             # 伏吟日辰相刑 → 子母俱死（案例0076"子母俱死伏吟课阴阳各伏"）
+            #   【指南深读 第三轮】守卫：伏吟 + 中传=子孙（胎神乘旺）→ 母子清吉
+            #   （ZN-孕产-二"月建重叠，作胎神乘旺气……母子清吉"）
             if fu_yin:
+                if _shi_shen(zhong, ri_gan) == '子孙':
+                    return self._mk('母子清吉', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'伏吟课而中传{zhong}为子孙胎神乘旺气，母子清吉，主双胎',
+                                    'ZN-孕产-二"月建重叠，作胎神乘旺气…母子清吉"')
                 return self._mk('产凶母危', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'伏吟课阴阳各伏，滞而不通，生不下，子母俱危',
                                 'CASE-壬占汇选-0076"子母俱死盖伏吟课阴阳各伏"')
