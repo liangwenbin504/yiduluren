@@ -23,7 +23,7 @@ if src_dir not in sys.path:
     sys.path.insert(0, src_dir)
 
 # 现在可以直接导入
-from engine.sike_sanchuan_engine import SiKeSanChuanCalculator
+from engine.sike_sanchuan_engine import SiKeSanChuanCalculator2
 from utils.gui_style_config import COLORS, FONTS
 
 
@@ -56,7 +56,7 @@ class SiKeSanChuanVerificationGUI:
         
         # 初始化计算器
         try:
-            self.calculator = SiKeSanChuanCalculator()
+            self.calculator = SiKeSanChuanCalculator2()
         except Exception as e:
             messagebox.showerror("致命错误", f"无法初始化计算器：{str(e)}\n\n请确保程序文件完整。")
             raise

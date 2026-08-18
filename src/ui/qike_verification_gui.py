@@ -20,7 +20,7 @@ os.chdir(project_root)
 if src_dir not in sys.path:
     sys.path.insert(0, src_dir)
 
-from engine.sike_sanchuan_engine import SiKeSanChuanCalculator
+from engine.sike_sanchuan_engine import SiKeSanChuanCalculator2
 
 
 class QikeVerificationGUI:
@@ -35,7 +35,7 @@ class QikeVerificationGUI:
         self.root.configure(bg='#f5f5f5')
         
         # 初始化计算器
-        self.calculator = SiKeSanChuanCalculator()
+        self.calculator = SiKeSanChuanCalculator2()
         
         # 创建界面
         self.create_main_layout()

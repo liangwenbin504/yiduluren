@@ -34,7 +34,7 @@ if src_dir not in sys.path:
 # print(f"SYS_PATH: {sys.path[:3]}")
 
 # 现在导入核心引擎
-from engine.sike_sanchuan_engine import SiKeSanChuanCalculator
+from engine.sike_sanchuan_engine import SiKeSanChuanCalculator2
 
 
 class SimpleVerificationGUI:
@@ -50,7 +50,7 @@ class SimpleVerificationGUI:
         self.style.theme_use('clam')
         
         # 初始化计算器
-        self.calculator = SiKeSanChuanCalculator()
+        self.calculator = SiKeSanChuanCalculator2()
         
         # 创建界面
         self.create_widgets()

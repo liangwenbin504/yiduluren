@@ -32,6 +32,14 @@ import os
 import sys
 from datetime import datetime
 import traceback
+import shutil
+
+# 尝试导入 python-docx
+try:
+    from docx import Document
+    DOCX_AVAILABLE = True
+except ImportError:
+    DOCX_AVAILABLE = False
 
 # 尝试导入win32com用于修复文档
 try:
@@ -40,6 +48,45 @@ try:
     WIN32COM_AVAILABLE = True
 except ImportError:
     WIN32COM_AVAILABLE = False
+
+
+def _extract_doushou_keti(doushou_result):
+    """从斗首分析结果中提取课格名称"""
+    if not doushou_result:
+        return ''
+
+    # 1. 优先使用 '课格' 字段
+    keti = doushou_result.get('课格', '')
+    if keti:
+        return keti
+
+    # 2. 使用 'keti' 字段
+    keti = doushou_result.get('keti', '')
+    if keti:
+        return keti
+
+    # 3. 从 '课格格局' 列表中提取第一个格局名称
+    patterns = doushou_result.get('课格格局', [])
+    if patterns and len(patterns) > 0:
+        if isinstance(patterns[0], dict):
+            return patterns[0].get('格局名称', '')
+        elif isinstance(patterns[0], str):
+            return patterns[0]
+
+    # 4. 如果列表中有多个格局，组合前两个作为课格描述
+    if patterns and len(patterns) > 1:
+        names = []
+        for p in patterns[:2]:
+            if isinstance(p, dict):
+                name = p.get('格局名称', '')
+            else:
+                name = str(p)
+            if name:
+                names.append(name)
+        if names:
+            return '、'.join(names)
+
+    return ''
 
 
 def fix_document_seal_after_export(doc_path):
@@ -114,9 +161,9 @@ def fix_document_seal_after_export(doc_path):
         traceback.print_exc()
         return False
 
-# 添加核心模块路径（只从 engine/ 目录导入）
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'engine'))
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'core_modules'))
+# 添加核心模块路径
+sys.path.insert(0, PROJECT_ROOT)
+sys.path.insert(0, os.path.join(PROJECT_ROOT, 'engine'))
 
 app = Flask(__name__)
 CORS(app)
@@ -144,11 +191,19 @@ except Exception as e:
     YanQinAnalyzer = None
 
 try:
-    from sike_sanchuan_engine import SiKeSanChuanCalculator
-    print("✅ sike_sanchuan_engine 导入成功")
+    from sike_sanchuan_engine import SiKeSanChuanCalculator2
+    print("✅ sike_sanchuan_engine(V2) 导入成功")
 except Exception as e:
     print(f"❌ sike_sanchuan_engine 导入失败: {e}")
-    SiKeSanChuanCalculator = None
+    SiKeSanChuanCalculator2 = None
+
+try:
+    # 三传课格检测器（玄胎/铸印/斫轮/盘珠等，仅供前端显示，不赋吉凶）
+    from sanchuan_kege import SanChuanKegeDetector as SanchuanKegeDetector
+    print("✅ sanchuan_kege 导入成功")
+except Exception as e:
+    print(f"❌ sanchuan_kege 导入失败: {e}")
+    SanchuanKegeDetector = None
 
 try:
     from daliuren_engine import DaLiuRenEngine
@@ -193,17 +248,17 @@ except Exception as e:
     ComprehensiveScorer = None
 
 # ==================== 导入导出模块 ====================
-# 优先使用python-docx版本（更稳定）
+# 优先 python-docx 版本；失败则回退 win32com 版本（core_modules 已废弃，移除其分支）
 try:
     from export_docx_docx import export_docx_document
     print("✅ export_docx_docx 导入成功（python-docx版本）")
 except Exception as e:
-    print(f"⚠️ export_docx_docx 导入失败: {e}，尝试导入win32com版本...")
+    print(f"⚠️ export_docx_docx 导入失败: {e}，回退 win32com 版本...")
     try:
         from export_docx import export_docx_document
         print("✅ export_docx 导入成功（win32com版本）")
-    except Exception as e2:
-        print(f"❌ export_docx 导入失败: {e2}")
+    except Exception as e3:
+        print(f"❌ export_docx 导入失败: {e3}")
         export_docx_document = None
 
 # ==================== 导入断语库模块 ====================
@@ -218,13 +273,47 @@ except Exception as e:
 try:
     from engine.ai_evaluation import AIEvaluation
     print("✅ ai_evaluation 导入成功")
-    # 通义千问 API Key 配置
-    QWEN_API_KEY = "***REMOVED***"
-    AIEvaluation_Instance = AIEvaluation(enable_ai=True, api_key=QWEN_API_KEY)
-    print(f"✅ 通义千问AI评价已启用: {AIEvaluation_Instance.ai_available}")
+    # 通义千问 API Key — 从环境变量读取
+    import os as _os
+    from dotenv import load_dotenv as _load_dotenv
+    _load_dotenv()
+    QWEN_API_KEY = _os.environ.get("QWEN_API_KEY", "")
+    DS_API_KEY = _os.environ.get("DEEPSEEK_API_KEY", "")
+    if QWEN_API_KEY:
+        AIEvaluation_Instance = AIEvaluation(enable_ai=True, api_key=QWEN_API_KEY)
+        print(f"✅ AI评价: 通义千问已启用")
+    elif DS_API_KEY:
+        AIEvaluation_Instance = AIEvaluation(enable_ai=True, api_key="")
+        print(f"✅ AI评价: DeepSeek已启用（QWEN未配）")
+    else:
+        AIEvaluation_Instance = AIEvaluation(enable_ai=False)
+        print(f"⚠️ AI评价: 未配置密钥（QWEN或DeepSeek任一即可）")
 except Exception as e:
     print(f"❌ ai_evaluation 导入失败: {e}")
     AIEvaluation_Instance = None
+
+# ==================== 导入传统六壬引擎 ====================
+try:
+    from liuren_traditional_engine import LiurenTraditionalEngine
+    print("✅ liuren_traditional_engine 导入成功")
+    TraditionalLiurenEngine_Instance = LiurenTraditionalEngine()
+except Exception as e:
+    print(f"❌ liuren_traditional_engine 导入失败: {e}")
+    TraditionalLiurenEngine_Instance = None
+
+try:
+    from liuren_auto_learner import LiurenAutoLearner
+    print("✅ liuren_auto_learner 导入成功")
+    AutoLearner_Instance = LiurenAutoLearner()
+    # 尝试加载已有知识库
+    try:
+        AutoLearner_Instance.load_knowledge()
+        print("✅ 知识库加载成功")
+    except Exception as ek:
+        print(f"⚠️ 知识库加载失败（首次运行）: {ek}")
+except Exception as e:
+    print(f"❌ liuren_auto_learner 导入失败: {e}")
+    AutoLearner_Instance = None
 
 # ==================== 全局辅助函数 ====================
 def arrange_tiandi_pan(yuejiang, shichen):
@@ -243,7 +332,7 @@ except ImportError:
 @app.route('/')
 def index():
     """首页"""
-    return send_from_directory('.', 'index.html')
+    return send_from_directory('.', 'index_v2.html')
 
 @app.route('/<path:filename>')
 def serve_static(filename):
@@ -268,7 +357,7 @@ def health_check():
         'timestamp': datetime.now().isoformat(),
         'server': '仪度六壬择日 API服务器',
         'modules': {
-            'SiKeSanChuanCalculator': SiKeSanChuanCalculator is not None,
+            'SiKeSanChuanCalculator2': SiKeSanChuanCalculator2 is not None,
             'KeJingScoring': KeJingScoring is not None,
             'DouhouKegeAnalyzer': DouhouKegeAnalyzer is not None,
             'YanQinAnalyzer': YanQinAnalyzer is not None
@@ -381,6 +470,7 @@ def calculate_mubiao_bonus(mubiao, doushou_result, daliuren_result, luma_guiren_
     bonus = 0
     matched = []
     yidu_score_result = None
+    mubiao_kege_bonus = {}
 
     if not KeKeDuanyu:
         return 0, [], None
@@ -394,37 +484,95 @@ def calculate_mubiao_bonus(mubiao, doushou_result, daliuren_result, luma_guiren_
     )
 
     bonus = yidu_score_result.get('综合评分', 0)
-    matched = []
 
     if mubiao:
         doushou_patterns = doushou_result.get('课格格局', [])
         doushou_pattern_str = ' '.join(doushou_patterns) if doushou_patterns else ''
 
+        sizhu = daliuren_result or {}
+        day_zhu = sizhu.get('日柱', '')
+
         for m in mubiao:
+            mubiao_kege_bonus[m] = 0
+
             if m == '求官':
-                if '禄马贵人' in yidu_score_result.get('评价', '') or '官' in doushou_pattern_str:
+                if '禄马' in doushou_pattern_str or '禄马齐发' in doushou_pattern_str:
                     matched.append('求官')
+                    mubiao_kege_bonus[m] = 30
+                elif luma_guiren_info.get('ri_qualified', False) and luma_guiren_info.get('qualified_count', 0) >= 2:
+                    matched.append('求官')
+                    mubiao_kege_bonus[m] = 20
+                elif '元辰' in doushou_pattern_str:
+                    matched.append('求官')
+                    mubiao_kege_bonus[m] = 10
+
             elif m == '求财':
-                if '武财' in doushou_pattern_str or '财' in doushou_pattern_str:
+                if '武财' in doushou_pattern_str:
                     matched.append('求财')
+                    mubiao_kege_bonus[m] = 30
+                elif '元辰' in doushou_pattern_str:
+                    matched.append('求财')
+                    mubiao_kege_bonus[m] = 20
+                elif luma_guiren_info.get('qualified_count', 0) >= 2:
+                    matched.append('求财')
+                    mubiao_kege_bonus[m] = 10
+
             elif m == '求富贵':
-                if yidu_score_result.get('综合评分', 0) >= 40:
+                if '禄马齐发' in doushou_pattern_str or '全元联曜' in doushou_pattern_str:
                     matched.append('求富贵')
+                    mubiao_kege_bonus[m] = 30
+                elif yidu_score_result.get('综合评分', 0) >= 40:
+                    matched.append('求富贵')
+                    mubiao_kege_bonus[m] = 20
+                elif luma_guiren_info.get('qualified_count', 0) >= 3:
+                    matched.append('求富贵')
+                    mubiao_kege_bonus[m] = 15
+
             elif m == '求子':
-                if yidu_score_result.get('综合评分', 0) >= 30:
+                if '天喜' in doushou_pattern_str or '红鸾' in doushou_pattern_str:
                     matched.append('求子')
+                    mubiao_kege_bonus[m] = 30
+                elif '廉贞' in doushou_pattern_str or '廉子' in doushou_pattern_str:
+                    matched.append('求子')
+                    mubiao_kege_bonus[m] = 20
+                elif yidu_score_result.get('综合评分', 0) >= 30:
+                    matched.append('求子')
+                    mubiao_kege_bonus[m] = 10
+
             elif m == '求学问' or m == '求文昌':
-                if '朱雀' in str(yidu_score_result.get('课传美格', [])):
+                if '文昌' in doushou_pattern_str or '朱雀' in doushou_pattern_str or '科第' in doushou_pattern_str:
                     matched.append('求学问')
+                    mubiao_kege_bonus[m] = 30
+                elif '华盖' in doushou_pattern_str:
+                    matched.append('求学问')
+                    mubiao_kege_bonus[m] = 20
+                elif yidu_score_result.get('综合评分', 0) >= 30:
+                    matched.append('求学问')
+                    mubiao_kege_bonus[m] = 10
+
             elif m == '求婚姻':
-                if yidu_score_result.get('综合评分', 0) >= 30:
+                if '红鸾' in doushou_pattern_str or '天喜' in doushou_pattern_str:
                     matched.append('求婚姻')
+                    mubiao_kege_bonus[m] = 30
+                elif '武财' in doushou_pattern_str:
+                    matched.append('求婚姻')
+                    mubiao_kege_bonus[m] = 20
+                elif yidu_score_result.get('综合评分', 0) >= 30:
+                    matched.append('求婚姻')
+                    mubiao_kege_bonus[m] = 10
+
+        bonus = sum(mubiao_kege_bonus.values())
 
     return bonus, matched, yidu_score_result
 
 @app.route('/api/doushou/full_range_analyze', methods=['POST'])
 def doushou_full_range_analyze():
-    """完整日期范围分析 - 使用测试成功的逻辑"""
+    """完整日期范围分析 - 使用测试成功的逻辑
+
+    ⚠️ 已废弃（2026-08-17 理顺标注）：旧版内联天地盘/节气实现，与 engine 版并行。
+    生产前端走 :5555 stock_dashboard.py 的 /api/zeri/batch（sike_sanchuan 排盘 + 完整引擎管线）。
+    本路由保留仅为兼容历史调用，新开发请勿复用。
+    """
     try:
         data = request.json
         
@@ -448,7 +596,7 @@ def doushou_full_range_analyze():
         
         # 初始化
         douhou_analyzer = DouhouKegeAnalyzer()
-        sike_calc = SiKeSanChuanCalculator()
+        sike_calc = SiKeSanChuanCalculator2()
         kejing_scorer = KeJingScoring()
         yanqin_analyzer = YanQinAnalyzer()
         luma_guiren_calc = DaLiuRenLuMaGuiRen()
@@ -571,16 +719,32 @@ def doushou_full_range_analyze():
                     
                     # 四课三传
                     sike = sike_calc.qi_sike(ri_gan, ri_zhi, tiandi_pan)
-                    sanchuan = sike_calc.fa_sanchuan(sike, ri_gan, ri_zhi, tiandi_pan)
+                    sanchuan = sike_calc.fa_sanchuan(sike, ri_gan, ri_zhi, tiandi_pan, shichen)
                     keti = sanchuan.get('课体', '')
                     daliuren_keti = keti
-                    
+
+                    # 特殊课格检测（玄胎/铸印/斫轮/盘珠等，仅供前端显示，不赋吉凶）
+                    _kege_list = []
+                    _kr = {}
+                    if SanchuanKegeDetector:
+                        try:
+                            _sc = [sanchuan.get('初传', ''), sanchuan.get('中传', ''), sanchuan.get('末传', '')]
+                            _det = SanchuanKegeDetector()
+                            _kr = _det.detect(_sc, ri_gan=ri_gan, ri_zhi=ri_zhi, keti_raw=keti)
+                            _kege_list = _kr.get('课格列表', [])
+                            if _kege_list:
+                                daliuren_keti = (keti + ' · ' if keti else '') + ' · '.join(_kege_list)
+                        except Exception as _e:
+                            print(f"特殊课格检测失败(comprehensive_score)：{_e}")
+
                     # 课经评分
                     keti_name = keti.replace('课', '') if keti else ''
                     kejing_score = kejing_scorer.calculate_score(keti_name) * 10
                     
                     daliuren_detail = {
                         '课体': keti,
+                        '课格列表': _kege_list,
+                        '课格详情': _kr.get('课格详情', {}) if isinstance(_kr, dict) else {},
                         '三传': sanchuan,
                         '起法': sanchuan.get('起法', '')
                     }
@@ -654,10 +818,15 @@ def doushou_full_range_analyze():
                     doushou_ok = doushou_score >= 50
                     daliuren_ok = daliuren_score >= min_daliuren_score
                     yanqin_ok = yanqin_score >= 50
-                    
-                    if is_daxiong:
-                        continue
-                    
+
+                    # 调试：记录所有课体和评分
+                    if total_shichen < 5:
+                        log_print(f"  {date_str} {shichen}: 课体={keti}, 六壬评分={daliuren_score}, 大凶={is_daxiong}, 斗首={doushou_score}, 演禽={yanqin_score}")
+
+                    # 不再完全排除大凶课，而是降低其分数
+                    # if is_daxiong:
+                    #     continue
+
                     if doushou_ok and daliuren_ok and yanqin_ok:
                         total_candidates += 1
 
@@ -674,6 +843,7 @@ def doushou_full_range_analyze():
                             'shichen': shichen,
                             'sizhu': sizhu_result,
                             'doushou_score': doushou_score,
+                            'doushou_keti': _extract_doushou_keti(doushou_result),
                             'daliuren_score': daliuren_score,
                             'yanqin_score': yanqin_score,
                             'total_score': total_score,
@@ -784,10 +954,10 @@ def calculate_tiandipan():
         day = int(request.args.get('day', 1))
         hour = int(request.args.get('hour', 12))
         
-        if SiKeSanChuanCalculator is None:
+        if SiKeSanChuanCalculator2 is None:
             return jsonify({'error': 'sike_sanchuan_engine 未加载'}), 500
         
-        calculator = SiKeSanChuanCalculator()
+        calculator = SiKeSanChuanCalculator2()
         result = calculator.calculate(year, month, day, hour)
         
         return jsonify({
@@ -802,17 +972,17 @@ def calculate_tiandipan():
 
 @app.route('/api/daliuren', methods=['GET'])
 def calculate_daliuren():
-    """计算大六壬"""
+    """计算大六壬（P1：停用 DaLiuRenEngine 起课，统一到 V2 起课引擎）"""
     try:
         year = int(request.args.get('year', 2026))
         month = int(request.args.get('month', 1))
         day = int(request.args.get('day', 1))
         hour = int(request.args.get('hour', 12))
         
-        if DaLiuRenEngine is None:
-            return jsonify({'error': 'daliuren_engine 未加载'}), 500
+        if SiKeSanChuanCalculator2 is None:
+            return jsonify({'error': 'sike_sanchuan_engine(V2) 未加载'}), 500
         
-        engine = DaLiuRenEngine()
+        engine = SiKeSanChuanCalculator2()
         result = engine.calculate(year, month, day, hour)
         
         return jsonify({
@@ -874,58 +1044,166 @@ def comprehensive_score():
 
 @app.route('/api/export/docx', methods=['POST'])
 def export_docx():
-    """导出 DOCX 文档"""
+    """导出 DOCX 文档
+
+    ⚠️ 已废弃（2026-08-17 理顺标注）：本服务为旧版（:8000/:5000），生产前端 stock_dashboard.html
+    只走 :5555 stock_dashboard.py 的 /api/export/docx（吉期表格版）。本路由保留仅为兼容历史调用，
+    新开发请勿复用；后续可整体移除。
+    """
     try:
         data = request.json
-        
+
         print("=" * 80)
         print("📄 收到导出请求")
         print(f"📄 请求数据: {data}")
         print("=" * 80)
-        
-        if export_docx_document is None:
-            return jsonify({'error': 'export_docx 未加载'}), 500
-        
-        # 导出文档（函数内部会自己生成文件名并保存）
-        print("📄 开始调用 export_docx_document...")
-        result = export_docx_document(data)
-        
-        print(f"📄 导出结果: {result}")
-        
-        if result and isinstance(result, dict):
-            # 检查是否成功
-            if result.get('success') == False:
-                return jsonify({'error': result.get('error', '导出失败')}), 500
-            
-            filename = result.get('filename')
-            file_path = result.get('file_path')
-            
-            if not filename:
-                return jsonify({'error': '导出失败：未生成文件名'}), 500
-            
-            # ========================================
-            # 关键：导出后立即修复印章图片！
-            # ========================================
-            # if file_path and os.path.exists(file_path):
-            #     print("🔧 导出完成，立即修复印章图片...")
-            #     fix_document_seal_after_export(file_path)
-            
-            return jsonify({
-                'success': True,
-                'filename': filename,
-                'download_url': f'/api/export/download/{filename}',
-                'timestamp': datetime.now().isoformat()
-            })
-        else:
-            return jsonify({'error': '导出文档失败：未知错误'}), 500
+
+        if not DOCX_AVAILABLE:
+            return jsonify({'error': 'python-docx 未安装'}), 500
+
+        # 直接使用内联逻辑
+        result = inline_export_docx(data)
+
+        if result.get('success') == False:
+            return jsonify({'error': result.get('error', '导出失败')}), 500
+
+        filename = result.get('filename')
+        file_path = result.get('file_path')
+
+        if not filename or not file_path:
+            return jsonify({'error': '导出失败：未生成文件'}), 500
+
+        if not os.path.exists(file_path):
+            return jsonify({'error': f'文件不存在: {file_path}'}), 500
+
+        return send_from_directory(
+            os.path.dirname(file_path),
+            filename,
+            as_attachment=True
+        )
     except Exception as e:
         print(f"❌ 导出文档失败：{e}")
-        print("=" * 80)
-        print("❌ 详细错误堆栈：")
-        print("=" * 80)
         traceback.print_exc()
-        print("=" * 80)
         return jsonify({'error': str(e)}), 500
+
+
+def inline_export_docx(data):
+    """内联导出函数 - 直接生成docx文档"""
+    try:
+        basic = data.get('basic', {})
+        mountain = data.get('mountain', {})
+        sizhu = data.get('sizhu', {})
+        doushou = data.get('doushou', {})
+        liuren = data.get('liuren', {})
+        luma = data.get('luma', {})
+
+        doc = Document()
+
+        year_pillar = sizhu.get('year', '') or ''
+        month_pillar = sizhu.get('month', '') or ''
+        day_pillar = sizhu.get('day', '') or ''
+        hour_pillar = sizhu.get('hour', '') or ''
+
+        def format_pillar(p):
+            if not p:
+                return ''
+            if len(p) >= 2 and p[1] in ['年', '月', '日', '时']:
+                return p[:2]
+            return p
+
+        year_str = format_pillar(year_pillar)
+        month_str = format_pillar(month_pillar)
+        day_str = format_pillar(day_pillar)
+        hour_str = format_pillar(hour_pillar)
+        sizhu_str = f"{year_str}年{month_str}月{day_str}日{hour_str}时"
+
+        zuoshan = mountain.get('name', '') or mountain.get('display', '') or ''
+        doushou_keti = doushou.get('keti', '') or ''
+
+        daliuren_keti = ''
+        if isinstance(liuren, dict):
+            daliuren_keti = liuren.get('keti', '') or liuren.get('课体', '')
+
+        patterns = doushou.get('patterns', [])
+        if isinstance(patterns, str):
+            patterns = [patterns]
+        pattern_str = ' '.join(patterns) if patterns else ''
+
+        if '武财' in pattern_str:
+            peiyu = '日柱武财入命，财源广进，宜求财创业。'
+        elif '元辰' in pattern_str:
+            peiyu = '元辰旺相，诸事大吉，阴阳和畅，福泽绵绵。'
+        elif '贪官' in pattern_str:
+            peiyu = '贪官临命，须防小人，宜守不宜攻。'
+        elif '破鬼' in pattern_str:
+            peiyu = '破鬼耗泄，宜静不宜动，谨慎行事。'
+        elif '廉贞' in pattern_str:
+            peiyu = '廉贞入命，需防刑伤，择日调理可化解。'
+        else:
+            peiyu = '课格平和，无大凶之象，可斟酌使用。'
+
+        xianming = f"{year_str}年" if year_str else '待定'
+
+        # 标题
+        title_para = doc.add_paragraph()
+        title_para.alignment = 1  # CENTER
+        title_run = title_para.add_run('仪度六壬择日课单')
+        title_run.font.size = 24
+        title_run.bold = True
+
+        # 开篇语
+        opening = doc.add_paragraph()
+        opening.alignment = 2  # RIGHT
+        opening.add_run('伏以，天地定位，山向合机；理气相通，福泽攸关。谨奉《穿山透地真传》之旨，依《仪度六壬选日要诀》之法，为孝眷择取吉期，安妥先灵，庇荫后昆。')
+
+        # 仙命
+        doc.add_paragraph(f'仙命：{xianming}')
+
+        # 山向
+        doc.add_paragraph(f'山向：{zuoshan}')
+
+        # 来龙
+        doc.add_paragraph(f'来龙：待定')
+
+        # 四柱
+        doc.add_paragraph(f'择取岁次{sizhu_str}')
+
+        # 六壬课格
+        keti_info = doushou_keti
+        if daliuren_keti:
+            keti_info = f"{doushou_keti} / {daliuren_keti}" if doushou_keti else daliuren_keti
+        if not keti_info:
+            keti_info = '待定'
+        doc.add_paragraph(f'六壬课格：{keti_info}')
+
+        # 批语
+        doc.add_paragraph(f'批语：{peiyu}')
+
+        # 避忌
+        doc.add_paragraph(f'避忌事宜：无重大避忌')
+
+        # 地理师
+        sig_para = doc.add_paragraph()
+        sig_para.alignment = 2  # RIGHT
+        sig_para.add_run('仪度六壬沐手谨择')
+
+        # 日期
+        date_para = doc.add_paragraph()
+        date_para.alignment = 2  # RIGHT
+        current_date = datetime.now().strftime('%Y年%m月%d日')
+        date_para.add_run(f'日期：岁次{current_date}榖旦 勒石')
+
+        filename = f'仪度六壬_{datetime.now().strftime("%Y%m%d_%H%M%S")}.docx'
+        file_path = os.path.join(os.path.expanduser('~'), filename)
+        doc.save(file_path)
+
+        return {'success': True, 'filename': filename, 'file_path': file_path}
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return {'success': False, 'error': str(e)}
+
 
 def _traditional_duanyu_handler():
     """获取传统断语的处理函数"""
@@ -946,6 +1224,7 @@ def _traditional_duanyu_handler():
         
         print(f"📌 传统断语API调用")
         print(f"📌 课格列表: {keti_list}")
+        print(f"📌 坐山: {data.get('mountain', '未提供')}")
         print(f"📌 斗首课格: {doushou_kege}")
         print(f"📌 斗首评分: {doushou_score}")
         print(f"📌 六壬评分: {liuren_score}")
@@ -977,6 +1256,382 @@ def traditional_duanyu_api():
     """获取传统断语（带/api前缀）"""
     return _traditional_duanyu_handler()
 
+@app.route('/api/ai/zhanshi_judge', methods=['POST'])
+def zhanshi_judge():
+    """AI占事智能判断"""
+    try:
+        data = request.json
+
+        # 提取参数
+        sizhu = data.get('sizhu', '')  # 四柱
+        sike = data.get('sike', '')  # 四课
+        sanchuan = data.get('sanchuan', '')  # 三传
+        keti = data.get('keti', '')  # 课体
+        zhanshi = data.get('zhanshi', '')  # 占事类型
+        stock_code = data.get('stock_code', '')  # 股票代码（股市占事）
+
+        print(f"🔮 AI占事判断API调用")
+        print(f"📌 四柱: {sizhu}")
+        print(f"📌 四课: {sike}")
+        print(f"📌 三传: {sanchuan}")
+        print(f"📌 课体: {keti}")
+        print(f"📌 占事: {zhanshi}")
+        if stock_code:
+            print(f"📌 股票代码: {stock_code}")
+
+        # 调用AI判断
+        from engine.liuren_ai_judge import LiuRenAIJudge
+        judge = LiuRenAIJudge()
+
+        result = judge.quick_judge(
+            sizhu=sizhu,
+            sike=sike,
+            sanchuan=sanchuan,
+            keti=keti,
+            zhanshi=zhanshi,
+            stock_code=stock_code
+        )
+
+        print(f"📌 AI判断结果长度: {len(result) if result else 0}")
+
+        return jsonify({
+            'success': True,
+            'result': result,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        print(f"❌ AI占事判断失败: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
+
+@app.route('/api/training/query', methods=['GET'])
+def query_training_cases():
+    """查询训练案例"""
+    try:
+        zhanshi = request.args.get('zhanshi', '')
+        limit = int(request.args.get('limit', 5))
+
+        print(f"🔍 查询训练案例: 占事={zhanshi}, 限制={limit}")
+
+        from engine.liuren_training_knowledge import LiuRenTrainingKnowledge
+        kb = LiuRenTrainingKnowledge()
+
+        if zhanshi:
+            cases = kb.query_by_zhanshi(zhanshi)
+        else:
+            cases = kb.query_similar_cases(limit=limit)
+
+        cases = cases[:limit]
+
+        # 简化返回
+        simple_cases = []
+        for case in cases:
+            simple_cases.append({
+                'id': case.get('id', ''),
+                '占事': case.get('占事', ''),
+                '实际事情': case.get('实际事情', '')[:200] if case.get('实际事情') else '',
+                '预测事情': case.get('预测事情', '')[:200] if case.get('预测事情') else ''
+            })
+
+        return jsonify({
+            'success': True,
+            'cases': simple_cases,
+            'total': len(simple_cases)
+        })
+    except Exception as e:
+        print(f"❌ 查询训练案例失败: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
+
+@app.route('/api/training/stats', methods=['GET'])
+def get_training_stats():
+    """获取训练统计"""
+    try:
+        from engine.liuren_training_knowledge import LiuRenTrainingKnowledge
+        kb = LiuRenTrainingKnowledge()
+        stats = kb.get_statistics()
+
+        return jsonify({
+            'success': True,
+            'stats': stats
+        })
+    except Exception as e:
+        print(f"❌ 获取训练统计失败: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
+
+@app.route('/api/liuren/signal', methods=['GET'])
+def liuren_signal():
+    """轻量级六壬大盘信号接口（供聚宽/米筐等外部量化平台调用）
+
+    返回今日最新的六壬预测信号，包含吉凶/趋势/置信度/仓位建议。
+    聚宽策略在 before_trading 中调用此接口决定当日仓位。
+    """
+    try:
+        from datetime import date as _date
+        import json as _json
+        memory_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '_memory')
+        preds_file = os.path.join(memory_dir, 'stock_predictions.json')
+        preds = []
+        if os.path.exists(preds_file):
+            with open(preds_file, 'r', encoding='utf-8') as f:
+                preds = _json.load(f)
+        today = _date.today().isoformat()
+
+        # 查找今日最新的预测记录
+        today_pred = None
+        for d in reversed(preds):
+            pt = d.get('predict_time', '') or d.get('target_date', '')
+            if pt.startswith(today):
+                today_pred = d
+                break
+
+        if not today_pred:
+            # 没有今日预测，返回中性信号
+            return jsonify({
+                'success': True,
+                'has_signal': False,
+                'message': '今日暂无六壬预测，默认中平半仓',
+                'date': today,
+                'jixiong': '中平',
+                'trend_prediction': '震荡',
+                'confidence': 0.5,
+                'suggested_position': 0.5,
+            })
+
+        jixiong = (today_pred.get('jixiong') or '').strip()
+        trend = (today_pred.get('trend_prediction') or '').strip()
+        confidence = today_pred.get('confidence', 0.5)
+        if not isinstance(confidence, (int, float)):
+            confidence = 0.5
+
+        # 仓位决策矩阵
+        if jixiong == '吉' and confidence >= 0.6:
+            suggested_position = 1.0
+        elif jixiong == '吉' and confidence >= 0.5:
+            suggested_position = 0.8
+        elif jixiong == '中平':
+            suggested_position = 0.5
+        elif jixiong == '凶' and confidence >= 0.6:
+            suggested_position = 0.0
+        else:
+            suggested_position = 0.3
+
+        return jsonify({
+            'success': True,
+            'has_signal': True,
+            'date': today,
+            'jixiong': jixiong or '中平',
+            'trend_prediction': trend or '震荡',
+            'confidence': round(confidence, 3),
+            'suggested_position': suggested_position,
+            'category': today_pred.get('category', ''),
+            'analysis': today_pred.get('analysis', '')[:200],  # 截断分析文本
+        })
+    except Exception as e:
+        print(f"❌ 六壬信号接口失败: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'has_signal': False,
+            'jixiong': '中平',
+            'suggested_position': 0.5,
+        }), 500
+
+
+@app.route('/api/stock/search', methods=['GET'])
+def stock_search():
+    """搜索股票代码"""
+    try:
+        keyword = request.args.get('keyword', '')
+        if not keyword:
+            return jsonify({'success': False, 'error': '请提供搜索关键词'}), 400
+
+        from engine.stock_analyzer import StockAnalyzer
+        sa = StockAnalyzer()
+        results = sa.search_stock(keyword)
+
+        return jsonify({
+            'success': True,
+            'results': results
+        })
+    except Exception as e:
+        print(f"❌ 股票搜索失败: {e}")
+        return jsonify({'error': str(e), 'success': False}), 500
+
+
+@app.route('/api/stock/quote', methods=['GET'])
+def stock_quote():
+    """获取股票实时行情"""
+    try:
+        code = request.args.get('code', '000001')
+        name = request.args.get('name', '')
+
+        from engine.stock_analyzer import StockAnalyzer
+        sa = StockAnalyzer()
+        quote = sa.get_realtime_quote(code)
+
+        if not quote:
+            return jsonify({'success': False, 'error': '未找到该股票'}), 404
+
+        return jsonify({
+            'success': True,
+            'quote': quote
+        })
+    except Exception as e:
+        print(f"❌ 获取股票行情失败: {e}")
+        return jsonify({'error': str(e), 'success': False}), 500
+
+
+@app.route('/api/stock/market', methods=['GET'])
+def stock_market():
+    """获取大盘指数行情（上证/深证等）"""
+    try:
+        from engine.stock_analyzer import StockAnalyzer
+        sa = StockAnalyzer()
+        overview = sa.get_market_overview()
+
+        return jsonify({
+            'success': True,
+            'market': overview
+        })
+    except Exception as e:
+        print(f"❌ 获取大盘行情失败: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/multi_stock', methods=['GET'])
+def multi_stock_predictions():
+    """获取大六壬一课多断最新预测结果
+
+    读取 _memory/multi_stock_*.json 中最新的文件，
+    返回 predictions 数组（含 symbol/name/trend/jixiong/confidence/analysis）。
+    """
+    try:
+        from pathlib import Path
+        memory_dir = Path(os.path.dirname(os.path.abspath(__file__))) / '_memory'
+        # 列出所有 multi_stock_*.json 并按文件名（含时间戳）降序取最新
+        files = sorted(memory_dir.glob('multi_stock_*.json'), reverse=True)
+        if not files:
+            return jsonify({
+                'success': True,
+                'date': None,
+                'predictions': [],
+                'message': '暂无大六壬一课多断预测记录'
+            })
+
+        import json as _json
+        latest_file = files[0]
+        with open(latest_file, 'r', encoding='utf-8') as f:
+            data = _json.load(f)
+
+        preds = data.get('predictions', [])
+        # 统一字段，便于前端使用
+        normalized = []
+        for p in preds:
+            normalized.append({
+                'symbol': p.get('symbol', ''),
+                'name': p.get('name', ''),
+                'trend': p.get('trend', '?'),
+                'jixiong': p.get('jixiong', '?'),
+                'confidence': float(p.get('confidence', 0) or 0),
+                'analysis': p.get('analysis', ''),
+            })
+
+        return jsonify({
+            'success': True,
+            'date': data.get('date', ''),
+            'rizhu': data.get('rizhu', ''),
+            'shichen': data.get('shichen', ''),
+            'file': latest_file.name,
+            'predictions': normalized
+        })
+    except Exception as e:
+        print(f"❌ 获取大六壬一课多断预测失败: {e}")
+        return jsonify({'success': False, 'error': str(e), 'predictions': []}), 500
+
+
+@app.route('/api/ip/location', methods=['GET'])
+def ip_location():
+    """根据客户端 IP 获取地理位置（优先 IPIP.net 精确到地级市/州）"""
+    try:
+        import urllib.request
+        import json
+        import re
+
+        client_ip = request.remote_addr or ''
+        log_print(f"📍 IP定位请求: {client_ip}")
+
+        use_ip = client_ip
+        if not use_ip or use_ip in ('127.0.0.1', '::1', '::ffff:127.0.0.1'):
+            use_ip = ''
+            log_print("  → 本地请求，使用服务端公网IP查询")
+
+        # ====== 主要数据源: IPIP.net（国内最精确，返回省/市/州级）======
+        location_name = ''
+        ip_found = ''
+        isp_found = ''
+
+        try:
+            ipip_req = urllib.request.Request(
+                'https://myip.ipip.net',
+                headers={'User-Agent': 'Mozilla/5.0'},
+            )
+            ipip_resp = urllib.request.urlopen(ipip_req, timeout=8)
+            ipip_text = ipip_resp.read().decode('utf-8', errors='replace').strip()
+
+            match = re.search(r'来自于：(.+)', ipip_text)
+            if match:
+                parts = [p.strip() for p in match.group(1).split() if p.strip()]
+                if parts:
+                    location_name = ' '.join(parts)
+                    log_print(f"  → IPIP.net: {location_name}")
+                    ip_match = re.search(r'IP：(\S+)', ipip_text)
+                    if ip_match:
+                        ip_found = ip_match.group(1)
+                    if len(parts) > 1:
+                        isp_found = parts[-1] if len(parts) >= 2 else ''
+        except Exception as e:
+            log_print(f"  → IPIP.net 不可用: {e}")
+
+        # ====== 辅助数据源: ip-api.com（提供坐标）======
+        lat, lon = 0, 120
+        country_en = ''
+
+        try:
+            api_req = urllib.request.Request(
+                f"http://ip-api.com/json/{use_ip}?fields=status,country,lat,lon",
+                headers={'User-Agent': 'Mozilla/5.0'},
+            )
+            api_resp = urllib.request.urlopen(api_req, timeout=5)
+            api_data = json.loads(api_resp.read().decode('utf-8'))
+
+            if api_data.get('status') == 'success':
+                lat = api_data.get('lat', 0)
+                lon = api_data.get('lon', 0)
+                country_en = api_data.get('country', '')
+                log_print(f"  → ip-api.com 坐标: {lat}, {lon}°E")
+            else:
+                log_print(f"  → ip-api.com 返回失败")
+        except Exception as e:
+            log_print(f"  → ip-api.com 不可用: {e}")
+
+        result = {
+            'success': True,
+            'ip': ip_found or '',
+            'location': location_name or country_en or '未知',
+            'isp': isp_found,
+            'latitude': lat,
+            'longitude': lon,
+        }
+        log_print(f"  → 定位结果: {result.get('location')} ({lon}°E)")
+        return jsonify(result)
+
+    except Exception as e:
+        log_print(f"❌ IP定位失败: {e}")
+        return jsonify({'success': False, 'longitude': 120, 'location': '默认(东八区)'})
+
+
 @app.route('/api/export/download/<path:filename>', methods=['GET'])
 def download_docx(filename):
     """下载DOCX文档"""
@@ -1004,6 +1659,343 @@ def download_docx(filename):
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
+# ==================== 增强版六壬分析 API ====================
+
+@app.route('/api/liuren/enhanced_analysis', methods=['POST'])
+def liuren_enhanced_analysis():
+    """增强版六壬分析（类象分析 + 应期判断）"""
+    try:
+        data = request.json
+        
+        print("🔮 增强版六壬分析请求")
+        print(f"   占事类别: {data.get('category', '')}")
+        print(f"   日干: {data.get('dayGan', '')}, 日支: {data.get('dayZhi', '')}")
+        
+        # 提取求测人信息
+        qiuceren_info = data.get('qiucerenInfo', {})
+        print(f"   求测人: {qiuceren_info.get('gender', '')} {qiuceren_info.get('age', '')}岁 {qiuceren_info.get('occupation', '')}")
+        
+        # 调用增强版占卜系统
+        from enhanced_divination import EnhancedDivination
+        
+        # 构建查询信息
+        query_info = {
+            'ri_gan': data.get('dayGan', ''),
+            'ri_zhi': data.get('dayZhi', ''),
+            'year': '',
+            'month': '',
+            'date': '',
+            'time': '',
+            'yue_jiang': '',
+            'question': data.get('category', ''),
+            'gender': qiuceren_info.get('gender', ''),
+            'age': qiuceren_info.get('age', 0),
+            'occupation': qiuceren_info.get('occupation', ''),
+            'residence': qiuceren_info.get('residence', ''),
+            'era': qiuceren_info.get('era', '')
+        }
+        
+        # 处理四课数据
+        si_ke = []
+        siKe_data = data.get('siKe', {})
+        for i in ['ke1', 'ke2', 'ke3', 'ke4']:
+            ke = siKe_data.get(i, {})
+            if ke:
+                si_ke.append({
+                    'top': ke.get('top', '') or ke.get('shangGan', '') or ke.get('tianGan', ''),
+                    'bottom': ke.get('bottom', '') or ke.get('xiaGan', '') or ke.get('diGan', '')
+                })
+        
+        # 处理三传数据
+        san_chuan = []
+        sanChuan_data = data.get('sanChuan', {})
+        tianJiang_data = data.get('sanChuanTianJiang', [])
+        for i, chuan_name in enumerate(['chuChuan', 'zhongChuan', 'moChuan']):
+            zhi = sanChuan_data.get(chuan_name, '')
+            if zhi:
+                san_chuan.append({
+                    'zhi': zhi,
+                    'tian_jiang': tianJiang_data[i] if i < len(tianJiang_data) else ''
+                })
+        
+        # 创建增强版占卜实例
+        diviner = EnhancedDivination(query_info)
+        diviner.set_paipan(None, si_ke, san_chuan)
+        result = diviner.analyze()
+        
+        return jsonify({
+            'success': True,
+            'data': {
+                'qiucerenInfo': qiuceren_info,
+                'classifications': result.get('classifications', {}),
+                'yingqi': result.get('yingqi', {})
+            },
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        print(f"❌ 增强版六壬分析失败: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
+
+# ==================== 传统六壬引擎API端点 ====================
+
+@app.route('/api/liuren/traditional/analyze', methods=['POST'])
+def liuren_traditional_analyze():
+    """传统六壬完整分析"""
+    try:
+        data = request.json
+        
+        if TraditionalLiurenEngine_Instance is None:
+            return jsonify({'error': 'TraditionalLiurenEngine 未加载'}), 500
+        
+        print("🔮 传统六壬分析请求")
+        
+        # 构建分析数据
+        analysis_data = {
+            'ri_gan': data.get('ri_gan', data.get('dayGan', '')),
+            'ri_zhi': data.get('ri_zhi', data.get('dayZhi', '')),
+            'sanchuan': data.get('sanchuan', []),
+            'si_ke': data.get('si_ke', []),
+            'question': data.get('question', data.get('category', '')),
+            'gender': data.get('gender', ''),
+            'occupation': data.get('occupation', ''),
+            'age': data.get('age', 0),
+            'ke_ti': data.get('ke_ti', data.get('keti', ''))
+        }
+        
+        # 从增强的前端数据中提取四课
+        if not analysis_data['si_ke'] and 'siKe' in data:
+            si_ke_list = []
+            siKe_data = data.get('siKe', {})
+            for i in ['ke1', 'ke2', 'ke3', 'ke4']:
+                ke = siKe_data.get(i, {})
+                if ke:
+                    si_ke_list.append({
+                        'top': ke.get('top', '') or ke.get('shangGan', '') or ke.get('tianGan', ''),
+                        'bottom': ke.get('bottom', '') or ke.get('xiaGan', '') or ke.get('diGan', '')
+                    })
+            analysis_data['si_ke'] = si_ke_list
+        
+        # 从增强的前端数据中提取三传
+        if not analysis_data['sanchuan'] and 'sanChuan' in data:
+            san_chuan_list = []
+            sanChuan_data = data.get('sanChuan', {})
+            for chuan_name in ['chuChuan', 'zhongChuan', 'moChuan']:
+                zhi = sanChuan_data.get(chuan_name, '')
+                if zhi:
+                    san_chuan_list.append(zhi)
+            analysis_data['sanchuan'] = san_chuan_list
+        
+        # 从求测人信息中提取
+        if 'qiucerenInfo' in data:
+            qiuceren_info = data.get('qiucerenInfo', {})
+            analysis_data['gender'] = analysis_data.get('gender', qiuceren_info.get('gender', ''))
+            analysis_data['age'] = analysis_data.get('age', qiuceren_info.get('age', 0))
+            analysis_data['occupation'] = analysis_data.get('occupation', qiuceren_info.get('occupation', ''))
+        
+        print(f"📌 分析数据:")
+        print(f"   日干: {analysis_data['ri_gan']}, 日支: {analysis_data['ri_zhi']}")
+        print(f"   三传: {analysis_data['sanchuan']}")
+        print(f"   四课数量: {len(analysis_data['si_ke'])}")
+        print(f"   占事: {analysis_data['question']}")
+        print(f"   求测人: {analysis_data['gender']} {analysis_data['age']}岁 {analysis_data['occupation']}")
+        
+        # 调用传统六壬引擎
+        result = TraditionalLiurenEngine_Instance.full_traditional_analysis(analysis_data)
+        
+        print(f"✅ 传统六壬分析完成")
+        
+        return jsonify({
+            'success': True,
+            'result': result,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        print(f"❌ 传统六壬分析失败: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
+
+@app.route('/api/liuren/traditional/yingqi', methods=['POST'])
+def liuren_traditional_yingqi():
+    """传统六壬应期分析"""
+    try:
+        data = request.json
+        
+        if TraditionalLiurenEngine_Instance is None:
+            return jsonify({'error': 'TraditionalLiurenEngine 未加载'}), 500
+        
+        sanchuan = data.get('sanchuan', [])
+        ri_gan = data.get('ri_gan', data.get('dayGan', ''))
+        ri_zhi = data.get('ri_zhi', data.get('dayZhi', ''))
+        age = data.get('age', 0)
+        
+        # 从增强的前端数据中提取三传
+        if not sanchuan and 'sanChuan' in data:
+            sanChuan_data = data.get('sanChuan', {})
+            sanchuan = [
+                sanChuan_data.get('chuChuan', ''),
+                sanChuan_data.get('zhongChuan', ''),
+                sanChuan_data.get('moChuan', '')
+            ]
+            sanchuan = [z for z in sanchuan if z]
+        
+        result = TraditionalLiurenEngine_Instance.calculate_yingqi(sanchuan, ri_gan, ri_zhi, age)
+        
+        return jsonify({
+            'success': True,
+            'yingqi': result,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        print(f"❌ 传统六壬应期分析失败: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
+
+@app.route('/api/liuren/auto_learner/learn', methods=['POST'])
+def liuren_learner_learn():
+    """自动学习器 - 学习案例"""
+    try:
+        data = request.json
+        
+        if AutoLearner_Instance is None:
+            return jsonify({'error': 'AutoLearner 未加载'}), 500
+        
+        case = data.get('case', {})
+        ai_analysis = data.get('ai_analysis', {})
+        
+        AutoLearner_Instance.learn_from_case(case, ai_analysis)
+        AutoLearner_Instance.save_knowledge()
+        
+        return jsonify({
+            'success': True,
+            'message': '学习完成，知识库已保存',
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        print(f"❌ 自动学习失败: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
+
+@app.route('/api/liuren/auto_learner/apply', methods=['POST'])
+def liuren_learner_apply():
+    """自动学习器 - 应用知识"""
+    try:
+        data = request.json
+        
+        if AutoLearner_Instance is None:
+            return jsonify({'error': 'AutoLearner 未加载'}), 500
+        
+        result = AutoLearner_Instance.apply_knowledge(data)
+        
+        return jsonify({
+            'success': True,
+            'result': result,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        print(f"❌ 应用知识失败: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
+
+# ==================== 混合推理系统API端点 ====================
+
+# 初始化混合推理系统
+try:
+    from hybrid_reasoning_system_simple import HybridAPIHandler
+    print("✅ 混合推理系统加载成功")
+    HybridHandler = HybridAPIHandler()
+except Exception as e:
+    print(f"⚠️  混合推理系统加载失败: {e}")
+    HybridHandler = None
+
+@app.route('/api/liuren/hybrid/analyze', methods=['POST'])
+def liuren_hybrid_analyze():
+    """混合推理系统 - 完整分析"""
+    try:
+        if HybridHandler is None:
+            return jsonify({'error': '混合推理系统未加载', 'success': False}), 500
+        
+        data = request.json
+        print("🔮 混合推理分析请求")
+        
+        result = HybridHandler.handle_analysis_request(data)
+        
+        return jsonify(result)
+        
+    except Exception as e:
+        print(f"❌ 混合推理分析失败: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
+
+# ==================== P3: 按占事生成断语（2026-08-18）====================
+
+@app.route('/api/liuren/zhanshi_duanyu', methods=['POST'])
+def liuren_zhanshi_duanyu():
+    """按具体占事生成六壬断语（解决一刀切）。
+
+    body: {
+      category: 'marriage' 或 zhanshi: '婚姻'（前端 13 类英文键，见 CATEGORY_MAP）,
+      dayGan/dayZhi 或 year/month/day/hour（缺省时后端推导）,
+      yuejiang/shichen 可选（缺省按日期推导）
+    }
+    返回: {success, data: {zhanshi, paipan, level, keti_duanyu, zhanshi_duanyu, bifa_duanyu, summary}}
+    """
+    try:
+        data = request.json or {}
+        category = data.get('category', '')
+        zhanshi = data.get('zhanshi', '')
+        ri_gan = data.get('dayGan', '') or data.get('ri_gan', '')
+        ri_zhi = data.get('dayZhi', '') or data.get('ri_zhi', '')
+        yuejiang = data.get('yuejiang', '')
+        shichen = data.get('shichen', '')
+
+        year = int(data.get('year', 0) or 0)
+        month = int(data.get('month', 0) or 0)
+        day = int(data.get('day', 0) or 0)
+        hour = int(data.get('hour', 12) or 12)
+
+        # 时辰映射（与 /api/sizhu 同口径）
+        if not shichen:
+            _sc_map = {23:'子',0:'子',1:'丑',2:'丑',3:'寅',4:'寅',5:'卯',6:'卯',7:'辰',8:'辰',
+                       9:'巳',10:'巳',11:'午',12:'午',13:'未',14:'未',15:'申',16:'申',
+                       17:'酉',18:'酉',19:'戌',20:'戌',21:'亥',22:'亥'}
+            shichen = _sc_map.get(hour, '午')
+
+        # 缺月将 → 中气精确口径
+        if not yuejiang and year and month and day:
+            try:
+                from engine.daliuren_luma_guiren import DaLiuRenLuMaGuiRen
+                yuejiang = DaLiuRenLuMaGuiRen().get_yuejiang_by_date(year, month, day)
+            except Exception:
+                yuejiang = ''
+
+        # 缺日柱 → sizhu_engine 推导
+        if (not ri_gan or not ri_zhi) and year and month and day:
+            if get_sizhu is not None:
+                sr = get_sizhu(year, month, day, shichen)
+                if not ri_gan:
+                    ri_gan = (sr.get('日柱', '') or '')[:1]
+                if not ri_zhi:
+                    ri_zhi = (sr.get('日柱', '') or '')[1:]
+
+        if not (ri_gan and ri_zhi and yuejiang and shichen):
+            return jsonify({'error': '排盘参数不完整（需 dayGan/dayZhi/yuejiang/shichen，或 year/month/day/hour）', 'success': False}), 400
+
+        from engine.zhanshi_duanyu import generate
+        result = generate(ri_gan, ri_zhi, yuejiang, shichen, zhanshi=zhanshi, category=category)
+        return jsonify({'success': True, 'data': result})
+
+    except Exception as e:
+        print(f"❌ 占事断语生成失败: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
+
+
 # ==================== 服务器启动 ====================
 
 def start_server():
@@ -1016,7 +2008,7 @@ def start_server():
     print("=" * 80)
     
     print("使用 Flask 开发服务器启动...")
-    app.run(host='0.0.0.0', port=5000, debug=False, threaded=True)
+    app.run(host='0.0.0.0', port=8000, debug=False, threaded=True)
 
 if __name__ == '__main__':
     start_server()
