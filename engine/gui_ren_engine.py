@@ -28,6 +28,9 @@ except ImportError:
         pass
 
 
+# 导入昼夜贵人模块
+from engine.gui_ren_daynight import get_gui_ren_pan, is_daytime, get_tianjiang_for_sanchuan
+
 class GuiRenCalculator:
     """贵人计算器"""
     
@@ -54,9 +57,9 @@ class GuiRenCalculator:
         gui_ren_list = self.guiren.get(ri_gan, ['丑', '未'])
         
         if is_night and len(gui_ren_list) > 1:
-            return gui_ren_list[1]  # 阴贵（夜贵）
+            return gui_ren_list[1]  # 阴贵
         else:
-            return gui_ren_list[0]  # 阳贵（昼贵）
+            return gui_ren_list[0]  # 阳贵
     
     def is_night_time(self, shichen: str) -> bool:
         """
@@ -85,13 +88,14 @@ class GuiRenCalculator:
         return dizhi in yang_positions
     
     def arrange_gui_ren_pan(self, ri_gan: str, tian_pan: dict, 
-                           shichen: str = None, is_night: bool = None) -> dict:
+                           shichen: str = None, is_night: bool = None,
+                           lat: float = None, lon: float = None, d=None) -> dict:
         """
         排贵人盘（十二天将）
         
         排法步骤：
         1. 起贵人：根据日干确定贵人（丑或未）
-        2. 分昼夜：昼占用阳贵，夜占用阴贵
+        2. 分昼夜：昼占用阳贵，夜占用阴贵（优先真太阳时日出日落，需 lat/lon/d；否则固定卯酉）
         3. 贵人加临：贵人加在天盘地支上
         4. 判顺逆：天盘贵人落地盘阳位则顺行，落地盘阴位则逆行
         5. 布天将：贵人→螣蛇→朱雀→六合→勾陈→青龙→天空→白虎→太常→玄武→太阴→天后
@@ -99,27 +103,33 @@ class GuiRenCalculator:
         :param ri_gan: 日干
         :param tian_pan: 天盘（包含天地对应关系）
         :param shichen: 占时（可选，用于自动判断昼夜）
-        :param is_night: 是否夜间（可选，不填则根据 shichen 自动判断）
+        :param is_night: 是否夜间（可选，不填则自动判断）
+        :param lat/lon: 经纬度（可选，提供则用真太阳时日出日落判昼夜）
+        :param d: 公历日期（可选，真太阳时用，默认今天）
         :return: 贵人盘字典
         """
-        # 1. 自动判断昼夜
-        if is_night is None and shichen:
-            is_night = self.is_night_time(shichen)
-        elif is_night is None:
-            is_night = False  # 默认昼占
+        # 1. 自动判断昼夜：优先真太阳时（日出日落），否则固定卯酉
+        if is_night is None:
+            if lat is not None and lon is not None:
+                is_night = not is_daytime(shichen, lat=lat, lon=lon, d=d)
+            elif shichen:
+                is_night = self.is_night_time(shichen)
+            else:
+                is_night = False  # 默认昼占
         
         # 2. 起贵人
         gui_ren = self.get_gui_ren_by_ri_gan(ri_gan, is_night)
         
         # 3. 找位置：天盘贵人地支落地盘的哪个位置
+        # 【BUG-FIX 2026-08-18】空盘（无'天地对应'键）兜底，不再 KeyError
         gui_di_position = None
-        for di_zhi, tian_zhi in tian_pan['天地对应'].items():
+        for di_zhi, tian_zhi in (tian_pan.get('天地对应') or {}).items():
             if tian_zhi == gui_ren:
                 gui_di_position = di_zhi
                 break
         
         # 4. 判断顺逆：看天盘贵人落地盘的位置是阳位还是阴位
-        is_shun_xing = self.is_yang_position(gui_di_position)
+        is_shun_xing = self.is_yang_position(gui_di_position) if gui_di_position else False
         
         # 5. 排十二天将
         # 天将顺序：贵人→螣蛇→朱雀→六合→勾陈→青龙→天空→白虎→太常→玄武→太阴→天后
