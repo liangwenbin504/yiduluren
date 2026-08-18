@@ -470,11 +470,10 @@ class LiuChenEngine:
                                 'ZN-仕宦-八"干支年命俱见罗网…仕宦忌罗网，以罗网为丁忧之象"')
             # 【疏正精读 2026-08-18】干寄宫加支而寄宫自刑 → 自取乱首，为仆所害
             #   （§前程仕进03·075"亥加辰，乃自取乱首……本身则死于仆手"——
-            #   壬寄亥加支辰、亥自刑；守卫：寄宫=禄时权摄食禄不判（§058 戊寄巳加支为禄））
+            #   壬寄亥加支辰、亥自刑；§058 戊寄巳加支、巳不自刑不受影响）
             _GAN_JI5 = {'甲': '寅', '乙': '辰', '丙': '巳', '丁': '未', '戊': '巳',
                         '己': '未', '庚': '申', '辛': '戌', '壬': '亥', '癸': '丑'}
-            if (zhi_shang == _GAN_JI5.get(ri_gan, '') and zhi_shang in ('辰', '午', '酉', '亥') and
-                    zhi_shang != lu_zhi):
+            if zhi_shang == _GAN_JI5.get(ri_gan, '') and zhi_shang in ('辰', '午', '酉', '亥'):
                 return self._mk('自取乱首', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'干寄宫{zhi_shang}加支又自刑，自取乱首，主为仆辈所持，防身命之祸',
                                 '§前程仕进03·075"亥加辰，乃自取乱首…本身则死于仆手"')
@@ -572,11 +571,12 @@ class LiuChenEngine:
                     return self._mk('阴阳制官', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                     f'官星{chu}发用而干支阴神克官，官受制于人，迁擢随罢，须防人祟',
                                     'ZN-仕宦-二十三"忌日之阴阳制官，须防陈王田姓人为祟"')
-            # 【疏正精读 2026-08-18】官星发用而末传空亡且三传递减（一味投绝）→ 不能赴任
+            # 【疏正精读 2026-08-18】官星发用而末传空亡且三传递退（一味投绝）→ 不能赴任
             #   （§前程仕进03·097"盖初传日贵，传归夜贵……一味投绝，又自日传夜……
             #   何能赴任?"——辛亥日三传午辰寅递退、末寅空）
-            if (guan_xing_fa_yong and mo in kong and
-                    _zhi_seq2.get(chu, 0) > _zhi_seq2.get(zhong, 0) > _zhi_seq2.get(mo, 0)):
+            _dza = (_zhi_seq2.get(chu, 0) - _zhi_seq2.get(zhong, 0)) % 12
+            _dzb = (_zhi_seq2.get(zhong, 0) - _zhi_seq2.get(mo, 0)) % 12
+            if (guan_xing_fa_yong and mo in kong and 1 <= _dza <= 6 and 1 <= _dzb <= 6):
                 return self._mk('传退投绝', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'官星{chu}发用而三传{chu}·{zhong}·{mo}递退、末传{mo}空亡，一味投绝，美差不能赴任',
                                 '§前程仕进03·097"一味投绝，又自日传夜…何能赴任"')
@@ -628,11 +628,12 @@ class LiuChenEngine:
                 return self._mk('权摄食禄', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'禄神{lu_zhi}临支，权摄不正禄临支，正任不可望，迁官不能',
                                 '§前程仕进03·058"权摄不正禄临支"; §069"必见回避前程未通"; §097"美差不能赴"; CASE-037"不能升迁，后果不能升迁告休而回"')
-            # 【疏正精读 2026-08-18】禄临干而三传递减、中末传空亡 → 禄作仪神退入空亡，晚年谪降
+            # 【疏正精读 2026-08-18】禄临干而三传递退、中末传空亡 → 禄作仪神退入空亡，晚年谪降
             #   （§前程仕进03·071"中末若不空，则五府之课，今既迤逦入近天门……退入空亡，
             #   主晚年谪降矣"——乙卯日禄卯临干、丑子亥递退、中子丑空）
-            if (lu_lin_gan and
-                    _zhi_seq2.get(chu, 0) > _zhi_seq2.get(zhong, 0) > _zhi_seq2.get(mo, 0) and
+            _dz1 = (_zhi_seq2.get(chu, 0) - _zhi_seq2.get(zhong, 0)) % 12
+            _dz2 = (_zhi_seq2.get(zhong, 0) - _zhi_seq2.get(mo, 0)) % 12
+            if (lu_lin_gan and 1 <= _dz1 <= 6 and 1 <= _dz2 <= 6 and
                     (zhong in kong or mo in kong)):
                 return self._mk('先吉后凶', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'禄神{gan_shang}临干而三传{chu}·{zhong}·{mo}递退、中末传入空亡，禄作仪神退入空亡，虽登高第，晚年谪降',
@@ -1408,6 +1409,13 @@ class LiuChenEngine:
                 return self._mk('赘婿家破', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'支{ri_zhi}来就干为干所制，名曰赘婿，身不由己，家破屋拆之象',
                                 '§宅墓02·005"支来就干为干所制名曰赘婿，六年中家破屋拆"')
+            # 【疏正精读 2026-08-18】支上=日禄又=干寄宫 → 日往加辰，人广而宅狭，终因家财争讼
+            #   （§宅墓02·017 戊子日支上巳=戊禄+寄宫"此课日往加辰，是人广而宅狭也……
+            #   十三年后……因家财争讼"）
+            if zhi_shang == lu_zhi and zhi_shang == ji_gong and ji_gong:
+                return self._mk('人广宅狭', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'支上{zhi_shang}为日禄又为干寄宫，日往加辰，人广而宅狭，居不得许多人，后因家财争讼',
+                                '§宅墓02·017"此课日往加辰，是人广而宅狭也……因家财争讼"')
             # 【壬占汇选深读 2026-08-18】死气临宅发用 → 家下有死亡事
             #   （CASE-160"死气临宅发用，又作月厌，家下有死亡事……两幼子俱伤"——
             #   辛巳日卯将（建戌）死气=寅发用；死气=月建顺数四位）
@@ -2080,10 +2088,9 @@ class LiuChenEngine:
                            '戌': '亥', '亥': '子', '卯': '辰', '午': '未', '酉': '戌',
                            '子': '丑', '丑': '寅'}
             if (_shi_shen(gan_shang, ri_gan) == '官鬼' and
-                    _gan_shang_tj in ('勾陈', '玄武', '螣蛇', '白虎', '天空') and
                     zhi_shang == _TIANLUO_SZ.get(_GAN_JI_QT.get(ri_gan, ''), '')):
                 return self._mk('罗网鬼克', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
-                                f'干上{gan_shang}为日干官鬼乘{_gan_shang_tj}克身，支上{zhi_shang}又为天罗，干支罗网，主兴讼是非，被事贬谪',
+                                f'干上{gan_shang}为日干官鬼克身，支上{zhi_shang}又为天罗，干支罗网，主兴讼是非，被事贬谪',
                                 '§终身04·111"日上乘破碎，作鬼克身……干支罗网…定被事贬谪"')
             # 【疏正精读 2026-08-18】循环格而末传=日禄 → 费力中得便宜，劳苦中得迁转
             #   （§一课二事09·144 甲申日三传申亥寅循环格、末传寅=甲禄"是费力中得便宜，
@@ -2092,6 +2099,22 @@ class LiuChenEngine:
                 return self._mk('费力得迁', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'循环格而末传{mo}为日禄，费力中得便宜，劳苦中得迁转，终有荣名',
                                 '§一课二事09·144"费力中得便宜，劳苦中得迁转…遂得诸王宫教授"')
+            # 【疏正精读 2026-08-18】三合水局=日干之财而青龙入传 → 雨雪应验（天时占）
+            #   （§天时01·002 戊申日申子辰水局=戊之财"润下课，元临子作用，中传龙又乘申，
+            #   末传又是夜青龙……必有大雪。果辛亥日雨，丙辰日大雪"；守卫：水局为子孙
+            #   （食伤）不判——CASE-128/134 庚辰日水局为庚之子孙非天时应验）
+            _SHUI_JU_SZ = {'申', '子', '辰'}
+            if ({chu, zhong, mo} == _SHUI_JU_SZ and KE.get(gw) == '水' and
+                    any(t == '青龙' for t in (chu_tj, zhong_tj, mo_tj))):
+                return self._mk('雨雪应验', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传申·子·辰润下课为日干财局而青龙入传，水气发动，主雨雪应验',
+                                '§天时01·002"润下课…末传又是夜青龙…必有大雪。果辛亥日雨，丙辰日大雪"')
+            # 【疏正精读 2026-08-18】支上乘天空而中传空亡 → 乘空虚诈，事必无成
+            #   （§杂占17·217 壬子日支上酉乘天空、中传卯空"乘空为虚诈，又传入空亡，是以无酒"）
+            if _zhi_shang_tj == '天空' and zhong in kong:
+                return self._mk('天空传空', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'支上{zhi_shang}乘天空而中传{zhong}空亡，乘空为虚诈，又传入空亡，事必无成',
+                                '§杂占17·217"乘空为虚诈，又传入空亡，是以无酒"')
             # 【疏正精读 2026-08-18】干上=日墓乘螣蛇 → 支来墓干，病块难脱
             #   （§终身04·116 丙戌日干上戌=火墓乘螣蛇"日上见戌，作蛇，是支来墓干也……
             #   此病不能脱矣……遭官灾，大有破费"）
