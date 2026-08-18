@@ -544,14 +544,26 @@ def _get_kongwang(result: Dict[str, Any]):
 
 
 def _derive_gan_zhi_shang(si_ke, tiandi_pan, ri_gan, ri_zhi):
-    """从四课/天地盘推导干上神、支上神（富检测器毕法/特殊课格需要）。"""
+    """从四课/天地盘推导干上神、支上神（富检测器毕法/特殊课格需要）。
+    【BUG-FIX 2026-08-18】兼容 sike 元素 dict 格式（{'上神':..,'下神':..}）：
+    原 `si_ke[0][1]` 对 dict 键 KeyError 1。"""
     gan_shang = ''
     zhi_shang = ''
+
+    def _ke_shang(k):
+        if not k:
+            return ''
+        if isinstance(k, dict):
+            return str(k.get('上神', '') or '')[-1:]
+        if isinstance(k, (list, tuple)) and len(k) >= 2:
+            return str(k[1])[-1:]
+        return ''
+
     if isinstance(si_ke, list):
-        if len(si_ke) >= 1 and si_ke[0] and len(si_ke[0]) >= 2:
-            gan_shang = str(si_ke[0][1])[-1:]
-        if len(si_ke) >= 3 and si_ke[2] and len(si_ke[2]) >= 2:
-            zhi_shang = str(si_ke[2][1])[-1:]
+        if len(si_ke) >= 1:
+            gan_shang = _ke_shang(si_ke[0])
+        if len(si_ke) >= 3:
+            zhi_shang = _ke_shang(si_ke[2])
     if not gan_shang and ri_gan and tiandi_pan:
         g = tiandi_pan.get(ri_gan, '')
         if g:
@@ -1456,9 +1468,10 @@ def extract_tianyu_valence(ri_gan: str, tiandi_pan: Dict) -> Dict[str, Any]:
     rgwx = GAN_WX.get(ri_gan)
     if not rgwx:
         return {"score": 0, "level": "平", "details": [], "fired": ""}
-    # 日干长生位（阳顺阴逆：甲亥 乙午 丙寅 丁酉 戊寅 己酉 庚巳 辛子 壬申 癸卯）
-    _RI_CS = {'甲': '亥', '丙': '寅', '戊': '寅', '庚': '巳', '壬': '申',
-              '乙': '午', '丁': '酉', '己': '酉', '辛': '子', '癸': '卯'}
+    # 日干长生位（五行长生；【BUG-FIX 2026-08-18 案例实证】"丙以寅为日本"、
+    # "辛长生于巳"→ 五行长生；原"阳顺阴逆"十干阴阳表（乙午辛子…）与案例矛盾，弃用）
+    _RI_CS = {'甲': '亥', '丙': '寅', '戊': '申', '庚': '巳', '壬': '申',
+              '乙': '亥', '丁': '寅', '己': '申', '辛': '巳', '癸': '申'}
     ri_cs = _RI_CS.get(ri_gan)
     if not ri_cs:
         return {"score": 0, "level": "平", "details": [], "fired": ""}

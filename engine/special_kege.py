@@ -111,7 +111,8 @@ class SpecialKegeDetector:
 
         # 综合课格
         self._jieli(ri_gan, ganzhi, gan_shang_shen, zhi_shang_shen)
-        self._youzi(sc)
+        _rz = ganzhi[1] if len(ganzhi) >= 2 else ''
+        self._youzi(sc, ri_gan, _rz, ganzhi)
 
         # 64课/毕法赋变格（从属格，2026-08-16 补）
         self._xiuluan(sc, kongwang)                                       # 朽木难雕/伤轮
@@ -301,13 +302,30 @@ class SpecialKegeDetector:
         if gs_wx and zw and WX_KE.get(gs_wx,'')==zw and zs_wx and gw and WX_KE.get(zs_wx,'')==gw:
             self._add('解离课','凶',f'干上{gs}克支{rz}，支上{zs}克干{ri_gan}，解离之象','跌',2)
 
-    def _youzi(self, sc):
-        """游子课: 三传皆土(辰戌丑未)
-        【BUG-FIX 2026-08-18】原判「三传皆孟(寅申巳亥)」与玄胎课(传皆四孟)
-        撞车且无古籍依据；通解 游子课：三传皆土，遇旬丁天马为用。"""
-        if len(sc)<3: return
-        if all(z in {'辰','戌','丑','未'} for z in sc):
-            self._add('游子课','震荡','三传皆土，游子奔波，行情方向不明','震荡',1)
+    def _youzi(self, sc, ri_gan='', ri_zhi='', ganzhi=''):
+        """游子课: 三传皆土(辰戌丑未)，遇旬丁/驿马/天马为用
+        【BUG-FIX 2026-08-18】原判「三传皆孟(寅申巳亥)」撞玄胎课；改三传皆土后
+        仍须逢丁马才算游子（案例："稼穑见旬丁为游子"、"驿马发用游子之象"、
+        "天马入传课名游子"）——纯三传皆土是稼穑课，非游子。"""
+        if len(sc) < 3:
+            return
+        if not all(z in {'辰', '戌', '丑', '未'} for z in sc):
+            return
+        # 旬丁 / 驿马 / 天马 任一在三传
+        _has_dingma = False
+        try:
+            from .bifa_detector import get_ding_shen
+            ding = get_ding_shen(ganzhi) if len(ganzhi) >= 2 else ''
+            _has_dingma = bool(ding and ding in sc)
+        except Exception:
+            _has_dingma = False
+        if not _has_dingma and ri_zhi:
+            _ma = {'申': '寅', '子': '寅', '辰': '寅', '寅': '申', '午': '申', '戌': '申',
+                   '亥': '巳', '卯': '巳', '未': '巳', '巳': '亥', '酉': '亥', '丑': '亥'}
+            _has_dingma = _ma.get(ri_zhi, '') in sc
+        if not _has_dingma:
+            return
+        self._add('游子课', '震荡', '三传皆土，游子奔波，行情方向不明', '震荡', 1)
 
     # ════════════════ 64课/毕法赋变格（从属格，2026-08-16 补）════════════════
 

@@ -444,10 +444,40 @@ def judge_xuan_gai(env):
 
 
 def judge_you_zi(env):
-    """游子：三传皆土，旬丁天马加季发用。"""
+    """游子：三传皆土，遇旬丁、天马为用（通解 游子课）。
+    【BUG-FIX 2026-08-18 案例实证】"稼穑见旬丁为游子"、"驿马发用游子之象"、
+    "天马入传课名游子"——三传皆土须逢 旬丁/驿马/天马 之一才算游子，
+    原判纯三传皆土太宽（把普通稼穑课全算游子）。"""
     sc = env.get('sanchuan', [])
-    if sc and all(ZHI_WX.get(z, '') == '土' for z in sc):
-        return _ref('游子', f'三传{sc}皆土(四季)', '通解 游子课')
+    if not sc or not all(ZHI_WX.get(z, '') == '土' for z in sc):
+        return None
+    ri_zhi = env.get('ri_zhi', '')
+    ri_gan = env.get('ri_gan', '')
+    # 旬丁（通解：旬丁=旬首支+3；bifa_detector.get_ding_shen 同源）
+    ding = ''
+    try:
+        from engine.bifa_detector import get_ding_shen
+        ding = get_ding_shen((ri_gan or '') + (ri_zhi or '')) if ri_gan and ri_zhi else ''
+    except Exception:
+        ding = ''
+    # 驿马（日支三合）
+    ma = YI_MA.get(ri_zhi, '')
+    # 天马（正月起午顺行六阳位子寅辰午申戌；按月建推，缺省不判）
+    tian_ma = ''
+    yue_jian = env.get('yue_jian', '')
+    if yue_jian and yue_jian in DIZHI_IDX:
+        _YUE_ORD = {'寅': 0, '卯': 1, '辰': 2, '巳': 3, '午': 4, '未': 5,
+                    '申': 6, '酉': 7, '戌': 8, '亥': 9, '子': 10, '丑': 11}
+        _TM_6Y = ['子', '寅', '辰', '午', '申', '戌']
+        _tm_idx = (_YUE_ORD.get(yue_jian, 0)) % 6
+        tian_ma = _TM_6Y[_tm_idx]
+    # 丁马任一在三传中 → 游子
+    if ding and ding in sc:
+        return _ref('游子', f'三传{sc}皆土，逢旬丁{ding}', '通解 游子课')
+    if ma and ma in sc:
+        return _ref('游子', f'三传{sc}皆土，驿马{ma}在传', '通解 游子课')
+    if tian_ma and tian_ma in sc:
+        return _ref('游子', f'三传{sc}皆土，天马{tian_ma}在传', '通解 游子课')
     return None
 
 
@@ -649,7 +679,10 @@ def judge_tian_kou(env):
 
 
 def judge_er_fan(env):
-    """二烦：四仲月将 + 四正日 + 日月宿加四仲 + 斗罡系丑未。"""
+    """二烦：四仲月将 + 四正日 + 日月宿加四仲 + 斗罡系丑未。
+    【BUG-FIX 2026-08-18】斗罡系丑未 = 天盘辰(天罡)加临地盘丑/未。
+    dou_gang_wei 原从未赋值 → c4 恒 False，二烦永不触发。
+    现从 tiandi_pan（{地盘: 天盘}）推：天盘辰所临地盘支；无盘或缺参安全返回。"""
     yue_jiang = env.get('yue_jiang', '')
     lunar_day = env.get('lunar_day', 0)
     lunar_month = env.get('lunar_month', 0)
@@ -662,9 +695,16 @@ def judge_er_fan(env):
     ri_su_zhong = ri_su_ in SI_ZHONG
     yue_su_zhong = XIU_ZHI.get(yue_su_, '') in SI_ZHONG if yue_su_ else False
     c3 = ri_su_zhong and yue_su_zhong
-    # 斗罡系丑未（天罡辰加临丑未）
-    c4 = env.get('dou_gang_wei', '') in ('丑', '未')
-    hit = [ok for c, ok in [(c1, '四仲月将'), (c2, '四正日'), (c3, f'日月宿加四仲(日{ri_su_}月{yue_su_})'), (c4, '斗罡系丑未')] if c]
+    # 斗罡系丑未（天罡辰加临丑/未）：优先 env 传入，否则从天地盘推
+    dou_wei = env.get('dou_gang_wei', '')
+    if not dou_wei:
+        tdp = env.get('tiandi_pan') or {}
+        for di, tian in tdp.items():
+            if tian == '辰':
+                dou_wei = di
+                break
+    c4 = dou_wei in ('丑', '未')
+    hit = [ok for c, ok in [(c1, '四仲月将'), (c2, '四正日'), (c3, f'日月宿加四仲(日{ri_su_}月{yue_su_})'), (c4, f'斗罡系{(dou_wei or "?")}')] if c]
     if len(hit) == 4:
         return _ref('二烦', f'天地相并：{hit}', '通解 二烦课')
     return None
@@ -699,9 +739,10 @@ def judge_yin_cong(env):
 
 
 def judge_luan_shou(env):
-    """乱首：干加支受支克（下欺上）。
-    【BUG-FIX 2026-08-18】原 k[1]==ri_gan 拿上神(地支)比日干(天干)恒假，乱首永不命中；
-    改为 k[1]==日干寄宫（干加支）。"""
+    """乱首：干加支受支克（乱首）或 支加干克干（上门乱首）。
+    【BUG-FIX 2026-08-18】补"上门乱首"：案例原文"法以干加支而受克，尊临卑位而受凌辱，
+    故名乱首。此占乃支来加克干，卑凌尊位，表义亦同"——支加干克干同样算乱首。
+    """
     ri_gan = env.get('ri_gan', '')
     ri_zhi = env.get('ri_zhi', '')
     sike = env.get('sike', [])
@@ -711,9 +752,13 @@ def judge_luan_shou(env):
     except Exception:
         ji_gong = ''
     for k in sike:
-        if len(k) > 2 and k[2] == ri_zhi and k[1] == ji_gong:
-            if _ke(ri_zhi, ri_gan):
+        if len(k) > 2:
+            # ① 干加支受支克（乱首）：日干寄宫加于日支，支克干
+            if k[2] == ri_zhi and k[1] == ji_gong and _ke(ri_zhi, ri_gan):
                 return _ref('乱首', f'干{ri_gan}加支{ri_zhi}受克', '通解 乱首课')
+            # ② 支加干克干（上门乱首）：日支加于日干，支克干
+            if k[2] == ri_gan and k[1] == ri_zhi and _ke(ri_zhi, ri_gan):
+                return _ref('乱首', f'支{ri_zhi}加干{ri_gan}克干（上门乱首）', '通解 乱首课')
     return None
 
 
