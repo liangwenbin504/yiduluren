@@ -97,7 +97,7 @@ def paipan_v2(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str) -> Dict[str
         return {'ri_gan': ri_gan, 'ri_zhi': ri_zhi, 'yuejiang': yuejiang, 'shichen': shichen,
                 'tiandi_pan': {}, 'sike': [], 'sanchuan': [],
                 'keti': '', 'qifa': '', 'tianjiang_map': {}, 'tianjiang_list': []}
-    from engine.sike_sanchuan_engine import SiKeSanChuanCalculator2
+    from engine.sike_sanchuan_engine_patched import SiKeSanChuanCalculator2
     from engine.gui_ren_engine import GuiRenCalculator
     calc = SiKeSanChuanCalculator2()
     tdp = calc.get_tiandi_pan(yuejiang, shichen)
