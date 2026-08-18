@@ -693,19 +693,21 @@ class DaLiuRenLuMaGuiRen:
         ke_ti_lower = ke_ti_name.lower()
 
         # 上上吉课（扣0分）
-        shangshangji = ['三光', '三阳', '天福', '天恩', '天赦']
+        # 上上吉课（扣0分）——【2026-08-18 清理】天福/天恩/天赦为吉神名非课体，删除
+        shangshangji = ['三光', '三阳']
         for name in shangshangji:
             if name in ke_ti_name or name in ke_ti_lower:
                 return 0, '上上吉课', False
 
         # 上吉课（扣0分）
-        shangji = ['龙德', '官爵', '富贵', '喜庆', '玉堂', '金堂', '天德', '月德', '圣心', '益后', '续世', '三奇', '六仪', '时泰', '元首', '重审']
+        shangji = ['龙德', '官爵', '富贵', '喜庆', '玉堂', '金堂', '圣心', '益后', '续世', '三奇', '六仪', '时泰', '元首', '重审']
         for name in shangji:
             if name in ke_ti_name or name in ke_ti_lower:
                 return 0, '上吉课', False
 
         # 中吉课（扣0分）
-        zhongji = ['生气', '解神', '天医', '福德', '天喜', '六合', '太阴', '青龙', '明堂', '金匮', '斫轮', '铸印', '轩盖', '登三天', '龙战', '引从', '亨通', '繁昌', '荣华', '德庆', '合欢']
+        # 【2026-08-18 清理】生气/解神/天医/福德/天喜/六合/太阴/青龙/明堂/金匮 为吉神/天将名非课体，删除
+        zhongji = ['斫轮', '铸印', '轩盖', '登三天', '龙战', '引从', '亨通', '繁昌', '荣华', '德庆', '合欢']
         for name in zhongji:
             if name in ke_ti_name or name in ke_ti_lower:
                 return 0, '中吉课', False
@@ -726,19 +728,22 @@ class DaLiuRenLuMaGuiRen:
                 return 10, '平课', False
 
         # 小凶课（扣20分）- 基于课格名
-        xiaoxiong = ['涉害', '遥克', '别责', '八专', '芜淫', '解离', '度厄', '无禄', '绝嗣', '小耗', '败亡', '破败', '失脱', '比用']
+        # 【2026-08-18 清理】小耗/败亡/破败/失脱为凶煞名非课体；比用为V1课体(V2已并入涉害流程)，均删除
+        xiaoxiong = ['涉害', '遥克', '别责', '八专', '芜淫', '解离', '度厄', '无禄', '绝嗣']
         for name in xiaoxiong:
             if name in ke_ti_name or name in ke_ti_lower:
                 return 20, '小凶课', False
 
         # 中凶课（扣30分）
-        zhongxiong = ['孤辰', '寡宿', '刑伤', '二烦', '三烦', '九丑', '天祸', '天寇', '死气', '病符', '丧吊', '官符']
+        # 【2026-08-18 清理】孤辰/寡宿/天寇/死气/病符/官符为神煞名或引擎不产，删除
+        zhongxiong = ['刑伤', '二烦', '三烦', '九丑', '天祸', '丧吊']
         for name in zhongxiong:
             if name in ke_ti_name or name in ke_ti_lower:
                 return 30, '中凶课', False
 
         # 大凶课（扣40分）
-        daxiong = ['天罗地网', '死奇', '魄化', '飞魂', '丧门', '白虎', '岁破', '大耗', '灭门', '绝灭']
+        # 【2026-08-18 清理】丧门/白虎/岁破/大耗/绝灭为神煞/天将名非课体，删除
+        daxiong = ['天罗地网', '死奇', '魄化', '飞魂', '灭门']
         for name in daxiong:
             if name in ke_ti_name or name in ke_ti_lower:
                 return 40, '大凶课', True
