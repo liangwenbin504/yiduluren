@@ -349,6 +349,16 @@ def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
     seq = _sanchuan_time_sequence(pan['sanchuan'], pan['tianjiang_list'], yuejiang, kw, zhanshi)
     seq_desc = seq.get('desc', '')
 
+    # ── 事体走向引擎（六壬断事流程：初始→过程→结局，2026-08-18）──
+    # 结合知识库规则（duanan_knowledge_base L783/L830/L1470/L689 等）判断
+    # 事体变化过程与走向，非仅吉凶。输出叙事供断语使用。
+    try:
+        from engine.liuchen_engine import LiuChenEngine
+        liuchen_out = LiuChenEngine().analyze(
+            ri_gan, ri_zhi, pan['sanchuan'], pan['tianjiang_list'], kw, pan['keti'], pan['sike'])
+    except Exception:
+        liuchen_out = {'走向': '未定', '终局': '平', '叙事': '', '阶段': {}, '三传': ''}
+
     # ── 支上神（宅/事体·根基）信号（案例实证：支上泄克冲刑墓日干+凶将→凶）──
     # 支=事体/内/静，三传=过程/外/动。支上受损即使三传吉，无解神最终凶。
     zs = _zhi_shang_signal(ri_gan, ri_zhi, pan['sike'], yuejiang, zhanshi)
@@ -424,6 +434,7 @@ def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
             'tianjiang': pan['tianjiang_list'],
         },
         'level': level,
+        'liuchen': liuchen_out,
         'seq_desc': seq_desc,
         'seq_score': seq.get('score', 0),
         'zhi_shang_desc': zs_desc,
@@ -432,7 +443,7 @@ def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
         'zhanshi_duanyu': zl_details,
         'bifa_duanyu': bifa_duanyu,
         'bifa_detail': bifa[:3],
-        'summary': '；'.join(filter(None, [keti_text] + zl_details + bifa_duanyu[:2] + ([seq_desc] if seq_desc else []) + ([zs_desc] if zs_desc else []))) or '课体平稳，需结合具体占事详参。',
+        'summary': '；'.join(filter(None, [keti_text] + zl_details + bifa_duanyu[:2] + ([seq_desc] if seq_desc else []) + ([zs_desc] if zs_desc else []) + ([liuchen_out.get('叙事', '')] if liuchen_out.get('叙事') else []))) or '课体平稳，需结合具体占事详参。',
     }
 
 
