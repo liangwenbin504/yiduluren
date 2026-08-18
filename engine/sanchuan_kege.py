@@ -979,9 +979,12 @@ class SanChuanKegeDetector:
                  WU_XING_KE.get(chu_wx) == gan_wx)
 
         if shun_dk or ni_dk:
-            self.detected_kege.append('殃咎课')
-            self.kege_details['殃咎课'] = {
-                '名称': '殃咎课',
+            # 【BUG-FIX 2026-08-18 案例/通解核实】殃咎课正解=通解 p5147"三传克日因"
+            # （三传皆克日干，见 _detect_64ke_missing）；此处"顺/逆递克"是毕法32法
+            # 「三传互克众人欺」，原误标为"殃咎课"→ 课名冲突。改报"递克课"。
+            self.detected_kege.append('递克课')
+            self.kege_details['递克课'] = {
+                '名称': '递克课',
                 '类型': '生克关系',
                 '方向': '顺递克' if shun_dk else '逆递克',
                 '吉凶': '凶',
