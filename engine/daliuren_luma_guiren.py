@@ -711,7 +711,10 @@ class DaLiuRenLuMaGuiRen:
                 return 0, '中吉课', False
 
         # 小吉课（扣5分）
-        xiaoji = ['进连茹', '退连茹', '间传课', '交车课', '刑德', '始破', '平吉', '小成', '守成', '安定']
+        # 【2026-08-18 清理】移除 6 个无效课体名（刑德/始破/平吉/小成/守成/安定）：
+        #   引擎(64ke/sanchuan_kege)从不产出这些课体名，匹配永不命中；且 64 课经权威源未收录
+        #   （平吉/小成/守成/安定为评级词、刑德为神煞概念、始破无考），保留会造成误导。
+        xiaoji = ['进连茹', '退连茹', '间传课', '交车课']
         for name in xiaoji:
             if name in ke_ti_name or name in ke_ti_lower:
                 return 5, '小吉课', False
