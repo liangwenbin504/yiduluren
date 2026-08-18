@@ -282,7 +282,7 @@ def judge_tian_wang(env):
     """天网：占时与用神同克日。"""
     ri_gan = env.get('ri_gan', '')
     chu = env.get('chu', '')
-    shi = env.get('shi_chen', '')
+    shi = env.get('shichen') or env.get('shi_chen', '')
     if _ke(chu, ri_gan) and _ke(shi, ri_gan):
         return _ref('天网', f'占时{shi}与用神{chu}同克日干', '通解 天网课')
     return None
@@ -327,7 +327,9 @@ def judge_jian_chuan(env):
         idx = [DIZHI_IDX[z] for z in sc if z in DIZHI_IDX]
         if len(idx) == 3:
             if (idx[1] - idx[0]) % 12 == 2 and (idx[2] - idx[1]) % 12 == 2:
-                return _ref('间传', f'三传{sc}隔位相传', '通解 间传课')
+                return _ref('间传', f'三传{sc}顺隔位', '通解 间传课')
+            if (idx[0] - idx[1]) % 12 == 2 and (idx[1] - idx[2]) % 12 == 2:
+                return _ref('间传', f'三传{sc}逆隔位', '通解 间传课')
     return None
 
 
@@ -697,13 +699,19 @@ def judge_yin_cong(env):
 
 
 def judge_luan_shou(env):
-    """乱首：干加支受支克（下欺上）。"""
+    """乱首：干加支受支克（下欺上）。
+    【BUG-FIX 2026-08-18】原 k[1]==ri_gan 拿上神(地支)比日干(天干)恒假，乱首永不命中；
+    改为 k[1]==日干寄宫（干加支）。"""
     ri_gan = env.get('ri_gan', '')
     ri_zhi = env.get('ri_zhi', '')
     sike = env.get('sike', [])
+    try:
+        from engine.sike_sanchuan_engine import SiKeSanChuanCalculator2 as _SSC
+        ji_gong = _SSC.TIAN_GAN_JI_GONG.get(ri_gan, '')
+    except Exception:
+        ji_gong = ''
     for k in sike:
-        if len(k) > 2 and k[2] == ri_zhi and k[1] == ri_gan:
-            # 干加支，看是否支克干
+        if len(k) > 2 and k[2] == ri_zhi and k[1] == ji_gong:
             if _ke(ri_zhi, ri_gan):
                 return _ref('乱首', f'干{ri_gan}加支{ri_zhi}受克', '通解 乱首课')
     return None
@@ -924,8 +932,10 @@ def judge_zai_e(env):
 
 # ═════════════ 辅助函数 ═════════════
 def _ke(a: str, b: str) -> bool:
-    """a 克 b（五行相克）。"""
-    wx_a, wx_b = ZHI_WX.get(a, ''), ZHI_WX.get(b, '')
+    """a 克 b（五行相克）。
+    【BUG-FIX 2026-08-18】参数可为天干或地支（原只用 ZHI_WX，天干参数恒 False，
+    废掉度厄/无禄/绝嗣/天网/殃咎/解离/乱首/赘婿 8 个判定器）。"""
+    wx_a, wx_b = GAN_WX.get(a, '') or ZHI_WX.get(a, ''), GAN_WX.get(b, '') or ZHI_WX.get(b, '')
     return wx_a and wx_b and _wx_ke(wx_a, wx_b)
 
 
@@ -959,6 +969,7 @@ _JUDGES = {
     '六纯': judge_liu_chun, '斩关': judge_zhan_guan, '龙战': judge_long_zhan, '死奇': judge_si_qi,
     '鬼墓': judge_gui_mu, '励德': judge_li_de, '铸印': judge_zhu_yin, '轩盖': judge_xuan_gai,
     '游子': judge_you_zi, '三交': judge_san_jiao, '龙德': judge_long_de, '时泰': judge_shi_tai,
+    # 【BUG-FIX 2026-08-18】迍福 judge_zhun_fu 无真实判据无条件命中（每次必报），暂移除；待补八迍五福判据
     '三光': judge_san_guang, '三奇': judge_san_qi, '六仪': judge_liu_yi, '合欢': judge_he_huan,
     '和美': judge_he_mei, '亨通': judge_heng_tong, '侵害': judge_qin_hai, '刑伤': judge_xing_shang,
     '魄化': judge_po_hua, '殃咎': judge_yang_jiu, '闭口': judge_bi_kou, '天祸': judge_tian_huo,
@@ -967,7 +978,7 @@ _JUDGES = {
     '冲破': judge_chong_po, '淫佚': judge_yin_yi, '芜淫': judge_wu_yin, '解离': judge_jie_li,
     '孤辰': judge_gu_chen, '寡宿': judge_gua_su, '天狱': judge_tian_yu, '三阴': judge_san_yin,
     '盘珠': judge_pan_zhu, '荣华': judge_rong_hua, '官爵': judge_guan_jue, '繁昌': judge_fan_chang,
-    '九丑': judge_jiu_chou, '迍福': judge_zhun_fu,
+    '九丑': judge_jiu_chou, 
     '三阳': judge_san_yang, '富贵': judge_fu_gui, '德庆': judge_de_qing, '灾厄': judge_zai_e,
 }
 
