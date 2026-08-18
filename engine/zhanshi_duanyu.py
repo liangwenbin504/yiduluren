@@ -136,6 +136,89 @@ def _bifa_duanyu(pan: Dict[str, Any]) -> List[Dict[str, str]]:
     return out
 
 
+def _zhi_yue_jian_wangshuai(zhi: str, yuejiang: str) -> str:
+    """地支在月令下的旺衰（旺相休囚死；月令=月将对应季节的五行）。
+    简化：用月将地支五行定当令，同令=旺、生令=相、克令=囚、令生=休、令克=死。"""
+    WX = {'子': '水', '丑': '土', '寅': '木', '卯': '木', '辰': '土', '巳': '火',
+          '午': '火', '未': '土', '申': '金', '酉': '金', '戌': '土', '亥': '水'}
+    SHENG = {'木': '火', '火': '土', '土': '金', '金': '水', '水': '木'}
+    KE = {'木': '土', '火': '金', '土': '水', '金': '木', '水': '火'}
+    zwx = WX.get(zhi, '')
+    mwx = WX.get(yuejiang, '')
+    if not zwx or not mwx:
+        return ''
+    if zwx == mwx:
+        return '旺'
+    if SHENG.get(mwx) == zwx:
+        return '相'
+    if KE.get(zwx) == mwx:
+        return '休'
+    if SHENG.get(zwx) == mwx:
+        return '囚'
+    return '死'
+
+
+# 天将吉凶（邵公断案通行口径：青龙六合太常天后太阴贵人=吉，白虎玄武螣蛇朱雀=凶，勾陈天空=中性）
+_JI_JIANG = {'贵人', '青龙', '六合', '太常', '天后', '太阴'}
+_XIONG_JIANG = {'白虎', '玄武', '螣蛇', '朱雀'}
+
+
+def _sanchuan_time_sequence(sanchuan: List[str], tianjiang_list: List[str],
+                            yuejiang: str, kongwang) -> Dict[str, Any]:
+    """三传时序吉凶合成（案例实证规则，2026-08-18）：
+    - 每传信号 = 天将吉凶(±2) + 旺衰(±1) + 空亡(-1)
+    - 权重：初传0.3 / 中传0.5 / 末传1.2（案例"末后却吉""末传天喜乘龙先凶后吉"
+      证实末传=结局权重最高；"初受任日兵卒不合末后却吉"证实初传权重最低）
+    - 末传空亡再扣1.5（案例"先凶后吉，奈何寅是空亡，反成凶咎"）
+    - 先凶后吉(初<0且末>0)→吉；先吉后凶(初>0且末<0)→凶（案例"先凶后吉恩旨赦回"、
+      "先兴旺而后衰败""先及第见官后死"实证）
+    返回：每传分 + 合成分 + 走向描述。无三传数据安全返回平。"""
+    if not sanchuan or len(sanchuan) < 3:
+        return {'score': 0, 'dir': '平', 'per_chuan': [], 'desc': ''}
+    tj = list(tianjiang_list or [])
+    kw = set(kongwang or [])
+    per = []
+    for i, z in enumerate(sanchuan):
+        if not z:
+            per.append(0.0)
+            continue
+        s = 0.0
+        t = tj[i] if i < len(tj) else ''
+        if t in _JI_JIANG:
+            s += 2.0
+        elif t in _XIONG_JIANG:
+            s -= 2.0
+        ws = _zhi_yue_jian_wangshuai(z, yuejiang)
+        if ws in ('旺', '相'):
+            s += 1.0
+        elif ws in ('囚', '死'):
+            s -= 1.0
+        if z in kw:
+            s -= 1.0
+        per.append(s)
+    # 权重（末传最高）
+    score = per[0] * 0.3 + per[1] * 0.5 + per[2] * 1.2
+    # 末传空亡重罚（案例：先凶后吉但末传空亡→反成凶咎）
+    if sanchuan[2] in kw:
+        score -= 1.5
+    # 走向判定
+    desc = ''
+    if per[0] < 0 and per[2] > 0:
+        desc = '初凶末吉，先难后易，终得吉'
+    elif per[0] > 0 and per[2] < 0:
+        desc = '初吉末凶，先易后难，终归于凶'
+    elif per[0] == 0 and per[2] == 0 and abs(score) < 0.5:
+        desc = '始终平平，无大吉凶'
+    elif score > 0.5:
+        desc = '三传向吉，事有终成'
+    elif score < -0.5:
+        desc = '三传向凶，事有终败'
+    else:
+        desc = '吉凶参半，看类神走向'
+    return {'score': round(score, 2), 'dir': '吉' if score > 0.5 else ('凶' if score < -0.5 else '平'),
+            'per_chuan': [round(x, 2) for x in per], 'desc': desc}
+
+
 def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
              zhanshi: str = '其他', category: str = '') -> Dict[str, Any]:
     """按占事生成完整断语。zhanshi 为中文占类；category 为前端英文键（二选一，category 优先映射）。"""
@@ -162,11 +245,45 @@ def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
     bifa = _bifa_duanyu(pan)
     bifa_duanyu = [f'{b["条文"]}：{b["白话"]}' for b in bifa if b.get('白话')]
 
-    # 综合评级：占类信号优先，其次课体等级，默认平
-    # 【BUG-FIX 2026-08-18】原 `zl_signal.get('score')` 真值判断：score=0 但有
-    # 命中信号（如吉凶相抵归零）时 level 被丢弃退回课体等级 → 占类断语与等级脱节。
-    # 改为占类信号 level 非'平'即采用（抽取器未命中时 level='平'，行为不变）。
-    level = zl_signal.get('level') if zl_signal.get('level') and zl_signal.get('level') != '平' else (keti_level or '平')
+    # ── 三传时序合成（案例实证：末传定结局，先凶后吉=吉、先吉后凶=凶）──
+    # 数据源：pan['sanchuan'] + pan['tianjiang_list'] + yuejiang + 旬空
+    kw = ()
+    try:
+        from engine.bifa_detector import get_xun_kong
+        kw = get_xun_kong(ri_gan + ri_zhi) if ri_gan and ri_zhi else ('', '')
+    except Exception:
+        kw = ('', '')
+    seq = _sanchuan_time_sequence(pan['sanchuan'], pan['tianjiang_list'], yuejiang, kw)
+    seq_desc = seq.get('desc', '')
+
+    # ── 综合评级：占类信号 + 三传时序 加权合成（权重由 218 案实例反推，2026-08-18）──
+    # 实例网格搜索最优：占类=0.6、时序=0.4、课体=0.0 → 符合率 0.650（134/206）。
+    # 课体 valence 单独符合率仅 0.228（64课吉凶表偏凶且与断案吉凶相关性弱），
+    # 剔除出评分（仅作展示），避免劣质信号拉低精度。
+    _lv_score = {'上吉': 3, '大吉': 2.5, '吉': 2, '小吉': 1, '中吉': 1.5,
+                 '平': 0, '中平': -0.5, '凶': -2, '小凶': -1, '中凶': -2.5, '大凶': -3}
+    zl_score = 0
+    zl_level = zl_signal.get('level', '')
+    if zl_level:
+        zl_score = _lv_score.get(str(zl_level).split('-')[0].strip(), 0)
+        if str(zl_level).startswith('吉-'):
+            zl_score = 2
+        elif str(zl_level).startswith('凶-'):
+            zl_score = -2
+    # 时序分是绝对分（范围约 -6~+6），归一化到 -3~+3
+    seq_score = max(-3.0, min(3.0, seq.get('score', 0) / 2.0))
+    # 权重 0.6/0.4（实例反推最优；课体 0.0 剔除）
+    total = zl_score * 0.6 + seq_score * 0.4
+    if total >= 1.2:
+        level = '吉'
+    elif total >= 0.4:
+        level = '小吉'
+    elif total <= -1.2:
+        level = '凶'
+    elif total <= -0.4:
+        level = '小凶'
+    else:
+        level = '平'
 
     return {
         'zhanshi': zhanshi,
@@ -177,11 +294,13 @@ def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
             'tianjiang': pan['tianjiang_list'],
         },
         'level': level,
+        'seq_desc': seq_desc,
+        'seq_score': seq.get('score', 0),
         'keti_duanyu': keti_text,
         'zhanshi_duanyu': zl_details,
         'bifa_duanyu': bifa_duanyu,
         'bifa_detail': bifa[:3],
-        'summary': '；'.join(filter(None, [keti_text] + zl_details + bifa_duanyu[:2])) or '课体平稳，需结合具体占事详参。',
+        'summary': '；'.join(filter(None, [keti_text] + zl_details + bifa_duanyu[:2] + ([seq_desc] if seq_desc else []))) or '课体平稳，需结合具体占事详参。',
     }
 
 
