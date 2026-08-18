@@ -448,9 +448,9 @@ class SiKeSanChuanCalculator:
                                     '起法': '贼克法（下贼上）'
                                 }
                             elif len(bi_yong_results) > 1:
-                                result = self._she_hai_fa([(k, s, x) for k, s, x in bi_yong_results], tiandi_pan, ri_gan)
+                                result = self._she_hai_fa([(k, s, x) for k, s, x in bi_yong_results], tiandi_pan, ri_gan, ri_zhi)
                             else:
-                                result = self._she_hai_fa([(k, s, x) for k, _, s, x in xia_zei_shang], tiandi_pan, ri_gan)
+                                result = self._she_hai_fa([(k, s, x) for k, _, s, x in xia_zei_shang], tiandi_pan, ri_gan, ri_zhi)
                     else:
                         # 无下贼上，处理上克下
                         if len(shang_ke_xia) == 1:
@@ -487,9 +487,9 @@ class SiKeSanChuanCalculator:
                                     '起法': '贼克法（上克下，比用）'
                                 }
                             elif len(bi_yong_results) > 1:
-                                result = self._she_hai_fa([(k, s, x) for k, s, x in bi_yong_results], tiandi_pan, ri_gan)
+                                result = self._she_hai_fa([(k, s, x) for k, s, x in bi_yong_results], tiandi_pan, ri_gan, ri_zhi)
                             else:
-                                result = self._she_hai_fa([(k, s, x) for k, _, s, x in shang_ke_xia], tiandi_pan, ri_gan)
+                                result = self._she_hai_fa([(k, s, x) for k, _, s, x in shang_ke_xia], tiandi_pan, ri_gan, ri_zhi)
 
             else:
                 # 无克贼时：遥克 → 别责(四课不全) → 八专(干支同位) → 昴星(四课全无克贼)
@@ -529,7 +529,7 @@ class SiKeSanChuanCalculator:
                                         if i + 1 == ke_num:
                                             bi_yong_with_xia.append((ke_num, shang, x))
                                             break
-                                result = self._she_hai_fa(bi_yong_with_xia, tiandi_pan, ri_gan)
+                                result = self._she_hai_fa(bi_yong_with_xia, tiandi_pan, ri_gan, ri_zhi)
                                 self.sanchuan_cache[cache_key] = result
                                 return result
                             else:
@@ -557,7 +557,7 @@ class SiKeSanChuanCalculator:
                                         if i + 1 == ke_num:
                                             bi_yong_with_xia.append((ke_num, shang, x))
                                             break
-                                result = self._she_hai_fa(bi_yong_with_xia, tiandi_pan, ri_gan)
+                                result = self._she_hai_fa(bi_yong_with_xia, tiandi_pan, ri_gan, ri_zhi)
                                 self.sanchuan_cache[cache_key] = result
                                 return result
                             else:
@@ -592,7 +592,7 @@ class SiKeSanChuanCalculator:
         self.sanchuan_cache[cache_key] = result
         return result
     
-    def _she_hai_fa(self, bi_yong_results: List, tiandi_pan: Dict, ri_gan: str) -> Dict:
+    def _she_hai_fa(self, bi_yong_results: List, tiandi_pan: Dict, ri_gan: str, ri_zhi: str = '') -> Dict:
         """
         涉害法（完整规则）
         
@@ -626,6 +626,23 @@ class SiKeSanChuanCalculator:
                 '涉害深度': 0, 'error': '无比用候选，无法起课'
             }
         
+        # 1.5 【邵公古法 2026-08-18】"干来加支即发用"——涉害候选中，若课3（支上）
+        #    之上神=日干寄宫 且 下神=日支，直接取该课发用（不涉害）。
+        #    据 §交易谋为10·148/§亡盗15·188"此课干来加支，即发用"（癸卯日课3丑加卯，
+        #    丑=癸寄、卯=支）；§六畜走失14·185"未加卯作龙为用"（己卯日课3未加卯，
+        #    未=己寄、卯=支）。中末传=初传天盘链（既有逻辑）。
+        if ri_zhi:
+            for ke_num, shang, xia in bi_yong_results:
+                if ke_num == 3 and shang == self.TIAN_GAN_JI_GONG.get(ri_gan, '') and xia == ri_zhi:
+                    chu_chuan_gl = shang
+                    zhong_chuan_gl = tiandi_pan.get(chu_chuan_gl, '')
+                    mo_chuan_gl = tiandi_pan.get(zhong_chuan_gl, '')
+                    return {
+                        '初传': chu_chuan_gl, '中传': zhong_chuan_gl, '末传': mo_chuan_gl,
+                        '课体': '涉害课', '起法': '涉害法·干来加支',
+                        '涉害深度': 0,
+                    }
+
         # 1. 计算每个候选的涉害深度
         hai_depths = []
         for ke_num, shang, xia in bi_yong_results:
@@ -1476,7 +1493,7 @@ class SiKeSanChuanCalculator2(SiKeSanChuanCalculator):
             }
 
         # 多候选 → 涉害法
-        return self._she_hai_fa(use_candidates, tiandi_pan, ri_gan)
+        return self._she_hai_fa(use_candidates, tiandi_pan, ri_gan, ri_zhi)
 
     def _execute_yao_ke(self, yao_ke_results: List, ri_gan: str, ri_zhi: str,
                         tiandi_pan: Dict, yang_ri: bool, sike: List) -> Dict:
@@ -1522,7 +1539,7 @@ class SiKeSanChuanCalculator2(SiKeSanChuanCalculator):
             chu_chuan = use_candidates[0][1]
         else:
             # 多候选 → 涉害法
-            result = self._she_hai_fa(use_candidates, tiandi_pan, ri_gan)
+            result = self._she_hai_fa(use_candidates, tiandi_pan, ri_gan, ri_zhi)
             if result.get('error'):
                 chu_chuan = use_candidates[0][1]
                 zhong_chuan = tiandi_pan[chu_chuan]
@@ -1578,7 +1595,7 @@ class SiKeSanChuanCalculator2(SiKeSanChuanCalculator):
 
 
 # 修复 _she_hai_fa 中的空候选bug（修补父类方法）
-def _patched_she_hai_fa(self, bi_yong_results, tiandi_pan, ri_gan):
+def _patched_she_hai_fa(self, bi_yong_results, tiandi_pan, ri_gan, ri_zhi=''):
     """
     涉害法（修复版）- 修复空候选崩溃bug
 
@@ -1595,6 +1612,16 @@ def _patched_she_hai_fa(self, bi_yong_results, tiandi_pan, ri_gan):
             '涉害深度': 0,
             'error': '无比用候选，无法起课'
         }
+
+    # 1.5 【邵公古法 2026-08-18】干来加支即发用（与 _she_hai_fa 同规则）
+    if ri_zhi:
+        for ke_num, shang, xia in bi_yong_results:
+            if ke_num == 3 and shang == self.TIAN_GAN_JI_GONG.get(ri_gan, '') and xia == ri_zhi:
+                c = shang
+                z = tiandi_pan.get(c, '')
+                m = tiandi_pan.get(z, '')
+                return {'初传': c, '中传': z, '末传': m, '课体': '涉害课',
+                        '起法': '涉害法·干来加支', '涉害深度': 0}
 
     # 1. 计算每个候选的涉害深度
     hai_depths = []
