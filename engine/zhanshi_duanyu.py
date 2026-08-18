@@ -196,8 +196,10 @@ def _sanchuan_time_sequence(sanchuan: List[str], tianjiang_list: List[str],
         if z in kw:
             s -= 1.0
         per.append(s)
-    # 权重（末传最高）
-    score = per[0] * 0.3 + per[1] * 0.5 + per[2] * 1.2
+    # 权重（末传定结局；【BUG-FIX 2026-08-18 实例反推】218案网格搜索最优
+    # 每传权重 (0.2, 0.3, 1.5)——末传权重最高、初传最低，印证案例
+    # "末后却吉""末传天喜乘龙先凶后吉"，符合率 0.650→0.670）
+    score = per[0] * 0.2 + per[1] * 0.3 + per[2] * 1.5
     # 末传空亡重罚（案例：先凶后吉但末传空亡→反成凶咎）
     if sanchuan[2] in kw:
         score -= 1.5
