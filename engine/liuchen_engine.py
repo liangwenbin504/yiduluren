@@ -186,17 +186,202 @@ class LiuChenEngine:
                             'L235"救神空亡为墓门开大凶"; CASE-壬占汇选-0369')
 
         # ───────────────────────────
-        # 【功名】前程仕进
+        # 【功名】（前程仕进·邵公断案60案深读增强 2026-08-18）
+        # 刘评归纳："举凡仕宦之占，无非官、禄两样最为切要"（§058）；
+        # "幕贵乃科名第一吉神"（§052）；"大凡占前程禄重于财"（§046）。
+        # 层次：先课体课格（乱首/顾祖/四绝/登三天/铸印/六阴），
+        #       次官禄切要（官星临身/禄临干/禄空/贵空），后幕贵学堂/脱耗。
         # ───────────────────────────
         if category == '功名':
-            # 官星发用 + 得地 → 得官升迁（L"求官用起官星更带四马者得官最速"；
-            #   案例0117"本年中举，来年庚戌及第"、0287"后果升镇江太守"）
+            # 日干禄神（甲禄寅、乙禄卯、丙戊禄巳、丁己禄午、庚禄申、辛禄酉、壬禄亥、癸禄子）
+            LU_SHEN = {'甲': '寅', '乙': '卯', '丙': '巳', '丁': '午', '戊': '巳',
+                       '己': '午', '庚': '申', '辛': '酉', '壬': '亥', '癸': '子'}
+            lu_zhi = LU_SHEN.get(ri_gan, '')
+            # 贵人（旦贵/暮贵）地支集
+            GUI_REN_ZHI = {'甲': {'丑', '未'}, '乙': {'子', '申'}, '丙': {'亥', '酉'}, '丁': {'亥', '酉'},
+                           '戊': {'丑', '未'}, '己': {'子', '申'}, '庚': {'丑', '未'}, '辛': {'午', '寅'},
+                           '壬': {'巳', '卯'}, '癸': {'巳', '卯'}}
+            gui_zhi_set = GUI_REN_ZHI.get(ri_gan, set())
+            # 羊刃（甲卯、丙午、戊午、庚酉、壬子）
+            YANG_REN2 = {'甲': '卯', '丙': '午', '戊': '午', '庚': '酉', '壬': '子'}
+            yang_ren = YANG_REN2.get(ri_gan, '')
+            # 三传含官星数
+            guan_cnt = sum(1 for z in (chu, zhong, mo) if _shi_shen(z, ri_gan) == '官鬼')
+            # 干上神=官星（官星临身，§059"申官星临身龙神入庙"、§072"官星临日初传应之谓之催官符"）
+            guan_lin_shen = bool(gan_shang and _shi_shen(gan_shang, ri_gan) == '官鬼')
+            # 干上神=禄神（禄临干，§044"午乃丁禄临干日禄扶身"）
+            lu_lin_gan = bool(lu_zhi and gan_shang == lu_zhi)
+            # 禄神在三传且空亡（禄空，§055"禄空故不可为武"、§076"末又是禄乘空亡入墓"）
+            lu_kong = bool(lu_zhi and any(z == lu_zhi and z in kong for z in (chu, zhong, mo)))
+            # 干上神=贵人且空亡（贵空=虚贵，§060"贵人又乘空乃是虚贵"、§103"昼贵人空虚是贵而无位也"）
+            gui_kong = bool(gan_shang in gui_zhi_set and gan_shang in kong)
+            # 干支上神皆乘墓（§064"干支皆墓主前程迟滞"）
+            gan_zhi_jie_mu = bool(gan_shang == mu_zhi and zhi_shang == GAN_MU.get(ri_gan, ''))
+            # 干支上神自刑（§057"干支自刑主自满"）
+            _ZI_XING2 = {'辰', '午', '酉', '亥'}
+            zi_xing = bool((gan_shang in _ZI_XING2 and zhi_shang in _ZI_XING2) or
+                           (gan_shang == ri_zhi and gan_shang in _ZI_XING2))
+            # 三传皆子孙（脱气，§046"脱上逢脱必诗书荒废"、§093"一火生四土叠叠脱气"）
+            zi_sun_all = all(_shi_shen(z, ri_gan) == '子孙' for z in (chu, zhong, mo))
+            # 满局贵人（贵多不贵，§053"满局皆贵人贵多不贵慕十不得一"、§087"三传日辰遍地贵人"）
+            # 【BUG-FIX 2026-08-18】§052 干上卯贵人（幕贵临干）+日贵巳末传=先晦后明吉，
+            #   非贵多不贵——须贵人≥3处且≥2处空亡/受克（§053"身与初中皆空慕十不得一"）才判凶。
+            gui_weizhi = [z for z in (gan_shang, zhi_shang, chu, zhong, mo)
+                          if z and z in gui_zhi_set]
+            gui_duo = len(gui_weizhi)
+            gui_kong_cnt = sum(1 for z in gui_weizhi if z in kong)
+            gui_duo_bad = gui_duo >= 3 and gui_kong_cnt >= 2
+            # 四绝课：四正加四孟（干支上神构成四绝——§066"金绝寅、水绝巳、木绝申、火绝亥"）
+            jue_zhi_set = {'寅': '申', '申': '寅', '巳': '亥', '亥': '巳'}  # 简化：干上/支上互为绝
+            si_jue = bool(gan_shang and zhi_shang and
+                          jue_zhi_set.get(gan_shang) == zhi_shang and
+                          gan_shang in jue_zhi_set)
+            # 铸印格：三传巳戌卯/戌卯巳/卯巳戌（§049"戌为模范亦落空地"、§050"朱雀投戌墓破模"）
+            zhu_yin = ({chu, zhong, mo} == {'巳', '戌', '卯'} or
+                       {chu, zhong, mo} == {'巳', '丑', '酉'})
+            # 顾祖课（初传=干上神 且 传退入支（§074"日上发传退入支上又是顾祖"））——
+            #   判据：初传=干上神 且 末传贴近日支（d_mo <= 2 且 末传比初传更近支）
+            #   【BUG-FIX 2026-08-18】§055 干上申=禄（弃武从文吉），申→寅→巳非退向支，
+            #   不判顾祖；§074 午→辰→寅 末传寅贴近支辰（d=2<初传d=2且寅为支上神）→ 顾祖凶。
+            _zhi_seq2 = {'子': 0, '丑': 1, '寅': 2, '卯': 3, '辰': 4, '巳': 5,
+                         '午': 6, '未': 7, '申': 8, '酉': 9, '戌': 10, '亥': 11}
+            if chu == gan_shang and ri_zhi in _zhi_seq2 and chu in _zhi_seq2 and mo in _zhi_seq2:
+                _d_chu = abs(_zhi_seq2[chu] - _zhi_seq2[ri_zhi])
+                _d_chu = min(_d_chu, 12 - _d_chu)
+                _d_mo = abs(_zhi_seq2[mo] - _zhi_seq2[ri_zhi])
+                _d_mo = min(_d_mo, 12 - _d_mo)
+                gu_zu = _d_mo <= 2 and _d_mo <= _d_chu
+            else:
+                gu_zu = False
+
+            # ⑦ 干支自刑 → 自满失宠（§057"干支自刑主自满"；置于禄/贵之前——§057禄临干
+            #   但自刑仍断"升转则未"，自刑优先）
+            if zi_xing:
+                return self._mk('自满失宠', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干支自刑（干{gan_shang}支{zhi_shang}），主自满骄傲，因宠生祸失官',
+                                '§前程仕进03·057"干支自刑主自满"')
+            # ⑦a 赘婿课（支来就干为干所克，§065"支来就干为干所克…课名赘婿所以无正居"）→ 无正宅
+            #   【BUG-FIX 2026-08-18】§065 干上申=支来就干受丙克=赘婿，无正宅，止于小职——
+            #   置于三传递生之前，防"荐举升迁"误判吉
+            if gan_shang == ri_zhi and ri_zhi and KE.get(gw) == ZHI_WX.get(ri_zhi, ''):
+                return self._mk('赘婿无宅', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'支{ri_zhi}来就干为干所克，课名赘婿，无正宅，多居寺观妻家，前程止于小职',
+                                '§前程仕进03·065"支来就干为干所克…课名赘婿所以无正居也"')
+            # ⑦c 顾祖课（初传=干上神且传退入支）→ 仕途受阻（§074"日上发传退入支上又是顾祖
+            #   …仕途必定受阻"、§097"顾祖传空前程镜中花"）——课体级凶象，优先于官星吉
+            if gu_zu:
+                return self._mk('顾祖受阻', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'初传{chu}退入支上，顾祖课，仕途受阻，升转无望',
+                                '§前程仕进03·074"日上发传退入支上又是顾祖"; §097"顾祖传空前程镜中花"')
+            # ① 官星临身+初传应之=催官符（§072"官星临日初传应之谓之催官符"）→ 得官
+            if guan_lin_shen and _shi_shen(chu, ri_gan) == '官鬼':
+                if mo in kong or mo == mu_zhi or zhong in kong:
+                    return self._mk('先成后败', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'官星{gan_shang}临身初传应之，催官符赴任，然传中{"中传空丁忧" if zhong in kong else "末传" + mo + "空/墓"}，得官后不久即败',
+                                    '§前程仕进03·072"官星临日初传应之谓之催官符"; §059"及第后死"')
+                return self._mk('得官赴任', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'官星{gan_shang}临身初传应之，催官符，主赴任得官',
+                                '§前程仕进03·072"官星临日初传应之谓之催官符"')
+            # ①b 官星临身（干上神=官星）→ 得官赴任；末传空/墓/凶将 或 中传空（父母丁忧）
+            #   =先成后败（§072"及第后便丁父母服"、§059"及第后死"、§089"得十六月遭父丧"）
+            if guan_lin_shen:
+                _mo_bad = mo in kong or mo == mu_zhi or mo_shi == '凶'
+                _zhong_bad = zhong in kong  # 中传空=父母空=丁忧（§072"中传父母空亡主丁忧"）
+                if _mo_bad or _zhong_bad:
+                    return self._mk('先成后败', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'官星{gan_shang}临身主得官，然{"中传空亡主丁忧" if _zhong_bad else "末传" + mo + ("空" if mo in kong else "墓" if mo == mu_zhi else "凶")}，得官后不久即败',
+                                    '§前程仕进03·072"及第后便丁父母服"; §059"及第后死"')
+                return self._mk('得官赴任', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'官星{gan_shang}临身，主得官赴任',
+                                '§前程仕进03·089"日上官星作贵"')
+            # ② 官星发用 + 得地 → 得官升迁（原有；加禄临干强化）
             if guan_xing_fa_yong and chu_shi != '凶' and chu not in kong:
                 return self._mk('得官升迁', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'官星{chu}发用，官星得地，求官有望，升迁在望',
                                 'L求官用起官星; CASE-壬占汇选-0117/0287')
-            # 官星落空亡/受制 → 功名难成（案例0112"无禄课虽受通判必不能食禄"、
-            #   0227"不但不能入相且不日归乡"、0291"两公俱不能入相"）
+            # ③ 禄临干（随身禄）→ 得禄有官（§044"午乃丁禄临干日禄扶身"）
+            if lu_lin_gan and not lu_kong:
+                return self._mk('得禄有官', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'禄神{gan_shang}临干，随身禄扶身，得官食禄',
+                                '§前程仕进03·044"午乃丁禄临干日禄扶身"')
+            # ④ 禄空 → 虚禄难食（§055"将仕之禄乃虚禄…禄空不可为武"、§076"末又是禄乘空亡入墓"）
+            if lu_kong:
+                return self._mk('虚禄难食', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'禄神{lu_zhi}空亡，虚禄也，得官不能食禄',
+                                '§前程仕进03·055"将仕之禄乃虚禄"; §076"末又是禄乘空亡入墓"')
+            # ⑤ 贵空 → 虚贵无位（§060"贵人又乘空乃是虚贵"、§103"昼贵人空虚是贵而无位也"）
+            if gui_kong:
+                return self._mk('虚贵无位', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干上贵人{gan_shang}空亡，贵而无位，求贵无门',
+                                '§前程仕进03·060"贵人又乘空乃是虚贵"; §103"昼贵人空虚是贵而无位也"')
+            # ⑥ 干支皆墓 → 前程迟滞（§064"干支皆墓主前程迟滞"）
+            if gan_zhi_jie_mu:
+                return self._mk('前程迟滞', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干支上神皆乘墓（干{gan_shang}支{zhi_shang}），前程迟滞，凡事不通',
+                                '§前程仕进03·064"干支皆墓主前程迟滞"')
+            # ⑦ 干支自刑 → 自满失宠（§057"干支自刑主自满"）
+            if zi_xing:
+                return self._mk('自满失宠', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干支自刑（干{gan_shang}支{zhi_shang}），主自满骄傲，因宠生祸失官',
+                                '§前程仕进03·057"干支自刑主自满"')
+            # ⑧ 满局贵人 → 贵多不贵（§053"满局皆贵人贵多不贵慕十不得一"）
+            if gui_duo_bad:
+                return self._mk('贵多不贵', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'课传满地贵人（{gui_duo}处，{gui_kong_cnt}处空亡），贵多不贵，慕十不得一，无贵可依',
+                                '§前程仕进03·053"满局皆贵人贵多不贵慕十不得一"')
+            # ⑨ 三传皆子孙（脱气）→ 诗书荒废（§046"脱上逢脱必诗书荒废"、§093"叠叠脱气"）
+            if zi_sun_all:
+                return self._mk('脱气荒废', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传{chu}·{zhong}·{mo}皆子孙脱气，脱上逢脱，诗书荒废，功名难成',
+                                '§前程仕进03·046"脱上逢脱必诗书荒废"; §093"一火生四土叠叠脱气"')
+            # ⑩ 四绝课 → 偃蹇不通（§066"此课名四绝…前程非惟不远且又寿夭"）
+            if si_jue:
+                return self._mk('四绝不通', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干支上神{gan_shang}·{zhi_shang}四绝，偃蹇不通，前程非惟不远且又寿夭',
+                                '§前程仕进03·066"此课名四绝且干支自刑"; §083"四绝偃蹇不通"')
+            # ⑩b 返吟+旧太岁 → 旧政迟任（§063"此课旧政上又见旧政…第六年方得赴任"）
+            #   【BUG-FIX 2026-08-18】返吟课（干支对冲）+ 初传=干上神 → 旧政再来迟任
+            if fan_yin and chu == gan_shang and _shi_shen(chu, ri_gan) == '官鬼':
+                return self._mk('旧政迟任', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'返吟课旧政上又见旧政，迁延迟任，六年方得赴任',
+                                '§前程仕进03·063"旧政上又见旧政…第六年方得赴任"')
+            # ⑩c 无禄课（四课上神俱克下）→ 必不能食禄（§076"无禄课虽受通判必不能食禄"）
+            #   判据：四课上神皆克其下神（简化：干上神克日干 且 支上神克日支）
+            if gan_shang and zhi_shang and ri_zhi:
+                _gan_shang_ke = KE.get(ZHI_WX.get(gan_shang, '')) == gw
+                _zhi_shang_ke = KE.get(ZHI_WX.get(zhi_shang, '')) == ZHI_WX.get(ri_zhi, '')
+                if _gan_shang_ke and _zhi_shang_ke:
+                    return self._mk('无禄难食', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'四课上神俱克下，无禄课，虽受官职必不能食禄',
+                                    '§前程仕进03·076"无禄课虽受通判必不能食禄"')
+            # ⑫ 铸印格+模空/破 → 虚名（§049"戌为模范亦落空地"、§050"朱雀投戌墓破模"、
+            #   §078"初末夹定日墓引从不起"）
+            #   模=戌（铸印格中戌为模）；戌空亡或受克（传中）→ 铸印损模虚名
+            if zhu_yin:
+                _mo_kong = '戌' in kong or (mo in kong)
+                _mo_ke = any(KE.get(ZHI_WX.get(z, '')) == '土' for z in (chu, zhong, mo) if z != '戌')
+                if _mo_kong or _mo_ke:
+                    return self._mk('铸印损模', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'铸印格而模（戌）{"空亡" if _mo_kong else "受克"}，铸印损模，虚名无实',
+                                    '§前程仕进03·049"戌为模范亦落空地"; §050"朱雀投戌墓破模"; §078"引从不起"')
+            # ⑬ 羊刃在传/干支 → 升迁受阻（§051"干支皆天罗羊刃"、§054"午为阳刃撞干进锐退速"）
+            if yang_ren and (yang_ren in (chu, zhong, mo) or yang_ren in (gan_shang, zhi_shang)):
+                return self._mk('羊刃阻迁', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'羊刃{yang_ren}临课传，升迁受阻，进锐退速',
+                                '§前程仕进03·051"干支皆天罗羊刃"; §054"午为阳刃撞干进锐退速"')
+            # ⑬b 幕贵临干（干上神=贵人且不空=科名第一吉神）→ 先晦后明登科
+            #   （§052"太阴乘卯作幕贵加日干…先晦后明准拟登科"、§061"官星作幕贵今年必高中"；
+            #   刘评"幕贵乃科名第一吉神"；守卫：传不空、非铸印破模——§050铸印破模凶不判吉）
+            if gan_shang in gui_zhi_set and gan_shang not in kong and \
+               not (chu in kong and zhong in kong):
+                if mo == cs_zhi or mo_shi == '吉':
+                    return self._mk('先晦后明', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'幕贵{gan_shang}临干，科名第一吉神，先晦后明，准拟登科',
+                                    '§前程仕进03·052"太阴乘卯作幕贵加日干先晦后明准拟登科"')
+                return self._mk('幕贵临干', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'幕贵{gan_shang}临干，得贵助力，功名有望',
+                                '§前程仕进03·052"幕贵乃科名第一吉神"')
+            # ⑭ 官星落空亡 → 功名难成（原有）
             if chu in kong and _shi_shen(chu, ri_gan) == '官鬼':
                 return self._mk('功名无成', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'官星{chu}空亡，功名落空，虽有机会亦难到手',
