@@ -41,6 +41,9 @@ WX_JUE = {'木': '申', '火': '亥', '金': '寅', '水': '巳', '土': '巳'}
 # 天将吉凶
 _JI_JIANG = {'贵人', '青龙', '六合', '太常', '天后', '太阴'}
 _XIONG_JIANG = {'白虎', '玄武', '螣蛇', '朱雀'}
+# 日干禄神（甲禄寅、乙禄卯、丙戊禄巳、丁己禄午、庚禄申、辛禄酉、壬禄亥、癸禄子）
+LU_SHEN = {'甲': '寅', '乙': '卯', '丙': '巳', '丁': '午', '戊': '巳',
+           '己': '午', '庚': '申', '辛': '酉', '壬': '亥', '癸': '子'}
 
 # ── 占类六亲（L270 财爻 / L1315 官鬼 / L1647 官星）──
 def _shi_shen(zhi: str, ri_gan: str) -> str:
@@ -147,6 +150,8 @@ class LiuChenEngine:
         # 官鬼/财爻在三传
         guan_gui_zhi = [z for z in (chu, zhong, mo) if _shi_shen(z, ri_gan) == '官鬼']
         cai_zhi = [z for z in (chu, zhong, mo) if _shi_shen(z, ri_gan) == '妻财']
+        # 日干禄神（功名/求财等占类共用；甲禄寅、乙禄卯、丙戊禄巳、丁己禄午、庚禄申、辛禄酉、壬禄亥、癸禄子）
+        lu_zhi = LU_SHEN.get(ri_gan, '')
         # 官星发用（L"求官用起官星"）
         guan_xing_fa_yong = _shi_shen(chu, ri_gan) == '官鬼'
         # 白虎乘鬼（L545"虎乘日鬼同入三传主大凶"）
@@ -194,10 +199,6 @@ class LiuChenEngine:
         #       次官禄切要（官星临身/禄临干/禄空/贵空），后幕贵学堂/脱耗。
         # ───────────────────────────
         if category == '功名':
-            # 日干禄神（甲禄寅、乙禄卯、丙戊禄巳、丁己禄午、庚禄申、辛禄酉、壬禄亥、癸禄子）
-            LU_SHEN = {'甲': '寅', '乙': '卯', '丙': '巳', '丁': '午', '戊': '巳',
-                       '己': '午', '庚': '申', '辛': '酉', '壬': '亥', '癸': '子'}
-            lu_zhi = LU_SHEN.get(ri_gan, '')
             # 贵人（旦贵/暮贵）地支集
             GUI_REN_ZHI = {'甲': {'丑', '未'}, '乙': {'子', '申'}, '丙': {'亥', '酉'}, '丁': {'亥', '酉'},
                            '戊': {'丑', '未'}, '己': {'子', '申'}, '庚': {'丑', '未'}, '辛': {'午', '寅'},
@@ -687,31 +688,95 @@ class LiuChenEngine:
         # 【求财】
         # ───────────────────────────
         if category == '求财':
-            # 传财化鬼 → 因财致祸（L274/L287"传财化鬼难求觅，因财致祸"）
+            # 【邵公断案·财产章深读 2026-08-18】核心：
+            #   §134"求财视财爻乃通法常理"；§132"传财化鬼财休觅…传财太旺反财亏"；
+            #   §133"独足无足不利陆行，若船行加倍得利"；§135"末传逢禄逢旺诸事遂意尽在末"；
+            #   §136"干支上皆盗气…人宅受脱俱遭盗"；§137"日上见贵财支上见财库此大利"；
+            #   §141"传鬼化财…必主喜兆"；§142"反复争夺之财甚薄"（返吟）；§148"皆阴岂宜进干"
+            # ① 干上神=财爻 且 支上神=日墓（财库）→ 财归财库，得财大利（§137"日上见贵财，
+            #   支上见财库，日上财神又归财库，此大利"）
+            if gan_shang and zhi_shang and zhi_shang == mu_zhi and _shi_shen(gan_shang, ri_gan) == '妻财':
+                return self._mk('财入库吉', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干上神{gan_shang}为财，支上神{zhi_shang}为日墓财库，日上财神归财库，得财大利',
+                                '§财产08·137"日上见贵财，支上见财库，日上财神又归财库，此大利"')
+            # ② 传财化鬼 → 因财致祸（L274/L287"传财化鬼难求觅，因财致祸"；§132/137实证）
             if _shi_shen(chu, ri_gan) == '妻财' and KE.get(mo_wx) == gw:
                 return self._mk('先吉后凶', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'初传财{chu}末传鬼{mo}，传财化鬼，因财致祸，得而复失',
-                                'L274"传财化鬼难求觅"')
-            # 三传初中皆空独末为财爻 → 先难后得（L283）
+                                'L274"传财化鬼难求觅"; §财产08·132"传财化鬼财休觅"')
+            # ③ 三传皆鬼 + 干上神=财爻 → 传鬼化财，先难后易终吉（§141"三传虽鬼，只是少阻
+            #   无妨…必主喜兆，非鬼兆也"；L"传鬼化财钱险危"——有财可化则险中取财）
+            if mo_wx and chu_wx and zhong_wx and gw and \
+                    KE.get(chu_wx) == gw and KE.get(zhong_wx) == gw and KE.get(mo_wx) == gw and \
+                    gan_shang and _shi_shen(gan_shang, ri_gan) == '妻财':
+                return self._mk('传鬼化财', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传{chu}·{zhong}·{mo}皆鬼，然干上神{gan_shang}为财可化，先难后易，必主喜兆',
+                                '§财产08·141"三传虽鬼，只是少阻无妨…必主喜兆，非鬼兆也"')
+            # ④ 三传皆财（财局太旺）→ 传财太旺反财亏（§132"三传全财化为鬼…传财太旺反财亏"；
+            #   L286"传财太旺反财亏"）
+            _cai_cnt = sum(1 for z in (chu, zhong, mo) if _shi_shen(z, ri_gan) == '妻财')
+            if _cai_cnt >= 2:
+                return self._mk('财旺反亏', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传{chu}·{zhong}·{mo}财爻太旺，传财太旺反财亏，财多伤身',
+                                '§财产08·132"传财太旺反财亏"; L286')
+            # ⑤ 独足课（三传同支）→ 利舟行不利陆行（§133"独足无足不利陆行，若船行加倍得利"）
+            if chu == zhong == mo:
+                return self._mk('独足利舟', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传{chu}·{zhong}·{mo}独足课，独足无足不利陆行，若船行加倍得利',
+                                '§财产08·133"独足无足不利陆行，若船行加倍得利"')
+            # ⑥ 干支上皆盗气（干支互脱）→ 人宅受脱俱遭盗（§136"干支上皆盗气其家世店业十退五六"；
+            #   L"人宅受脱俱遭盗"）
+            if gan_shang and zhi_shang:
+                _gan_tuo = SHENG.get(gw) == ZHI_WX.get(gan_shang, '')
+                _zhi_tuo = SHENG.get(ZHI_WX.get(ri_zhi, '')) == ZHI_WX.get(zhi_shang, '')
+                if _gan_tuo and _zhi_tuo:
+                    return self._mk('人宅受脱', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'干上{gan_shang}支上{zhi_shang}皆盗气，人宅受脱俱遭盗，店业退败',
+                                    '§财产08·136"干支上皆盗气其家世店业十退五六矣"')
+            # ⑦ 返吟+财薄 → 反复争夺之财甚薄（§142"此乃反复争夺之财甚薄"；§139返吟讨息；
+            #   返吟课体优先于传内细节——§142末传禄神亦不作吉断）
+            if fan_yin:
+                return self._mk('返吟薄财', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'返吟课反复争夺之财，财甚薄，得而复失',
+                                '§财产08·142"此乃反复争夺之财甚薄"; §139"返吟始可将本求利"')
+            # ⑧ 末传=禄神/旺相 → 末传逢禄逢旺诸事遂意尽在末（§135"末传逢禄逢旺诸事遂意尽在末"；
+            #   优先于三传皆阴——§135三传皆阴而末禄，邵公仍断"尽在末也"）
+            if lu_zhi and mo == lu_zhi:
+                return self._mk('末禄遂意', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'末传{mo}为日禄，末传逢禄逢旺，诸事遂意，尽在末也',
+                                '§财产08·135"末传逢禄逢旺诸事遂意尽在末"')
+            # ⑨ 三传皆阴（阴课）→ 宜静不宜动，谋新不利（§148"三四课皆阴，岂宜进干"；
+            #   刘评引《毕法》"六阴相继尽昏迷"）
+            if chu in ('丑', '卯', '巳', '未', '酉', '亥') and \
+                    zhong in ('丑', '卯', '巳', '未', '酉', '亥') and \
+                    mo in ('丑', '卯', '巳', '未', '酉', '亥'):
+                return self._mk('宜静谋旧', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传{chu}·{zhong}·{mo}皆阴，宜静不宜动，谋新进干不利，自宜用旧',
+                                '§交易谋为10·148"三传四课皆阴岂宜进干…自宜用旧，未利谋新"')
+            # ⑩ 三传初中皆空独末为财爻 → 先难后得（L283）
             if chu in kong and zhong in kong and _shi_shen(mo, ri_gan) == '妻财':
                 return self._mk('先难后易', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'初中传空亡，末传{mo}为财爻，先涉艰难然后得财',
                                 'L283"三传初中皆空独末为财爻先难后得"')
-            # 初传财末传生之 → 末来助始（L282）
+            # ⑪ 初传财末传生之 → 末来助始（L282）
             if _shi_shen(chu, ri_gan) == '妻财' and mo_wx and SHENG.get(mo_wx) == chu_wx:
                 return self._mk('得财有望', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'初传财{chu}，末传{mo}生之，末来助始，有人暗将财相助',
                                 'L282"初传财末传生之末来助始"')
-            # 财爻临日干 → 得财甚速；财在末传 → 得财迟滞（L270）
+            # ⑫ 财爻临日干 → 得财甚速；财在末传 → 得财迟滞（L270）
             if _shi_shen(mo, ri_gan) == '妻财' and mo_shi == '吉':
                 return self._mk('终得财利', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'末传{mo}为财爻得地，得财虽迟终有财利',
                                 'L270"财在末传得财迟滞"')
-            # 财爻空亡 → 不可强求（L275"财坐空亡不可强求"）
-            if any(z in kong and _shi_shen(z, ri_gan) == '妻财' for z in (chu, zhong, mo)):
+            # ⑬ 财爻空亡（三传或支上）→ 不可强求（L275"财坐空亡不可强求"；
+            #   §134"午财旬空故未得"——支上财空亦主先未得）
+            _cai_kong = any(z in kong and _shi_shen(z, ri_gan) == '妻财' for z in (chu, zhong, mo))
+            if not _cai_kong and zhi_shang and zhi_shang in kong and _shi_shen(zhi_shang, ri_gan) == '妻财':
+                _cai_kong = True
+            if _cai_kong:
                 return self._mk('求财落空', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
-                                f'财爻{chu if chu in kong else zhong if zhong in kong else mo}空亡，求财落空，不可强求',
-                                'L275"财坐空亡不可强求"')
+                                f'财爻{chu if chu in kong and _shi_shen(chu, ri_gan) == "妻财" else zhi_shang if zhi_shang in kong else zhong}空亡，求财落空，不可强求',
+                                'L275"财坐空亡不可强求"; §财产08·134"午财旬空故未得"')
 
         # ───────────────────────────
         # 【家宅】（邵公断案·宅墓章深读增强 2026-08-18）
@@ -947,6 +1012,41 @@ class LiuChenEngine:
         # 【胎产】
         # ───────────────────────────
         if category == '胎产':
+            # 【邵公断案·胎产子息章深读 2026-08-18】
+            #   §125"干支见酉，皆阳刃破碎自刑…必不利于子母"（羊刃临干支）；
+            #   §127"独足…毕竟男胎不成"（独足课子息难成）；
+            #   §129"三传贵人太多，所以贵多不贵…年三十二上自有子"（课传贵多过房子难留）；
+            #   §131"虎乘墓入内门，故母死"（末传日墓母死子存）
+            YANG_REN3 = {'甲': '卯', '丙': '午', '戊': '午', '庚': '酉', '壬': '子'}
+            _yr = YANG_REN3.get(ri_gan, '')
+            GUI_REN3 = {'甲': {'丑', '未'}, '乙': {'子', '申'}, '丙': {'亥', '酉'}, '丁': {'亥', '酉'},
+                        '戊': {'丑', '未'}, '己': {'子', '申'}, '庚': {'丑', '未'}, '辛': {'午', '寅'},
+                        '壬': {'巳', '卯'}, '癸': {'巳', '卯'}}
+            _gui_set = GUI_REN3.get(ri_gan, set())
+            # 干支上神皆=日干羊刃（破碎）→ 产育不利，子母俱伤（§125"干支见酉，皆阳刃破碎
+            #   自刑，故先害身，却来害母"）
+            if _yr and gan_shang == _yr and zhi_shang == _yr:
+                return self._mk('刃破伤子', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干支上神皆{_yr}为日干羊刃破碎自刑，必不利于子母，产育大凶',
+                                '§胎产子息07·125"干支见酉，皆阳刃破碎自刑…必不利于子母"')
+            # 末传=日墓 → 母死子存（§131"虎乘墓入内门，故母死…日干得旺相之气，故儿存"）
+            if mo == mu_zhi:
+                return self._mk('母死子存', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'末传{mo}为日墓，虎乘墓入内门，主母死；干上儿得旺气则子存',
+                                '§胎产子息07·131"支是母兮干是儿…虎乘墓入内门，故母死…日干得旺相之气，故儿存"')
+            # 三传独足（同支）→ 子息难成，男胎不成（§127"独足…毕竟男胎不成也"）
+            if chu == zhong == mo:
+                return self._mk('独足无子', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传{chu}·{zhong}·{mo}独足课，子息难成，男胎不成',
+                                '§胎产子息07·127"独足…毕竟男胎不成也"')
+            # 课传贵人≥3处（贵多不贵）→ 子息占：过房子不合留，本命行年自有子（§129"三传
+            #   贵人太多，所以贵多不贵…吾兄年三十二上，自有子"）
+            _gui_cnt = (1 if gan_shang in _gui_set else 0) + (1 if zhi_shang in _gui_set else 0) + \
+                       sum(1 for z in (chu, zhong, mo) if z in _gui_set)
+            if _gui_cnt >= 3:
+                return self._mk('贵多不贵', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'课传贵人{_gui_cnt}处，贵多不贵，过房子不合留，然本命行年自有子',
+                                '§胎产子息07·129"三传贵人太多，所以贵多不贵…年三十二上自有子"')
             # 三传克日 → 难产；三传克支 → 伤母（L229）
             if mo_wx and KE.get(mo_wx) == gw:
                 return self._mk('产难母伤', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
@@ -978,11 +1078,53 @@ class LiuChenEngine:
         # 【出行】
         # ───────────────────────────
         if category == '出行':
+            # 【邵公断案·出行访谒/行人音信章深读 2026-08-18】
+            #   §150"中传断桥，访之反不得"（三合局中传空亡）；§151"甲日火局十二分盗气…
+            #   大有所费"（盗气局）；§154"日上驿马交驰…主动必远"（返吟驿马）；
+            #   §158"中传又雀乘太岁…被蒿恼不意而动"（中传朱雀文书扰）；
+            #   §161"昴星课…朱雀临门，主文字立至"（昴星文字即至）
+            SAN_HE_JZ = [{'申', '子', '辰'}, {'寅', '午', '戌'}, {'巳', '酉', '丑'}, {'亥', '卯', '未'}]
+            SAN_HE_WX = ['水', '火', '金', '木']
+            _sanchuan_set = {chu, zhong, mo}
+            _ju_wx = ''
+            for _jz, _jwx in zip(SAN_HE_JZ, SAN_HE_WX):
+                if _sanchuan_set == _jz:
+                    _ju_wx = _jwx
+                    break
+            # 驿马（按日支三合：申子辰马寅、寅午戌马申、巳酉丑马亥、亥卯未马巳）
+            _MA = {'申': '寅', '子': '寅', '辰': '寅', '寅': '申', '午': '申', '戌': '申',
+                   '巳': '亥', '酉': '亥', '丑': '亥', '亥': '巳', '卯': '巳', '未': '巳'}
+            _ma_zhi = _MA.get(ri_zhi, '')
             # 干支乘死绝最忌不宜远行（L434）
             if mo == jue_zhi or (mo in kong and mo_shi == '凶'):
                 return self._mk('不宜远行', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'末传{mo}乘死绝，不宜远行，恐途中有阻',
                                 'L434"干支乘死绝最忌不宜远行"')
+            # 三合局中传空亡（断桥）→ 访之反不得（§150"中传断桥，访之反不得耳"；
+            #   三合全局本主相见，中空则事中断）。末传旺相（临官/帝旺）→ 先凶后吉，
+            #   终必达（§156"中传断桥…文书次第未备…目下未归。在三月子日至也"）
+            if _ju_wx and zhong in kong:
+                _wang_set = {'寅', '卯'} if gw == '木' else {'巳', '午'} if gw == '火' else \
+                            {'申', '酉'} if gw == '金' else {'亥', '子'}
+                if mo in _wang_set:
+                    return self._mk('先凶后吉', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'三合局{chu}·{zhong}·{mo}中传{zhong}空亡为断桥，事受阻迟滞，然末传{mo}旺相，终必达，先凶后吉',
+                                    '§行人音信11·156"中传断桥…文书次第未备…在三月子日至也"')
+                return self._mk('访之不得', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三合局{chu}·{zhong}·{mo}中传{zhong}空亡为断桥，访之反不得，事不谐',
+                                '§出行访谒11·150"中传断桥，访之反不得耳"')
+            # 三合局为日之子孙（盗气局）→ 大有所费，所得微薄（§151"甲日火局，十二分盗气，
+            #   支又来耗我，大有所费"）
+            if _ju_wx and gw and SHENG.get(gw) == _ju_wx:
+                return self._mk('破费无益', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三合{_ju_wx}局{chu}·{zhong}·{mo}为日干盗气，十二分盗气，支又来耗，大有所费，所得微薄',
+                                '§出行访谒11·151"甲日火局，十二分盗气，支又来耗我，大有所费"')
+            # 返吟+驿马入传（中传非日支）→ 主动必远，行必成（§154"日上驿马交驰…主动必远"；
+            #   守卫：§149返吟中传归支=半路归家，不作远行之吉）
+            if fan_yin and _ma_zhi and any(z == _ma_zhi for z in (chu, zhong, mo)) and zhong != ri_zhi:
+                return self._mk('主动必远', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'返吟课驿马{_ma_zhi}交驰入传，主动必远，行必成，虽远必达',
+                                '§出行访谒11·154"日上驿马交驰…主动必远"')
             # 螣蛇上课 → 途路有惊恐盗贼（L443）
             if chu_tj == '螣蛇' or mo_tj == '螣蛇':
                 return self._mk('途中惊恐', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
@@ -993,6 +1135,17 @@ class LiuChenEngine:
                 return self._mk('途程艰难', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 '登三天课，途程艰难，出行辛苦',
                                 'L442"登三天课辰午申主呈途艰难"')
+            # 初传=日干官鬼且临绝地 → 音信凶兆，文字来而事扰，先吉后凶（§158"申是岁马带鬼
+            #   克日…涉三渊之格…被蒿恼不意而动…充替河州"）
+            if chu == jue_zhi and _shi_shen(chu, ri_gan) == '官鬼':
+                return self._mk('先吉后凶', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'初传{chu}为日干官鬼临绝地，音信文字必来，然鬼害来速，被蒿恼不意而动，先吉后凶',
+                                '§行人音信12·158"申是岁马带鬼克日…被蒿恼不意而动"')
+            # 昴星课 → 文字立至（§161"盖昴星课…朱雀临门，主文字立至"）
+            if '昴星' in keti:
+                return self._mk('文字立至', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'昴星课，类神乘道路神临门，文字立至，消息速达',
+                                '§行人音信12·161"昴星课…朱雀临门，主文字立至"')
             # 日上得吉将/生日之神 → 往之吉（L416）
             if chu_shi == '吉' and mo_shi != '凶':
                 return self._mk('出行顺利', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
@@ -1003,27 +1156,51 @@ class LiuChenEngine:
         # 【婚姻】
         # ───────────────────────────
         if category == '婚姻':
-            # 三传生日 → 婚姻迪吉（L178"三传生日婚姻迪吉媒言亦实"）
+            # 【邵公断案·婚姻章深读 2026-08-18】核心：
+            #   §122"此课占婚何必有媒?私情久已通矣"（后合入传=婚必成，返吟玄武=淫奔先成后败）
+            #   §123"上方出墓寻生其亲必成…但恐不久尊堂服动"（先成后败）
+            #   §124"此课必成，恐成亲后…兼难得子"（天罗地网兜牢+退子=先成后败）
+            # ① 后合入传（天后+六合俱现）→ 婚必成；若返吟/玄武淫神入传 → 私情淫奔之婚，
+            #   女非贞良暗有退子，先成后败（§122"后合占婚岂用媒…私情久已通矣…暗有退子"）
+            _hou_he = (chu_tj in ('天后', '六合') or zhong_tj in ('天后', '六合') or
+                       mo_tj in ('天后', '六合'))
+            if _hou_he and (chu_tj in ('天后', '六合') and (zhong_tj in ('天后', '六合') or
+                                                            mo_tj in ('天后', '六合'))):
+                if fan_yin or xuan_wu_zai_chuan:
+                    return self._mk('先成后败', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'后合入传婚必成，然返吟玄武淫神乘之，私情淫奔，女非贞良，暗有退子，先成后败',
+                                    '§婚姻06·122"此课占婚何必有媒?私情久已通矣…暗有退子"')
+                return self._mk('私情已通', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'后合入传（天后六合并见），私情久已通，婚必成',
+                                '§婚姻06·122"此课占婚何必有媒?私情久已通矣"')
+            # ② 出墓寻生（干上神=日墓，传中见长生）→ 亲必成，然恐服动之灾，先成后败
+            #   （§123"上方出墓寻生其亲必成…但恐不久尊堂服动"；L544"自墓传生"）
+            if gan_shang and gan_shang == mu_zhi and \
+                    any(z == cs_zhi for z in (chu, zhong, mo)):
+                return self._mk('先成后败', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干上神{gan_shang}为日墓，传中{cs_zhi}长生，出墓寻生其亲必成，然恐尊堂服动，先成后败',
+                                '§婚姻06·123"上方出墓寻生其亲必成…但恐不久尊堂服动"')
+            # ③ 三传生日 → 婚姻迪吉（L178"三传生日婚姻迪吉媒言亦实"）
             if mo_wx and SHENG.get(mo_wx) == gw:
                 return self._mk('姻缘有成', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'三传生日干，婚姻迪吉，媒言亦实，婚事可成',
                                 'L178"三传生日婚姻迪吉"')
-            # 日生三传 → 强成终久不偕（L179）
+            # ④ 日生三传 → 强成终久不偕（L179）
             if gw and mo_wx and SHENG.get(gw) == mo_wx:
                 return self._mk('先成后败', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'日干生三传，事多乖违，强成终久不偕，婚姻难长久',
                                 'L179"日生三传事多乖违强成终久不偕"')
-            # 初传天后与日辰相生 → 必成（案例0069"初传天后与日辰相生而气和必成之理也"）
+            # ⑤ 初传天后与日辰相生 → 必成（案例0069"初传天后与日辰相生而气和必成之理也"）
             if chu_tj == '天后' and chu_shi != '凶':
                 return self._mk('婚姻必成', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'初传{chu}乘天后与日辰相生，气和必成，婚姻可成',
                                 'CASE-壬占汇选-0069"初传天后与日辰相生而气和必成之理也"')
-            # 朱雀发用克日 → 不成（L169"朱雀发用克日不成"）
+            # ⑥ 朱雀发用克日 → 不成（L169"朱雀发用克日不成"）
             if chu_tj == '朱雀' and KE.get(chu_wx) == gw:
                 return self._mk('婚姻不成', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'朱雀发用克日干，婚姻不成，媒言难信',
                                 'L169"朱雀发用克日不成"')
-            # 末传=日墓 → 婚难长久（L183"即成亦不长久"）
+            # ⑦ 末传=日墓 → 婚难长久（L183"即成亦不长久"）
             if mo == mu_zhi:
                 return self._mk('婚难长久', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'末传{mo}为日墓，婚姻即成亦不长久',
