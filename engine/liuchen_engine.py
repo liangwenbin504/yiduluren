@@ -1575,16 +1575,24 @@ class LiuChenEngine:
                 return self._mk('失物可寻', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'末传{mo}克初传{chu}，贼人堪捉，失物可寻',
                                 'L702"末传盛初传贼人堪捉"')
+            # 【邵公断案·亡盗章 2026-08-18】独足课 → 失物不须寻，当日自归
+            #   （§亡盗15·192"独足课，酉为婢，加未，不离身宅矣。兼独足体，一足焉能动焉？
+            #   不须寻，当日归矣"）
+            if chu == zhong == mo:
+                return self._mk('独足自归', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传{chu}·{zhong}·{mo}独足课，失物不离身宅，一足难行，不须寻当日归',
+                                '§亡盗15·192"独足课…不须寻，当日归矣"')
+            # 末传生日干 → 失物自归（L673"元武乘旺生干支者不寻自还"）
+            #   【2026-08-18】置于循环格之前——§188 循环格而末酉生癸水，邵公断"可往擒之"（吉）
+            if mo_wx and SHENG.get(mo_wx) == gw:
+                return self._mk('失而复得', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'末传{mo}生日干，失物不寻自还，失而复得',
+                                'L673"元武乘旺生干支者不寻自还"')
             # 循环格 → 贼人复来（L723"周遍格循环格主贼人复来"）
             if xun_huan:
                 return self._mk('贼人复来', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'循环格，主贼人复来之意，失物难全保',
                                 'L723"周遍格循环格主贼人复来"')
-            # 末传生日干 → 失物自归（L673"元武乘旺生干支者不寻自还"）
-            if mo_wx and SHENG.get(mo_wx) == gw:
-                return self._mk('失而复得', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
-                                f'末传{mo}生日干，失物不寻自还，失而复得',
-                                'L673"元武乘旺生干支者不寻自还"')
 
         # ───────────────────────────
         # 【行人】
@@ -1635,6 +1643,9 @@ class LiuChenEngine:
         """
         if not sanchuan or len(sanchuan) < 3:
             return {'走向': '未定', '阶段': {}, '叙事': '三传不全，无法判断事体走向', '终局': '平'}
+        # 占类归一化（走失/六畜等归入贼盗——疏正亡盗吉案因占类未映射而误判平/凶，2026-08-18）
+        if category in ('亡盗', '六畜走失', '走失'):
+            category = '贼盗'
         tj = list(tianjiang_list or [])
         kong = set(kongwang or [])
         chu, zhong, mo = sanchuan[0], sanchuan[1], sanchuan[2]
