@@ -1257,8 +1257,10 @@ class LiuRenKetiDuanyu:
         
         :param keti_name: 课体名称
         :return: 课体断语字典
+        【BUG-FIX 2026-08-18】命中条目缺键（如无'等级'/'断语'）时不再 KeyError，
+        与默认结构合并补齐。
         """
-        return self.keti_jixiong.get(keti_name, {
+        _default = {
             '等级': '平',
             '断语': f'{keti_name}，课体平稳，无大吉凶。',
             '详细断语': {
@@ -1276,7 +1278,13 @@ class LiuRenKetiDuanyu:
             '凶神宜忌': [],
             '宜事': [],
             '忌事': []
-        })
+        }
+        info = self.keti_jixiong.get(keti_name)
+        if not info:
+            return _default
+        merged = dict(_default)
+        merged.update(info)
+        return merged
     
     def get_luma_guiren_duanyu(self, luma_type: str) -> Dict:
         """

@@ -1314,7 +1314,8 @@ class KeKeDuanyu:
 
     @classmethod
     def analyze_yidu_score(cls, mountain: str, sizhu: Dict, doushou_result: Dict,
-                           luma_guiren_info: Dict = None, mubiao: List = None) -> Dict:
+                           luma_guiren_info: Dict = None, mubiao: List = None,
+                           ben_ming: str = '', date_str: str = '') -> Dict:
         """分析仪度六壬评分
 
         Args:
@@ -1323,6 +1324,8 @@ class KeKeDuanyu:
             doushou_result: 斗首分析结果
             luma_guiren_info: 禄马贵人信息
             mubiao: 目标列表
+            ben_ming: 仙命/主家本命（60甲子，如'甲子'；第二要诀_仙命禄马贵用）
+            date_str: 公历日期 YYYY-MM-DD（第五要诀_太阳带禄马贵用）
 
         Returns:
             仪度六壬评分详情
@@ -1334,8 +1337,12 @@ class KeKeDuanyu:
             '评价': ''
         }
 
-        ri_gan = sizhu.get('日柱', '甲子')[0]
-        ri_zhi = sizhu.get('日柱', '甲子')[1]
+        # 【BUG-FIX 2026-08-18】日柱空值/短串不再 IndexError（原直取 [0]/[1]）
+        _ri_pillar = sizhu.get('日柱') or '甲子'
+        if not isinstance(_ri_pillar, str) or len(_ri_pillar) < 2:
+            _ri_pillar = '甲子'
+        ri_gan = _ri_pillar[0]
+        ri_zhi = _ri_pillar[1]
 
         yidao_scores = []
 
@@ -1353,6 +1360,53 @@ class KeKeDuanyu:
             if sanchuan_luma >= 2:
                 scores['五大要诀得分']['发出三传'] = 20
                 yidao_scores.append(20)
+
+        # ── 五大要诀 第二~第五诀（2026-08-17 接入：梁佳明《仪度六壬择日要诀》模板知识落引擎）──
+        # 第二诀_仙命禄马贵：山向禄马贵 == 仙命/主家本命；第三诀_日课日子：日课禄马贵与山向关联且发出；
+        # 第四诀_大岁月建：日课禄马贵 == 太岁(年支)/月建(月支)；第五诀_太阳带禄马贵：禄马贵==太阳且太阳到山向。
+        try:
+            from engine.daliuren_luma_guiren import DaLiuRenLuMaGuiRen
+            _lmd = DaLiuRenLuMaGuiRen()
+            shan_jia = _lmd.get_shan_jia(mountain)
+            xiang_shou = _lmd.get_xiang_shou(mountain)
+            nian_zhi = (sizhu.get('年柱', '甲子') or '甲子')[1]
+            yue_zhi = (sizhu.get('月柱', '甲子') or '甲子')[1]
+            # 日课禄马贵支（本山本日禄马贵人）：日干禄 + 日支马 + 阴阳双贵
+            _lu = _lmd.get_lu_zhi(ri_gan) or ''
+            _ma = _lmd.get_ma_zhi(ri_zhi) or ''
+            _gy = cls.TIANGAN_GUIREN_YANG.get(ri_gan, '')
+            _gi = cls.TIANGAN_GUIREN_YIN.get(ri_gan, '')
+            lmg = [z for z in (_lu, _ma, _gy, _gi) if z]
+
+            # 第二要诀_仙命禄马贵（本山向禄马贵即仙命/主家本命）
+            if ben_ming and len(ben_ming) >= 2:
+                xian_zhi = ben_ming[-1]
+                if xian_zhi in lmg:
+                    scores['五大要诀得分']['第二要诀_仙命禄马贵'] = 15
+                    yidao_scores.append(15)
+
+            # 第三要诀_日课日子禄马贵：日课与山向关联（第一诀覆盖）+ 三传发出禄马贵 → 灵动发福
+            if pillar_qualified >= 1 and sanchuan_luma >= 1:
+                scores['五大要诀得分']['第三要诀_日课日子禄马贵'] = 10
+                yidao_scores.append(10)
+
+            # 第四要诀_大岁月建禄马贵：本山本日禄马贵即太岁或月建禄马贵（权力重大）
+            if nian_zhi in lmg or yue_zhi in lmg:
+                scores['五大要诀得分']['第四要诀_大岁月建禄马贵'] = 20
+                yidao_scores.append(20)
+
+            # 第五要诀_太阳带禄马贵：禄马贵==太阳且太阳到山到向（权力最重）
+            if date_str and len(date_str) >= 7:
+                try:
+                    _yy, _mm, _dd = [int(x) for x in date_str.split('-')]
+                    taiyang = _lmd.get_taiyang_position(_mm, _dd)
+                    if taiyang in lmg and taiyang in (shan_jia, xiang_shou):
+                        scores['五大要诀得分']['第五要诀_太阳带禄马贵'] = 20
+                        yidao_scores.append(20)
+                except Exception:
+                    pass
+        except Exception:
+            pass
 
         if mubiao:
             if '求官' in mubiao or '求富贵' in mubiao:

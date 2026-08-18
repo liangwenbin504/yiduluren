@@ -9,23 +9,31 @@ import os
 # 先定义默认值
 DIZHI = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥']
 GUIREN = {}
-TIANJIANG = []
+TIANJIANG = ['贵人', '螣蛇', '朱雀', '六合', '勾陈', '青龙',
+             '天空', '白虎', '太常', '玄武', '太阴', '天后']
 
 # 动态导入：尝试多种路径
 try:
     from data.斗首择日规则 import DIZHI as IMPORTED_DIZHI, GUIREN as IMPORTED_GUIREN, TIANJIANG as IMPORTED_TIANJIANG
-    DIZHI = IMPORTED_DIZHI
-    GUIREN = IMPORTED_GUIREN
-    TIANJIANG = IMPORTED_TIANJIANG
+    DIZHI = IMPORTED_DIZHI or DIZHI
+    GUIREN = IMPORTED_GUIREN or GUIREN
+    TIANJIANG = IMPORTED_TIANJIANG or TIANJIANG
 except ImportError:
     try:
         from core_modules.data.斗首择日规则 import DIZHI as IMPORTED_DIZHI, GUIREN as IMPORTED_GUIREN, TIANJIANG as IMPORTED_TIANJIANG
-        DIZHI = IMPORTED_DIZHI
-        GUIREN = IMPORTED_GUIREN
-        TIANJIANG = IMPORTED_TIANJIANG
+        DIZHI = IMPORTED_DIZHI or DIZHI
+        GUIREN = IMPORTED_GUIREN or GUIREN
+        TIANJIANG = IMPORTED_TIANJIANG or TIANJIANG
     except ImportError:
         # 使用默认值
         pass
+
+# 【BUG-FIX 2026-08-18】导入结果为空时用默认值兜底，防止天将排布 IndexError
+if not TIANJIANG or len(TIANJIANG) < 12:
+    TIANJIANG = ['贵人', '螣蛇', '朱雀', '六合', '勾陈', '青龙',
+                 '天空', '白虎', '太常', '玄武', '太阴', '天后']
+if not DIZHI or len(DIZHI) < 12:
+    DIZHI = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥']
 
 
 # 导入昼夜贵人模块
@@ -54,7 +62,19 @@ class GuiRenCalculator:
         :param is_night: 是否夜间（True=阴贵，False=阳贵）
         :return: 贵人地支
         """
-        gui_ren_list = self.guiren.get(ri_gan, ['丑', '未'])
+        # 【BUG-FIX 2026-08-18】GUIREN 表缺失/为空时不再静默回落同一默认值
+        # （原 get(ri_gan, ['丑','未']) 会让所有日干都取丑未，贵人错配）；
+        # 改为按口诀硬编码兜底，仅当表完全不可用时生效。
+        gui_ren_list = self.guiren.get(ri_gan) if isinstance(self.guiren, dict) else None
+        if not gui_ren_list:
+            _fallback = {
+                '甲': ['丑', '未'], '戊': ['丑', '未'], '庚': ['丑', '未'],
+                '乙': ['子', '申'], '己': ['子', '申'],
+                '丙': ['亥', '酉'], '丁': ['亥', '酉'],
+                '壬': ['巳', '卯'], '癸': ['巳', '卯'],
+                '辛': ['午', '寅'],
+            }
+            gui_ren_list = _fallback.get(ri_gan, ['丑', '未'])
         
         if is_night and len(gui_ren_list) > 1:
             return gui_ren_list[1]  # 阴贵

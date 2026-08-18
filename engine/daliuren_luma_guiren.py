@@ -222,7 +222,10 @@ class DaLiuRenLuMaGuiRen:
         return self.YIMA.get(di_zhi, '')
     
     def get_guiren_zhi(self, tian_gan: str, tiandi_pan: Dict, shichen: str) -> Optional[str]:
-        """获取贵人位置"""
+        """获取贵人位置（返回**地盘支**）
+        【BUG-FIX 2026-08-18】arrange_gui_ren_pan 的'天将映射'键为**天盘支**，
+        原直接返回 → 与禄马（已转地盘支）口径不一致，三传匹配/到山到向全错位。
+        现经 _get_tiandi_position 转为地盘支，与 check_pillar_all_qualified 的禄马口径统一。"""
         if not self.gui_ren_calc:
             return None
         try:
@@ -232,7 +235,7 @@ class DaLiuRenLuMaGuiRen:
             tianjiang_map = guiren_info.get('天将映射', {})
             for zhi, tj in tianjiang_map.items():
                 if tj == '贵人':
-                    return zhi
+                    return self._get_tiandi_position(zhi, tiandi_pan)
         except Exception:
             pass
         return None
@@ -622,7 +625,7 @@ class DaLiuRenLuMaGuiRen:
         else:
             status = f'{pillar_qualified_count}柱合格，三传禄马贵人{sanchuan_luma_count}个'
 
-        return {
+        result = {
             'base_score': round(base_score, 1),
             'ke_ti_deduction': ke_ti_deduction,
             'ke_ti_level': ke_ti_level,
@@ -643,7 +646,9 @@ class DaLiuRenLuMaGuiRen:
             'mijue_details': {},
         }
 
-        # 8. 六壬断案秘诀规则调整
+        # 7. 六壬断案秘诀规则调整
+        # 【BUG-FIX 2026-08-18】原此段位于 `return {...}` 之后为死代码，永不执行；
+        # 已移至 return 之前，使秘诀扣分/加分真正生效。
         try:
             from engine.mijue_engine import analyze_with_mijue, check_shas
             mijue = analyze_with_mijue(
@@ -658,6 +663,8 @@ class DaLiuRenLuMaGuiRen:
             result['final_score'] = max(20, min(100, result['final_score']))
         except ImportError:
             pass
+
+        return result
     
     def get_keti_deduction(self, ke_ti_name: str) -> Tuple[int, str, bool]:
         """
@@ -676,12 +683,17 @@ class DaLiuRenLuMaGuiRen:
             info = get_64ke_info(ke_ti_name)
             if info:
                 level = info.get('吉凶', '平')
+                # 【BUG-FIX 2026-08-18】补齐 64 课通解知识库实际值域：
+                # 上吉/吉/凶（原缺这三键，命中'吉'/'凶'课会漏走 level_map）
                 level_map = {
+                    '上吉': (0, False),
                     '大吉': (0, False),
+                    '吉': (0, False),
                     '中吉': (0, False),
                     '小吉': (5, False),
                     '平': (10, False),
                     '小凶': (20, False),
+                    '凶': (25, False),
                     '中凶': (30, False),
                     '大凶': (40, True),
                 }
