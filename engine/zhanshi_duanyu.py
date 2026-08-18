@@ -336,9 +336,10 @@ def _sanchuan_time_sequence(sanchuan: List[str], tianjiang_list: List[str],
 
 
 def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
-             zhanshi: str = '其他', category: str = '', zishu: str = '') -> Dict[str, Any]:
+             zhanshi: str = '其他', category: str = '', zishu: str = '',
+             year: str = '') -> Dict[str, Any]:
     """按占事生成完整断语。zhanshi 为中文占类；category 为前端英文键（二选一，category 优先映射）；
-    zishu 为家宅子类（阳宅/阴宅/迁移），仅 zhanshi==家宅 时生效。"""
+    zishu 为家宅子类（阳宅/阴宅/迁移），仅 zhanshi==家宅 时生效；year 为占课年（干支），供太岁规则。"""
     if category:
         zhanshi = CATEGORY_MAP.get(category, zhanshi)
     pan = paipan_v2(ri_gan, ri_zhi, yuejiang, shichen)
@@ -380,7 +381,7 @@ def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
         from engine.liuchen_engine import LiuChenEngine
         liuchen_out = LiuChenEngine().analyze(
             ri_gan, ri_zhi, pan['sanchuan'], pan['tianjiang_list'], kw, pan['keti'], pan['sike'],
-            category=zhanshi, zishu=zishu, yuejiang=yuejiang)
+            category=zhanshi, zishu=zishu, yuejiang=yuejiang, year=year)
     except Exception:
         liuchen_out = {'走向': '未定', '终局': '平', '叙事': '', '阶段': {}, '三传': ''}
 
