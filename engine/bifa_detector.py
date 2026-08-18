@@ -135,12 +135,14 @@ SANHE_SHANG = {
     '金': {'刑': '酉', '害': '戌', '冲': '卯'},  # 巳酉丑
 }
 
-# 月将→季节
+# 月将→季节（月将是太阳过宫，中气换将：雨水后亥将…大寒后子将；
+# 【BUG-FIX 2026-08-18】原表误用"月建"表（寅卯辰=春…），月将≠月建，错位一组。
+# 月将对应：亥戌酉=春、申未午=夏、巳辰卯=秋、寅丑子=冬）
 YUEJIANG_SEASON = {
-    '寅': '春', '卯': '春', '辰': '春',
-    '巳': '夏', '午': '夏', '未': '夏',
-    '申': '秋', '酉': '秋', '戌': '秋',
-    '亥': '冬', '子': '冬', '丑': '冬',
+    '亥': '春', '戌': '春', '酉': '春',
+    '申': '夏', '未': '夏', '午': '夏',
+    '巳': '秋', '辰': '秋', '卯': '秋',
+    '寅': '冬', '丑': '冬', '子': '冬',
 }
 
 # 季节→五行旺
@@ -454,13 +456,13 @@ def _is_gan_sibling(gan: str, zhi: str) -> bool:
 
 
 def _zhi_sheng_zhi(z1: str, z2: str) -> bool:
-    """判断 z1 生 z2（地支五行相生）"""
-    return _wuxing_sheng(ZHI_WUXING.get(z1), ZHI_WUXING.get(z2))
+    """判断 z1 生 z2（地支五行相生；z1/z2 也可为天干，第77法天干互生用）"""
+    return _wuxing_sheng(ZHI_WUXING.get(z1) or GAN_WUXING.get(z1), ZHI_WUXING.get(z2) or GAN_WUXING.get(z2))
 
 
 def _zhi_ke_zhi(z1: str, z2: str) -> bool:
-    """判断 z1 克 z2（地支五行相克）"""
-    return _wuxing_ke(ZHI_WUXING.get(z1), ZHI_WUXING.get(z2))
+    """判断 z1 克 z2（地支五行相克；z1/z2 也可为天干）"""
+    return _wuxing_ke(ZHI_WUXING.get(z1) or GAN_WUXING.get(z1), ZHI_WUXING.get(z2) or GAN_WUXING.get(z2))
 
 
 # ============ 季节相关 ============
@@ -889,17 +891,10 @@ class BiFaDetector:
         # 87. 人宅坐墓甘招晦
         self._check_rule_87(ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen, tiandi_pan)
         
-        # === 独立收尾: 5条组合方法中已逻辑存在但缺独立方法的规则 ===
-        # 20. 胎财死气损胎推
-        self._check_rule_20(ri_gan, yuejiang)
-        # 26. 水日逢丁财动之
-        self._check_rule_26(ri_gan, ganzhi, sanchuan_dizhi, gan_shang_shen, zhi_shang_shen, ben_ming_zhi)
-        # 30. 屋宅宽广致人衰
-        self._check_rule_30(sanchuan_dizhi, ri_gan, ri_zhi)
-        # 84. 合中犯杀蜜中砒
-        self._check_rule_84(sanchuan_dizhi, ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen)
-        # 90. 来去俱空岂动宜
-        self._check_rule_90(sanchuan_dizhi, kongwang, ganzhi)
+        # 【BUG-FIX 2026-08-18】删除原"独立收尾"5 条重复调用：
+        # 第20/26/30/84/90 法逻辑已由组合方法 _check_rule_19_20 / _check_rule_25_26 /
+        # _check_rule_29_30 / _check_rule_83_84 / _check_rule_89_90 完整覆盖；
+        # 原独立版第30法判据(any 生支)与组合版(all 生支)矛盾，双调会行为不一致。
 
         # 构建结果
         return self._build_result()
@@ -1207,7 +1202,9 @@ class BiFaDetector:
                     continue
                 if s == xing:
                     violations.append(f'{label}{s}为自刑')
-                if s == hai and LIUHAI.get(s) == xing:
+                # 【BUG-FIX 2026-08-18】原 `s == hai and LIUHAI.get(s) == xing`
+                # 把"六害"与"刑"混为一谈：害位判断应为 s == hai（局中神之害位）。
+                if s == hai:
                     violations.append(f'{label}{s}为六害')
                 if s == chong:
                     violations.append(f'{label}{s}为冲')
@@ -1967,20 +1964,28 @@ class BiFaDetector:
     def _check_rule_70(self, ri_gan: str, si_ke_info: Optional[List[str]] = None):
         """第70法: 鬼临三四讼灾随
         日干之鬼临于第三四课全者。
+        【BUG-FIX 2026-08-18】sike 元素为 tuple ('第一课',上神,下神,天将)，
+        原 `zhi in ke3` 对 tuple 恒 False → 永不触发；改为从课位中提取地支判断。
         """
         if not ri_gan or not si_ke_info or len(si_ke_info) < 4:
             return
-        ke3 = si_ke_info[2] if len(si_ke_info) > 2 else ''
-        ke4 = si_ke_info[3] if len(si_ke_info) > 3 else ''
-        ghost_in_3 = False
-        ghost_in_4 = False
-        for zhi in DIZHI_ORDER:
-            if zhi in ke3 and _is_gan_ghost(ri_gan, zhi):
-                ghost_in_3 = True
-            if zhi in ke4 and _is_gan_ghost(ri_gan, zhi):
-                ghost_in_4 = True
+        ke3 = si_ke_info[2] if len(si_ke_info) > 2 else None
+        ke4 = si_ke_info[3] if len(si_ke_info) > 3 else None
+
+        def _ghost_in(ke) -> bool:
+            if not ke:
+                return False
+            # 兼容 tuple/list ('第三课', 上神, 下神, 天将) 与 dict 格式
+            if isinstance(ke, dict):
+                zhis = [ke.get('上神', ''), ke.get('下神', '')]
+            else:
+                zhis = list(ke)[1:3] if len(ke) >= 3 else list(ke)
+            return any(_is_gan_ghost(ri_gan, z) for z in zhis if z and z in DIZHI_ORDER)
+
+        ghost_in_3 = _ghost_in(ke3)
+        ghost_in_4 = _ghost_in(ke4)
         if ghost_in_3 and ghost_in_4:
-            self._add_rule(70, f'日干{ri_gan}之鬼临第三课({ke3})第四课({ke4})，鬼临三四讼灾随')
+            self._add_rule(70, f'日干{ri_gan}之鬼临第三课第四课，鬼临三四讼灾随')
 
     def _check_rule_71(self, ri_zhi: str, zhi_shang: str, tai_sui: str = ''):
         """第71法: 病符克宅全家患
@@ -2311,9 +2316,9 @@ class BiFaDetector:
         if sanchuan[0] == wei_zhi and wei_jia_shou and chu_mo_he:
             self._add_rule(38, f'旬尾{wei_zhi}加旬首{shou_zhi}发用且初末六合，闭口卦气塞于中')
             return
-        # 兜底：旬尾发用（无天地盘时）
-        if sanchuan[0] == wei_zhi:
-            self._add_rule(38, f'初传{wei_zhi}为旬尾发用，闭口卦')
+        # 【BUG-FIX 2026-08-18】删除原"兜底：旬尾发用即闭口卦"——无古籍依据
+        # （闭口卦正解为地盘旬首上神乘玄武，或旬尾加旬首发用，二者均已在上方判定；
+        # 仅"初传为旬尾"不成闭口卦，属编造判据）。
 
     # === Batch4: 贵人天将系列 ===
 
@@ -2608,6 +2613,8 @@ class BiFaDetector:
                        tian_jiang: Optional[Dict] = None):
         """第86法: 将逢内战所谋危
         天将五行克所乘地支五行，凡用事将成合被人搅扰。
+        【BUG-FIX 2026-08-18】tian_jiang 键为地支（如 {'子':'贵人'}），原按
+        '初传'/'中传' 等位置名取 → 永不匹配。现按位置→地支→天将取值。
         """
         if not tian_jiang:
             return
@@ -2622,13 +2629,14 @@ class BiFaDetector:
             pos_zhi['干上'] = gan_shang
         if zhi_shang:
             pos_zhi['支上'] = zhi_shang
-        for pos, jiang in tian_jiang.items():
+        for pos, zhi in pos_zhi.items():
+            if not zhi:
+                continue
+            # 兼容两种键格式：{地支: 天将}（tianjiang_map）或 {位置名: 天将}（tianjiang_detail）
+            jiang = tian_jiang.get(zhi, '') or tian_jiang.get(pos, '')
             if not jiang:
                 continue
             jiang_wx = TIANJIANG_WUXING.get(jiang, '')
-            zhi = pos_zhi.get(pos, '')
-            if not zhi:
-                continue
             zhi_wx = ZHI_WUXING.get(zhi, '')
             if jiang_wx and zhi_wx and _wuxing_ke(jiang_wx, zhi_wx):
                 self._add_rule(86, f'{pos}天将{jiang}({jiang_wx})克地支{zhi}({zhi_wx})，将逢内战所谋危')
@@ -2721,7 +2729,9 @@ class BiFaDetector:
                 violations.append(f'{label}{s}为自刑')
             if s == chong:
                 violations.append(f'{label}{s}为冲')
-            if hai and LIUHAI.get(s, '') == hai:
+            # 【BUG-FIX 2026-08-18】害位判断：s == hai（局中神之害位）；
+            # 原 `LIUHAI.get(s) == hai` 误把"s 的六害对象"当害位，反向错判。
+            if s == hai:
                 violations.append(f'{label}{s}为六害')
         if violations:
             self._add_rule(84, f'三传{sanchuan}为{he_ju}局，{"、".join(violations)}，合中犯杀蜜中砒')

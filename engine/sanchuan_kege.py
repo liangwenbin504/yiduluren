@@ -127,18 +127,18 @@ GAN_LU = {
     '壬': '亥', '癸': '子'
 }
 
-# 驿马（日支三合局之驿马）
+# 驿马（日支三合局之驿马：申子辰→寅、寅午戌→申、亥卯未→巳、巳酉丑→亥）
 YI_MA = {
     '申': '寅', '子': '寅', '辰': '寅',
     '寅': '申', '午': '申', '戌': '申',
-    '亥': '亥', '卯': '亥', '未': '亥',
-    '巳': '巳', '酉': '巳', '丑': '巳'
+    '亥': '巳', '卯': '巳', '未': '巳',
+    '巳': '亥', '酉': '亥', '丑': '亥'
 }
 
-# 十干日德（阳尊阴卑，用于时泰课「财德」）
+# 十干日德（阳尊阴卑，用于时泰课「财德」；己与甲同德寅、辛与丙同德巳）
 GAN_DE = {
     '甲': '寅', '乙': '申', '丙': '巳', '丁': '亥',
-    '戊': '巳', '己': '亥', '庚': '申', '辛': '寅',
+    '戊': '巳', '己': '寅', '庚': '申', '辛': '巳',
     '壬': '亥', '癸': '巳'
 }
 
@@ -632,8 +632,9 @@ class SanChuanKegeDetector:
         name, duanyu, jixiong = season_names.get(season, ('稼穑', '自微而至著', '吉'))
 
         self.detected_kege.append('稼穑课')
-        if name != '稼穑':
-            self.detected_kege.append(name)
+        # 【BUG-FIX 2026-08-18】四时名(夏游子/秋地角/冬五墓)不再进 detected_kege——
+        # 无对应 kege_details 详情条目，且'游子'与64课游子课、'地角'/'五墓'均非正规课名
+        # （憨爷纠错：只删五墓/地角）。四时名仅保留在详情字段供展示。
 
         self.kege_details['稼穑课'] = {
             '名称': '稼穑课',
@@ -1150,10 +1151,8 @@ class SanChuanKegeDetector:
 
         # 2. 殃咎（p5147：三传克日因）
         rg_wx = TIANGAN_WU_XING.get(ri_gan, '')
-        if rg_wx:
-            ke = WU_XING_KE.get(rg_wx, '')
-            if ke and all(DIZHI_WU_XING.get(z, '') == ke for z in [chu, zhong, mo]):
-                self._add_kege('殃咎', _ref('殃咎', '三传克日因', '通解 p5147'))
+        if rg_wx and all(WU_XING_KE.get(DIZHI_WU_XING.get(z, ''), '') == rg_wx for z in [chu, zhong, mo]):
+            self._add_kege('殃咎', _ref('殃咎', '三传克日因', '通解 p5147'))
 
         # 3. 亨通（p7971：三传递生日干）
         if (WU_XING_SHENG.get(DIZHI_WU_XING.get(chu, ''), '') == DIZHI_WU_XING.get(zhong, '')) and \
@@ -1388,14 +1387,20 @@ class SanChuanKegeDetector:
         }
 
         # 三传走势
-        chu_idx = DIZHI.index(chu)
-        zhong_idx = DIZHI.index(zhong)
-        mo_idx = DIZHI.index(mo)
+        # 【BUG-FIX 2026-08-18】DIZHI.index 无兜底：非法地支会抛 ValueError，已加守卫
+        if chu in DIZHI and zhong in DIZHI and mo in DIZHI:
+            chu_idx = DIZHI.index(chu)
+            zhong_idx = DIZHI.index(zhong)
+            mo_idx = DIZHI.index(mo)
+        else:
+            chu_idx = zhong_idx = mo_idx = -1
 
         d1 = (zhong_idx - chu_idx) % 12
         d2 = (mo_idx - zhong_idx) % 12
 
-        if d1 == 1 and d2 == 1:
+        if chu_idx < 0:
+            classification['三传走势'] = '杂传'
+        elif d1 == 1 and d2 == 1:
             classification['三传走势'] = '连茹进传'
         elif d1 == 11 and d2 == 11:
             classification['三传走势'] = '连茹退传'
