@@ -604,9 +604,9 @@ class LiuChenEngine:
                     return self._mk('权摄转官', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                     f'禄神{lu_zhi}临支权摄，然末传{mo}乘{mo_tj}恩赦相救，虽权摄终必转官',
                                     '§前程仕进03·099"末申作后六月初有赦…明年三月必转官"')
-                return self._mk('权摄食禄', '平', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
-                                f'禄神{lu_zhi}临支，权摄不正禄临支，正任不可望，却乃食禄',
-                                '§前程仕进03·058"权摄不正禄临支"; §069/097')
+                return self._mk('权摄食禄', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'禄神{lu_zhi}临支，权摄不正禄临支，正任不可望，迁官不能',
+                                '§前程仕进03·058"权摄不正禄临支"; §069"必见回避前程未通"; §097"美差不能赴"; CASE-037"不能升迁，后果不能升迁告休而回"')
             # ③ 禄临干（随身禄）→ 得禄有官（§044"午乃丁禄临干日禄扶身"）
             #   【壬占汇选深读 2026-08-18】守卫：干上禄神乘天空/玄武 → 禄作天空入庙、
             #   禄被玄武所夺，虚禄不中（CASE-254"禄作天空…贵人入庙，吉不为吉…天空高恶矣"；
@@ -1027,10 +1027,13 @@ class LiuChenEngine:
                        mo if mo_tj == '玄武' else ''
                 # 守卫②：返吟课 → 卯酉反复，讼反复不止，不判讼止（CASE-35"天传反复是卯酉…
                 #   反复不止一次……罪重落狱遣戌"）
-                if not guan_gui_zhi and not (_xw2 and _xw2 in cai_zhi) and not fan_yin:
+                # 守卫③：中传=自刑（辰午酉亥）→ 毒在其中，有凶事，不判讼止
+                #   （CASE-62"上申下申中见自刑之水，主毒在中……有凶事"）
+                if (not guan_gui_zhi and not (_xw2 and _xw2 in cai_zhi) and not fan_yin and
+                        zhong not in ('辰', '午', '酉', '亥')):
                     return self._mk('讼止', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                     f'三传{chu}·{zhong}·{mo}无官鬼，财不乘玄武，讼根已断，出据相证，讼可便止',
-                                    'CASE-壬占汇选-242"三传无官鬼财……讼可便止。果讼止"; CASE-35"卯酉反复不止一次"')
+                                    'CASE-壬占汇选-242"三传无官鬼财……讼可便止。果讼止"; CASE-35"卯酉反复不止一次"; CASE-62"中见自刑之水…有凶事"')
                 return self._mk('周遍讼缠', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'三传{chu}·{zhong}·{mo}不离四课，一旬周遍格，讼要散不要关锁，讼事缠绵',
                                 '§官讼16·203"一旬周遍格…惟讼要散不要关锁"')
@@ -1560,6 +1563,25 @@ class LiuChenEngine:
                 return self._mk('生男之祥', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'干上神卯属震，长男之象，生贵儿必矣，生必顺利',
                                 'ZN-孕产-五"干上卯属震，长男之象…生贵儿必矣"')
+            # 【壬占汇选深读 2026-08-18】用神克下（初传克其下神）→ 当生男，顺产
+            #   （CASE-228"占时与日比，用神克下，当生男……卯日当生矣，果验"——
+            #   丁亥日初传戌克下神亥水；守卫：干支上神皆子孙 → 坟墓不招花而不实，
+            #   不判生男——§126 丙申日干上辰支上未皆子孙"屡得子息，皆花而不实"）
+            _chu_xia_s = ''
+            for _k in (sike or []):
+                _us = str(_k[1]) if isinstance(_k, (list, tuple)) and len(_k) > 1 else str(_k.get('上神', ''))
+                if _us == chu:
+                    _xs = str(_k[2]) if isinstance(_k, (list, tuple)) and len(_k) > 2 else str(_k.get('下神', ''))
+                    _chu_xia_s = _xs
+                    break
+            _gz_jie_zisun = bool(gan_shang and zhi_shang and
+                                 _shi_shen(gan_shang, ri_gan) == '子孙' and
+                                 _shi_shen(zhi_shang, ri_gan) == '子孙')
+            if (_chu_xia_s and chu_wx and KE.get(chu_wx) == ZHI_WX.get(_chu_xia_s, '') and
+                    not _gz_jie_zisun):
+                return self._mk('用神克下', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'用神{chu}克下神{_chu_xia_s}，占时与日比，用神克下，当生男，产必顺利',
+                                'CASE-壬占汇选-228"用神克下，当生男……果验"; §126"干支皆子息…花而不实"')
             # 支辰上神生日上神 → 顺而易生（L223）
             if gan_shang and zhi_shang and SHENG.get(ZHI_WX.get(zhi_shang, '')) == ZHI_WX.get(gan_shang, ''):
                 return self._mk('顺产易生', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
