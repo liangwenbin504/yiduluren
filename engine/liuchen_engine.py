@@ -1315,6 +1315,37 @@ class LiuChenEngine:
                 return self._mk('赘婿家破', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'支{ri_zhi}来就干为干所制，名曰赘婿，身不由己，家破屋拆之象',
                                 '§宅墓02·005"支来就干为干所制名曰赘婿，六年中家破屋拆"')
+            # 【壬占汇选深读 2026-08-18】死气临宅发用 → 家下有死亡事
+            #   （CASE-160"死气临宅发用，又作月厌，家下有死亡事……两幼子俱伤"——
+            #   辛巳日卯将（建戌）死气=寅发用；死气=月建顺数四位）
+            _JIAN_ZS = yue_jian(yuejiang)
+            if _JIAN_ZS:
+                _ZS_SEQ = '子丑寅卯辰巳午未申酉戌亥'
+                _si_qi = _ZS_SEQ[(_ZS_SEQ.index(_JIAN_ZS) + 4) % 12]
+                if chu == _si_qi:
+                    return self._mk('死气临宅', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'死气{_si_qi}临宅发用，家下有死亡之事，防幼丁伤损',
+                                    'CASE-壬占汇选-160"死气临宅发用，又作月厌，家下有死亡事……两幼子俱伤"')
+            # 【壬占汇选深读 2026-08-18】支上空亡而中传=长生 → 宅暂不可得，然长生有气，终得宅
+            #   （CASE-262"支上空亡，是宅不可得而图也……却见中传长生，便就长生上言……
+            #   至丁巳年方才造此宅也"——庚寅日支上未空、中传巳=庚长生）
+            if zhi_shang in kong and zhong == cs_zhi:
+                return self._mk('先凶后吉', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'支上{zhi_shang}空亡宅暂不可得，然中传{zhong}为日干长生，就长生上言，假以年月终得宅基',
+                                'CASE-壬占汇选-262"支上空亡，是宅不可得而图也。却见中传长生…至丁巳年方才造此宅也"')
+            # 【壬占汇选深读 2026-08-18】支上=日干帝旺 → 宅上帝旺，财物兴隆
+            #   （CASE-527"宅上帝旺，财物兴隆。今年进子又添孙……池塘之利，必然大发"——
+            #   壬子日支上子=壬水帝旺乘青龙；守卫：支上须乘吉将且非羊刃——
+            #   §018 支上午乘白虎（牛马自伤）、§031 支上卯乘朱雀（子息破费）、
+            #   §040 支上子乘玄武（阴地酒败）、§042 支上午=戊刃乘青龙仍争屋凶）
+            _WX_WANG5 = {'木': '卯', '火': '午', '土': '午', '金': '酉', '水': '子'}
+            _YR_JZ = {'甲': '卯', '丙': '午', '戊': '午', '庚': '酉', '壬': '子'}
+            if (zhi_shang == _WX_WANG5.get(gw, '') and
+                    _zhi_shang_tj in ('青龙', '六合', '太常', '贵人', '天后') and
+                    zhi_shang != _YR_JZ.get(ri_gan, '')):
+                return self._mk('宅上帝旺', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'支上{zhi_shang}为日干帝旺乘吉将，宅上帝旺，财物兴隆，进子添孙，池塘之利大发',
+                                'CASE-壬占汇选-527"宅上帝旺，财物兴隆……池塘之利，必然大发"')
             # 干支各乘墓 → 身宅居墓无气（§009"此课占宅而身宅居墓无气"；§026"干支乘墓各昏迷"；
             #   L"干支乘墓各昏迷"）
             if gan_shang == mu_zhi and zhi_shang and ri_zhi:
@@ -1336,11 +1367,14 @@ class LiuChenEngine:
                                 '§宅墓02·011"丁巳二火自旺方递归死绝之地"')
             # 干支上神自刑 → 宅不居人/人自刑（§028"日上自刑乃人刑人，宅上自刑宅不居人也"；
             #   判据：干上神=日干寄宫（自刑）或 支上神=日支（自刑））
-            if (gan_shang == ji_gong and gan_shang in ZI_XING) or \
-               (zhi_shang == ri_zhi and zhi_shang in ZI_XING):
+            #   【壬占汇选深读 2026-08-18】守卫：干上神=日禄 → 财禄极稳，不判自刑
+            #   （CASE-527 壬子日干上亥=壬禄又自刑，"此课财禄极稳……财物兴隆"吉）
+            if not (lu_zhi and gan_shang == lu_zhi) and \
+               ((gan_shang == ji_gong and gan_shang in ZI_XING) or
+                (zhi_shang == ri_zhi and zhi_shang in ZI_XING)):
                 return self._mk('干支自刑', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'干上{gan_shang}支上{zhi_shang}自刑，人刑人宅不居人，家道自耗',
-                                '§宅墓02·028"日上自刑乃人刑人宅上自刑宅不居人也"')
+                                '§宅墓02·028"日上自刑乃人刑人宅上自刑宅不居人也"; CASE-527"财禄极稳"')
             # 三传成子孙局（局五行=日干所生）或 ≥2 传为子孙爻 → 子息耗家财
             # （§008"三传日辰皆子孙爻，家计亦被子孙磨灭"；§031"中末传巳午为甲之子息
             #   秉旺气脱干，主因子息破费钱物而败"；§021"子作盗气，诸子耗盗财物"）
@@ -1867,6 +1901,35 @@ class LiuChenEngine:
 
         # ═══ 【壬占汇选深读 2026-08-18】其他/终身占类（问终身、杂占、求贵等）═══
         if category in ('其他', '终身'):
+            # 极阴课（三传丑亥酉）→ 必因酒色成痨，自身败坏
+            #   （CASE-361"此极阴课……末传酉为日败……必因酒色而成痨病"——
+            #   邵公"先生每怕丑亥酉，名极阴，到此方是极地"）
+            if [chu, zhong, mo] == ['丑', '亥', '酉']:
+                return self._mk('极阴酒痨', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传丑·亥·酉为极阴课，末传{mo}为日败之地，主自身败坏，因酒色成痨',
+                                'CASE-壬占汇选-361"此极阴课……必因酒色而成痨病"; "先生每怕丑亥酉，名极阴"')
+            # 干上=官鬼乘螣蛇 → 官鬼自缠其身，脱身不得
+            #   （CASE-23"酉加乙作蛇官鬼自缠其身……断然难脱，脱后又重做也"）
+            if _shi_shen(gan_shang, ri_gan) == '官鬼' and _gan_shang_tj == '螣蛇':
+                return self._mk('鬼蛇缠身', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干上{gan_shang}为日干官鬼乘螣蛇，官鬼自缠其身，被监勒难脱，脱后复来',
+                                'CASE-壬占汇选-23"酉加乙作蛇官鬼自缠其身……断然难脱，脱后又重做也"')
+            # 阳刃乘天后加支 → 与妇人来往受刑
+            #   （CASE-360"只是不合阳刃乘后加支，主住持九月与朱姓人交通，遂受刑而出"——
+            #   戊戌日支上午=戊刃乘天后）
+            _YR_QT = {'甲': '卯', '丙': '午', '戊': '午', '庚': '酉', '壬': '子'}
+            if zhi_shang == _YR_QT.get(ri_gan, '') and _zhi_shang_tj == '天后':
+                return self._mk('刃后加支', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'阳刃{zhi_shang}乘天后加支上，主与妇人交通，被告发受刑而出',
+                                'CASE-壬占汇选-360"阳刃乘后加支……遂受刑而出"')
+            # 墓神覆日 + 末传乘白虎 → 定有兵丧不测事
+            #   （CASE-234"墓神覆日，虎符朝支，又丧吊入传，末见岁刑白虎，定有兵丧不测事"——
+            #   丁亥日干上戌=火墓、末传寅乘白虎）
+            _WX_MU5 = {'木': '未', '火': '戌', '土': '戌', '金': '丑', '水': '辰'}
+            if gan_shang == _WX_MU5.get(gw, '') and mo_tj == '白虎':
+                return self._mk('墓覆虎临', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干上{gan_shang}墓神覆日，末传{mo}乘白虎，虎符入传，定有兵丧不测之事',
+                                'CASE-壬占汇选-234"墓神覆日，虎符朝支……定有兵丧不测事"')
             # 上门乱首（支加干克干）→ 犯上之课，主犯官长，重罪流配
             #   （CASE-123"此课支加干克干名上门乱首……遂犯重罪，减等充军于东海"）
             if gan_shang == ri_zhi and ri_zhi and KE.get(ZHI_WX.get(ri_zhi, '')) == gw:
@@ -1968,19 +2031,22 @@ class LiuChenEngine:
             if {chu, zhong, mo} <= sike_zhi:
                 return self._mk('反复', '平', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'三传{chu}·{zhong}·{mo}不离四课，循环格，事有反复，一波三折')
-        # ④ 末传生日干 → 暗地有人扶持，事终成（知识库 L689/L780）
-        if ZHI_WX.get(mo) and SHENG.get(ZHI_WX.get(mo, '')) == GAN_WX.get(ri_gan, ''):
-            walk = '先难后易' if chu_shi == '凶' else '渐入佳境'
-            narr = f'初传{chu}{chu_shi}，中传{zhong}{zhong_shi}，末传{mo}生日干，暗地有人扶持，事终有济'
-            end = '吉'
         # ⑤ 末传=长生但空亡 → 见生不生，反成凶咎（L235"救神空亡为墓门开大凶"；
         #    案例0369"末又长生…奈何寅是空亡，所以不能引进，见生不生，反成凶咎"）
         if mo == cs_zhi and mo in kong:
-            walk = '先吉后凶'
-            narr = f'末传{mo}为日干长生，然逢空亡，见生不生，救神空亡，反成凶咎'
-            end = '凶'
+            return self._mk('先吉后凶', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                            f'末传{mo}为日干长生，然逢空亡，见生不生，救神空亡，反成凶咎',
+                            'L235"救神空亡为墓门开大凶"; CASE-壬占汇选-0369')
+        # ④ 末传生日干 → 暗地有人扶持，事终成（知识库 L689/L780）
+        #   【BUG-FIX 2026-08-18】原为普通赋值被⑤-⑬链覆盖成死代码，改为即时返回；
+        #   守卫：征战占类不判（ZN-兵斗-一"贼必乘虚而入…先帝自缢"、兵斗-九 末传丑生干仍城陷凶）
+        if category != '征战' and ZHI_WX.get(mo) and SHENG.get(ZHI_WX.get(mo, '')) == GAN_WX.get(ri_gan, ''):
+            walk = '先难后易' if chu_shi == '凶' else '渐入佳境'
+            return self._mk(walk, '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                            f'初传{chu}{chu_shi}，中传{zhong}{zhong_shi}，末传{mo}生日干，暗地有人扶持，事终有济',
+                            'L689/L780"末传生日干主暗地有人扶持"; ZN-兵斗-一"贼必乘虚而入"')
         # ⑥ 末传=长生 → 结局转生（自墓传生/否极泰来）
-        elif mo == cs_zhi:
+        if mo == cs_zhi:
             walk = '先凶后吉' if (chu_shi == '凶' or zhong_shi == '凶') else '终得生助'
             narr = f'初{chu_shi}中{zhong_shi}，末传{mo}为日干长生，先难后易，否极泰来'
             end = '吉'
