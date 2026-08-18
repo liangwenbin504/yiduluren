@@ -355,7 +355,8 @@ def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
     try:
         from engine.liuchen_engine import LiuChenEngine
         liuchen_out = LiuChenEngine().analyze(
-            ri_gan, ri_zhi, pan['sanchuan'], pan['tianjiang_list'], kw, pan['keti'], pan['sike'])
+            ri_gan, ri_zhi, pan['sanchuan'], pan['tianjiang_list'], kw, pan['keti'], pan['sike'],
+            category=zhanshi)
     except Exception:
         liuchen_out = {'走向': '未定', '终局': '平', '叙事': '', '阶段': {}, '三传': ''}
 
