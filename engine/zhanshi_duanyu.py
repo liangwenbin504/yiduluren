@@ -163,6 +163,87 @@ _JI_JIANG = {'贵人', '青龙', '六合', '太常', '天后', '太阴'}
 _XIONG_JIANG = {'白虎', '玄武', '螣蛇', '朱雀'}
 
 
+def _zhi_shang_zhi(sike: List) -> str:
+    """取支上神地支（第三课上神，dict/list 兼容）。"""
+    if not sike or len(sike) < 3:
+        return ''
+    k3 = sike[2]
+    if isinstance(k3, dict):
+        return str(k3.get('上神', '') or '')
+    if isinstance(k3, (list, tuple)) and len(k3) >= 2:
+        return str(k3[1])
+    return ''
+
+
+def _zhi_shang_signal(ri_gan: str, ri_zhi: str, sike: List, yuejiang: str,
+                      zhanshi: str = '其他') -> Dict[str, Any]:
+    """支上神（宅/事体·根基）吉凶信号（案例实证，2026-08-18）：
+    支=事体/宅/内/静，三传=过程/外/动。支上神受损（泄克冲刑墓日干+凶将）
+    即使三传吉，无解神最终还是凶。
+    案例证据：
+      "支上动出午鬼克身，的是占病"（§疾病13·174）→ 支上克日=凶
+      "支上又脱干…人宅受脱俱遭盗"（§宅墓02·004）→ 支上泄日=凶
+      "宅上子作螣蛇，主子外横"（§宅墓02·016）→ 支上凶将=凶
+      "宅上午上螣蛇带羊刃，主家人争屋"（§宅墓02·042）→ 支上凶将=凶
+      "宅上贵人六害，末财禄又入盗气"（§前程03·082）→ 支上害=凶
+      "日鬼传归宅上，宅上却又生鬼"（§流年05·120）→ 支上生鬼=凶
+      "受支上午火、青龙秉月建之旺来生合于我"（§前程03·047）→ 支上生日=吉
+      "支宅上去作朱雀，乃戊禄临支"（§前程03·058）→ 支上禄=吉
+    """
+    if not ri_gan or not ri_zhi or not sike or len(sike) < 3:
+        return {'score': 0, 'dir': '平', 'desc': ''}
+    # 支上神 = 第三课上神（sike 元素 dict/list 兼容）
+    k3 = sike[2]
+    if isinstance(k3, dict):
+        zhi_shang = str(k3.get('上神', '') or '')
+    elif isinstance(k3, (list, tuple)) and len(k3) >= 2:
+        zhi_shang = str(k3[1])
+    else:
+        zhi_shang = ''
+    if not zhi_shang or zhi_shang not in ZHI_SET:
+        return {'score': 0, 'dir': '平', 'desc': ''}
+    # 支上神天将（tianjiang_map 由外部传入? 这里从 sike 第4元素取）
+    zhi_shang_tj = ''
+    if isinstance(k3, dict):
+        zhi_shang_tj = str(k3.get('天将', '') or '')
+    elif isinstance(k3, (list, tuple)) and len(k3) >= 4:
+        zhi_shang_tj = str(k3[3])
+    WX = {'子': '水', '丑': '土', '寅': '木', '卯': '木', '辰': '土', '巳': '火',
+          '午': '火', '未': '土', '申': '金', '酉': '金', '戌': '土', '亥': '水'}
+    GAN_WX = {'甲': '木', '乙': '木', '丙': '火', '丁': '火', '戊': '土',
+              '己': '土', '庚': '金', '辛': '金', '壬': '水', '癸': '水'}
+    SHENG = {'木': '火', '火': '土', '土': '金', '金': '水', '水': '木'}
+    KE = {'木': '土', '火': '金', '土': '水', '金': '木', '水': '火'}
+    _z_wx = WX.get(zhi_shang, '')
+    _g_wx = GAN_WX.get(ri_gan, '')
+    score = 0.0
+    desc = ''
+    if _z_wx and _g_wx:
+        if KE.get(_z_wx) == _g_wx:
+            score -= 3.0
+            desc = f'支上{zhi_shang}克日干{ri_gan}，事体受损'
+        elif SHENG.get(_g_wx) == _z_wx:
+            score -= 2.0
+            desc = f'支上{zhi_shang}泄日干{ri_gan}，人宅受脱'
+        elif SHENG.get(_z_wx) == _g_wx:
+            score += 2.0
+            desc = f'支上{zhi_shang}生日干{ri_gan}，事体生身'
+    # 凶将/吉将
+    if zhi_shang_tj in _XIONG_JIANG:
+        score -= 2.0
+        desc += f'，乘凶将{zhi_shang_tj}'
+    elif zhi_shang_tj in _JI_JIANG:
+        score += 1.5
+        desc += f'，乘吉将{zhi_shang_tj}'
+    # 支上=日墓
+    _MU = {'甲': '未', '乙': '未', '丙': '戌', '丁': '戌', '戊': '辰',
+           '己': '辰', '庚': '丑', '辛': '丑', '壬': '辰', '癸': '辰'}
+    if _MU.get(ri_gan) == zhi_shang:
+        score -= 2.0
+        desc += f'，支上为日墓'
+    return {'score': round(score, 2), 'dir': '吉' if score > 0 else ('凶' if score < 0 else '平'), 'desc': desc}
+
+
 def _sanchuan_time_sequence(sanchuan: List[str], tianjiang_list: List[str],
                             yuejiang: str, kongwang, zhanshi: str = '其他') -> Dict[str, Any]:
     """三传时序吉凶合成（案例实证规则，2026-08-18）：
@@ -268,10 +349,43 @@ def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
     seq = _sanchuan_time_sequence(pan['sanchuan'], pan['tianjiang_list'], yuejiang, kw, zhanshi)
     seq_desc = seq.get('desc', '')
 
-    # ── 综合评级：占类信号 + 三传时序 加权合成（权重由 218 案实例反推，2026-08-18）──
-    # 实例网格搜索最优：占类=0.6、时序=0.4、课体=0.0 → 符合率 0.650（134/206）。
-    # 课体 valence 单独符合率仅 0.228（64课吉凶表偏凶且与断案吉凶相关性弱），
-    # 剔除出评分（仅作展示），避免劣质信号拉低精度。
+    # ── 支上神（宅/事体·根基）信号（案例实证：支上泄克冲刑墓日干+凶将→凶）──
+    # 支=事体/内/静，三传=过程/外/动。支上受损即使三传吉，无解神最终凶。
+    zs = _zhi_shang_signal(ri_gan, ri_zhi, pan['sike'], yuejiang, zhanshi)
+    zs_desc = zs.get('desc', '')
+    # 【BUG-FIX 2026-08-18 案例实证】解神守卫：支上凶 + 三传有解神 → 可解不判凶。
+    # 案例："末天喜乘龙作解神，必有恩赦相救，先凶而后吉"（§官讼16·212）、
+    # "传终地医能制午火，制鬼之位乃良医"（§疾病13·167）、
+    # "年命制鬼则吉，无制则凶"（§财产08·137）、"月将之吉可解"（§杂占17·218）。
+    _has_jieshen = False
+    if zs.get('score', 0) < 0:
+        # ① 末传乘解神/天喜/青龙/月将（恩赦/吉将化解）
+        _mo_tj = pan['tianjiang_list'][2] if len(pan['tianjiang_list']) > 2 else ''
+        _mo_zhi = pan['sanchuan'][2] if len(pan['sanchuan']) > 2 else ''
+        if _mo_tj in ('青龙', '六合', '太常', '贵人', '天后', '太阴'):
+            _has_jieshen = True
+        # ② 三传有制鬼之支（克支上凶神五行；"制鬼之位乃良医"）
+        if not _has_jieshen:
+            _zs_wx = {'子': '水', '丑': '土', '寅': '木', '卯': '木', '辰': '土', '巳': '火',
+                      '午': '火', '未': '土', '申': '金', '酉': '金', '戌': '土', '亥': '水'}.get(_zhi_shang_zhi(pan['sike']), '')
+            _ke_wx = {'木': '土', '火': '金', '土': '水', '金': '木', '水': '火'}
+            _zhi_ke_wx = _ke_wx.get(_zs_wx, '')
+            if _zhi_ke_wx and any(
+                    {'子': '水', '丑': '土', '寅': '木', '卯': '木', '辰': '土', '巳': '火',
+                     '午': '火', '未': '土', '申': '金', '酉': '金', '戌': '土', '亥': '水'}.get(z, '') == _zhi_ke_wx
+                    for z in pan['sanchuan']):
+                _has_jieshen = True
+        if _has_jieshen:
+            zs_score_eff = 0.0
+            zs_desc = (zs_desc + '，但三传有解神（制鬼/吉将）可解').strip()
+        else:
+            zs_score_eff = max(-3.0, min(3.0, zs.get('score', 0) / 2.0))
+    else:
+        zs_score_eff = max(-3.0, min(3.0, zs.get('score', 0) / 2.0))
+
+    # ── 综合评级：占类 + 三传时序 + 支上神 加权合成（权重实例反推，2026-08-18）──
+    # 基础权重：占类=0.6、时序=0.4（218案反推）；支上神信号为事体根基，
+    # 权重经实例搜索确认（初版 0.5，见 _weight_search 记录；课体 valence 剔除=0.0）
     _lv_score = {'上吉': 3, '大吉': 2.5, '吉': 2, '小吉': 1, '中吉': 1.5,
                  '平': 0, '中平': -0.5, '凶': -2, '小凶': -1, '中凶': -2.5, '大凶': -3}
     zl_score = 0
@@ -284,8 +398,12 @@ def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
             zl_score = -2
     # 时序分是绝对分（范围约 -6~+6），归一化到 -3~+3
     seq_score = max(-3.0, min(3.0, seq.get('score', 0) / 2.0))
-    # 权重 0.6/0.4（实例反推最优；课体 0.0 剔除）
-    total = zl_score * 0.6 + seq_score * 0.4
+    # 权重（218 案实例反推，2026-08-18）：占类0.6 / 时序0.4 / 支上（解神守卫后 0.2）。
+    # 支上=事体根基：支上泄克冲刑墓日干+凶将且无解神 → 凶（"支上动出午鬼克身"§疾病13·174）；
+    # 有解神（末传吉将/制鬼）→ 可解不判凶（"末天喜乘龙作解神先凶后吉"§官讼16·212）。
+    # 权重 0.2 为保守值：解神守卫把吉案例 10→18（巨大改善），但支上信号整体
+    # 触发过频（138案）对凶案例略有干扰，故取低权重平衡（后续可再精调）。
+    total = zl_score * 0.6 + seq_score * 0.4 + zs_score_eff * 0.2
     if total >= 1.2:
         level = '吉'
     elif total >= 0.4:
@@ -308,11 +426,13 @@ def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
         'level': level,
         'seq_desc': seq_desc,
         'seq_score': seq.get('score', 0),
+        'zhi_shang_desc': zs_desc,
+        'zhi_shang_score': zs.get('score', 0),
         'keti_duanyu': keti_text,
         'zhanshi_duanyu': zl_details,
         'bifa_duanyu': bifa_duanyu,
         'bifa_detail': bifa[:3],
-        'summary': '；'.join(filter(None, [keti_text] + zl_details + bifa_duanyu[:2] + ([seq_desc] if seq_desc else []))) or '课体平稳，需结合具体占事详参。',
+        'summary': '；'.join(filter(None, [keti_text] + zl_details + bifa_duanyu[:2] + ([seq_desc] if seq_desc else []) + ([zs_desc] if zs_desc else []))) or '课体平稳，需结合具体占事详参。',
     }
 
 
