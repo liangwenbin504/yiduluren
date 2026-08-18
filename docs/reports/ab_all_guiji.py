@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""全古籍库统一回测工具（2026-08-18）
-三库合计 479 案：疏正集 218 + 壬占汇选 183 + 大六壬指南 78
-用法：python _memory/_ab_all.py  → 输出各库吉凶符合率
+"""全古籍库统一回测工具（2026-08-18 v2，纳入全部壬占汇选）
+库：疏正218 + 壬占汇选153 + 壬占汇选183 + 大六壬指南78 = 632案
+用法：python docs/reports/ab_all_guiji.py → 各库吉凶符合率
 任何引擎修改后都应跑本工具确认无回归。"""
 import json, sys, io, os
 sys.path.insert(0, r'E:\仪度六壬择日\yiduluren')
@@ -22,6 +22,15 @@ def run_case(rg, rz, yj, shi, zl, label, tag):
         lv = 'ERR'
     return {'tag': tag, 'label': label, 'lv': lv}
 
+def zl_from_question(q):
+    zl = '其他'
+    for k, v in [('行', '出行'), ('功名', '功名'), ('官', '官讼'), ('病', '疾病'),
+                 ('财', '求财'), ('宅', '家宅'), ('产', '胎产'), ('婚', '婚姻'), ('贼', '贼盗')]:
+        if k in str(q):
+            zl = v
+            break
+    return zl
+
 def main():
     all_rows = []
     # 1. 疏正集 218
@@ -34,33 +43,35 @@ def main():
                                  str(c.get('yue_jiang', '') or '').replace('将', ''),
                                  str(c.get('shichen', '') or ''),
                                  c.get('zhanlei', '其他'), c.get('label', ''), '疏正'))
-    # 2. 壬占汇选 183
-    c2 = json.load(open(r'E:\仪度六壬择日\yiduluren\extracted_data\_guji_fetch\壬占汇选_案例_labeled.json', encoding='utf-8'))
+    # 2. 壬占汇选 153（ancient_truth_labels_rzhy）
+    c2 = json.load(open(r'E:\仪度六壬择日\yiduluren\engine\ancient_truth_labels_rzhy.json', encoding='utf-8'))['cases']
     for c in c2:
+        if not isinstance(c, dict):
+            continue
+        all_rows.append(run_case(str(c.get('ri_gan', '')), str(c.get('ri_zhi', '')),
+                                 str(c.get('yue_jiang', '') or '').replace('将', ''),
+                                 str(c.get('shichen', '') or '').replace('时', ''),
+                                 c.get('category', '其他'), c.get('label', ''), '壬占汇选153'))
+    # 3. 壬占汇选 183（_guji_fetch labeled）
+    c3 = json.load(open(r'E:\仪度六壬择日\yiduluren\extracted_data\_guji_fetch\壬占汇选_案例_labeled.json', encoding='utf-8'))
+    for c in c3:
         gz = str(c.get('ganzhi', ''))
         if len(gz) < 2:
             continue
-        q = str(c.get('question', ''))
-        zl = '其他'
-        for k, v in [('行', '出行'), ('功名', '功名'), ('官', '官讼'), ('病', '疾病'),
-                     ('财', '求财'), ('宅', '家宅'), ('产', '胎产'), ('婚', '婚姻'), ('贼', '贼盗')]:
-            if k in q:
-                zl = v
-                break
         all_rows.append(run_case(gz[0], gz[1],
                                  str(c.get('yuejiang', '') or '').replace('将', ''),
-                                 str(c.get('shichen', '') or ''),
-                                 zl, c.get('label', ''), '壬占汇选'))
-    # 3. 大六壬指南 78
-    c3 = json.load(open(r'E:\仪度六壬择日\yiduluren\engine\ancient_truth_labels_zhinan_v3.json', encoding='utf-8'))['cases']
-    for c in c3:
+                                 str(c.get('shichen', '') or '').replace('时', ''),
+                                 zl_from_question(c.get('question', '')), c.get('label', ''), '壬占汇选183'))
+    # 4. 大六壬指南 78
+    c4 = json.load(open(r'E:\仪度六壬择日\yiduluren\engine\ancient_truth_labels_zhinan_v3.json', encoding='utf-8'))['cases']
+    for c in c4:
         all_rows.append(run_case(str(c.get('ri_gan', '')), str(c.get('ri_zhi', '')),
                                  str(c.get('yue_jiang', '') or '').replace('将', ''),
-                                 str(c.get('shichen', '') or ''),
+                                 str(c.get('shichen', '') or '').replace('时', ''),
                                  c.get('category', '其他'), c.get('label', ''), '大六壬指南'))
 
     print(f'全量案例: {len(all_rows)} 案')
-    for tag in ('疏正', '壬占汇选', '大六壬指南'):
+    for tag in ('疏正', '壬占汇选153', '壬占汇选183', '大六壬指南'):
         sub = [r for r in all_rows if r['tag'] == tag]
         xo = sum(1 for r in sub if is_xiong(r['lv']) and r['label'] == '凶')
         jo = sum(1 for r in sub if is_ji(r['lv']) and r['label'] == '吉')
