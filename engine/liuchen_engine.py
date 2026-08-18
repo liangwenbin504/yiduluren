@@ -21,7 +21,7 @@ import sys
 from typing import Dict, List, Any, Optional
 
 try:
-    from engine.liuchen_shensha import you_du, jie_sha, tian_ma, tian_she, xue_ji, tai_sui, sui_po
+    from engine.liuchen_shensha import you_du, jie_sha, tian_ma, tian_she, xue_ji, tai_sui, sui_po, yue_jian, wang_shuai
 except Exception:
     you_du = jie_sha = tian_ma = tian_she = xue_ji = tai_sui = sui_po = lambda *a, **k: ''
 
@@ -206,7 +206,9 @@ class LiuChenEngine:
         # ── 通用占类守卫（所有占类共用，须优先于占类兜底规则）──
         # 末传=长生但空亡 → 见生不生，反成凶咎（L235"救神空亡为墓门开大凶"；
         #   案例0369"末又长生…奈何寅是空亡，所以不能引进，见生不生，反成凶咎"）
-        if mo == cs_zhi and mo in kong:
+        #   【壬占汇选深读 2026-08-18】守卫：功名占类不判——CASE-451 丙午日末传寅=丙长生
+        #   空亡而"太岁月建生日，目今必然迁擢…催官迅速之象"升迁吉（由功名块官星临支判）
+        if mo == cs_zhi and mo in kong and category != '功名':
             return self._mk('先吉后凶', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                             f'末传{mo}为日干长生，然逢空亡，见生不生，救神空亡，反成凶咎',
                             'L235"救神空亡为墓门开大凶"; CASE-壬占汇选-0369')
@@ -311,6 +313,30 @@ class LiuChenEngine:
             _gui_kong_gs = (gan_shang in kong and _shi_shen(gan_shang, ri_gan) == '官鬼')
             gu_zu = _gu_zu_core and not _lu_wei and not _gui_kong_gs
 
+            # ═══ 【壬占汇选深读 2026-08-18】═══
+            # 涉三渊课（三传申戌子）→ 跋涉奔波，劳力无成
+            #   （CASE-43"涉三渊课主跋涉奔波，劳力无成……一任远，一任劳"；§047同）
+            if [chu, zhong, mo] == ['申', '戌', '子']:
+                return self._mk('涉三渊无成', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传申·戌·子为涉三渊课，跋涉奔波，劳力无成，功名难就',
+                                'CASE-壬占汇选-043"涉三渊课主跋涉奔波，劳力无成"; §047')
+            # 上门乱首（支加干克干）→ 犯上失序，非取功名之年
+            #   （CASE-122"上门乱首……己日得木局，助支克干，专主凶伤，今科不是取功名之年"；
+            #   CASE-123"此课支加干克干名上门乱首……遂犯重罪，减等充军"）
+            if gan_shang == ri_zhi and ri_zhi and KE.get(ZHI_WX.get(ri_zhi, '')) == gw:
+                return self._mk('上门乱首', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'支{ri_zhi}加干上克日干，上门乱首，下犯上卑凌尊，犯讳斗争，非取功名之年',
+                                'CASE-壬占汇选-122"上门乱首……今科不是取功名之年"; CASE-123"支加干克干名上门乱首"')
+            # 幕贵覆干克日而空亡 → 虚而不实，名落孙山（CASE-284"幕贵覆干并行年，本吉，
+            #   嫌其克日又是空亡……极为不美。后果未中"——辛卯日干上午=幕贵空亡克日；
+            #   守卫：克日为要——ZN-27 己未日干上子=己贵空但子为财不克日，起官有期吉不受影响；
+            #   CASE-0162 干上巳=壬贵空、壬水克巳不克日，贵空有救不受影响）
+            if (gan_shang in gui_zhi_set and gan_shang in kong and
+                    KE.get(ZHI_WX.get(gan_shang, '')) == gw):
+                return self._mk('虚贵不中', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'幕贵{gan_shang}覆干克日又逢空亡，贵虚无力，名落孙山，不中',
+                                'CASE-壬占汇选-284"幕贵覆干……嫌其克日又是空亡……极为不美。后果未中"')
+
             # ⑥g 【指南深读 2026-08-18】三合局=日干官鬼 → 官局峥嵘，功名吉
             #   （ZN-仕宦-九"传将木局，官星峥嵘……功名显赫"、ZN-仕宦-三十二"传课结成官局……
             #   事业远大"；三合官局为官星成局，最利功名）
@@ -366,9 +392,12 @@ class LiuChenEngine:
                     return self._mk('贵德临身', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                     f'干上神{gan_shang}为日德临身，贵德财马临身，必应今科甲榜',
                                     'ZN-选举-七"贵德财马临身，且居太岁之位，必应今年甲榜"')
-                return self._mk('德丧禄绝', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
-                                f'干上神{gan_shang}为日干绝地，干支乘死绝，德丧禄绝，朝官必主去位',
-                                'ZN-仕宦-十一"干支乘死绝，德丧禄绝…必主去位"')
+                # 【壬占汇选深读 2026-08-18】守卫：干上绝神空亡 → 不判德丧禄绝凶
+                #   （CASE-83 甲戌日干上申=甲绝而申空，"榜即至矣…果当日报至中四十九名"吉）
+                if gan_shang not in kong:
+                    return self._mk('德丧禄绝', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'干上神{gan_shang}为日干绝地，干支乘死绝，德丧禄绝，朝官必主去位',
+                                    'ZN-仕宦-十一"干支乘死绝，德丧禄绝…必主去位"; CASE-083"三传空亡恐居官不久"')
             # ⑥g2 【指南深读 第三轮】返吟 + 初传=日德（德入天门发用）→ 必中高魁
             #   （ZN-选举-五"戊日返吟是德入天门发用，丑未两贵相加…必中高魁"；
             #   守卫：干上=日绝先判（德丧禄绝凶优先，仕宦十一））
@@ -423,6 +452,13 @@ class LiuChenEngine:
                                 'ZN-仕宦-八"干支年命俱见罗网…仕宦忌罗网，以罗网为丁忧之象"')
             # ⑦ 干支自刑 → 自满失宠（§057"干支自刑主自满"；置于禄/贵之前——§057禄临干
             #   但自刑仍断"升转则未"，自刑优先）
+            #   【壬占汇选深读 2026-08-18】守卫：干上神空亡（日上空亡破碎）→ 不判自满失宠，
+            #   迟而后发终可言升迁（CASE-115 戊寅日干上酉空"日上空亡破碎，到好处，又被不中
+            #   事夺了…要特达须待五十四岁，方可言升迁"吉；§057 干上亥不空仍凶）
+            if zi_xing and gan_shang in kong:
+                return self._mk('先凶后吉', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干支自刑（干{gan_shang}支{zhi_shang}），然干上{gan_shang}空亡破碎，虽先被夺，迟而后发，终可言升迁',
+                                'CASE-壬占汇选-115"日上空亡破碎…要特达须待五十四岁，方可言升迁"')
             if zi_xing:
                 return self._mk('自满失宠', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'干支自刑（干{gan_shang}支{zhi_shang}），主自满骄傲，因宠生祸失官',
@@ -542,6 +578,13 @@ class LiuChenEngine:
             #   【疏正补强 2026-08-18】守卫：末传乘天后/青龙/贵人（恩赦）→ 转官吉——
             #   §099"末申作后，六月初有赦……寅作龙入宅，明年三月必转官"
             if lu_zhi and zhi_shang == lu_zhi:
+                # 【壬占汇选深读 2026-08-18】禄临支而初传=贵人空亡 → 贵空玄滞，仅解发不能及第
+                #   （CASE-406 壬寅日支上亥禄、初传巳=壬贵空亡"但嫌贵空，又为玄所滞，
+                #   只运司解发而不能及第"；§058 初传寅=官星空（非贵）仍权摄食禄，不受影响）
+                if chu in gui_zhi_set and chu in kong:
+                    return self._mk('贵空滞禄', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'禄神{lu_zhi}临支权摄，然初传{chu}为贵人空亡，贵空玄滞，仅能解发，不能及第',
+                                    'CASE-壬占汇选-406"但嫌贵空，又为玄所滞，只运司解发而不能及第"')
                 if mo_tj in ('天后', '青龙', '贵人'):
                     return self._mk('权摄转官', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                     f'禄神{lu_zhi}临支权摄，然末传{mo}乘{mo_tj}恩赦相救，虽权摄终必转官',
@@ -550,6 +593,13 @@ class LiuChenEngine:
                                 f'禄神{lu_zhi}临支，权摄不正禄临支，正任不可望，却乃食禄',
                                 '§前程仕进03·058"权摄不正禄临支"; §069/097')
             # ③ 禄临干（随身禄）→ 得禄有官（§044"午乃丁禄临干日禄扶身"）
+            #   【壬占汇选深读 2026-08-18】守卫：干上禄神乘天空/玄武 → 禄作天空入庙、
+            #   禄被玄武所夺，虚禄不中（CASE-254"禄作天空…贵人入庙，吉不为吉…天空高恶矣"；
+            #   CASE-290"干上禄神为玄武所夺…皆非吉象，后果抱屈"）
+            if lu_lin_gan and _gan_shang_tj in ('天空', '玄武'):
+                return self._mk('虚禄被夺', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'禄神{gan_shang}临干而乘{_gan_shang_tj}，禄作天空/被玄武所夺，虚禄不实，难以高中',
+                                'CASE-壬占汇选-254"禄作天空…贵人入庙，吉不为吉"; CASE-290"干上禄神为玄武所夺"')
             if lu_lin_gan and not lu_kong:
                 return self._mk('得禄有官', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'禄神{gan_shang}临干，随身禄扶身，得官食禄',
@@ -574,6 +624,14 @@ class LiuChenEngine:
             #   【BUG-FIX 2026-08-18】CASE-0162"禄马如此且乘天后恩泽青龙吉将相并安得不中"——
             #   贵人空但三传青龙/六合/天后吉将时仍可中，虚贵守卫：传中有青龙/六合/天后吉将不判凶
             if gui_kong:
+                # 【壬占汇选深读 2026-08-18】干上贵人空亡且为日墓 → 贵空入墓，前程迟滞
+                #   （CASE-190 甲申日干上未=甲贵空亡又为甲墓，"干支皆墓主前程迟滞，凡事不通。
+                #   本命是木墓，本身上贵人又空亡，乃是虚贵……得心病，九年而卒"凶；
+                #   CASE-0162 干上巳=壬贵空但非日墓仍贵空有救）
+                if gan_shang == mu_zhi:
+                    return self._mk('贵空入墓', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'干上贵人{gan_shang}空亡又为日墓，贵空入墓，干支皆墓，前程迟滞，凡事不通',
+                                    'CASE-壬占汇选-190"干支皆墓主前程迟滞…本身上贵人又空亡，乃是虚贵"; §064')
                 _ji_jiang_in_sc = any(t in ('青龙', '六合', '天后', '太常') for t in (chu_tj, zhong_tj, mo_tj))
                 if _ji_jiang_in_sc:
                     return self._mk('贵空有救', '平', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
@@ -637,10 +695,13 @@ class LiuChenEngine:
                                 '§前程仕进03·051"干支皆天罗羊刃"; §054"午为阳刃撞干进锐退速"')
             # ⑬c 【指南深读 第二轮】末传乘青龙（月将青龙）→ 片言入相，功名吉
             #   （ZN-仕宦-十"末传月将青龙片言入相"、ZN-仕宦-十三"喜末传月将青龙，是以将来可"）
-            if mo_tj == '青龙':
+            #   【壬占汇选深读 2026-08-18】守卫：三传皆阴（极阴格）→ 不判末龙入相
+            #   （CASE-289"嫌课名九丑，格名极阴。太岁作墓神为龙夹克，不美。果不中"）
+            _YIN_GM = {'子', '丑', '卯', '巳', '未', '酉', '亥'}
+            if mo_tj == '青龙' and not (chu in _YIN_GM and zhong in _YIN_GM and mo in _YIN_GM):
                 return self._mk('末龙入相', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'末传{mo}乘青龙（月将青龙），片言入相，功名有成',
-                                'ZN-仕宦-十"末传月将青龙片言入相"; ZN-仕宦-十三"喜末传月将青龙"')
+                                'ZN-仕宦-十"末传月将青龙片言入相"; ZN-仕宦-十三"喜末传月将青龙"; CASE-289"格名极阴…果不中"')
             # ⑬d 【指南深读 第三轮】末传=贵人且乘贵人 → 贵临末传，功名吉
             #   （ZN-仕宦-十八"贵德官星临年，月将青龙居丁…应未年高第"——末传亥=丁贵乘贵人）
             if mo in gui_zhi_set and mo_tj == '贵人':
@@ -655,7 +716,11 @@ class LiuChenEngine:
             #   【指南深读 第三轮】守卫：八专课（自他处发用）→ 不判幕贵吉
             #   （ZN-仕宦-八"日比虎刃自他处发用……干支年命俱见罗网，恐不能也"）
             if gan_shang in gui_zhi_set and gan_shang not in kong and \
-               not (chu in kong and zhong in kong) and gan_shang != mu_zhi and '八专' not in keti:
+               not (chu in kong and zhong in kong) and gan_shang != mu_zhi and '八专' not in keti and \
+               _gan_shang_tj != '天空':
+                # 【壬占汇选深读 2026-08-18】守卫：幕贵临干而乘天空 → 贵作天空，正科不中
+                #   （CASE-468 戊申日干上丑=幕贵乘天空，"须三换名字，及换卷子，并令人代之，
+                #   此所以不正中也"——次年省试不中）
                 if mo == cs_zhi or mo_shi == '吉':
                     return self._mk('先晦后明', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                     f'幕贵{gan_shang}临干，科名第一吉神，先晦后明，准拟登科',
@@ -851,6 +916,13 @@ class LiuChenEngine:
             _luan_shou2 = bool(zhi_shang == ri_gan and ri_zhi and
                                KE.get(ZHI_WX.get(ri_zhi, '')) == gw)
 
+            # ⓪ 【壬占汇选深读 2026-08-18】自墓传生 → 先凶后吉，终无责罚
+            #   （CASE-88"初墓末生即无责罚"——乙亥日初未=乙墓末亥=乙长生；
+            #   CASE-564"自墓传归长生，岂不美哉"）
+            if zi_mu_chuan_sheng:
+                return self._mk('先凶后吉', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传自墓({chu})传生({mo})，初墓末生，官司有救，终无责罚',
+                                'CASE-壬占汇选-088"初墓末生即无责罚"; CASE-564"自墓传归长生，岂不美哉"')
             # ① 递生但传含墓/死/白虎 → 讼凶（§211"三传递生…乱首死奇恐死不完尸"——
             #   壬辰日午丑申递生，然末申作虎入墓，乱首大凶，递生非吉）
             if di_sheng and (mo == mu_zhi or mo_tj == '白虎' or '乱首' in keti):
@@ -1448,6 +1520,17 @@ class LiuChenEngine:
                 return self._mk('行人速来', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'驿马{_ma_zhi}临干，行人自宅起程，速来将至',
                                 'ZN-行人-四"驿马临干…行人速来"')
+            # 【壬占汇选深读 2026-08-18】末传=驿马 → 行人来归（CASE-10"末传寅为马，当主来"——
+            #   甲子日申子辰马寅末传寅；守卫①：返吟末传驿马反复已由返吟规则处理；
+            #   守卫②：末传马被中传六合合住 → 马合难脱，得冲方行，不判来归
+            #   （§153"寅马合亥难脱，得冲则行也……所以恋家，卒难脱解"））
+            _LIU_HE_CHU = {'子': '丑', '丑': '子', '寅': '亥', '亥': '寅', '卯': '戌', '戌': '卯',
+                           '辰': '酉', '酉': '辰', '巳': '申', '申': '巳', '午': '未', '未': '午'}
+            if (_ma_zhi and mo == _ma_zhi and not fan_yin and
+                    not (zhong and _LIU_HE_CHU.get(mo) == zhong)):
+                return self._mk('行人来归', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'末传{mo}为驿马，行人不日来归，主速至',
+                                'CASE-壬占汇选-010"末传寅为马，当主来"; §153"寅马合亥难脱，得冲则行"')
             # 螣蛇上课 → 途路有惊恐盗贼（L443）
             #   【疏正补强 2026-08-18】守卫：三合局生日干（当令及时）→ 不判惊恐——
             #   §行人音信12·157"冬占润下课，正及时也。新官今已至润州"（辰申子水局生甲木）
@@ -1703,6 +1786,33 @@ class LiuChenEngine:
                 return self._mk('行人有信', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'末传{mo}生日干，行人主归，近日有信',
                                 'L482"末传加日者行人亦主归"')
+
+        # ═══ 【壬占汇选深读 2026-08-18】其他/终身占类（问终身、杂占、求贵等）═══
+        if category in ('其他', '终身'):
+            # 上门乱首（支加干克干）→ 犯上之课，主犯官长，重罪流配
+            #   （CASE-123"此课支加干克干名上门乱首……遂犯重罪，减等充军于东海"）
+            if gan_shang == ri_zhi and ri_zhi and KE.get(ZHI_WX.get(ri_zhi, '')) == gw:
+                return self._mk('上门乱首', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'支{ri_zhi}加干上克日干，上门乱首，犯上之课，主犯官长受罚，与尊长争竞',
+                                'CASE-壬占汇选-123"支加干克干名上门乱首……遂犯重罪"')
+            # 贵空+三合局休囚 → 贵虚无力，局乘休气，事不成
+            #   （CASE-39"求贵不宜贵空，空则无力，且夏令得木局，乃休气。休气者废也，
+            #   不成之象。果于七月另委他人矣"——丁卯日干上亥=丁贵空亡，亥卯未木局逢夏月休）
+            _GUI_QT = {'甲': {'丑', '未'}, '乙': {'子', '申'}, '丙': {'亥', '酉'}, '丁': {'亥', '酉'},
+                       '戊': {'丑', '未'}, '己': {'子', '申'}, '庚': {'丑', '未'}, '辛': {'午', '寅'},
+                       '壬': {'巳', '卯'}, '癸': {'巳', '卯'}}
+            _SANHE_QT = {'水': {'申', '子', '辰'}, '火': {'寅', '午', '戌'},
+                         '金': {'巳', '酉', '丑'}, '木': {'亥', '卯', '未'}}
+            _ju_qt = ''
+            for _jw2, _jz2 in _SANHE_QT.items():
+                if {chu, zhong, mo} == _jz2:
+                    _ju_qt = _jw2
+                    break
+            if (gan_shang in _GUI_QT.get(ri_gan, set()) and gan_shang in kong and _ju_qt and
+                    wang_shuai(_ju_qt, yuejiang) in ('休', '囚', '死')):
+                return self._mk('贵空事废', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干上贵人{gan_shang}空亡无力，三传{chu}·{zhong}·{mo}成{_ju_qt}局而乘休囚之气，废而不成，事终不谐',
+                                'CASE-壬占汇选-039"求贵不宜贵空，空则无力，且夏令得木局，乃休气……不成之象"')
 
         return None
 
