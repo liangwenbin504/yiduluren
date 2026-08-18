@@ -1346,6 +1346,11 @@ class KeKeDuanyu:
 
         yidao_scores = []
 
+        # 【BUG-FIX 2026-08-18】pillar_qualified/sanchuan_luma 提前初始化默认 0：
+        # 原在 `if luma_guiren_info:` 块内定义，块外 L1389 引用时若 luma_guiren_info
+        # 为空 → NameError 被外层 try 静默吞掉，第二~第五诀全部丢失。
+        pillar_qualified = 0
+        sanchuan_luma = 0
         if luma_guiren_info:
             sanchuan_luma = luma_guiren_info.get('sanchuan_luma_count', 0)
             pillar_qualified = luma_guiren_info.get('pillar_qualified_count', 0)

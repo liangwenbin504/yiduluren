@@ -163,7 +163,10 @@ def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
     bifa_duanyu = [f'{b["条文"]}：{b["白话"]}' for b in bifa if b.get('白话')]
 
     # 综合评级：占类信号优先，其次课体等级，默认平
-    level = zl_signal.get('level') if zl_signal.get('score') else (keti_level or '平')
+    # 【BUG-FIX 2026-08-18】原 `zl_signal.get('score')` 真值判断：score=0 但有
+    # 命中信号（如吉凶相抵归零）时 level 被丢弃退回课体等级 → 占类断语与等级脱节。
+    # 改为占类信号 level 非'平'即采用（抽取器未命中时 level='平'，行为不变）。
+    level = zl_signal.get('level') if zl_signal.get('level') and zl_signal.get('level') != '平' else (keti_level or '平')
 
     return {
         'zhanshi': zhanshi,
