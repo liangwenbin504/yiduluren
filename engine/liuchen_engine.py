@@ -457,58 +457,208 @@ class LiuChenEngine:
         # 【疾病】
         # ───────────────────────────
         if category == '疾病':
-            # 三传自墓传生 → 患易瘥（L544）
+            # 日干死地（§163"甲寅二木皆死于午"——木死午火死酉金死子水死卯土死卯）
+            _SI_WX = {'木': '午', '火': '酉', '金': '子', '水': '卯', '土': '卯'}
+            _si_zhi_d = _SI_WX.get(gw, '')
+            # 白虎临干鬼（§164"白虎临干鬼乃旧太岁兼作病符"、§175"白虎乘午作鬼男病主三日内死"）
+            _hu_lin_gan_gui = bool(gan_shang and _shi_shen(gan_shang, ri_gan) == '官鬼' and
+                                   chu_tj == '白虎')
+            # 四课上神皆脱日干（§166"此课大凶上下俱脱…其病恐是泄泻"）
+            _shang_jie_tuo = bool(gan_shang and zhi_shang and
+                                  SHENG.get(gw) == ZHI_WX.get(gan_shang, '') and
+                                  SHENG.get(gw) == ZHI_WX.get(zhi_shang, ''))
+            # 初传绝神+中末死地（§163"初传又是绝神…中末又是午…皆死于午"）
+            _chu_jue_mo_si = bool(chu == jue_zhi and mo == _si_zhi_d)
+
+            # ① 白虎临干鬼 → 病危速死（§175"白虎乘午作鬼男病主三日内死…虎乘干鬼凶速速"；
+            #   §164"疾病之占首责白虎次及官鬼"）
+            if _hu_lin_gan_gui:
+                return self._mk('病危速死', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'白虎临干鬼{gan_shang}，虎乘干鬼凶速速，病危难救',
+                                '§疾病13·175"白虎乘午作鬼男病主三日内死"; §164"首责白虎次及官鬼"')
+            # ② 四课上神皆脱 → 上下俱脱大凶（§166"此课大凶上下俱脱…病恐是泄泻"）
+            if _shang_jie_tuo:
+                return self._mk('上下俱脱', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干上{gan_shang}支上{zhi_shang}皆脱日干，上下俱脱，病由泄泻而起，凶',
+                                '§疾病13·166"此课大凶上下俱脱其病恐是泄泻上得之"')
+            # ③ 初传绝神+中末死地 → 病凶寿促（§163"初传又是绝神…中末又是午…皆死于午"）
+            if _chu_jue_mo_si:
+                return self._mk('病入死地', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'初传{chu}为日绝神，末传{mo}为日死地，病入死地，难治',
+                                '§疾病13·163"初传又是绝神中末又是午皆死于午"')
+            # ④ 三传自墓传生 → 患易瘥（L544）
             if zi_mu_chuan_sheng:
                 return self._mk('先凶后吉', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'三传自墓({chu})传生({mo})，病虽重自墓传生，患易瘥，终可愈',
                                 'L544"三传自墓传生患易瘥"')
-            # 三传自生传墓 → 难瘳（L544）
+            # ⑤ 三传自生传墓 → 难瘳（L544）
             if zi_sheng_chuan_mu:
                 return self._mk('先吉后凶', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'三传自生({chu})传墓({mo})，自生传墓，病难瘳，终凶',
                                 'L544"自生传墓者难瘳"')
-            # 白虎乘日鬼同入三传 → 大凶（L545；案例0412"此课不利占病丁巳日必死"）
+            # ⑥ 白虎乘日鬼同入三传 → 大凶（L545；案例0412"此课不利占病丁巳日必死"）
             if hu_gui:
                 return self._mk('病危难救', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'白虎乘日鬼入传，病势凶险，恐难救治',
                                 'L545"虎乘日鬼同入三传主大凶"; CASE-壬占汇选-0412')
-            # 虎鬼空亡 → 病自愈（L546）
+            # ⑦ 虎鬼空亡 → 病自愈（L546）
             if any(z in kong and _shi_shen(z, ri_gan) == '官鬼' and tj == '白虎'
                    for z, tj in ((chu, chu_tj), (zhong, zhong_tj), (mo, mo_tj))):
                 return self._mk('有惊无险', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'虎鬼{chu if chu in kong else zhong if zhong in kong else mo}空亡，病自愈，有惊无险',
                                 'L546"虎鬼空亡病自愈"')
-            # 白虎克日 → 病必凶（L540）
+            # ⑧ 白虎克日 → 病必凶（L540）
             if mo_tj == '白虎' and KE.get(mo_wx) == gw:
                 return self._mk('病势凶险', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'末传{mo}白虎克日干，病势凶险，须防不测',
                                 'L540"白虎克日病必凶"')
-            # 循环格 → 病多反复（L557"循环格三传不离四课主病多反复"）
+            # ⑨ 循环格 → 病多反复（L557"循环格三传不离四课主病多反复"；
+            #   【BUG-FIX 2026-08-18】邵公断案§166"循环格…病恐是泄泻…死在二十八日"、
+            #   §168"循环不断…久而不治必成痨怯"——疾病循环格=病缠身凶，非平）
             if xun_huan:
-                return self._mk('病多反复', '平', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                return self._mk('病多反复', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'三传{chu}·{zhong}·{mo}不离四课，循环格，病多反复，迁延难愈',
-                                'L557"循环格主病多反复"')
-            # 传归死墓必死（L617"传归死墓必死"）
+                                'L557"循环格主病多反复"; §疾病13·166"死在二十八日"; §168"久而不治必成痨怯"')
+            # ⑩ 传归死墓必死（L617"传归死墓必死"）
             if mo == mu_zhi and (chu_shi == '凶' or zhong_shi == '凶'):
                 return self._mk('病终难救', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'末传{mo}为日墓，传归死墓，病终难救',
                                 'L617"传归死墓必死"')
+            # ⑪ 长生空亡=虚生 → 病难愈（§162"日上长生是空亡…终身瘦弱二十八岁不能过"）
+            if gan_shang == cs_zhi and gan_shang in kong:
+                return self._mk('虚生难愈', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干上长生{gan_shang}空亡，虚生无力，病缠绵难愈',
+                                '§疾病13·162"日上长生是空亡…终身瘦弱"')
+            # ⑫ 病符临支/支上（旧太岁）→ 全家病（§169"病符克宅全家患…疫气入宅主合宅病"；
+            #   判据简化：支上神=日干死地或墓）
+            if zhi_shang and (zhi_shang == _si_zhi_d or zhi_shang == mu_zhi):
+                return self._mk('病符入宅', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'支上神{zhi_shang}为日死/墓地，病符入宅，主合宅病',
+                                '§疾病13·169"病符克宅全家患…疫气入宅主合宅病"')
+            # ⑬ 三交课（四正相加）→ 病由情欲（§173"三交中有空亡六合者皆不正之合…其患有三"；
+            #   判据：三传含≥2四正 或 干支上神自刑）
+            _SI_ZHENG_JB = {'子', '午', '卯', '酉'}
+            _sj_cnt = sum(1 for z in (chu, zhong, mo) if z in _SI_ZHENG_JB)
+            if _sj_cnt >= 2:
+                return self._mk('三交情病', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传{chu}·{zhong}·{mo}三交课，四正相加，病由情欲不正之合',
+                                '§疾病13·173"三交中有空亡六合者皆不正之合其患有三"')
+            # ⑭ 昴星课纯阴无阳气 → 病危（§178"昴星课纯阴之象阴掩其阳是无阳气也…阴阳气绝"；
+            #   判据：课体含"昴星" 或 三传皆阴且末传=日墓）
+            if '昴星' in keti or (chu in ('子', '丑', '卯', '巳', '未', '酉', '亥') and
+                                   zhong in ('子', '丑', '卯', '巳', '未', '酉', '亥') and
+                                   mo in ('子', '丑', '卯', '巳', '未', '酉', '亥')):
+                return self._mk('阴阳气绝', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'昴星纯阴之象，阴掩其阳，无阳气，阴阳气绝，病危',
+                                '§疾病13·178"昴星课纯阴之象…阴阳气绝者促也"')
 
         # ───────────────────────────
         # 【官讼】
         # ───────────────────────────
         if category == '官讼':
-            # 末传生初传生日干 → 有人暗地用力扶持，官事不日消缴（L780）
+            # 【邵公断案·官讼章深读 2026-08-18】核心：
+            #   §202"贵人差迭事参差…不宜讼必主断理不明"——昼夜贵加为贵人差迭
+            #   §203"一旬周遍格…惟讼要散不要关锁"——周遍格讼难散
+            #   §204"顾祖课主原有讼根…天网课兜罗难脱"——讼有源头再发
+            #   §207"独足课…必配本州"——独足课流配
+            #   §211"乱首死奇…恐死不完尸"——乱首大凶
+            # 贵人表（旦贵/暮贵）
+            _GUI_REN_GS = {'甲': {'丑', '未'}, '乙': {'子', '申'}, '丙': {'亥', '酉'}, '丁': {'亥', '酉'},
+                           '戊': {'丑', '未'}, '己': {'子', '申'}, '庚': {'丑', '未'}, '辛': {'午', '寅'},
+                           '壬': {'巳', '卯'}, '癸': {'巳', '卯'}}
+            _gui_set_gs = _GUI_REN_GS.get(ri_gan, set())
+            # 贵人差迭：干上神=贵人且官鬼、支上神=另一贵人（§202"昼贵在夜夜贵在昼"）
+            _gui_zao_die = bool(gan_shang and zhi_shang and
+                                gan_shang in _gui_set_gs and zhi_shang in _gui_set_gs and
+                                _shi_shen(gan_shang, ri_gan) == '官鬼')
+            # 独足课：三传同支（§207"三传酉酉酉…独足不行也必配"）
+            _du_zu = (chu == zhong == mo)
+            # 乱首课：支加干克干 或 干加支受支克（§211"日加辰作勾…自取乱首"——
+            #   壬辰日干上加辰受克；§202/211均乱首）
+            _luan_shou = bool(
+                (gan_shang == ri_zhi and ri_zhi and KE.get(ZHI_WX.get(ri_zhi, '')) == gw) or
+                (zhi_shang == ri_gan and ri_gan and KE.get(ZHI_WX.get(ri_zhi, '')) == gw)
+            )
+            # 六阴相继不利公讼（§202"六阴相继之体不利公讼"——三传皆阴）
+            _YIN_GS = {'子', '丑', '卯', '巳', '未', '酉', '亥'}
+            _liu_yin = (chu in _YIN_GS and zhong in _YIN_GS and mo in _YIN_GS)
+            # 一旬周遍格/循环格（§203"一旬周遍格…惟讼要散不要关锁"——传不离课讼难散）
+            # 干加支受克（§211"日加辰作勾"——干临支而受支克，乱首）
+            _luan_shou2 = bool(zhi_shang == ri_gan and ri_zhi and
+                               KE.get(ZHI_WX.get(ri_zhi, '')) == gw)
+
+            # ① 递生但传含墓/死/白虎 → 讼凶（§211"三传递生…乱首死奇恐死不完尸"——
+            #   壬辰日午丑申递生，然末申作虎入墓，乱首大凶，递生非吉）
+            if di_sheng and (mo == mu_zhi or mo_tj == '白虎' or '乱首' in keti):
+                return self._mk('乱首讼凶', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传{chu}·{zhong}·{mo}递生，然乱首死奇/末传{mo}虎入墓，官讼大凶',
+                                '§官讼16·211"乱首死奇…恐死不完尸"')
+            # ①b 六阴相继不利公讼（§202"六阴相继之体不利公讼…必主断理不明"；
+            #   【BUG-FIX 2026-08-18】§209 三传亥卯未六阴但成曲直木局（"三传曲直应先曲后直，
+            #   末有龙故无事"）先凶后吉——三合局且局生日干时有救；§205木局为辛之财局
+            #   （"传财太盛反化鬼"）仍凶
+            _SANHE_GS = [{'申', '子', '辰'}, {'寅', '午', '戌'}, {'巳', '酉', '丑'}, {'亥', '卯', '未'}]
+            _SANHE_WX_GS = {'水': {'申', '子', '辰'}, '火': {'寅', '午', '戌'},
+                            '金': {'巳', '酉', '丑'}, '木': {'亥', '卯', '未'}}
+            _ju_gs = ''
+            for _jw, _jz in _SANHE_WX_GS.items():
+                if {chu, zhong, mo} == _jz:
+                    _ju_gs = _jw
+                    break
+            # 局生日干=有救（§209曲直木局生乙木）或 局=日干同类比劫局（§209乙日亥卯未木局
+            #   "三传曲直应先曲后直，末有龙故无事"亦吉）；局克日干（财局§205）仍凶
+            _ju_jiu = bool(_ju_gs and gw and (SHENG.get(_ju_gs) == gw or _ju_gs == gw))
+            # 三传含对冲（巳亥反复等）→ 讼有反复非纯凶（CASE-0186"以巳亥反复皆四数也"）
+            _CHONG_GS = {'子': '午', '午': '子', '卯': '酉', '酉': '卯',
+                         '寅': '申', '申': '寅', '巳': '亥', '亥': '巳',
+                         '丑': '未', '未': '丑', '辰': '戌', '戌': '辰'}
+            _you_chong = bool(
+                (chu and _CHONG_GS.get(chu) == zhong) or
+                (chu and _CHONG_GS.get(chu) == mo) or
+                (zhong and _CHONG_GS.get(zhong) == mo)
+            )
+            if _liu_yin and not _ju_jiu and not _you_chong:
+                return self._mk('六阴讼晦', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传{chu}·{zhong}·{mo}六阴相继，不利公讼，断理不明',
+                                '§官讼16·202"六阴相继之体不利公讼"')
+            # ①c 一旬周遍格/循环格（§203"一旬周遍格…惟讼要散不要关锁"——传不离课讼难散；
+            #   【BUG-FIX 2026-08-18】§209 循环格+曲直局生身=先凶后吉，不判凶）
+            if xun_huan and not _ju_jiu:
+                return self._mk('周遍讼缠', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传{chu}·{zhong}·{mo}不离四课，一旬周遍格，讼要散不要关锁，讼事缠绵',
+                                '§官讼16·203"一旬周遍格…惟讼要散不要关锁"')
+            # ①d 三合局（曲直/炎上等）→ 先曲后直，先凶后吉（§209"三传曲直应先曲后直，
+            #   末有龙故无事"——乙未日亥卯未木局，邵公断"一出头便被枷锢后却无事"吉）
+            if _ju_gs and _ju_jiu:
+                return self._mk('先凶后吉', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传{chu}·{zhong}·{mo}成{_ju_gs}局，先曲后直，虽先遭枷锢，终得无事',
+                                '§官讼16·209"三传曲直应先曲后直，末有龙故无事"')
+            # ① 贵人差迭 → 不宜讼，断理不明（§202"贵人差迭事参差…不宜讼必主断理不明"）
+            if _gui_zao_die:
+                return self._mk('贵人差迭', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干上{gan_shang}支上{zhi_shang}贵人差迭，不宜讼，必主断理不明',
+                                '§官讼16·202"贵人差迭事参差…不宜讼必主断理不明"')
+            # ② 独足课 → 流配（§207"独足不行也…必配本州"）
+            if _du_zu:
+                return self._mk('独足流配', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传{chu}·{zhong}·{mo}独足课，独足不行，官事主流配',
+                                '§官讼16·207"独足不行也…必配本州"')
+            # ③ 乱首课 → 大凶（§211"乱首死奇…恐死不完尸"）
+            if _luan_shou:
+                return self._mk('乱首大凶', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'支{ri_zhi}加干克干，乱首死奇，官讼大凶，恐死不完尸',
+                                '§官讼16·211"乱首死奇…其凶不可言恐死不完尸"')
+            # ④ 末传生初传生日干 → 有人暗地用力扶持，官事不日消缴（L780）
             if mo_wx and chu_wx and SHENG.get(mo_wx) == chu_wx and SHENG.get(chu_wx) == gw:
                 return self._mk('先凶后吉', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'末传{mo}生初传{chu}生日干，暗地有人用力扶持，官事不日消缴',
                                 'L780"末传生初传而生日干者主有人暗地用力扶持官事不日消缴"')
-            # 初传白虎末传螣蛇 → 虎头蛇尾虽有祸乱渐消释（L790；案例0520"先凶后吉"）
+            # ⑤ 初传白虎末传螣蛇 → 虎头蛇尾虽有祸乱渐消释（L790；案例0520"先凶后吉"）
             if chu_tj == '白虎' and mo_tj == '螣蛇':
                 return self._mk('先凶后吉', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'初传{chu}白虎末传{mo}螣蛇，虎头蛇尾，虽有祸乱渐消释，官事先凶后吉',
                                 'L790"若白虎作初传螣蛇作末传凡事虎头蛇尾虽有祸乱渐消释"; CASE-壬占汇选-0520')
-            # 初传官鬼旺相 → 讼必成；休囚 → 讼不成（L819"初传官鬼旺相讼必成休囚讼不成"）
+            # ⑥ 初传官鬼旺相 → 讼必成；休囚 → 讼不成（L819"初传官鬼旺相讼必成休囚讼不成"）
             if _shi_shen(chu, ri_gan) == '官鬼':
                 if chu not in kong and chu_shi != '凶':
                     return self._mk('讼事必成', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
@@ -517,17 +667,17 @@ class LiuChenEngine:
                 return self._mk('讼可消散', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'初传官鬼{chu}休囚，讼不成，可消散',
                                 'L819"官鬼休囚讼不成"')
-            # 干上神克支上神 → 先起者胜（L740；初传空亡或伏吟课例外——静局不讼）
+            # ⑦ 干上神克支上神 → 先起者胜（L740；初传空亡或伏吟课例外——静局不讼）
             if gan_ke_zhi_shang and chu not in kong and not fu_yin:
                 return self._mk('先起者胜', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'干上神{gan_shang}克支上神{zhi_shang}，先起者胜，理直气壮',
                                 'L740"干上神刑克冲害支上神者先起者胜"')
-            # 支上神克干上神 → 后应者胜（L742）
+            # ⑧ 支上神克干上神 → 后应者胜（L742）
             if zhi_ke_gan_shang and chu not in kong and not fu_yin:
                 return self._mk('后应者胜', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'支上神{zhi_shang}克干上神{gan_shang}，后应者胜，我方不利',
                                 'L742"支上神刑克冲害干上神者后应者胜"')
-            # 末传=天喜/青龙乘解神 → 恩赦相救先凶后吉（案例0520）
+            # ⑨ 末传=天喜/青龙乘解神 → 恩赦相救先凶后吉（案例0520/§212"末天喜乘龙作解神"）
             if mo_tj in ('青龙', '太常', '贵人') and mo_shi == '吉':
                 return self._mk('先凶后吉', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'末传{mo}乘{mo_tj}，恩赦相救，先凶后吉，官事可解',
