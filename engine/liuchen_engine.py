@@ -346,6 +346,19 @@ class LiuChenEngine:
                 return self._mk('鬼临三四', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'支上神{zhi_shang}为日干官鬼，鬼临三四课，必主他非退位',
                                 'ZN-仕宦-二十一"鬼临三四，必主他非退位"')
+            # ⑥g6 【指南深读 第四轮】干支上神皆=天罗（日干寄宫前一位）→ 罗网退职凶
+            #   （ZN-仕宦-八"干支年命俱见罗网……仕宦忌罗网，以罗网为丁忧之象，主退职也"——
+            #   己未日己寄未，天罗申，干支上皆申；八专自他处发用）
+            _GAN_JI4 = {'甲': '寅', '乙': '辰', '丙': '巳', '丁': '未', '戊': '巳',
+                        '己': '未', '庚': '申', '辛': '戌', '壬': '亥', '癸': '丑'}
+            _TIANLUO_NEXT = {'寅': '卯', '辰': '巳', '巳': '午', '未': '申', '申': '酉',
+                             '戌': '亥', '亥': '子', '卯': '辰', '午': '未', '酉': '戌',
+                             '子': '丑', '丑': '寅'}
+            _tianluo = _TIANLUO_NEXT.get(_GAN_JI4.get(ri_gan, ''), '')
+            if _tianluo and gan_shang == _tianluo and zhi_shang == _tianluo:
+                return self._mk('罗网退职', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干支上神皆{_tianluo}为天罗，仕宦忌罗网，罗网为丁忧退职之象，恐不能也',
+                                'ZN-仕宦-八"干支年命俱见罗网…仕宦忌罗网，以罗网为丁忧之象"')
             # ⑦ 干支自刑 → 自满失宠（§057"干支自刑主自满"；置于禄/贵之前——§057禄临干
             #   但自刑仍断"升转则未"，自刑优先）
             if zi_xing:
@@ -385,8 +398,10 @@ class LiuChenEngine:
                                     f'四课上神俱克下，无禄课，虽受官职必不能食禄',
                                     '§前程仕进03·076"无禄课虽受通判必不能食禄"')
             # ① 官星临身+初传应之=催官符（§072"官星临日初传应之谓之催官符"）→ 得官
+            #   【指南深读 第四轮】守卫：末传=长生（结局转生）→ 不判先成后败
+            #   （ZN-选举-二"院试必取……驿马坐墓……静象也"——丙戌日末传寅=丙长生）
             if guan_lin_shen and _shi_shen(chu, ri_gan) == '官鬼':
-                if mo in kong or mo == mu_zhi or zhong in kong:
+                if (mo in kong or mo == mu_zhi or zhong in kong) and mo != cs_zhi:
                     return self._mk('先成后败', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                     f'官星{gan_shang}临身初传应之，催官符赴任，然传中{"中传空丁忧" if zhong in kong else "末传" + mo + "空/墓"}，得官后不久即败',
                                     '§前程仕进03·072"官星临日初传应之谓之催官符"; §059"及第后死"')
@@ -395,10 +410,11 @@ class LiuChenEngine:
                                 '§前程仕进03·072"官星临日初传应之谓之催官符"')
             # ①b 官星临身（干上神=官星）→ 得官赴任；末传空/墓/凶将 或 中传空（父母丁忧）
             #   =先成后败（§072"及第后便丁父母服"、§059"及第后死"、§089"得十六月遭父丧"）
+            #   【指南深读 第四轮】守卫：末传=长生 → 不判先成后败（结局转生，ZN-选举-二）
             if guan_lin_shen:
                 _mo_bad = mo in kong or mo == mu_zhi or mo_shi == '凶'
                 _zhong_bad = zhong in kong  # 中传空=父母空=丁忧（§072"中传父母空亡主丁忧"）
-                if _mo_bad or _zhong_bad:
+                if (_mo_bad or _zhong_bad) and mo != cs_zhi:
                     return self._mk('先成后败', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                     f'官星{gan_shang}临身主得官，然{"中传空亡主丁忧" if _zhong_bad else "末传" + mo + ("空" if mo in kong else "墓" if mo == mu_zhi else "凶")}，得官后不久即败',
                                     '§前程仕进03·072"及第后便丁父母服"; §059"及第后死"')
@@ -1399,6 +1415,19 @@ class LiuChenEngine:
                 return self._mk('递克兵败', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'三传{chu}·{zhong}·{mo}递克，两军敌战尽遭伤，兵败之象',
                                 'ZN-兵斗-十二"传将递克…两军敌战尽遭伤也"')
+            # ③ 【指南深读 第四轮】末传克初传（非三合局）→ 以凶制凶，凶可解
+            #   （ZN-兵斗-七"末传…蛇冲克初传，此为以凶制凶，不过虎头蛇尾，不日围解"——
+            #   庚子日午酉子末子克初午；守卫：三合局不从革兵斗-二"合中刑干害支"仍凶）
+            if not _zz_ju and mo_wx and chu_wx and KE.get(mo_wx) == chu_wx:
+                return self._mk('以凶制凶', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'末传{mo}克初传{chu}，以凶制凶，不过虎头蛇尾，凶必无虞，不日围解',
+                                'ZN-兵斗-七"末传…蛇冲克初传，此为以凶制凶…不日围解"')
+            # ④ 【指南深读 第四轮】末传=日禄（健旺制劫）→ 守坚敌弱，吉
+            #   （ZN-兵斗-四"末传健旺制劫，是守坚敌弱，故知必不能东下"——乙亥日末卯=乙禄）
+            if lu_zhi and mo == lu_zhi:
+                return self._mk('守坚敌弱', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'末传{mo}为日禄健旺制劫，守坚敌弱，必不能久持，围自解',
+                                'ZN-兵斗-四"末传健旺制劫，是守坚敌弱"')
 
         # ───────────────────────────
         # 【贼盗】（失物/捕盗）
