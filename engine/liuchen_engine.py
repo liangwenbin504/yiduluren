@@ -347,6 +347,17 @@ class LiuChenEngine:
                 if {chu, zhong, mo} == _gj:
                     _gju_wx = _gw2
                     break
+            # 【壬占汇选深读 2026-08-18】极阴课（三传皆阴且非三合局）→ 九丑极阴，不中
+            #   （CASE-289"嫌课名九丑，格名极阴。太岁作墓神为龙夹克，不美。果不中"；
+            #   ZN-选举-六 巳丑酉虽皆阴但成三合金局"传将递生格合周遍…必中无疑"仍吉；
+            #   §052 癸亥日丑卯巳皆阴但干上卯=幕贵"太阴乘卯作幕贵加日干…先晦后明准拟登科"
+            #   ——干上=贵人不空 → 幕贵第一吉神，不判极阴）
+            _YIN_GM2 = {'丑', '卯', '巳', '未', '酉', '亥'}
+            if (chu in _YIN_GM2 and zhong in _YIN_GM2 and mo in _YIN_GM2 and not _gju_wx and
+                    not (gan_shang in gui_zhi_set and gan_shang not in kong)):
+                return self._mk('极阴不中', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传{chu}·{zhong}·{mo}皆阴为极阴格，阴掩其阳，会试不中',
+                                'CASE-壬占汇选-289"课名九丑，格名极阴……果不中"; ZN-选举-六"传将递生…必中无疑"; §052"幕贵加日干…准拟登科"')
             if _gju_wx and KE.get(_gju_wx) == gw:
                 # 【指南深读 2026-08-18】守卫②：无禄课（四课上神俱克下）不判官局吉——
                 #   CASE-0318 无禄+官局仍断"无禄难食"（§076）
@@ -415,12 +426,16 @@ class LiuChenEngine:
                                 'ZN-选举-一"末传德禄驿马…必中高魁"')
             # ⑥g4 【指南深读 第三轮】干上=日墓 且 支上=日支绝地 → 干墓支绝，凶
             #   （ZN-仕宦-十九"干墓支绝…必解任去"——甲午日干上未=甲墓、支上亥=午之绝）
+            #   【壬占汇选深读 2026-08-18】守卫：支上=官星又系贵人 → 官星临支催官，不判凶
+            #   （CASE-451 丙午日干上戌=丙墓、支上亥=午绝而"亥贵作官星临支……
+            #   果未及旬日推吴淞总镇"升；ZN-十九 支上亥=甲之父母非官星仍凶）
             _rz_wx = ZHI_WX.get(ri_zhi, '')
             _zhi_jue_d = WX_JUE.get(_rz_wx, '')
-            if gan_shang == mu_zhi and _zhi_jue_d and zhi_shang == _zhi_jue_d:
+            if (gan_shang == mu_zhi and _zhi_jue_d and zhi_shang == _zhi_jue_d and
+                    not (zhi_shang in gui_zhi_set and _shi_shen(zhi_shang, ri_gan) == '官鬼')):
                 return self._mk('干墓支绝', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'干上{gan_shang}为日墓，支上{zhi_shang}为日支绝地，干墓支绝，功名非久远之象',
-                                'ZN-仕宦-十九"干墓支绝…必解任去"')
+                                'ZN-仕宦-十九"干墓支绝…必解任去"; CASE-451"亥贵作官星临支…必然迁擢"')
             # ⑥g5 【指南深读 第三轮】支上神=官星：=贵人 → 官星临支吉（ZN-仕宦-二十九
             #   "亥贵作官星临支"）；非贵人 → 鬼临三四凶（ZN-仕宦-二十一"鬼临三四必主他非退位"）
             #   守卫（官星临支）：干支自刑（§062/081自满失宠）与赘婿（§065）不判吉
@@ -880,11 +895,11 @@ class LiuChenEngine:
                 return self._mk('鬼胎不宁', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'干上{gan_shang}为日干胎位又作官鬼乘六合，主孕而怀鬼胎，生后必有响动不宁',
                                 'CASE-壬占汇选-218"日上子作六合，主孕，恐是鬼胎"')
-            # 【壬占汇选深读 2026-08-18】干上=日禄而日支=禄之绝地 → 禄临绝地，病难起色
+            # 【壬占汇选深读 2026-08-18】支上=日禄而日支=禄之绝地 → 禄临绝地，病难起色
             #   （CASE-369"盖禄临绝地，马入墓乡……故断其七月必死。已而果然"——
             #   己亥日支上午=己禄、支亥=火之绝）
             if (zhi_shang == lu_zhi and ri_zhi and zhi_shang and
-                    ZHI_WX.get(ri_zhi, '') == WX_JUE.get(ZHI_WX.get(zhi_shang, ''), '')):
+                    ri_zhi == WX_JUE.get(ZHI_WX.get(zhi_shang, ''), '')):
                 return self._mk('禄临绝地', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'支上{zhi_shang}为日禄而日支{ri_zhi}为禄之绝地，禄临绝地，马入墓乡，病恐不测',
                                 'CASE-壬占汇选-369"禄临绝地，马入墓乡……故断其七月必死"')
@@ -1486,13 +1501,15 @@ class LiuChenEngine:
                         '戊': {'丑', '未'}, '己': {'子', '申'}, '庚': {'丑', '未'}, '辛': {'午', '寅'},
                         '壬': {'巳', '卯'}, '癸': {'巳', '卯'}}
             _gui_set = GUI_REN3.get(ri_gan, set())
-            # 【壬占汇选深读 2026-08-18】干支上神皆乘墓 → 母子俱不安宁，产虽易生子难保
+            # 【壬占汇选深读 2026-08-18】干支上神互乘墓（干上乘支之墓、支上乘干之墓）→
+            #   互相制，母子俱不安宁，产虽易生子难保
             #   （CASE-269"今干支俱乘墓，互相制，是怀此孕，即当有病。母子俱不安宁……
-            #   子难保也"——庚寅日干上丑=庚墓、支上未=木墓）
+            #   子难保也"——庚寅日干上未=木墓、支上丑=金墓，交互为墓）
             _WX_MU_TC = {'木': '未', '火': '戌', '土': '戌', '金': '丑', '水': '辰'}
-            if gan_shang == mu_zhi and zhi_shang == _WX_MU_TC.get(ZHI_WX.get(ri_zhi, ''), ''):
+            if (gan_shang == _WX_MU_TC.get(ZHI_WX.get(ri_zhi, ''), '') and
+                    zhi_shang == _WX_MU_TC.get(gw, '')):
                 return self._mk('干支俱墓', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
-                                f'干上{gan_shang}支上{zhi_shang}各乘墓神，干支俱乘墓互相制，怀孕即病，母子俱不安，产虽易生子难保',
+                                f'干上{gan_shang}乘支墓、支上{zhi_shang}乘干墓，干支俱乘墓互相制，怀孕即病，母子俱不安，产虽易生子难保',
                                 'CASE-壬占汇选-269"今干支俱乘墓，互相制……母子俱不安宁……子难保也"')
             # 干支上神皆=日干羊刃（破碎）→ 产育不利，子母俱伤（§125"干支见酉，皆阳刃破碎
             #   自刑，故先害身，却来害母"）
