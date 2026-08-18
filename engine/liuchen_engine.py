@@ -238,9 +238,10 @@ class LiuChenEngine:
             si_jue = bool(gan_shang and zhi_shang and
                           jue_zhi_set.get(gan_shang) == zhi_shang and
                           gan_shang in jue_zhi_set)
-            # 铸印格：三传巳戌卯/戌卯巳/卯巳戌（§049"戌为模范亦落空地"、§050"朱雀投戌墓破模"）
-            zhu_yin = ({chu, zhong, mo} == {'巳', '戌', '卯'} or
-                       {chu, zhong, mo} == {'巳', '丑', '酉'})
+            # 铸印格：三传巳戌卯（§049"戌为模范亦落空地"、§050"朱雀投戌墓破模"）
+            #   【指南深读 2026-08-18】{巳,丑,酉}为从革递生，非铸印——陈公献
+            #   "传将递生格合周遍……必中无疑"（ZN-选举-六）仍主吉，不作损模凶断。
+            zhu_yin = ({chu, zhong, mo} == {'巳', '戌', '卯'})
             # 顾祖课（初传=干上神 且 传退入支（§074"日上发传退入支上又是顾祖"））——
             #   判据：初传=干上神 且 末传贴近日支（d_mo <= 2 且 末传比初传更近支）
             #   【BUG-FIX 2026-08-18】§055 干上申=禄（弃武从文吉）、§058 干上寅=官星空
@@ -259,6 +260,39 @@ class LiuChenEngine:
             _gui_kong_gs = (gan_shang in kong and _shi_shen(gan_shang, ri_gan) == '官鬼')
             gu_zu = _gu_zu_core and not _lu_wei and not _gui_kong_gs
 
+            # ⑥g 【指南深读 2026-08-18】三合局=日干官鬼 → 官局峥嵘，功名吉
+            #   （ZN-仕宦-九"传将木局，官星峥嵘……功名显赫"、ZN-仕宦-三十二"传课结成官局……
+            #   事业远大"；三合官局为官星成局，最利功名）
+            _SANHE_G = [{'申', '子', '辰'}, {'寅', '午', '戌'}, {'巳', '酉', '丑'}, {'亥', '卯', '未'}]
+            _SANHE_WX = ['水', '火', '金', '木']
+            _gju_wx = ''
+            for _gj, _gw2 in zip(_SANHE_G, _SANHE_WX):
+                if {chu, zhong, mo} == _gj:
+                    _gju_wx = _gw2
+                    break
+            if _gju_wx and KE.get(_gju_wx) == gw:
+                # 【指南深读 2026-08-18】守卫②：无禄课（四课上神俱克下）不判官局吉——
+                #   CASE-0318 无禄+官局仍断"无禄难食"（§076）
+                _wulu_gj = bool(gan_shang and zhi_shang and ri_zhi and
+                                KE.get(ZHI_WX.get(gan_shang, '')) == gw and
+                                KE.get(ZHI_WX.get(zhi_shang, '')) == ZHI_WX.get(ri_zhi, ''))
+                if not _wulu_gj:
+                    # 【指南深读 2026-08-18】守卫①：官鬼局 + 初传=官鬼（重官/合中犯煞）→ 先成后败凶
+                    #   （ZN-仕宦-七"合中犯煞，发用午火刑干害支"、ZN-仕宦-三十"传成官局推升必矣，
+                    #   但结局不佳……行年酉金冲破官局"）
+                    if _shi_shen(chu, ri_gan) == '官鬼':
+                        return self._mk('官局受阻', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                        f'三传{chu}·{zhong}·{mo}官鬼局而初传{chu}又为官鬼，合中犯煞/重官，推升虽必而结局不佳',
+                                        'ZN-仕宦-七"合中犯煞，发用午火刑干害支"; ZN-仕宦-三十"传成官局推升必矣但结局不佳"')
+                    return self._mk('官局峥嵘', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'三传{chu}·{zhong}·{mo}成{_gju_wx}局为日干官鬼局，官星成局，官局峥嵘，功名远大',
+                                    'ZN-仕宦-九"传将木局，官星峥嵘"; ZN-仕宦-三十二"传课结成官局…事业远大"')
+            # ⑥h 【指南深读 2026-08-18】三合财局 + 末传空亡 → 财局虚设，功名凶
+            #   （ZN-仕宦-二十四"传将递生空亡……难以迁转"；传课纯财则印爻被克）
+            if _gju_wx and KE.get(gw) == _gju_wx and mo in kong:
+                return self._mk('财局空陷', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传{chu}·{zhong}·{mo}财局而末传{mo}空亡，传课纯财印爻被克，虚设难迁',
+                                'ZN-仕宦-二十四"传将递生空亡…难以迁转"')
             # ⑦ 干支自刑 → 自满失宠（§057"干支自刑主自满"；置于禄/贵之前——§057禄临干
             #   但自刑仍断"升转则未"，自刑优先）
             if zi_xing:
@@ -317,7 +351,9 @@ class LiuChenEngine:
                                 f'官星{gan_shang}临身，主得官赴任',
                                 '§前程仕进03·089"日上官星作贵"')
             # ② 官星发用 + 得地 → 得官升迁（原有；加禄临干强化）
-            if guan_xing_fa_yong and chu_shi != '凶' and chu not in kong:
+            #   【指南深读 2026-08-18】守卫：末传=日墓 → 不判升迁吉，落"功名难久"凶
+            #   （ZN-仕宦-五"干支乘墓，禄马空陷……不能久任"）
+            if guan_xing_fa_yong and chu_shi != '凶' and chu not in kong and mo != mu_zhi:
                 return self._mk('得官升迁', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'官星{chu}发用，官星得地，求官有望，升迁在望',
                                 'L求官用起官星; CASE-壬占汇选-0117/0287')
@@ -377,7 +413,9 @@ class LiuChenEngine:
                                 f'三传{chu}·{zhong}·{mo}皆子孙脱气，脱上逢脱，诗书荒废，功名难成',
                                 '§前程仕进03·046"脱上逢脱必诗书荒废"; §093"一火生四土叠叠脱气"')
             # ⑩ 四绝课 → 偃蹇不通（§066"此课名四绝…前程非惟不远且又寿夭"）
-            if si_jue:
+            #   【指南深读 2026-08-18】守卫：末传=日禄不空（德禄入末）→ 不判四绝——
+            #   ZN-选举-一"末传德禄驿马，干支交车生合……必中高魁"（四绝而末禄仍吉）
+            if si_jue and not (lu_zhi and mo == lu_zhi and mo not in kong):
                 return self._mk('四绝不通', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'干支上神{gan_shang}·{zhi_shang}四绝，偃蹇不通，前程非惟不远且又寿夭',
                                 '§前程仕进03·066"此课名四绝且干支自刑"; §083"四绝偃蹇不通"')
@@ -487,6 +525,14 @@ class LiuChenEngine:
                 return self._mk('病入死地', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'初传{chu}为日绝神，末传{mo}为日死地，病入死地，难治',
                                 '§疾病13·163"初传又是绝神中末又是午皆死于午"')
+            # ③b 【指南深读 2026-08-18】末传=日干官鬼克日（非空亡）→ 病危难救
+            #   （ZN-疾病-七"末传巳火克日，故以日决之……必死"；L540"白虎克日病必凶"——
+            #   末传官鬼克日与虎鬼同论；守卫：末传空亡则虎鬼空亡病自愈 L546；
+            #   循环格主病多反复（L557），不判速死——CASE-0151）
+            if mo_wx and KE.get(mo_wx) == gw and mo not in kong and not xun_huan:
+                return self._mk('病危难救', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'末传{mo}为日干官鬼克日，鬼星临末定结局，病危难救',
+                                'ZN-疾病-七"末传巳火克日，故以日决之"; L540"白虎克日病必凶"')
             # ④ 三传自墓传生 → 患易瘥（L544）
             if zi_mu_chuan_sheng:
                 return self._mk('先凶后吉', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
