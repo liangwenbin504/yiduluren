@@ -120,8 +120,10 @@ class LiuChenEngine:
                         chu: str, zhong: str, mo: str,
                         chu_tj: str, zhong_tj: str, mo_tj: str,
                         kong: set, keti: str, sike: List,
-                        zishu: str = '', yuejiang: str = '', year: str = '') -> Optional[Dict]:
+                        zishu: str = '', yuejiang: str = '', year: str = '',
+                        sike_tj: Dict = None) -> Optional[Dict]:
         gw = GAN_WX.get(ri_gan, '')
+        _tjmap = sike_tj or {}
         mu_zhi = GAN_MU.get(ri_gan, '')
         cs_zhi = WX_CS.get(gw, '')
         jue_zhi = WX_JUE.get(gw, '')
@@ -185,6 +187,9 @@ class LiuChenEngine:
                 return ''
             gan_shang = _sp(sike[0])
             zhi_shang = _sp(sike[2])
+        # 干支上神天将（sike_tj 天将映射，供贵人乘贵/朱雀位置等规则）
+        _gan_shang_tj = _tjmap.get(gan_shang, '')
+        _zhi_shang_tj = _tjmap.get(zhi_shang, '')
         gan_ke_zhi_shang = bool(gan_shang and zhi_shang and
                                 KE.get(ZHI_WX.get(gan_shang, '')) == ZHI_WX.get(zhi_shang, ''))
         zhi_ke_gan_shang = bool(gan_shang and zhi_shang and
@@ -416,6 +421,13 @@ class LiuChenEngine:
                 _gan_shang_ke = KE.get(ZHI_WX.get(gan_shang, '')) == gw
                 _zhi_shang_ke = KE.get(ZHI_WX.get(zhi_shang, '')) == ZHI_WX.get(ri_zhi, '')
                 if _gan_shang_ke and _zhi_shang_ke:
+                    # 【指南深读 第五轮】守卫：支上=日贵人且乘贵人（月将贵人临年）→
+                    #   无禄亦有中者（ZN-选举-四"课名虽为无禄，但亦有中者…月将贵人临年"——
+                    #   己巳日支上子=己贵乘贵人）
+                    if zhi_shang in gui_zhi_set and _zhi_shang_tj == '贵人':
+                        return self._mk('无禄有中', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                        f'无禄课而支上{zhi_shang}为日贵人乘贵人，月将贵人临年，无禄亦有中者',
+                                        'ZN-选举-四"课名虽为无禄，但亦有中者…月将贵人临年"')
                     return self._mk('无禄难食', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                     f'四课上神俱克下，无禄课，虽受官职必不能食禄',
                                     '§前程仕进03·076"无禄课虽受通判必不能食禄"')
@@ -1603,7 +1615,7 @@ class LiuChenEngine:
                 sanchuan: List[str], tianjiang_list: List[str] = None,
                 kongwang=('', ''), keti: str = '', sike: List = None,
                 category: str = '', zishu: str = '', yuejiang: str = '',
-                year: str = '') -> Dict[str, Any]:
+                year: str = '', sike_tj: Dict = None) -> Dict[str, Any]:
         """
         主入口。返回事体走向分析。
         sanchuan: [初传, 中传, 末传]
@@ -1613,6 +1625,7 @@ class LiuChenEngine:
         zishu: 家宅子类（阳宅/阴宅/迁移；空=阳宅默认）。阴宅看辰穴/朝案，迁移看丁马/宜迁。
         yuejiang: 月将（'申将'或'申'），供神煞占类化规则（游都/劫煞/天马/天赦等）使用。
         year: 占课年（干支，如'己酉'），供太岁/岁破规则使用。
+        sike_tj: 天将映射 {地支: 天将}（干支上神天将，供贵人乘贵/朱雀位置等规则）。
         """
         if not sanchuan or len(sanchuan) < 3:
             return {'走向': '未定', '阶段': {}, '叙事': '三传不全，无法判断事体走向', '终局': '平'}
@@ -1635,7 +1648,8 @@ class LiuChenEngine:
         # ── 占类化走向规则（v2：占类专属，优先于通用规则）──
         cat_out = self._category_rules(category, ri_gan, ri_zhi, chu, zhong, mo,
                                        chu_tj, zhong_tj, mo_tj, kong, keti, sike,
-                                       zishu=zishu, yuejiang=yuejiang, year=year)
+                                       zishu=zishu, yuejiang=yuejiang, year=year,
+                                       sike_tj=sike_tj)
         if cat_out:
             return cat_out
 
@@ -1740,10 +1754,10 @@ class LiuChenEngine:
 def analyze_liuchen(ri_gan: str, ri_zhi: str, sanchuan: List[str],
                     tianjiang_list: List[str] = None, kongwang=('', ''), keti: str = '',
                     sike: List = None, category: str = '', zishu: str = '',
-                    yuejiang: str = '', year: str = '') -> Dict[str, Any]:
+                    yuejiang: str = '', year: str = '', sike_tj: Dict = None) -> Dict[str, Any]:
     """便捷入口"""
     return LiuChenEngine().analyze(ri_gan, ri_zhi, sanchuan, tianjiang_list, kongwang, keti, sike,
-                                  category, zishu, yuejiang, year)
+                                  category, zishu, yuejiang, year, sike_tj)
 
 
 if __name__ == '__main__':
