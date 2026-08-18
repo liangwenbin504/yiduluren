@@ -864,11 +864,41 @@ class LiuChenEngine:
                 return self._mk('病符入宅', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'支上神{zhi_shang}为日死/墓地，病符入宅，主合宅病',
                                 '§疾病13·169"病符克宅全家患…疫气入宅主合宅病"')
+            # ⑫b 【壬占汇选深读 2026-08-18】干上=日胎又作官鬼乘六合 → 鬼胎
+            #   （CASE-218 丁亥日干上子=丁之胎（"丁火生于寅，胎在子"）又为官鬼乘六合
+            #   "日上子作六合，主孕，恐是鬼胎……生后时时或瓦落或物响，更不令安宁"凶）
+            _TAI_JB = {'木': '酉', '火': '子', '土': '巳', '金': '卯', '水': '午'}
+            _tai_zhi = _TAI_JB.get(gw, '')
+            if gan_shang == _tai_zhi and _shi_shen(gan_shang, ri_gan) == '官鬼' and _gan_shang_tj == '六合':
+                return self._mk('鬼胎不宁', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干上{gan_shang}为日干胎位又作官鬼乘六合，主孕而怀鬼胎，生后必有响动不宁',
+                                'CASE-壬占汇选-218"日上子作六合，主孕，恐是鬼胎"')
+            # 【壬占汇选深读 2026-08-18】干上=日禄而日支=禄之绝地 → 禄临绝地，病难起色
+            #   （CASE-369"盖禄临绝地，马入墓乡……故断其七月必死。已而果然"——
+            #   己亥日干上午=己禄、支亥=火之绝）
+            if (gan_shang == lu_zhi and ri_zhi and gan_shang and
+                    ZHI_WX.get(ri_zhi, '') == WX_JUE.get(ZHI_WX.get(gan_shang, ''), '')):
+                return self._mk('禄临绝地', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干上{gan_shang}为日禄而日支{ri_zhi}为禄之绝地，禄临绝地，马入墓乡，病恐不测',
+                                'CASE-壬占汇选-369"禄临绝地，马入墓乡……故断其七月必死"')
             # ⑬ 三交课（四正相加）→ 病由情欲（§173"三交中有空亡六合者皆不正之合…其患有三"；
             #   判据：三传含≥2四正 或 干支上神自刑）
             _SI_ZHENG_JB = {'子', '午', '卯', '酉'}
             _sj_cnt = sum(1 for z in (chu, zhong, mo) if z in _SI_ZHENG_JB)
             if _sj_cnt >= 2:
+                # 【壬占汇选深读 2026-08-18】守卫：三传官鬼乘旺相 → 鬼贼当时无畏忌，
+                #   病危不死渐愈（CASE-236"鬼贼当时无畏忌。至初八立春，木旺贪荣，上生枝叶，
+                #   下不克土，渐有生意。果至初八日渐愈"——戊子日卯木鬼乘冬月相气；
+                #   §174 辛酉日午火鬼囚于秋仍三交情病凶、§173 午火鬼囚秋亦凶）
+                _gj_wang = False
+                for _g in guan_gui_zhi:
+                    if wang_shuai(ZHI_WX.get(_g, ''), yuejiang) in ('旺', '相'):
+                        _gj_wang = True
+                        break
+                if _gj_wang:
+                    return self._mk('先凶后吉', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'三交课而官鬼乘旺相之气，鬼贼当时无畏忌，木旺贪荣不克身，病危不死，日渐愈',
+                                    'CASE-壬占汇选-236"鬼贼当时无畏忌…果至初八日渐愈"')
                 return self._mk('三交情病', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'三传{chu}·{zhong}·{mo}三交课，四正相加，病由情欲不正之合',
                                 '§疾病13·173"三交中有空亡六合者皆不正之合其患有三"')
@@ -959,7 +989,16 @@ class LiuChenEngine:
                                 '§官讼16·202"六阴相继之体不利公讼"')
             # ①c 一旬周遍格/循环格（§203"一旬周遍格…惟讼要散不要关锁"——传不离课讼难散；
             #   【BUG-FIX 2026-08-18】§209 循环格+曲直局生身=先凶后吉，不判凶）
+            #   【壬占汇选深读 2026-08-18】守卫：三传无官鬼且财不乘玄武 → 讼根已断，讼可止
+            #   （CASE-242"三传无官鬼财……将笔据出看讼可便止。果讼止"——戊子日辰申子，
+            #   子财乘青龙；§203 卯财乘玄武"到了翻论，才输财"仍凶）
             if xun_huan and not _ju_jiu:
+                _xw2 = chu if chu_tj == '玄武' else zhong if zhong_tj == '玄武' else \
+                       mo if mo_tj == '玄武' else ''
+                if not guan_gui_zhi and not (_xw2 and _xw2 in cai_zhi):
+                    return self._mk('讼止', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'三传{chu}·{zhong}·{mo}无官鬼，财不乘玄武，讼根已断，出据相证，讼可便止',
+                                    'CASE-壬占汇选-242"三传无官鬼财……讼可便止。果讼止"')
                 return self._mk('周遍讼缠', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'三传{chu}·{zhong}·{mo}不离四课，一旬周遍格，讼要散不要关锁，讼事缠绵',
                                 '§官讼16·203"一旬周遍格…惟讼要散不要关锁"')
@@ -994,6 +1033,15 @@ class LiuChenEngine:
                 return self._mk('先凶后吉', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'初传{chu}白虎末传{mo}螣蛇，虎头蛇尾，虽有祸乱渐消释，官事先凶后吉',
                                 'L790"若白虎作初传螣蛇作末传凡事虎头蛇尾虽有祸乱渐消释"; CASE-壬占汇选-0520')
+            # ⑥a 【壬占汇选深读 2026-08-18】干上=日墓且日干休囚 → 火有所藏不乱动，讼渐息
+            #   （CASE-467 丁未日干上戌=丁墓、深秋火囚"官讼渐息，身心渐安宁矣……十月方可
+            #   绝决了释"；守卫①：仅日干休囚死——若日干当令仍以初传官鬼旺相论；
+            #   守卫②：三传纯官鬼 → 仍凶（ZN-占讼-二十一"三传纯官鬼，又关墓覆日，岂不为凶"））
+            if (gan_shang == mu_zhi and wang_shuai(gw, yuejiang) in ('休', '囚', '死') and
+                    not all(_shi_shen(z, ri_gan) == '官鬼' for z in (chu, zhong, mo))):
+                return self._mk('先凶后吉', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干上{gan_shang}为日墓而日干{("火有所藏不乱动" if gw == "火" else "当令已衰")}，官讼渐息，身心渐安宁',
+                                'CASE-壬占汇选-467"丁日戴戌墓，是火有所藏，则不乱动……官讼渐息"')
             # ⑥ 初传官鬼旺相 → 讼必成；休囚 → 讼不成（L819"初传官鬼旺相讼必成休囚讼不成"）
             if _shi_shen(chu, ri_gan) == '官鬼':
                 if chu not in kong and chu_shi != '凶':
@@ -1690,6 +1738,22 @@ class LiuChenEngine:
         # 【贼盗】（失物/捕盗）
         # ───────────────────────────
         if category == '贼盗':
+            # 【壬占汇选深读 2026-08-18】鬼墓覆日（干上=日墓又为官鬼）→ 人已死/失不可寻
+            #   （CASE-416 癸卯日干上辰=癸墓又为鬼，"干乘鬼墓……死气在支……必死。
+            #   落水死者，辰为水库，天后乘之墓神作鬼"——酒后落水已死）
+            if gan_shang == mu_zhi and _shi_shen(gan_shang, ri_gan) == '官鬼':
+                return self._mk('鬼墓覆日', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干上{gan_shang}为日墓又作官鬼，鬼墓覆日，干乘鬼墓，人恐已死，失物不可寻',
+                                'CASE-壬占汇选-416"干乘鬼墓……凡占事课凶得闭口者，必死"')
+            # 【壬占汇选深读 2026-08-18】干上=贵人克玄武 → 告官必获（CASE-641"干上贵人克
+            #   玄武，勾陈又克其藏处，即可擒获矣。果验"——辛酉日干上午=辛贵克末传酉玄武）
+            _xw_zhi = chu if chu_tj == '玄武' else zhong if zhong_tj == '玄武' else \
+                      mo if mo_tj == '玄武' else ''
+            if (gan_shang in _GUI_TY.get(ri_gan, set()) and _xw_zhi and
+                    KE.get(ZHI_WX.get(gan_shang, '')) == ZHI_WX.get(_xw_zhi, '')):
+                return self._mk('贵制玄武', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干上贵人{gan_shang}克玄武所乘{_xw_zhi}，贵制玄武，告官必为捕役所获',
+                                'CASE-壬占汇选-641"干上贵人克玄武…即可擒获矣。果验"')
             # 【邵公断案·亡盗章 2026-08-18】末传乘天后 → 藏匿不远，可获（§亡盗15·190
             #   "末申作后……天后主厌翳藏匿"——天后厌翳藏匿，人未远走）
             if mo_tj == '天后':
@@ -1728,10 +1792,18 @@ class LiuChenEngine:
                                 f'游都{_ss_yd}入传，贼盗将至，防劫夺失脱',
                                 'ZN-应候-二"游都贼符临干支…主有贼"')
             # 元武乘鬼现传 → 盗难寻（L688"元武不克日辰而空亡脱气日鬼...必盗贼失脱之事"）
-            if xuan_wu_zai_chuan and any(_shi_shen(z, ri_gan) == '官鬼' for z in (chu, zhong, mo)):
+            #   【壬占汇选深读 2026-08-18】守卫：三传成三合局 → 类神不空可寻，不判难寻
+            #   （CASE-127"春占曲直课，未加卯作龙为用，其羊不失……初传是类神，作青龙而加
+            #   支辰，故不失"——己卯日未亥卯木局，末传卯乘玄武仍寻见）
+            _ZZ_JU3 = ''
+            for _jz3, _jwx3 in zip([{'申', '子', '辰'}, {'寅', '午', '戌'}, {'巳', '酉', '丑'}, {'亥', '卯', '未'}], ['水', '火', '金', '木']):
+                if {chu, zhong, mo} == _jz3:
+                    _ZZ_JU3 = _jwx3
+                    break
+            if xuan_wu_zai_chuan and any(_shi_shen(z, ri_gan) == '官鬼' for z in (chu, zhong, mo)) and not _ZZ_JU3:
                 return self._mk('失物难寻', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'玄武乘日鬼入传，盗贼难获，失物难寻',
-                                'L688"元武乘神克日干主破财失物"')
+                                'L688"元武乘神克日干主破财失物"; CASE-127"春占曲直课…其羊不失"')
             # 末传克初传 → 贼人堪捉（L702"末传盛初传贼人堪捉"）
             if mo_wx and chu_wx and KE.get(mo_wx) == chu_wx:
                 return self._mk('失物可寻', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
@@ -1752,6 +1824,12 @@ class LiuChenEngine:
                 return self._mk('失而复得', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'末传{mo}生日干，失物不寻自还，失而复得',
                                 'L673"元武乘旺生干支者不寻自还"')
+            # 【壬占汇选深读 2026-08-18】末传=日贵人且乘贵人 → 告官必为捕役所获
+            #   （CASE-620 己未日末传申=己贵乘贵人"勾陈制之…告官必为捕役所获。果获"）
+            if mo in _GUI_TY.get(ri_gan, set()) and mo_tj == '贵人':
+                return self._mk('捕役所获', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'末传{mo}为日贵人乘贵人，勾陈制贼，告官必为捕役所获，失物追回',
+                                'CASE-壬占汇选-620"勾陈制之…告官必为捕役所获。果获"')
             # 循环格 → 贼人复来（L723"周遍格循环格主贼人复来"）
             if xun_huan:
                 return self._mk('贼人复来', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
