@@ -1,0 +1,3144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 禁用浏览器缓存，确保 JavaScript 文件实时更新 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>仪度六壬择日</title>
+    <script>
+        // 全局错误捕获
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.error('全局错误:', message, 'at', source, ':', lineno);
+            alert('页面错误: ' + message + '\n位置: ' + source + ':' + lineno);
+            return false;
+        };
+        
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('Promise错误:', event.reason);
+            alert('Promise错误: ' + event.reason);
+        });
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "SimSun", sans-serif;
+            background: linear-gradient(180deg, #e0f7fa 0%, #b2ebf2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 标题 */
+        .header {
+            text-align: center;
+            background: linear-gradient(180deg, #4dd0e1 0%, #26c6da 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #000;
+            font-size: 36px;
+            font-weight: 900;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3), 3px 3px 6px rgba(0, 0, 0, 0.2);
+            font-family: "HanyiGuli", "STLiti", "LiSu", "隶书", "Kaiti", "Microsoft YaHei", sans-serif;
+            letter-spacing: 2px;
+        }
+
+        /* 输入区域 */
+        .input-section {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .input-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .input-group label {
+            color: #e65100;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .input-group input[type="text"],
+        .input-group input[type="number"] {
+            padding: 8px 12px;
+            border: 2px solid #ffb74d;
+            border-radius: 5px;
+            font-size: 16px;
+            background: #fff;
+            width: 120px;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #ff9800;
+            box-shadow: 0 0 10px rgba(255, 152, 0, 0.3);
+        }
+
+        .date-input-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .date-input-group input {
+            width: 70px;
+        }
+
+        /* 下拉选择框样式 */
+        .select-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 200px;
+        }
+
+        /* 评分选择框样式 - 更窄 */
+        .select-wrapper.score-select {
+            width: 120px;
+        }
+
+        .custom-select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid #ffb74d;
+            border-radius: 5px;
+            font-size: 16px;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .custom-select-display {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid #ffb74d;
+            border-radius: 5px;
+            font-size: 16px;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 20px;
+            position: relative;
+        }
+
+        .custom-select-display:hover {
+            border-color: #ff9800;
+            box-shadow: 0 2px 8px rgba(255, 152, 0, 0.2);
+        }
+
+        .custom-select-display::after {
+            content: '▼';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff9800;
+            font-size: 12px;
+        }
+
+        .custom-select:focus {
+            outline: none;
+            border-color: #ff9800;
+            box-shadow: 0 0 10px rgba(255, 152, 0, 0.3);
+        }
+
+        .custom-select:disabled {
+            background-color: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* 择日类型单选按钮样式 */
+        .zetiri-type-radios {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.5);
+            border: 2px solid transparent;
+        }
+
+        .radio-label:hover {
+            background: rgba(255, 152, 0, 0.1);
+            border-color: #ff9800;
+        }
+
+        .radio-label input[type="radio"] {
+            margin-right: 8px;
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+
+        .radio-text {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .radio-label input[type="radio"]:checked + .radio-text {
+            color: #e65100;
+            font-weight: bold;
+        }
+
+        .radio-label:has(input[type="radio"]:checked) {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-color: #ff9800;
+            box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
+        }
+
+        /* 年命选择框样式 */
+        #nianmingRow .input-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        /* 禁用状态的输入框 */
+        .input-row.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        /* 自定义下拉列表 */
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            max-height: 300px;
+            overflow-y: auto;
+            background: #fff;
+            border: 2px solid #ff9800;
+            border-radius: 5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            display: none;
+        }
+
+        .dropdown.show {
+            display: block;
+        }
+
+        .dropdown-search {
+            padding: 10px;
+            border-bottom: 1px solid #ffe0b2;
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 1;
+        }
+
+        .dropdown-search input {
+            width: 100%;
+            padding: 6px 10px;
+            border: 1px solid #ffb74d;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .dropdown-search input:focus {
+            outline: none;
+            border-color: #ff9800;
+        }
+
+        .dropdown-options {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .dropdown-option {
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 1px solid #fff3e0;
+        }
+
+        .dropdown-option:hover {
+            background: #fff3e0;
+        }
+
+        .dropdown-option.selected {
+            background: #ff9800;
+            color: #fff;
+        }
+
+        .dropdown-option.hidden {
+            display: none;
+        }
+
+        .dropdown-group {
+            font-weight: bold;
+            background: #ffe0b2;
+            padding: 8px 12px;
+            color: #e65100;
+            position: sticky;
+            top: 0;
+        }
+
+        /* 向山显示框 */
+        .xiangshan-display {
+            padding: 8px 15px;
+            background: linear-gradient(180deg, #e8f5e9 0%, #c8e6c9 100%);
+            border: 2px solid #81c784;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #2e7d32;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        /* 来龙选择区域样式 */
+        #lailongSelect {
+            width: 150px;
+        }
+
+        #lailongSelect:disabled {
+            background-color: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        #lailongSelect:not(:disabled) {
+            cursor: pointer;
+            background: linear-gradient(180deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-color: #4caf50;
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        #lailongSelect:not(:disabled):hover {
+            border-color: #388e3c;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+        }
+
+        /* 功能区域布局 */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+        }
+
+        .panel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .panel-title {
+            color: #000;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4dd0e1;
+        }
+
+        /* 四柱区域 */
+        .sizhu-panel {
+            background: #fff;
+            min-height: 200px;
+        }
+
+        .sizhu-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            text-align: center;
+            direction: rtl;
+        }
+
+        .sizhu-column {
+            direction: ltr;
+            padding: 15px;
+            background: linear-gradient(180deg, #fff3e0 0%, #ffe0b2 100%);
+            border-radius: 8px;
+            border: 2px solid #ffb74d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sizhu-label {
+            font-size: 14px;
+            color: #e65100;
+            margin-bottom: 10px;
+        }
+
+        .sizhu-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #bf360c;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            letter-spacing: 5px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 四柱斗首五行显示 */
+        .sizhu-doushou {
+            margin-top: 6px;
+            padding: 4px 8px;
+            background: linear-gradient(180deg, #fce4ec 0%, #f8bbd9 100%);
+            border-radius: 4px;
+            border: 1px solid #f48fb1;
+            font-size: 13px;
+            font-weight: 600;
+            color: #c2185b;
+        }
+
+        /* 四柱演禽真法显示 */
+        .sizhu-yanqin {
+            margin-top: 8px;
+            padding: 6px;
+            background: linear-gradient(180deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-radius: 5px;
+            border: 1px solid #a5d6a7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            font-size: 13px;
+        }
+
+        .yanqin-icon {
+            font-size: 16px;
+        }
+
+        .yanqin-text {
+            color: #2e7d32;
+            font-weight: 500;
+        }
+
+        /* 斗首吉凶断语区域（已合并到详情弹窗，暂时注释） */
+        /*
+
+        /* 日期显示列表区域 */
+        .date-list-panel {
+            background: linear-gradient(180deg, #fce4ec 0%, #f8bbd9 100%);
+            min-height: 300px;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .date-list {
+            list-style: none;
+        }
+
+        .date-item {
+            padding: 12px;
+            margin: 8px 0;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid #ec407a;
+        }
+
+        .date-item:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .date-item.selected {
+            background: #ec407a;
+            color: white;
+        }
+
+        /* 核心区域 */
+        .core-section {
+            background: linear-gradient(180deg, #fce4ec 0%, #f8bbd9 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 1fr 0.7fr 1fr;
+            gap: 20px;
+        }
+
+        .core-panel {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 250px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .core-panel-title {
+            color: #000;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f48fb1;
+        }
+
+        /* 天地盘 - 闭环正方形布局 */
+        .tiandi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .guiren-grid {
+            flex: 0 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            text-align: center;
+            margin-bottom: 0;
+        }
+        
+        /* 占位单元格（隐藏） */
+        .tiandi-cell.placeholder {
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .tiandi-cell {
+            padding: 2px;
+            background: linear-gradient(180deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 4px;
+            border: 1px solid #90caf9;
+            font-size: 12px;
+            font-weight: bold;
+            color: #1565c0;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            gap: 1px;
+        }
+
+        .tiandi-cell .shensha {
+            font-size: 8px;
+            color: #1976d2;
+            font-weight: 600;
+        }
+
+        /* ========================================
+           天地盘区域标准网格系统
+           ========================================
+           网格规范：
+           - 外层网格：6 列 × 6 行（贵人盘定位）
+           - 内层网格：4 列 × 4 行（天盘定位）
+           - 标准单元格尺寸：36px × 36px
+           - 标准间距：3px（内外层统一）
+           - 对齐方式：居中对齐
+           - 响应式：固定最大宽度 420px
+           - 内外层关系：内层完全嵌入外层中心区域
+           ======================================== */
+        
+        /* 天地盘统一布局 - 贵人盘在外圈动态定位 */
+        .guiren-outer-wrapper {
+            display: grid;
+            grid-template-columns: repeat(6, 36px);
+            grid-template-rows: repeat(6, 36px);
+            gap: 0;
+            padding: 0;
+            background: rgba(76, 175, 80, 0.05);
+            border: 1px solid #4caf50;
+            max-width: 216px;
+            min-width: 216px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 216px;
+        }
+
+        .guiren-outer-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border: 1px dashed #4caf50;
+            margin: 0;
+        }
+
+        .guiren-outer-label {
+            font-size: 0;
+            opacity: 0;
+            visibility: hidden;
+            display: none;
+        }
+
+        .guiren-outer-value {
+            font-size: 11px;
+            color: #2e7d32;
+            font-weight: 700;
+            white-space: nowrap;
+            padding: 3px 6px;
+            background: rgba(232, 245, 233, 0.95);
+            border-radius: 4px;
+            border: 1px solid #a5d6a7;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .tiandi-inner-wrapper {
+            position: absolute;
+            top: calc(36px + 0px);
+            left: calc(36px + 0px);
+            display: grid;
+            grid-template-columns: repeat(4, 36px);
+            grid-template-rows: repeat(4, 36px);
+            gap: 0;
+            padding: 0;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 6px;
+            width: 144px;
+            height: 144px;
+        }
+        
+        .tiandi-grid {
+            display: contents;
+        }
+        
+        .tiandi-cell {
+            padding: 2px;
+            background: linear-gradient(180deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 4px;
+            border: 1px solid #90caf9;
+            font-size: 12px;
+            font-weight: bold;
+            color: #1565c0;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            gap: 1px;
+        }
+
+        .guiren-outer-placeholder {
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .guiren-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            background: linear-gradient(180deg, #f1f8e9 0%, #dcedc8 100%);
+            border-radius: 5px;
+            border: 1px solid #c5e1a5;
+            font-size: 14px;
+        }
+
+        .guiren-label {
+            font-weight: bold;
+            color: #33691e;
+        }
+
+        .guiren-value {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+            color: #1b5e20;
+            font-weight: 600;
+        }
+
+        .guiren-divider {
+            color: #a5d6a7;
+        }
+
+        /* 四课 - 传统排法从右到左 */
+        .sicols-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 7px;
+            direction: rtl;
+        }
+        
+        .sicol-item {
+            direction: ltr;
+            padding: 10px;
+            background: linear-gradient(180deg, #fff9c4 0%, #fff59d 100%);
+            border-radius: 6px;
+            border: 2px solid #fdd835;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+        }
+
+        .sicol-ganzhi {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .sicol-guiren {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 8px;
+            background: linear-gradient(180deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-radius: 4px;
+            border: 1px solid #a5d6a7;
+            min-width: 35px;
+        }
+
+        .sicol-guiren-label {
+            font-size: 8px;
+            color: #2e7d32;
+            font-weight: 500;
+            margin-bottom: 1px;
+        }
+
+        .sicol-guiren-value {
+            font-size: 10px;
+            color: #1b5e20;
+            font-weight: bold;
+        }
+
+        .sicol-item .sicol-top {
+            font-size: 17px;
+            font-weight: bold;
+            color: #c62828;
+        }
+
+        .sicol-item .sicol-bottom {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+
+        .sicol-label {
+            font-size: 16px;
+            color: #f57f17;
+            font-weight: bold;
+            writing-mode: vertical-rl;
+        }
+
+        /* 贵人神煞区域 */
+        .guiren-shensha {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #fff3e0 0%, #ffe0b2 100%);
+            border-radius: 8px;
+            border: 2px solid #ffb74d;
+        }
+
+        .guiren-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 10px 20px;
+            background: linear-gradient(180deg, #ffcc80 0%, #ffa726 100%);
+            border-radius: 8px;
+            border: 2px solid #f57c00;
+            min-width: 100px;
+        }
+
+        .guiren-label {
+            font-size: 14px;
+            color: #e65100;
+            font-weight: bold;
+        }
+
+        .guiren-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #bf360c;
+        }
+
+        .shensha-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 10px 20px;
+            background: linear-gradient(180deg, #ffe0b2 0%, #ffcc80 100%);
+            border-radius: 8px;
+            border: 2px solid #ffa726;
+            min-width: 100px;
+        }
+
+        .shensha-label {
+            font-size: 14px;
+            color: #e65100;
+            font-weight: bold;
+        }
+
+        .shensha-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #bf360c;
+        }
+
+        .shensha-category {
+            margin-bottom: 12px;
+            padding: 8px;
+            background: rgba(255, 152, 0, 0.05);
+            border-radius: 6px;
+        }
+
+        .shensha-category h5 {
+            margin: 0 0 8px 0;
+            padding: 0 0 4px 8px;
+            font-size: 15px;
+            color: #e65100;
+            border-bottom: 1px solid #ffe0b2;
+        }
+
+        .shensha-category .guiren-shensha {
+            margin-bottom: 0;
+        }
+
+        /* 三传 */
+        .sanchuan-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sanchuan-item {
+            padding: 12px;
+            background: linear-gradient(180deg, #c8e6c9 0%, #a5d6a7 100%);
+            border-radius: 8px;
+            border: 2px solid #66bb6a;
+            text-align: center;
+        }
+
+        .sanchuan-label {
+            font-size: 14px;
+            color: #2e7d32;
+            margin-bottom: 5px;
+        }
+
+        .sanchuan-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1b5e20;
+        }
+
+        /* 三传完整布局 */
+        .sanchuan-complete {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: flex-start;
+        }
+
+        .sanchuan-liuqin {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1565c0;
+            min-width: 50px;
+            text-align: center;
+            padding: 5px 10px;
+            background: linear-gradient(180deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 5px;
+            border: 1px solid #90caf9;
+        }
+
+        .sanchuan-rigan {
+            font-size: 18px;
+            font-weight: bold;
+            color: #c62828;
+            min-width: 40px;
+            text-align: center;
+            padding: 5px 10px;
+            background: linear-gradient(180deg, #ffebee 0%, #ffcdd2 100%);
+            border-radius: 5px;
+            border: 1px solid #ef9a9a;
+        }
+
+        .sanchuan-dizhi {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2e7d32;
+            min-width: 50px;
+            text-align: center;
+            padding: 5px 10px;
+            background: linear-gradient(180deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-radius: 5px;
+            border: 1px solid #a5d6a7;
+        }
+
+        .sanchuan-guiren {
+            font-size: 16px;
+            font-weight: bold;
+            color: #f57f17;
+            min-width: 80px;
+            text-align: center;
+            padding: 5px 10px;
+            background: linear-gradient(180deg, #fff3e0 0%, #ffe0b2 100%);
+            border-radius: 5px;
+            border: 1px solid #ffcc80;
+            margin-left: auto;
+        }
+
+        /* AI 评价区域 */
+        .ai-evaluation-panel {
+            background: linear-gradient(180deg, #f5f5f5 0%, #e0e0e0 100%);
+            border-radius: 10px;
+            padding: 30px;
+            min-height: 200px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .ai-evaluation-title {
+            color: #000;
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .ai-evaluation-content {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 120px;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #333;
+            border-left: 4px solid #9c27b0;
+        }
+
+        /* 按钮区域 */
+        .button-section {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-export {
+            background: linear-gradient(180deg, #4caf50 0%, #43a047 100%);
+            color: white;
+        }
+
+        .btn-export:hover {
+            background: linear-gradient(180deg, #66bb6a 0%, #66bb6a 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-exit {
+            background: linear-gradient(180deg, #ef5350 0%, #e53935 100%);
+            color: white;
+        }
+
+        .btn-exit:hover {
+            background: linear-gradient(180deg, #ef5350 0%, #ef5350 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 83, 80, 0.4);
+        }
+
+        .btn-start {
+            background: linear-gradient(180deg, #2196f3 0%, #1e88e5 100%);
+            color: white;
+            padding: 12px 30px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-start:hover:not(:disabled) {
+            background: linear-gradient(180deg, #42a5f5 0%, #42a5f5 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        .btn-start:disabled {
+            background: linear-gradient(180deg, #bdbdbd 0%, #9e9e9e 100%);
+            color: #757575;
+            cursor: not-allowed;
+            opacity: 0.7;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-start:disabled::after {
+            content: ' （请先选择择日类型）';
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .btn-start.enabled {
+            animation: btnEnabledPulse 0.5s ease;
+        }
+
+        @keyframes btnEnabledPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* 进度条和提示区域样式 */
+        .progress-container {
+            background: linear-gradient(180deg, #fff9c4 0%, #fff59d 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #fdd835;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .progress-message {
+            font-size: 18px;
+            font-weight: bold;
+            color: #c62828;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar-wrapper {
+            width: 100%;
+            height: 25px;
+            background: #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #4caf50 0%, #8bc34a 50%, #4caf50 100%);
+            background-size: 200% 100%;
+            border-radius: 12px;
+            transition: width 0.3s ease;
+            animation: progressAnimation 1.5s ease-in-out infinite;
+        }
+
+        @keyframes progressAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .progress-status {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .core-section {
+                grid-template-columns: 1fr;
+            }
+
+            .input-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .button-section {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4dd0e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #26c6da;
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .panel {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* 评分显示 */
+        .score-display {
+            display: inline-block;
+            padding: 5px 15px;
+            background: linear-gradient(180deg, #ffecb3 0%, #ffe082 100%);
+            border-radius: 20px;
+            border: 2px solid #ffc107;
+            font-weight: bold;
+            color: #ff6f00;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        /* 课体显示 */
+        .keti-display {
+            display: inline-block;
+            padding: 5px 15px;
+            background: linear-gradient(180deg, #b3e5fc 0%, #81d4fa 100%);
+            border-radius: 5px;
+            border: 2px solid #4fc3f7;
+            font-weight: bold;
+            color: #0277bd;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        /* 山向信息提示框 */
+        .shanxiang-tooltip {
+            position: absolute;
+            background: #fff;
+            border: 2px solid #4dd0e1;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            z-index: 1001;
+            max-width: 300px;
+            display: none;
+        }
+
+        .shanxiang-tooltip.show {
+            display: block;
+        }
+
+        .shanxiang-tooltip h4 {
+            color: #0097a7;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .shanxiang-tooltip p {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* 斗首分值筛选窗口 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-window {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #4dd0e1;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #0097a7;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #999;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: #ffebee;
+            color: #e53935;
+        }
+
+        .modal-content {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .filter-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .filter-input {
+            padding: 12px 15px;
+            border: 2px solid #ffb74d;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: #ff9800;
+            box-shadow: 0 0 10px rgba(255, 152, 0, 0.2);
+        }
+
+        .filter-hint {
+            font-size: 14px;
+            color: #666;
+            padding: 8px 12px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn-modal {
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-confirm {
+            background: linear-gradient(180deg, #4caf50 0%, #43a047 100%);
+            color: white;
+        }
+
+        .btn-confirm:hover {
+            background: linear-gradient(180deg, #66bb6a 0%, #66bb6a 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-cancel {
+            background: linear-gradient(180deg, #9e9e9e 0%, #757575 100%);
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background: linear-gradient(180deg, #bdbdbd 0%, #9e9e9e 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(158, 158, 158, 0.3);
+        }
+
+        /* 斗首课体查看窗口 */
+        .keti-details {
+            padding: 20px;
+        }
+
+        .keti-header {
+            background: linear-gradient(180deg, #b3e5fc 0%, #81d4fa 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .keti-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0277bd;
+            margin-bottom: 10px;
+        }
+
+        .keti-score {
+            display: inline-block;
+            padding: 8px 20px;
+            background: white;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #ff6f00;
+            border: 2px solid #ffc107;
+        }
+
+        .keti-info-section {
+            margin-bottom: 20px;
+        }
+
+        .keti-info-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0097a7;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .keti-info-content {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .keti-params {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .keti-param-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid #4dd0e1;
+        }
+
+        .keti-param-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .keti-param-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .keti-description {
+            background: linear-gradient(180deg, #fff3e0 0%, #ffe0b2 100%);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ff9800;
+            margin-top: 15px;
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4dd0e1;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #e53935;
+            background: #ffebee;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .clickable-display {
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .clickable-display:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .clickable-display::after {
+            content: '🔍';
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .clickable-display:hover::after {
+            opacity: 1;
+        }
+
+        /* 日期详情弹窗样式 */
+        .date-detail-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+
+        .date-detail-modal.show {
+            display: flex;
+        }
+
+        .date-detail-window {
+            background: white;
+            border-radius: 15px;
+            padding: 0;
+            max-width: 700px;
+            width: 90%;
+            max-height: 85vh;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transform-origin: center center;
+            transition: box-shadow 0.2s ease;
+            cursor: move;
+        }
+
+        .date-detail-window.dragging {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            opacity: 0.9;
+        }
+
+        .date-detail-window.scaling {
+            transition: transform 0.1s ease;
+        }
+
+        .drag-hint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .drag-hint.show {
+            opacity: 1;
+        }
+
+        .date-detail-header {
+            background: linear-gradient(180deg, #ffb74d 0%, #ff9800 100%);
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #f57c00;
+            position: relative;
+        }
+
+        .date-detail-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .date-detail-close {
+            background: white;
+            border: 2px solid #fff;
+            font-size: 28px;
+            color: #fff;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 10;
+        }
+
+        .date-detail-close:hover {
+            background: #fff3e0;
+            color: #e65100;
+            border-color: #fff3e0;
+            transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        .date-detail-content {
+            padding: 25px;
+            max-height: 70vh;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .detail-row {
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #ffb74d;
+        }
+
+        .detail-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .detail-score {
+            display: inline-block;
+            padding: 6px 15px;
+            background: linear-gradient(180deg, #4caf50 0%, #43a047 100%);
+            color: white;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+        }
+
+        .detail-keti {
+            display: inline-block;
+            padding: 6px 15px;
+            background: linear-gradient(180deg, #2196f3 0%, #1e88e5 100%);
+            color: white;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+        }
+
+        .detail-section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #e65100;
+            margin: 0 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ffb74d;
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+        }
+
+        .duanyu-section {
+            margin-top: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-radius: 10px;
+            border: 2px solid #ff9800;
+        }
+
+        .duanyu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ffb74d;
+        }
+
+        .duanyu-keti-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #e65100;
+        }
+
+        .duanyu-score-badge {
+            padding: 6px 15px;
+            color: white;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .duanyu-content-block {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .duanyu-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 6px;
+        }
+
+        .duanyu-label {
+            font-size: 14px;
+            color: #e65100;
+            font-weight: bold;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .duanyu-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .integrated-keti-info {
+            margin: 15px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-radius: 8px;
+            border: 2px solid #ff9800;
+        }
+
+        .keti-info-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .keti-info-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .keti-info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 8px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 6px;
+        }
+
+        .keti-info-label {
+            font-size: 12px;
+            color: #e65100;
+            font-weight: bold;
+        }
+
+        .keti-info-value {
+            font-size: 13px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .keti-info-score {
+            display: inline-block;
+            padding: 4px 10px;
+            color: white;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 13px;
+            text-align: center;
+            width: fit-content;
+        }
+
+        .keti-info-keti {
+            display: inline-block;
+            padding: 4px 10px;
+            background: linear-gradient(180deg, #2196f3 0%, #1e88e5 100%);
+            color: white;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .keti-info-keti.daliuren {
+            background: linear-gradient(180deg, #9c27b0 0%, #7b1fa2 100%);
+        }
+
+        .integrated-score-badge {
+            display: flex;
+            justify-content: flex-end;
+            margin: 15px 0;
+        }
+
+        .score-badge-main {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            color: white;
+            border-radius: 20px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .score-badge-value {
+            font-size: 20px;
+        }
+
+        .score-badge-level {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* ======================== 标签页导航 ======================== */
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0 20px 0;
+        }
+
+        .tab-btn {
+            padding: 8px 24px;
+            border: 2px solid #ffb74d;
+            border-radius: 20px;
+            background: #fff;
+            color: #ff9800;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .tab-btn:hover {
+            background: #fff3e0;
+            border-color: #ff9800;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: #fff;
+            border-color: #f57c00;
+            box-shadow: 0 2px 8px rgba(255,152,0,0.3);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ======================== 占事输入面板 ======================== */
+        .zhanshi-input-section {
+            background: rgba(255,255,255,0.6);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .zhanshi-input-section .input-row {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 0;
+        }
+
+        .zhanshi-input-section .input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .zhanshi-input-section .input-group label {
+            font-weight: 500;
+            color: #555;
+            white-space: nowrap;
+        }
+
+        .zhanshi-input-section .input-group input[type="date"],
+        .zhanshi-input-section .input-group input[type="time"] {
+            padding: 6px 10px;
+            border: 2px solid #ffb74d;
+            border-radius: 5px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .zhanshi-input-section .input-group input:focus {
+            border-color: #ff9800;
+            box-shadow: 0 0 6px rgba(255,152,0,0.2);
+        }
+
+        .zhanshi-input-section .btn-primary {
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .zhanshi-input-section .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(255,152,0,0.3);
+        }
+
+        .zhanshi-input-section .btn-keti720 {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #7c4dff, #651fff);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .zhanshi-input-section .btn-keti720:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(124,77,255,0.3);
+        }
+
+        .zhanshi-input-section .btn-secondary {
+            padding: 6px 12px;
+            background: linear-gradient(135deg, #ffb74d, #ffa726);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .zhanshi-input-section .btn-secondary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(255,183,77,0.3);
+        }
+
+        /* ========================================
+           720课审核面板 — 可拖拽缩放样式
+           ======================================== */
+        .keti720-window {
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1001;
+            min-width: 240px;
+            min-height: 300px;
+            overflow: hidden;
+            resize: none;
+            width: 50%;
+            max-width: 360px;
+        }
+        .keti720-window .modal-header.draggable {
+            cursor: move;
+            user-select: none;
+        }
+        .keti720-window .modal-header.draggable:active {
+            cursor: grabbing;
+        }
+        .resize-handle {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 20px;
+            height: 20px;
+            cursor: nwse-resize;
+            z-index: 10;
+        }
+        .resize-handle::after {
+            content: '';
+            position: absolute;
+            right: 4px;
+            bottom: 4px;
+            width: 12px;
+            height: 12px;
+            border-right: 3px solid #ce93d8;
+            border-bottom: 3px solid #ce93d8;
+            border-radius: 0 0 4px 0;
+        }
+        .resize-handle:hover::after {
+            border-color: #7c4dff;
+        }
+        .keti720-window.dragging,
+        .keti720-window.resizing {
+            user-select: none;
+            pointer-events: none;
+        }
+        .keti720-window.dragging .modal-header.draggable,
+        .keti720-window.resizing .resize-handle {
+            pointer-events: auto;
+        }
+        .keti720-window.dragging {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            transition: box-shadow 0.1s ease;
+        }
+
+        /* ======================== 720课审核排盘面板 ======================== */
+        .keti720-form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            padding: 10px 0;
+        }
+
+        .keti720-form .form-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .keti720-form .form-row label {
+            min-width: 56px;
+            font-weight: 600;
+            color: #444;
+            font-size: 14px;
+        }
+
+        .keti720-form .form-row select {
+            flex: 1;
+            padding: 8px 10px;
+            border: 2px solid #ce93d8;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            background: #fafafa;
+            transition: border-color 0.2s;
+            cursor: pointer;
+        }
+
+        .keti720-form .form-row select:focus {
+            border-color: #7c4dff;
+            box-shadow: 0 0 8px rgba(124,77,255,0.15);
+        }
+
+        .keti720-form .form-row select:hover {
+            border-color: #b39ddb;
+        }
+
+        .keti720-status {
+            margin-top: 8px;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 13px;
+            text-align: center;
+            min-height: 20px;
+        }
+
+        .keti720-status.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .keti720-status.waiting {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .keti720-status.error {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .keti720-result {
+            margin-top: 10px;
+            padding: 12px;
+            background: #f3e5f5;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.8;
+            min-height: 80px;
+            white-space: pre-wrap;
+        }
+
+        /* ======================== 占事结果弹窗 ======================== */
+        .zhanshi-result-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ffb74d;
+        }
+
+        .zhanshi-result-header h3 {
+            color: #c62828;
+            font-size: 20px;
+            margin: 0;
+        }
+
+        .zhanshi-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 8px;
+            border-left: 3px solid #ff9800;
+        }
+
+        .zhanshi-section h4 {
+            margin: 0 0 12px 0;
+            color: #e65100;
+            font-size: 16px;
+            border-bottom: 1px solid #ffe0b2;
+            padding-bottom: 6px;
+        }
+
+        /* 天地盘表格 */
+        .tiandipan-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 auto;
+            max-width: 400px;
+        }
+
+        .tiandipan-table td {
+            text-align: center;
+            padding: 6px 8px;
+            border: 1px solid #ffe0b2;
+            font-size: 13px;
+            min-width: 40px;
+        }
+
+        .tiandipan-table td:empty {
+            border: none;
+        }
+
+        /* 四课显示 */
+        .sike-display {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .sike-item {
+            text-align: center;
+            padding: 6px;
+            background: #fff;
+            border-radius: 4px;
+            border: 1px solid #ffe0b2;
+        }
+
+        .sike-tiangan {
+            display: block;
+            font-weight: bold;
+            color: #c62828;
+            font-size: 14px;
+        }
+
+        .sike-dizhi {
+            display: block;
+            color: #555;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        /* 三传显示 */
+        .sanchuan-display {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .chuan-item {
+            text-align: center;
+            padding: 8px 16px;
+            background: #fff;
+            border-radius: 6px;
+            border: 1px solid #ffe0b2;
+            min-width: 100px;
+        }
+
+        .chuan-label {
+            display: block;
+            font-weight: bold;
+            color: #e65100;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .chuan-item span:last-child {
+            font-size: 14px;
+            color: #333;
+        }
+
+        /* 课体显示 */
+        .keti-display {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+            padding: 8px;
+            background: #fff;
+            border-radius: 4px;
+            border: 1px solid #ffe0b2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 标题 -->
+        <div class="header">
+            <h1>仪度六壬择日</h1>
+        </div>
+
+        <!-- 标签页导航 -->
+        <div class="tab-container">
+            <button class="tab-btn active" data-tab="zeri" onclick="switchTab('zeri')">📅 择日</button>
+            <button class="tab-btn" data-tab="zhanshi" onclick="switchTab('zhanshi')">🔮 占事</button>
+            <button class="tab-btn" data-tab="stock" onclick="switchTab('stock')">📈 股票预测训练</button>
+        </div>
+
+        <!-- 输入区域（择日面板） -->
+        <div class="input-section tab-content active" id="tab-zeri">
+            <div class="input-row">
+                <div class="input-group">
+                    <label>择日类型：</label>
+                    <div class="select-wrapper">
+                        <select class="custom-select" id="zetiriTypeSelect">
+                            <option value="">请选择择日类型</option>
+                            <option value="立碑" selected>立碑</option>
+                            <option value="安葬">安葬</option>
+                            <option value="婚嫁">婚嫁</option>
+                            <option value="开业">开业</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 隐藏字段存储山向信息 -->
+            <input type="hidden" id="shanxiang" value="">
+            
+            <!-- 坐山选择区域（立碑/安葬时显示） -->
+            <div class="input-row" id="zuoshanRow">
+                <div class="input-group">
+                    <label>坐山：</label>
+                    <div class="select-wrapper">
+                        <div class="custom-select-display" id="zuoshanSelectDisplay">
+                            <span>请选择坐山</span>
+                        </div>
+                        <div class="dropdown" id="zuoshanDropdown">
+                            <div class="dropdown-search">
+                                <input type="text" id="zuoshanSearch" placeholder="搜索坐山...">
+                            </div>
+                            <div class="dropdown-options" id="zuoshanOptions"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>向山：</label>
+                    <div class="xiangshan-display" id="xiangshanDisplay">--</div>
+                </div>
+                <div class="input-group">
+                    <label id="lailongLabel">来龙：</label>
+                    <div class="select-wrapper">
+                        <select class="custom-select" id="lailongSelect">
+                            <option value="">请选择来龙</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 年命选择区域（婚嫁时显示） -->
+            <div class="input-row" id="nianmingRow" style="display: none;">
+                <div class="input-group">
+                    <label>男年命：</label>
+                    <div class="select-wrapper">
+                        <select class="custom-select" id="nanNianmingSelect">
+                            <option value="">请选择男年命</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>女年命：</label>
+                    <div class="select-wrapper">
+                        <select class="custom-select" id="nvNianmingSelect">
+                            <option value="">请选择女年命</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label>斗首评分：</label>
+                    <div class="select-wrapper score-select">
+                        <select class="custom-select" id="doushouScoreSelect" title="选择斗首评分">
+                            <option value="">请选择</option>
+                            <option value="60">60分</option>
+                            <option value="65">65分</option>
+                            <option value="70" selected>70分</option>
+                            <option value="75">75分</option>
+                            <option value="80">80分</option>
+                            <option value="85">85分</option>
+                            <option value="90">90分</option>
+                            <option value="95">95分</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>大六壬评分：</label>
+                    <div class="select-wrapper score-select">
+                        <select class="custom-select" id="daliurenScoreSelect" title="选择大六壬评分">
+                            <option value="">请选择</option>
+                            <option value="60">60分</option>
+                            <option value="65">65分</option>
+                            <option value="70" selected>70分</option>
+                            <option value="75">75分</option>
+                            <option value="80">80分</option>
+                            <option value="85">85分</option>
+                            <option value="90">90分</option>
+                            <option value="95">95分</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>演禽真法评分：</label>
+                    <div class="select-wrapper score-select">
+                        <select class="custom-select" id="yanqinScoreSelect" title="选择演禽真法评分">
+                            <option value="">请选择</option>
+                            <option value="60">60分</option>
+                            <option value="65">65分</option>
+                            <option value="70" selected>70分</option>
+                            <option value="75">75分</option>
+                            <option value="80">80分</option>
+                            <option value="85">85分</option>
+                            <option value="90">90分</option>
+                            <option value="95">95分</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="input-row" style="display: none;">
+                <div class="input-group">
+                    <label>斗首课体：</label>
+                    <span class="keti-display clickable-display" id="doushouKeti" onclick="openKetiDetail(this.textContent, parseInt(document.getElementById('doushouScoreSelect').value))" title="点击查看课体详解">--</span>
+                </div>
+                <div class="input-group">
+                    <label>大六壬课体：</label>
+                    <span class="keti-display" id="daliurenKeti">--</span>
+                </div>
+            </div>
+            <div class="input-row">
+                <div class="input-group">
+                    <label>起始日期：</label>
+                    <div class="date-input-group">
+                        <input type="number" id="startYear" placeholder="年" min="1900" max="2100" oninput="autoCalculateEndDate()"> 年
+                        <input type="number" id="startMonth" placeholder="月" min="1" max="12" oninput="autoCalculateEndDate()"> 月
+                        <input type="number" id="startDay" placeholder="日" min="1" max="31" oninput="autoCalculateEndDate()"> 日
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>结束日期：</label>
+                    <div class="date-input-group">
+                        <input type="number" id="endYear" placeholder="年" min="1900" max="2100"> 年
+                        <input type="number" id="endMonth" placeholder="月" min="1" max="12"> 月
+                        <input type="number" id="endDay" placeholder="日" min="1" max="31"> 日
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 吉期个数选择和开始择日按钮 -->
+            <div class="input-row">
+                <div class="input-group">
+                    <label>选择吉期个数：</label>
+                    <select class="custom-select" id="jiriCount" style="width: 150px;">
+                        <option value="3">3 个</option>
+                        <option value="5" selected>5 个</option>
+                        <option value="7">7 个</option>
+                        <option value="9">9 个</option>
+                        <option value="11">11 个</option>
+                        <option value="15">15 个</option>
+                        <option value="20">20 个</option>
+                        <option value="30">30 个</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <button class="btn btn-start" id="btnStartZeri" disabled>🔍 开始择日</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主要内容区域 -->
+        <div class="main-content">
+            <!-- 四柱区域 -->
+            <div class="panel sizhu-panel">
+                <h2 class="panel-title">四柱区域</h2>
+                <div class="sizhu-grid">
+                    <div class="sizhu-column">
+                        <div class="sizhu-label">年柱</div>
+                        <div class="sizhu-value" id="yearPillar">--</div>
+                        <div class="sizhu-doushou" id="yearDoushou">--</div>
+                        <div class="sizhu-yanqin" id="yearYanqin">
+                            <span class="yanqin-icon">🐔</span>
+                            <span class="yanqin-text">--</span>
+                        </div>
+                    </div>
+                    <div class="sizhu-column">
+                        <div class="sizhu-label">月柱</div>
+                        <div class="sizhu-value" id="monthPillar">--</div>
+                        <div class="sizhu-doushou" id="monthDoushou">--</div>
+                        <div class="sizhu-yanqin" id="monthYanqin">
+                            <span class="yanqin-icon">🐔</span>
+                            <span class="yanqin-text">--</span>
+                        </div>
+                    </div>
+                    <div class="sizhu-column">
+                        <div class="sizhu-label">日柱</div>
+                        <div class="sizhu-value" id="dayPillar">--</div>
+                        <div class="sizhu-doushou" id="dayDoushou">--</div>
+                        <div class="sizhu-yanqin" id="dayYanqin">
+                            <span class="yanqin-icon">🐔</span>
+                            <span class="yanqin-text">--</span>
+                        </div>
+                    </div>
+                    <div class="sizhu-column">
+                        <div class="sizhu-label">时柱</div>
+                        <div class="sizhu-value" id="hourPillar">--</div>
+                        <div class="sizhu-doushou" id="hourDoushou">--</div>
+                        <div class="sizhu-yanqin" id="hourYanqin">
+                            <span class="yanqin-icon">🐔</span>
+                            <span class="yanqin-text">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 斗首吉凶断语区域（已合并到详情弹窗中） -->
+            <!-- <div class="panel doushou-duanyu-panel" id="doushouDuanyuPanel" style="display: none;">
+                <h2 class="panel-title">斗首吉凶断语</h2>
+                <div class="duanyu-content">
+                    <div class="duanyu-section">
+                        <div class="duanyu-title" id="duanyuKetiming">--</div>
+                        <div class="duanyu-score" id="duanyuScore">--</div>
+                    </div>
+                    <div class="duanyu-main">
+                        <div class="duanyu-row">
+                            <span class="duanyu-label">吉凶断语：</span>
+                            <div class="duanyu-text" id="duanyuMainText">--</div>
+                        </div>
+                        <div class="duanyu-row">
+                            <span class="duanyu-label">详细解读：</span>
+                            <div class="duanyu-text" id="duanyuDetail">--</div>
+                        </div>
+                        <div class="duanyu-row">
+                            <span class="duanyu-label">形成条件：</span>
+                            <div class="duanyu-text" id="duanyuConditions">--</div>
+                        </div>
+                        <div class="duanyu-row">
+                            <span class="duanyu-label">吉凶效应：</span>
+                            <div class="duanyu-text" id="duanyuEffect">--</div>
+                        </div>
+                        <div class="duanyu-row">
+                            <span class="duanyu-label">使用建议：</span>
+                            <div class="duanyu-text" id="duanyuUsage">--</div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- 日期显示列表区域 -->
+            <div class="panel date-list-panel">
+                <h2 class="panel-title">
+                    <span>日期显示列表区域</span>
+                    <span id="jiriCountDisplay" style="font-size: 16px; color: #ec407a; margin-left: 15px; font-weight: normal;"></span>
+                </h2>
+                <div id="dateListInfo" style="padding: 10px; background: rgba(255,255,255,0.6); border-radius: 5px; margin-bottom: 10px; display: none;">
+                    <strong>已选择吉期数量：</strong><span id="selectedJiriCount">0</span> 个
+                </div>
+                <ul class="date-list" id="dateList">
+                    <!-- 初始为空，点击"开始择日"后动态生成 -->
+                </ul>
+            </div>
+        </div>
+
+        <!-- 占事面板 -->
+        <div class="tab-content" id="tab-zhanshi">
+            <div class="zhanshi-input-section">
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>占事类别：</label>
+                        <select id="zhanshiCategorySelect" style="padding:6px 10px;border:2px solid #ffb74d;border-radius:5px;font-size:14px;outline:none;" onchange="onZhanshiCategoryChange()">
+                            <option value="general">📋 占事总论</option>
+                            <option value="stock">📊 股市</option>
+                            <option value="illness">🏥 疾病</option>
+                            <option value="travel">🚗 出行</option>
+                            <option value="career">📈 前程</option>
+                            <option value="marriage">💑 婚姻</option>
+                            <option value="wealth">💰 财运</option>
+                            <option value="litigation">⚖️ 诉讼</option>
+                            <option value="exam">📝 考试</option>
+                            <option value="lost">🔍 失物</option>
+                            <option value="child">👶 子嗣</option>
+                            <option value="house">🏠 家宅</option>
+                            <option value="business">🏪 经营</option>
+                        </select>
+                    </div>
+                    <div class="input-group" id="stockCodeGroup" style="display:none;">
+                        <label>股票代码：</label>
+                        <div style="display:flex;gap:4px;flex-wrap:wrap;">
+                            <input type="text" id="stockCodeInput" placeholder="输入代码或名称，如 000001" style="padding:6px 10px;border:2px solid #ffb74d;border-radius:5px;font-size:14px;outline:none;width:180px;" onkeydown="onStockInputKeyDown(event)">
+                            <button class="btn-secondary" onclick="doSearchStock()" style="padding:4px 8px;font-size:12px;">查询</button>
+                        </div>
+                        <div id="stockSearchResults" style="margin-top:4px;font-size:12px;"></div>
+                        <div id="marketOverview" style="margin-top:4px;font-size:12px;"></div>
+                    </div>
+                    <div class="input-group">
+                        <label>占事日期：</label>
+                        <input type="date" id="zhanshiDateInput">
+                    </div>
+                    <div class="input-group">
+                        <label>占事时辰：</label>
+                        <input type="time" id="zhanshiTimeInput">
+                        <span id="trueSolarInfo" style="font-size:12px;color:#e67e22;display:none;"></span>
+                    </div>
+                </div>
+                
+                <!-- 求测人信息（增强版） -->
+                <div class="input-row" id="qiucerenInfoRow" style="margin-top:15px;padding-top:15px;border-top:1px dashed #ffb74d;">
+                    <div style="font-weight:bold;color:#e65100;margin-bottom:10px;">👤 求测人信息（增强版）</div>
+                    <div class="input-group">
+                        <label>性别：</label>
+                        <select id="qiucerenGender" style="padding:4px 8px;border:1px solid #ffb74d;border-radius:4px;font-size:13px;">
+                            <option value="">请选择</option>
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>年龄：</label>
+                        <input type="number" id="qiucerenAge" placeholder="年龄" min="1" max="120" style="padding:4px 8px;border:1px solid #ffb74d;border-radius:4px;font-size:13px;width:60px;">
+                    </div>
+                    <div class="input-group">
+                        <label>职业：</label>
+                        <select id="qiucerenOccupation" style="padding:4px 8px;border:1px solid #ffb74d;border-radius:4px;font-size:13px;">
+                            <option value="">请选择</option>
+                            <option value="商人">商人</option>
+                            <option value="公务员">公务员</option>
+                            <option value="上班族">上班族</option>
+                            <option value="学生">学生</option>
+                            <option value="农民">农民</option>
+                            <option value="自由职业">自由职业</option>
+                            <option value="退休">退休</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>居住：</label>
+                        <select id="qiucerenResidence" style="padding:4px 8px;border:1px solid #ffb74d;border-radius:4px;font-size:13px;">
+                            <option value="">请选择</option>
+                            <option value="城市">城市</option>
+                            <option value="农村">农村</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>时代：</label>
+                        <select id="qiucerenEra" style="padding:4px 8px;border:1px solid #ffb74d;border-radius:4px;font-size:13px;">
+                            <option value="">请选择</option>
+                            <option value="古代">古代</option>
+                            <option value="现代">现代</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="input-row" style="margin-top:15px;">
+                    <div class="input-group">
+                        <button class="btn-primary" onclick="handleStartZhanshi()">🔮 开始占事</button>
+                        <button class="btn-keti720" onclick="openKeti720Modal()" style="margin-left:8px;">📚 720课审核</button>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 12px; font-size: 13px; color: #888;">
+                    💡 选择日期时辰后，点击"开始占事"进行大六壬排盘分析。填写求测人信息可获得更精准的类象匹配和应期判断。
+                </div>
+            </div>
+        </div>
+
+        <!-- 股票预测训练面板 -->
+        <div class="tab-content" id="tab-stock">
+            <div class="stock-dashboard-wrapper" style="background: #f0f2f5; border-radius: 10px; overflow: hidden; min-height: 800px;">
+                <iframe id="stockDashboardFrame" src="http://localhost:5556/" style="width: 100%; height: 900px; border: none;"></iframe>
+            </div>
+        </div>
+
+        <!-- 核心区域 -->
+        <div class="core-section">
+            <!-- 天地盘区域 -->
+            <div class="core-panel">
+                <h3 class="core-panel-title">天地盘区域</h3>
+                <!-- 贵人盘包裹天盘（外圈） -->
+                <div class="guiren-outer-wrapper">
+                    <!-- 天盘在内（被贵人盘包裹） -->
+                    <div class="tiandi-inner-wrapper">
+                        <div class="tiandi-grid" id="tiandiGrid">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 四课区域 -->
+            <div class="core-panel">
+                <h3 class="core-panel-title">四课区域</h3>
+                
+                <!-- 月将和时辰信息 -->
+                <div class="yuejiang-shichen-info" id="yuejiangShichenInfo" style="text-align: center; font-weight: bold; color: #c62828; margin-bottom: 15px; font-size: 16px;">
+                    月将：--  时辰：--
+                </div>
+                
+                <div class="sicols-grid">
+                    <!-- 第一课（最右，传统排法从右到左） -->
+                    <div class="sicol-item">
+                        <div class="sicol-guiren" id="sicol1Guiren">--</div>
+                        <div class="sicol-ganzhi">
+                            <div class="sicol-top" id="sicol1Top">--</div>
+                            <div class="sicol-bottom" id="sicol1Bottom">--</div>
+                        </div>
+                    </div>
+                    <!-- 第二课 -->
+                    <div class="sicol-item">
+                        <div class="sicol-guiren" id="sicol2Guiren">--</div>
+                        <div class="sicol-ganzhi">
+                            <div class="sicol-top" id="sicol2Top">--</div>
+                            <div class="sicol-bottom" id="sicol2Bottom">--</div>
+                        </div>
+                    </div>
+                    <!-- 第三课 -->
+                    <div class="sicol-item">
+                        <div class="sicol-guiren" id="sicol3Guiren">--</div>
+                        <div class="sicol-ganzhi">
+                            <div class="sicol-top" id="sicol3Top">--</div>
+                            <div class="sicol-bottom" id="sicol3Bottom">--</div>
+                        </div>
+                    </div>
+                    <!-- 第四课（最左） -->
+                    <div class="sicol-item">
+                        <div class="sicol-guiren" id="sicol4Guiren">--</div>
+                        <div class="sicol-ganzhi">
+                            <div class="sicol-top" id="sicol4Top">--</div>
+                            <div class="sicol-bottom" id="sicol4Bottom">--</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 三传区域 -->
+            <div class="core-panel">
+                <h3 class="core-panel-title">三传区域</h3>
+                <div class="sanchuan-list">
+                    <!-- 初传 -->
+                    <div class="sanchuan-item">
+                        <div class="sanchuan-label">初传</div>
+                        <div class="sanchuan-complete">
+                            <div class="sanchuan-liuqin" id="chuanchuLiuqin">--</div>
+                            <div class="sanchuan-rigan" id="chuanchuRigan">--</div>
+                            <div class="sanchuan-dizhi" id="chuanchuDizhi">--</div>
+                            <div class="sanchuan-guiren" id="chuanchuGuiren">--</div>
+                        </div>
+                    </div>
+                    <!-- 中传 -->
+                    <div class="sanchuan-item">
+                        <div class="sanchuan-label">中传</div>
+                        <div class="sanchuan-complete">
+                            <div class="sanchuan-liuqin" id="zhongchuanLiuqin">--</div>
+                            <div class="sanchuan-rigan" id="zhongchuanRigan">--</div>
+                            <div class="sanchuan-dizhi" id="zhongchuanDizhi">--</div>
+                            <div class="sanchuan-guiren" id="zhongchuanGuiren">--</div>
+                        </div>
+                    </div>
+                    <!-- 末传 -->
+                    <div class="sanchuan-item">
+                        <div class="sanchuan-label">末传</div>
+                        <div class="sanchuan-complete">
+                            <div class="sanchuan-liuqin" id="mochuanLiuqin">--</div>
+                            <div class="sanchuan-rigan" id="mochuanRigan">--</div>
+                            <div class="sanchuan-dizhi" id="mochuanDizhi">--</div>
+                            <div class="sanchuan-guiren" id="mochuanGuiren">--</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI 评价区域 -->
+        <div class="ai-evaluation-panel">
+            <h2 class="ai-evaluation-title">AI 评价课格课体吉凶区域</h2>
+            <div class="ai-evaluation-content" id="aiEvaluation">
+                请选择日期并点击开始择日，AI 将为您分析课格课体的吉凶情况...
+            </div>
+        </div>
+
+        <!-- 按钮区域 -->
+        <div class="button-section">
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-export" id="btnExport">📄 导出DOCX</button>
+                <button class="btn btn-export" id="btnExportPpt">📄 导出PPT</button>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-export" id="btnExportDocxTemplate">📋 导出DOCX模板</button>
+                <button class="btn btn-export" id="btnExportPptTemplate">📋 导出PPT模板</button>
+            </div>
+            <button class="btn btn-export" id="btnImportTemplate">📥 导入模板</button>
+            <button class="btn btn-exit" id="btnExit">❌ 退出</button>
+        </div>
+        
+        <!-- 导入模板文件输入 -->
+        <input type="file" id="templateFileInput" style="display: none;" accept=".json">
+    </div>
+
+    <!-- 网络请求恢复模块 -->
+    <!-- 引入文档导出模块 -->
+    <script src="export-module.js?v=2"></script>
+    <!-- 引入模板编辑模块 -->
+    <script src="template-editor.js"></script>
+    
+    <!-- ==================== 外部依赖（统一版本号） ==================== -->
+    <!-- 引入高精度历法计算模块 -->
+    <script src="lunar-calendar-accurate.js?v=1"></script>
+    <!-- 引入农历计算模块 -->
+    <script src="lunar-date.js?v=1"></script>
+    <!-- 引入网络请求恢复模块 -->
+    <script src="network_recovery.js"></script>
+    <!-- API 服务配置 -->
+    <script>
+        // API 服务基础配置
+        const API_BASE_URL = 'http://localhost:8000';
+        
+        // 初始化网络请求恢复模块
+        const networkRecovery = new NetworkRequestRecovery({
+            maxRetries: 3,
+            retryInterval: 2000,
+            exponentialBackoff: true,
+            timeout: 30000,
+            enableQueue: true,
+            enableIdempotency: false,
+            debug: true,
+            forceOnline: true  // 强制在线状态，避免TRAE内部浏览器navigator.onLine返回false
+        });
+        
+        networkRecovery.setCallbacks({
+            onQueued: (data) => {
+                console.log('📦 请求已入队:', data.requestId, '队列长度:', data.queueLength);
+                updateNetworkStatus('🔴 网络断开，请求已缓存 (' + data.queueLength + ')');
+            },
+            onRetry: (data) => {
+                console.log('🔄 重试请求:', data.requestId, '第' + data.retryCount + '次');
+            },
+            onSuccess: (data) => {
+                console.log('✅ 请求成功:', data.requestId, '重试次数:', data.retries);
+            },
+            onError: (data) => {
+                console.error('❌ 请求失败:', data.requestId, '错误:', data.error.message);
+                updateNetworkStatus('❌ 请求失败：' + data.error.message);
+            },
+            onRecover: (data) => {
+                console.log('🟢 网络已恢复');
+                updateNetworkStatus('🟢 网络已恢复，正在处理队列...');
+                setTimeout(() => updateNetworkStatus('🟢 在线'), 2000);
+            },
+            onOffline: (data) => {
+                console.log('🔴 网络已断开');
+                updateNetworkStatus('🔴 网络断开');
+            }
+        });
+        
+        function updateNetworkStatus(message) {
+            console.log('[网络状态]', message);
+            const statusEl = document.getElementById('networkStatus');
+            if (statusEl) {
+                statusEl.textContent = message;
+                statusEl.style.display = 'block';
+            }
+        }
+        
+        function handleApiError(error, endpoint) {
+            console.error(`API请求失败 (${endpoint}):`, error);
+            if (error.message && (error.message.includes('Failed to fetch') || error.message.includes('fetch failed'))) {
+                alert('日期分析失败: API服务器未运行\n\n请先运行 start_api_server.bat 启动API服务器，然后重新尝试。');
+            } else if (error.name === 'AbortError' || error.message && error.message.includes('aborted')) {
+                alert('日期分析失败: 请求超时，请稍后重试');
+            } else {
+                alert('日期分析失败: ' + (error.message || '未知错误'));
+            }
+        }
+        
+        async function fetchApi(url, options = {}) {
+            if (window.location.protocol === 'file:') {
+                console.warn('⚠️  本地文件模式：API 功能需要启动本地服务器后才能使用');
+                console.warn('📌 请在终端运行: python api_server.py 8000');
+                throw new Error('本地文件模式：请通过本地服务器访问（python api_server.py 8000）');
+            }
+            const requestConfig = {
+                url: url,
+                method: options.method || 'GET',
+                headers: options.headers,
+                body: options.body
+            };
+            if (options.timeout) requestConfig.timeout = options.timeout;
+            if (options.onDownloadProgress) requestConfig.onDownloadProgress = options.onDownloadProgress;
+            return await networkRecovery.request(requestConfig);
+        }
+        
+        const YNZR_API = {
+            doushou: {
+                async getShanjiaWuxing(mountain) {
+                    return await fetchApi(`${API_BASE_URL}/doushou/shanjia_wuxing?mountain=${mountain}`);
+                },
+                async getTianganHuaqi(tiangan) {
+                    return await fetchApi(`${API_BASE_URL}/doushou/tiangan_huaqi?tiangan=${tiangan}`);
+                },
+                async getFiveStars(mountain, tiangan) {
+                    return await fetchApi(`${API_BASE_URL}/doushou/five_stars?mountain=${mountain}&tiangan=${tiangan}`);
+                },
+                async analyze(data) {
+                    return await fetchApi(`${API_BASE_URL}/doushou/analyze`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(data)
+                    });
+                }
+            },
+            yanqin: {
+                async getFourQin(yearZhi, monthZhi, dayZhi, hourZhi) {
+                    return await fetchApi(`${API_BASE_URL}/yanqin/four_qin?year_zhi=${yearZhi}&month_zhi=${monthZhi}&day_zhi=${dayZhi}&hour_zhi=${hourZhi}`);
+                },
+                async analyze(data) {
+                    const response = await fetchApi(`${API_BASE_URL}/yanqin/analyze`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(data)
+                    });
+                    return response.json();
+                }
+            },
+            daliuren: {
+                async getTiandiPan(yuejiang, shichen) {
+                    const response = await fetchApi(`${API_BASE_URL}/daliuren/tiandi_pan?yuejiang=${yuejiang}&shichen=${shichen}`);
+                    return response.json();
+                },
+                async getSiKe(data) {
+                    return await fetchApi(`${API_BASE_URL}/daliuren/si_ke`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(data)
+                    });
+                },
+                async getSanChuan(data) {
+                    return await fetchApi(`${API_BASE_URL}/daliuren/san_chuan`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(data)
+                    });
+                },
+                async paipan(data) {
+                    const response = await fetchApi(`${API_BASE_URL}/daliuren/paipan`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(data)
+                    });
+                    return response.json();
+                }
+            },
+            dateRange: {
+                async generate(startDate, endDate) {
+                    const response = await fetchApi(`${API_BASE_URL}/date_range/generate`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({start_date: startDate, end_date: endDate})
+                    });
+                    return response.json();
+                },
+                async filter(data) {
+                    const response = await fetchApi(`${API_BASE_URL}/date_range/filter`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(data)
+                    });
+                    return response.json();
+                }
+            }
+        };
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tabName);
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.toggle('active', content.id === 'tab-' + tabName);
+            });
+        }
+    </script>
+    <!-- YNZR 核心模块 -->
+    <script src="js/ynzr-core.js"></script>
+    <!-- 大六壬排盘引擎 -->
+    <script src="js/ynzr-daliuren.js?v=3"></script>
+    <!-- 业务逻辑模块（择日/占事/斗首/演禽/UI） -->
+    <script src="js/ynzr-app.js?v=7"></script>
+    <!-- 弹窗 1：斗首分值筛选窗口 -->
+    <div class="modal-overlay" id="scoreFilterModal">
+        <div class="modal-window">
+            <div class="modal-header">
+                <h3 class="modal-title">🔢 斗首分值筛选</h3>
+                <button class="modal-close" onclick="closeScoreFilter()">×</button>
+            </div>
+            <div class="modal-content">
+                <div class="filter-form">
+                    <div class="filter-group">
+                        <label class="filter-label">分值阈值：</label>
+                        <input type="number" 
+                               class="filter-input" 
+                               id="scoreThreshold" 
+                               placeholder="请输入分值（0-100）"
+                               min="0" 
+                               max="100" 
+                               value="70">
+                        <div class="filter-hint">
+                            💡 提示：筛选出分值大于设定值的分析结果
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">筛选范围：</label>
+                        <div style="padding: 10px; background: #f5f5f5; border-radius: 5px;">
+                            <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <input type="radio" name="filterRange" value="all" checked> 
+                                <span>全部吉期</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 10px;">
+                                <input type="radio" name="filterRange" value="selected"> 
+                                <span>已选日期</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal btn-cancel" onclick="closeScoreFilter()">取消</button>
+                <button class="btn-modal btn-confirm" onclick="applyScoreFilter()">✅ 应用筛选</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 弹窗 2：斗首课体查看窗口 -->
+    <div class="modal-overlay" id="ketiDetailModal">
+        <div class="modal-window" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3 class="modal-title">📜 斗首课体详解</h3>
+                <button class="modal-close" onclick="closeKetiDetail()">×</button>
+            </div>
+            <div class="modal-content" id="ketiDetailContent">
+                <!-- 动态加载课体内容 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 弹窗 3：日期详情查看窗口 -->
+    <div class="date-detail-modal" id="dateDetailModal">
+        <div class="date-detail-window" id="dateDetailWindow">
+            <div class="date-detail-header" id="dateDetailHeader">
+                <h3 class="date-detail-title">📅 日期详情</h3>
+                <button class="date-detail-close" onclick="closeDateDetail()" title="关闭">×</button>
+            </div>
+            <div class="date-detail-content" id="dateDetailContent">
+                <!-- 动态加载详情内容 -->
+            </div>
+            <!-- 拖动提示 -->
+            <div class="drag-hint" id="dragHint"></div>
+        </div>
+    </div>
+
+    <!-- 弹窗 4：占事结果窗口 -->
+    <div class="modal-overlay" id="zhanshiResultModal">
+        <div class="modal-window" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3 class="modal-title">🔮 大六壬占事</h3>
+                <button class="modal-close" onclick="closeZhanshiResult()">×</button>
+            </div>
+            <div class="modal-content" id="zhanshiResultContent">
+                <!-- 求测人信息 -->
+                <div id="qiucerenInfoDisplay" style="margin-bottom:20px;padding:15px;background:#fff3e0;border-radius:8px;border-left:4px solid #ff9800;"></div>
+
+                <!-- 占事断语（P3 · 按占事专断） -->
+                <div id="zhanshiDuanyuPanel" style="margin-top:20px;padding:15px;background:#f3e5f5;border-radius:8px;border-left:4px solid #9c27b0;">
+                    <h4 style="color:#6a1b9a;font-size:16px;margin-bottom:10px;">🔮 占事断语</h4>
+                    <div id="zhanshiDuanyuContent"></div>
+                </div>
+                
+                <!-- 排盘结果 -->
+                <div id="daliurenZhanshiResult"></div>
+                
+                <!-- 类象分析（增强版） -->
+                <div id="leixiangAnalysis" style="margin-top:20px;padding:15px;background:#e3f2fd;border-radius:8px;border-left:4px solid #2196f3;">
+                    <h4 style="color:#1565c0;font-size:16px;margin-bottom:10px;">📊 类象分析</h4>
+                    <div id="leixiangContent"></div>
+                </div>
+                
+                <!-- 应期判断（增强版） -->
+                <div id="yingqiAnalysis" style="margin-top:20px;padding:15px;background:#e8f5e9;border-radius:8px;border-left:4px solid #4caf50;">
+                    <h4 style="color:#2e7d32;font-size:16px;margin-bottom:10px;">📅 应期判断</h4>
+                    <div id="yingqiContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 720课审核排盘面板 -->
+    <div class="modal-overlay" id="keti720Modal">
+        <div class="modal-window keti720-window" id="keti720Window" style="max-width: 480px;">
+            <div class="modal-header draggable" id="keti720DragHandle">
+                <h3 class="modal-title">📚 720课审核 — 手动排盘</h3>
+                <button class="modal-close" onclick="closeKeti720Modal()">×</button>
+            </div>
+            <div class="modal-content">
+                <div class="keti720-form">
+                    <div class="form-row">
+                        <label>日干：</label>
+                        <select id="keti720RiGan" onchange="onKeti720SelectionChange()">
+                            <option value="">-- 选择日干 --</option>
+                            <option value="甲">甲</option>
+                            <option value="乙">乙</option>
+                            <option value="丙">丙</option>
+                            <option value="丁">丁</option>
+                            <option value="戊">戊</option>
+                            <option value="己">己</option>
+                            <option value="庚">庚</option>
+                            <option value="辛">辛</option>
+                            <option value="壬">壬</option>
+                            <option value="癸">癸</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label>日支：</label>
+                        <select id="keti720RiZhi" onchange="onKeti720SelectionChange()">
+                            <option value="">-- 选择日支 --</option>
+                            <option value="子">子</option>
+                            <option value="丑">丑</option>
+                            <option value="寅">寅</option>
+                            <option value="卯">卯</option>
+                            <option value="辰">辰</option>
+                            <option value="巳">巳</option>
+                            <option value="午">午</option>
+                            <option value="未">未</option>
+                            <option value="申">申</option>
+                            <option value="酉">酉</option>
+                            <option value="戌">戌</option>
+                            <option value="亥">亥</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label>月将：</label>
+                        <select id="keti720YueJiang" onchange="onKeti720SelectionChange()">
+                            <option value="">-- 选择月将 --</option>
+                            <option value="寅">寅（正月）</option>
+                            <option value="卯">卯（二月）</option>
+                            <option value="辰">辰（三月）</option>
+                            <option value="巳">巳（四月）</option>
+                            <option value="午">午（五月）</option>
+                            <option value="未">未（六月）</option>
+                            <option value="申">申（七月）</option>
+                            <option value="酉">酉（八月）</option>
+                            <option value="戌">戌（九月）</option>
+                            <option value="亥">亥（十月）</option>
+                            <option value="子">子（十一月）</option>
+                            <option value="丑">丑（十二月）</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label>时辰：</label>
+                        <select id="keti720ShiChen" onchange="onKeti720SelectionChange()">
+                            <option value="">-- 选择时辰 --</option>
+                            <option value="子">子（23:00-00:59）</option>
+                            <option value="丑">丑（01:00-02:59）</option>
+                            <option value="寅">寅（03:00-04:59）</option>
+                            <option value="卯">卯（05:00-06:59）</option>
+                            <option value="辰">辰（07:00-08:59）</option>
+                            <option value="巳">巳（09:00-10:59）</option>
+                            <option value="午">午（11:00-12:59）</option>
+                            <option value="未">未（13:00-14:59）</option>
+                            <option value="申">申（15:00-16:59）</option>
+                            <option value="酉">酉（17:00-18:59）</option>
+                            <option value="戌">戌（19:00-20:59）</option>
+                            <option value="亥">亥（21:00-22:59）</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="keti720-status waiting" id="keti720Status">请选择排盘参数，系统将自动计算...</div>
+                <div class="keti720-result" id="keti720Result">天地盘、四课、三传将在此显示...</div>
+                <div class="modal-footer">
+                    <button class="btn-modal btn-confirm" onclick="handleKeti720Calculate()">📊 开始排盘</button>
+                    <button class="btn-modal btn-cancel" onclick="closeKeti720Modal()">关闭</button>
+                </div>
+            </div>
+            <div class="resize-handle" id="keti720ResizeHandle"></div>
+        </div>
+    </div>
+</body>
+</html>

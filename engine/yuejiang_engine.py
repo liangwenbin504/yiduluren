@@ -117,42 +117,17 @@ class YueJiangCalculator:
             yuejiang = self.YUE_JIANG_BY_ZHONG_QI[current_zhong_qi]
             return yuejiang, self.YUE_JIANG_NAMES[yuejiang]
         
-        # 如果还没到任何中气（如年初大寒前），用上一年的大寒
+        # 如果还没到当年第一个中气（大寒），说明在年初（元旦~大寒前）
+        # 【P2 2026-08-17 修复】应取"上一年冬至"（丑将）为基准，而非上一年大寒（子将）：
+        # 冬至(12/22)换丑将，持续到大寒(1/20)换子将；元旦~大寒前仍属丑将周期。
         if not current_zhong_qi:
-            # 获取上一年的大寒
             prev_year_jieqi = self.calendar.get_jieqi_dates(year - 1)
+            if '冬至' in prev_year_jieqi and query_datetime >= prev_year_jieqi['冬至']:
+                return '丑', '大吉'
             if '大寒' in prev_year_jieqi:
                 return '子', '神后'
         
         # 默认返回子将
-        return '子', '神后'
-    
-    def get_yuejiang_by_lunar_month(self, lunar_month: int, 
-                                     year: int = None) -> Tuple[str, str]:
-        """
-        根据农历月份计算月将（简化方法，不推荐用于精确计算）
-        
-        注意：此方法为近似计算，精确计算请使用 get_yuejiang_by_date()
-        
-        :param lunar_month: 农历月份（1-12）
-        :param year: 公历年份（用于参考，非必需）
-        :return: (月将地支，月将名)
-        
-        传统方法：月建与月将合
-        - 正月建寅，月将亥（寅亥合）
-        - 二月建卯，月将戌（卯戌合）
-        - 依此类推
-        """
-        yue_jiang_lunar = {
-            1: '亥', 2: '戌', 3: '酉', 4: '申',
-            5: '未', 6: '午', 7: '巳', 8: '辰',
-            9: '卯', 10: '寅', 11: '丑', 12: '子'
-        }
-        
-        if lunar_month in yue_jiang_lunar:
-            yuejiang = yue_jiang_lunar[lunar_month]
-            return yuejiang, self.YUE_JIANG_NAMES[yuejiang]
-        
         return '子', '神后'
     
     def get_yuejiang_info(self, yuejiang: str) -> dict:

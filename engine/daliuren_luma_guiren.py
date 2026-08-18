@@ -9,6 +9,19 @@ import sys
 import os
 from typing import Dict, List, Tuple, Optional
 
+# 尝试导入64课经知识库
+try:
+    from engine.liuren_64ke_v2 import LIU_SHI_KETI, get_keti_info as get_64ke_info
+    HAS_64KE_KNOWLEDGE = True
+except ImportError:
+    try:
+        from liuren_64ke_v2 import LIU_SHI_KETI, get_keti_info as get_64ke_info
+        HAS_64KE_KNOWLEDGE = True
+    except ImportError:
+        HAS_64KE_KNOWLEDGE = False
+        LIU_SHI_KETI = {}
+        get_64ke_info = None
+
 # 先定义默认值
 GuiRenCalculator = None
 
@@ -56,20 +69,63 @@ class DaLiuRenLuMaGuiRen:
         '巳': '亥', '酉': '亥', '丑': '亥'
     }
     
-    # 二十四山山家映射（斗首体系）
+    # 二十四山山家映射（斗首体系；八宫归法 2026-08-14 修正四库错位：丑→丑、辰→辰、未→未、戌→戌）
     SHAN_JIA_MAP = {
-        '壬': '子', '子': '子', '癸': '子', '丑': '子',
+        '壬': '子', '子': '子', '癸': '子', '丑': '丑',
         '艮': '丑', '寅': '丑', '甲': '卯', '卯': '卯',
-        '乙': '卯', '辰': '卯', '巽': '辰', '巳': '辰',
-        '丙': '午', '午': '午', '丁': '午', '未': '午',
+        '乙': '卯', '辰': '辰', '巽': '辰', '巳': '辰',
+        '丙': '午', '午': '午', '丁': '午', '未': '未',
         '坤': '未', '申': '未', '庚': '酉', '酉': '酉',
-        '辛': '酉', '戌': '酉', '乾': '戌', '亥': '戌'
+        '辛': '酉', '戌': '戌', '乾': '戌', '亥': '戌'
     }
     
+    # 三合局
+    SAN_HE = {
+        '申子辰': ['申','子','辰'], '亥卯未': ['亥','卯','未'],
+        '寅午戌': ['寅','午','戌'], '巳酉丑': ['巳','酉','丑'],
+    }
+    # 单个地支的三合伙伴
+    SAN_HE_PARTNERS = {
+        '申': {'子','辰'}, '子': {'申','辰'}, '辰': {'申','子'},
+        '亥': {'卯','未'}, '卯': {'亥','未'}, '未': {'亥','卯'},
+        '寅': {'午','戌'}, '午': {'寅','戌'}, '戌': {'寅','午'},
+        '巳': {'酉','丑'}, '酉': {'巳','丑'}, '丑': {'巳','酉'},
+    }
+
     YUEJIANG_MAP = {
         '寅': '亥', '卯': '戌', '辰': '酉', '巳': '申',
         '午': '未', '未': '午', '申': '巳', '酉': '辰',
         '戌': '卯', '亥': '寅', '子': '丑', '丑': '子'
+    }
+
+    # 向首映射（二十四山对宫，2026-08-14 憨爷拍板：寅→申、丑→未、辰→戌、巳→亥、未→丑、申→寅、戌→辰、亥→巳）
+    XIANG_SHOU_MAP = {
+        '壬': '午', '子': '午', '癸': '午', '丑': '未',
+        '艮': '未', '寅': '申', '甲': '酉', '卯': '酉',
+        '乙': '酉', '辰': '戌', '巽': '戌', '巳': '亥',
+        '丙': '子', '午': '子', '丁': '子', '未': '丑',
+        '坤': '丑', '申': '寅', '庚': '卯', '酉': '卯',
+        '辛': '卯', '戌': '辰', '乾': '辰', '亥': '巳'
+    }
+
+    # 本山禄神（二十四山本山对应禄神）
+    BEN_SHAN_LU = {
+        '壬': '亥', '子': '子', '癸': '子', '丑': '丑',
+        '艮': '寅', '寅': '寅', '甲': '卯', '卯': '卯',
+        '乙': '辰', '辰': '辰', '巽': '巳', '巳': '巳',
+        '丙': '午', '午': '午', '丁': '未', '未': '未',
+        '坤': '申', '申': '申', '庚': '酉', '酉': '酉',
+        '辛': '戌', '戌': '戌', '乾': '亥', '亥': '亥'
+    }
+
+    # 本山贵人（二十四山本山对应贵人）
+    BEN_SHAN_GUIREN = {
+        '壬': ['卯', '巳'], '子': ['坤', '巽'], '癸': ['卯', '巳'], '丑': ['艮', '兑'],
+        '艮': ['丑', '未'], '寅': ['艮', '坤'], '甲': ['丑', '未'], '卯': ['震', '兑'],
+        '乙': ['子', '申'], '辰': ['巽', '乾'], '巽': ['辰', '戌'], '巳': ['巽', '乾'],
+        '丙': ['亥', '酉'], '午': ['离', '坎'], '丁': ['亥', '酉'], '未': ['坤', '艮'],
+        '坤': ['未', '丑'], '申': ['坤', '巽'], '庚': ['寅', '午'], '酉': ['兑', '震'],
+        '辛': ['寅', '午'], '戌': ['乾', '巽'], '乾': ['戌', '辰'], '亥': ['乾', '巽']
     }
     
     def get_yuejiang(self, yue_zhi: str) -> str:
@@ -93,78 +149,59 @@ class DaLiuRenLuMaGuiRen:
         return self.YUEJIANG_MAP.get(yue_zhi, '亥')
     
     def get_yuejiang_by_date(self, year: int, month: int, day: int) -> str:
-        """
-        根据日期计算月将（考虑中气）
-        
-        月将（太阳过宫）是根据太阳在黄道上的位置确定的：
-        每个月的中气日期大约在：
-        - 1月20日左右：大寒 → 子（神后）
-        - 2月19日左右：雨水 → 亥（登明）
-        - 3月21日左右：春分 → 戌（河魁）
-        - 4月20日左右：谷雨 → 酉（从魁）
-        - 5月21日左右：小满 → 申（传送）
-        - 6月21日左右：夏至 → 未（小吉）
-        - 7月23日左右：大暑 → 午（胜光）
-        - 8月23日左右：处暑 → 巳（太乙）
-        - 9月23日左右：秋分 → 辰（天罡）
-        - 10月24日左右：霜降 → 卯（太冲）
-        - 11月22日左右：小雪 → 寅（功曹）
-        - 12月22日左右：冬至 → 丑（大吉）
-        
-        注意：中气日期每年略有不同，这里使用近似值
-        """
-        ZHONGQI_DATES = [
-            (1, 20, '子'),
-            (2, 19, '亥'),
-            (3, 21, '戌'),
-            (4, 20, '酉'),
-            (5, 21, '申'),
-            (6, 21, '未'),
-            (7, 23, '午'),
-            (8, 23, '巳'),
-            (9, 23, '辰'),
-            (10, 24, '卯'),
-            (11, 22, '寅'),
-            (12, 22, '丑'),
+        """精确计算月将(2024-2027中气precomputed，跨年自动处理)"""
+        from datetime import date
+        zq = {
+            2024:{1:20,2:19,3:20,4:19,5:20,6:21,7:22,8:22,9:22,10:23,11:22,12:21},
+            2025:{1:20,2:18,3:20,4:20,5:21,6:21,7:22,8:23,9:23,10:23,11:22,12:21},
+            2026:{1:20,2:18,3:20,4:20,5:21,6:21,7:23,8:23,9:23,10:23,11:22,12:22},
+            2027:{1:20,2:19,3:21,4:20,5:21,6:21,7:23,8:23,9:23,10:24,11:22,12:22},
+            2028:{1:20,2:19,3:20,4:19,5:20,6:21,7:22,8:23,9:22,10:23,11:22,12:21},
+            2029:{1:20,2:18,3:20,4:20,5:21,6:21,7:23,8:23,9:23,10:23,11:22,12:22},
+            2030:{1:20,2:19,3:20,4:20,5:21,6:21,7:23,8:23,9:23,10:23,11:22,12:22},
+            2031:{1:20,2:19,3:21,4:20,5:21,6:21,7:23,8:23,9:23,10:24,11:22,12:22},
+            2032:{1:20,2:19,3:20,4:19,5:20,6:21,7:22,8:22,9:22,10:23,11:22,12:21},
+            2033:{1:20,2:18,3:20,4:20,5:21,6:21,7:22,8:23,9:23,10:23,11:22,12:21},
+            2034:{1:20,2:18,3:20,4:20,5:21,6:21,7:23,8:23,9:23,10:23,11:22,12:22},
+            2035:{1:20,2:19,3:21,4:20,5:21,6:21,7:23,8:23,9:23,10:24,11:22,12:22},
+        }
+        today = date(year, month, day)
+
+        # 确定包含today的节气周期: 从上一个冬至开始，到下一个小雪结束
+        # 如果today >= 当年冬至(12月) → 使用当年的冬至作为起点
+        # 否则 → 使用上一年的冬至作为起点
+        this_dz = date(year, 12, zq.get(year, {12:22}).get(12, 22))
+        if today >= this_dz:
+            base_year = year  # 当年冬至已过
+        else:
+            base_year = year - 1  # 还在上一年冬至周期中
+
+        d = zq.get(base_year, {m:20 for m in range(1,13)})
+        next_d = zq.get(base_year+1, {m:20 for m in range(1,13)})
+
+        # 12个中气边界，从当年冬至到下一年小雪
+        # 月将映射: 子月=丑将, 丑月=子将, 寅月=亥将, 卯月=戌将, 辰月=酉将, 巳月=申将, 午月=未将, 未月=午将, 申月=巳将, 酉月=辰将, 戌月=卯将, 亥月=寅将
+        YJ_LIST = ['丑','子','亥','戌','酉','申','未','午','巳','辰','卯','寅']
+        boundaries = [
+            date(base_year,12,d[12]),  # 冬至
+            date(base_year+1,1,next_d[1]),   # 大寒
+            date(base_year+1,2,next_d[2]),   # 雨水
+            date(base_year+1,3,next_d[3]),   # 春分
+            date(base_year+1,4,next_d[4]),   # 谷雨
+            date(base_year+1,5,next_d[5]),   # 小满
+            date(base_year+1,6,next_d[6]),   # 夏至
+            date(base_year+1,7,next_d[7]),   # 大暑
+            date(base_year+1,8,next_d[8]),   # 处暑
+            date(base_year+1,9,next_d[9]),   # 秋分
+            date(base_year+1,10,next_d[10]), # 霜降
+            date(base_year+1,11,next_d[11]), # 小雪
         ]
-        
-        yuejiang = '子'
-        for m, d, yj in ZHONGQI_DATES:
-            if (month > m) or (month == m and day >= d):
-                yuejiang = yj
-        
-        return yuejiang
-    
-    # 二十四山向首映射（斗首体系）
-    XIANG_SHOU_MAP = {
-        '壬': '午', '子': '午', '癸': '午', '丑': '午',
-        '艮': '未', '寅': '未', '甲': '酉', '卯': '酉',
-        '乙': '酉', '辰': '酉', '巽': '戌', '巳': '戌',
-        '丙': '子', '午': '子', '丁': '子', '未': '子',
-        '坤': '丑', '申': '丑', '庚': '卯', '酉': '卯',
-        '辛': '卯', '戌': '卯', '乾': '辰', '亥': '辰'
-    }
-    
-    # 本山禄神（二十四山本山对应禄神）
-    BEN_SHAN_LU = {
-        '壬': '亥', '子': '子', '癸': '子', '丑': '丑',
-        '艮': '寅', '寅': '寅', '甲': '卯', '卯': '卯',
-        '乙': '辰', '辰': '辰', '巽': '巳', '巳': '巳',
-        '丙': '午', '午': '午', '丁': '未', '未': '未',
-        '坤': '申', '申': '申', '庚': '酉', '酉': '酉',
-        '辛': '戌', '戌': '戌', '乾': '亥', '亥': '亥'
-    }
-    
-    # 本山贵人（二十四山本山对应贵人）
-    BEN_SHAN_GUIREN = {
-        '壬': ['卯', '巳'], '子': ['坤', '巽'], '癸': ['卯', '巳'], '丑': ['艮', '兑'],
-        '艮': ['丑', '未'], '寅': ['艮', '坤'], '甲': ['丑', '未'], '卯': ['震', '兑'],
-        '乙': ['子', '申'], '辰': ['巽', '乾'], '巽': ['辰', '戌'], '巳': ['巽', '乾'],
-        '丙': ['亥', '酉'], '午': ['离', '坎'], '丁': ['亥', '酉'], '未': ['坤', '艮'],
-        '坤': ['未', '丑'], '申': ['坤', '巽'], '庚': ['寅', '午'], '酉': ['兑', '震'],
-        '辛': ['寅', '午'], '戌': ['乾', '巽'], '乾': ['戌', '辰'], '亥': ['乾', '巽']
-    }
-    
+        result = '寅'  # fallback
+        for i in range(len(boundaries)):
+            if today >= boundaries[i]:
+                result = YJ_LIST[i]
+        return result
+
     def __init__(self):
         self.gui_ren_calc = GuiRenCalculator() if GuiRenCalculator else None
     
@@ -205,36 +242,67 @@ class DaLiuRenLuMaGuiRen:
                                     shan_jia: str, xiang_shou: str) -> bool:
         """
         检查某柱的禄、马、贵人是否至少有一个到山或到向
-        
-        调整：每柱只要禄、马、贵人中有一个到山或到向，该柱就算合格
-        （原要求三个都到太严格，导致几乎没有合格课）
-        
+
+        重要：禄马贵人指的是天盘的地支，不是地盘的地支！
+        癸禄在天盘子 → 天盘子转动后对应地盘申 → 检查申是否到山或向
+
         参数:
             tian_gan: 天干
             di_zhi: 地支
-            tiandi_pan: 天地盘
+            tiandi_pan: 天地盘（格式：{地盘地支: 天盘地支}）
             shichen: 时辰
             shan_jia: 山家
             xiang_shou: 向首
-        
+
         返回:
             True 如果禄、马、贵人至少有一个到山或到向
         """
         lu_zhi = self.get_lu_zhi(tian_gan)
         ma_zhi = self.get_ma_zhi(di_zhi)
         guiren_zhi = self.get_guiren_zhi(tian_gan, tiandi_pan, shichen)
-        
-        # 禄到山或到向
-        lu_qualified = (lu_zhi == shan_jia or lu_zhi == xiang_shou) if lu_zhi else False
-        
-        # 马到山或到向
-        ma_qualified = (ma_zhi == shan_jia or ma_zhi == xiang_shou) if ma_zhi else False
-        
-        # 贵人到山或到向
-        guiren_qualified = (guiren_zhi == shan_jia or guiren_zhi == xiang_shou) if guiren_zhi else False
-        
-        # 只要有一个到山或到向就算合格
+
+        # 禄马贵人需要从天盘查找，不是直接用地盘的禄位
+        # 癸禄在地盘子，天盘子转动后对应地盘申
+        tianpan_lu_zhi = self._get_tiandi_position(lu_zhi, tiandi_pan)
+        tianpan_ma_zhi = self._get_tiandi_position(ma_zhi, tiandi_pan)
+
+        # 贵人在天盘已经是查找到的天盘位置，直接用
+        tianpan_guiren_zhi = guiren_zhi
+
+        # 检查是否到山或到向
+        lu_qualified = (tianpan_lu_zhi == shan_jia or tianpan_lu_zhi == xiang_shou) if tianpan_lu_zhi else False
+        ma_qualified = (tianpan_ma_zhi == shan_jia or tianpan_ma_zhi == xiang_shou) if tianpan_ma_zhi else False
+        guiren_qualified = (tianpan_guiren_zhi == shan_jia or tianpan_guiren_zhi == xiang_shou) if tianpan_guiren_zhi else False
+
+        # 三合匹配：禄马贵人的三合伙伴是否到山到向（次一级吉应）
+        lu_sanhe = tianpan_lu_zhi in self.SAN_HE_PARTNERS.get(shan_jia, set()) or                    tianpan_lu_zhi in self.SAN_HE_PARTNERS.get(xiang_shou, set()) if tianpan_lu_zhi else False
+        ma_sanhe = tianpan_ma_zhi in self.SAN_HE_PARTNERS.get(shan_jia, set()) or                    tianpan_ma_zhi in self.SAN_HE_PARTNERS.get(xiang_shou, set()) if tianpan_ma_zhi else False
+
         return lu_qualified or ma_qualified or guiren_qualified
+
+    def _get_tiandi_position(self, dizhi: str, tiandi_pan: Dict) -> Optional[str]:
+        """
+        获取地支在天盘转动后对应的实际地盘位置
+
+        例如：癸禄在地盘子，天盘子转动后对应地盘申
+        tiandi_pan = {子: 申, 丑: 酉, ...}
+        要找：天盘=子 对应的地盘 = 申
+
+        参数:
+            dizhi: 地支
+            tiandi_pan: 天地盘（格式：{地盘地支: 天盘地支}）
+
+        返回:
+            转换后的地盘地支
+        """
+        if not dizhi or not tiandi_pan:
+            return dizhi
+
+        for di, tian in tiandi_pan.items():
+            if tian == dizhi:
+                return di
+
+        return dizhi
     
     def check_sanchuan_luma_guiren_count(self, sanchuan: Dict,
                                           ri_gan: str, ri_zhi: str,
@@ -462,7 +530,8 @@ class DaLiuRenLuMaGuiRen:
                             ri_gan: str, ri_zhi: str,
                             shi_gan: str, shi_zhi: str,
                             sanchuan: Dict = None,
-                            ke_ti_list: List = None) -> Dict:
+                            ke_ti_list: List = None,
+                            yuejiang: str = None) -> Dict:
         """
         按新规则计算评分
         
@@ -487,7 +556,10 @@ class DaLiuRenLuMaGuiRen:
         """
         shan_jia = self.get_shan_jia(mountain)
         xiang_shou = self.get_xiang_shou(mountain)
-        tiandi_pan = arrange_tiandi_pan('亥', shichen)
+        # BUGFIX: 月将应从中气日期计算，而非硬编码'亥'；调用方可传 yuejiang（节气口径）覆盖
+        if yuejiang is None:
+            yuejiang = self.get_yuejiang(yue_zhi) if yue_zhi else '亥'
+        tiandi_pan = arrange_tiandi_pan(yuejiang, shichen)
         
         # 1. 检查四柱禄马贵人是否都到山到向
         nian_qualified = self.check_pillar_all_qualified(
@@ -566,67 +638,110 @@ class DaLiuRenLuMaGuiRen:
             'ri_qualified': ri_qualified,
             'shi_qualified': shi_qualified,
             'taiyang_bonus': 0,
-            'taisui_bonus': 0
+            'taisui_bonus': 0,
+            'mijue_score_adj': 0,
+            'mijue_details': {},
         }
+
+        # 8. 六壬断案秘诀规则调整
+        try:
+            from engine.mijue_engine import analyze_with_mijue, check_shas
+            mijue = analyze_with_mijue(
+                ri_gan=ri_gan, ri_zhi=ri_zhi, yue_zhi=yue_zhi,
+                sanchuan=list(sanchuan.values()) if isinstance(sanchuan, dict) else (sanchuan if isinstance(sanchuan, list) else []),
+                sike=[], tiandi_pan=tiandi_pan, tianjiang_map={},
+                sanchuan_tj=None, gan_shang_shen=None
+            )
+            result['mijue_details'] = mijue
+            result['mijue_score_adj'] = mijue.get('score_adjustment', 0)
+            result['final_score'] = round(result['final_score'] + result['mijue_score_adj'], 1)
+            result['final_score'] = max(20, min(100, result['final_score']))
+        except ImportError:
+            pass
     
     def get_keti_deduction(self, ke_ti_name: str) -> Tuple[int, str, bool]:
         """
-        根据课体名称获取扣分
-        
+        根据课体名称获取扣分（基于64课经知识库）
+
+        重要：九宗门（贼克、比用、涉害、遥克、昴星、别责、八专、伏吟、反吟）是起课方法，不是吉凶依据！
+        吉凶应根据实际的课体课格名称（如龙德、富贵、官爵等）来判断
+
         返回: (扣分, 课体等级, 是否大凶课)
         """
-        # 上上吉课
-        shangshangji = ['三光课', '富贵课', '龙德课', '三奇课', '六仪课', '时泰课']
-        # 上吉课
-        shangji = ['元首课', '连珠课', '重审课', '比用课', '涉害课', '遥克课', '昴星课', '别责课', '八专课']
-        # 中吉课
-        zhongji = ['和美课', '斩关课', '游子课', '长庚课', '玄胎课', '回环课']
-        # 小吉课
-        xiaoji = ['进连珠', '退连珠', '间传课', '交车课', '交车合', '交车害']
-        # 平课
-        pingke = ['普通课', '无特殊课体', '伏吟课', '反吟课']
-        # 小凶课
-        xiaoxiong = ['芜淫课', '解离课', '度厄课', '无禄课', '绝嗣课']
-        # 中凶课
-        zhongxiong = '孤辰课', '寡宿课', '刑伤课', '二烦课', '三烦课'
-        # 大凶课
-        daxiong = ['九丑课', '天祸课', '天寇课', '天罗地网', '死奇课', '魄化课', '飞魂课', '丧吊课']
-        
+        if not ke_ti_name or ke_ti_name == '待定':
+            return 10, '平课', False
+
+        # 如果有64课经知识库，优先使用
+        if HAS_64KE_KNOWLEDGE and get_64ke_info:
+            info = get_64ke_info(ke_ti_name)
+            if info:
+                level = info.get('吉凶', '平')
+                level_map = {
+                    '大吉': (0, False),
+                    '中吉': (0, False),
+                    '小吉': (5, False),
+                    '平': (10, False),
+                    '小凶': (20, False),
+                    '中凶': (30, False),
+                    '大凶': (40, True),
+                }
+                if level in level_map:
+                    deduction, is_daxiong = level_map[level]
+                    return deduction, info.get('名称', level), is_daxiong
+
+        # 备用判断逻辑（基于关键字匹配）
         ke_ti_lower = ke_ti_name.lower()
-        
+
+        # 上上吉课（扣0分）
+        shangshangji = ['三光', '三阳', '天福', '天恩', '天赦']
         for name in shangshangji:
-            if name in ke_ti_name or ke_ti_lower in name.lower():
+            if name in ke_ti_name or name in ke_ti_lower:
                 return 0, '上上吉课', False
-        
+
+        # 上吉课（扣0分）
+        shangji = ['龙德', '官爵', '富贵', '喜庆', '玉堂', '金堂', '天德', '月德', '圣心', '益后', '续世', '三奇', '六仪', '时泰', '元首', '重审']
         for name in shangji:
-            if name in ke_ti_name or ke_ti_lower in name.lower():
+            if name in ke_ti_name or name in ke_ti_lower:
                 return 0, '上吉课', False
-        
+
+        # 中吉课（扣0分）
+        zhongji = ['生气', '解神', '天医', '福德', '天喜', '六合', '太阴', '青龙', '明堂', '金匮', '斫轮', '铸印', '轩盖', '登三天', '龙战', '引从', '亨通', '繁昌', '荣华', '德庆', '合欢']
         for name in zhongji:
-            if name in ke_ti_name or ke_ti_lower in name.lower():
+            if name in ke_ti_name or name in ke_ti_lower:
                 return 0, '中吉课', False
-        
+
+        # 小吉课（扣5分）
+        xiaoji = ['进连茹', '退连茹', '间传', '交车', '刑德', '始破', '平吉', '小成', '守成', '安定']
         for name in xiaoji:
-            if name in ke_ti_name or ke_ti_lower in name.lower():
+            if name in ke_ti_name or name in ke_ti_lower:
                 return 5, '小吉课', False
-        
+
+        # 平课（扣10分）- 已知一、昴星等起课法为主的课
+        pingke = ['知一', '昴星', '返吟', '伏吟', '普通', '无特殊课体', '连珠']
         for name in pingke:
-            if name in ke_ti_name or ke_ti_lower in name.lower():
+            if name in ke_ti_name or name in ke_ti_lower:
                 return 10, '平课', False
-        
+
+        # 小凶课（扣20分）- 基于课格名
+        xiaoxiong = ['涉害', '遥克', '别责', '八专', '芜淫', '解离', '度厄', '无禄', '绝嗣', '小耗', '败亡', '破败', '失脱', '比用']
         for name in xiaoxiong:
-            if name in ke_ti_name or ke_ti_lower in name.lower():
-                return 35, '小凶课', False
-        
+            if name in ke_ti_name or name in ke_ti_lower:
+                return 20, '小凶课', False
+
+        # 中凶课（扣30分）
+        zhongxiong = ['孤辰', '寡宿', '刑伤', '二烦', '三烦', '九丑', '天祸', '天寇', '死气', '病符', '丧吊', '官符']
         for name in zhongxiong:
-            if name in ke_ti_name or ke_ti_lower in name.lower():
-                return 40, '中凶课', False
-        
+            if name in ke_ti_name or name in ke_ti_lower:
+                return 30, '中凶课', False
+
+        # 大凶课（扣40分）
+        daxiong = ['天罗地网', '死奇', '魄化', '飞魂', '丧门', '白虎', '岁破', '大耗', '灭门', '绝灭']
         for name in daxiong:
-            if name in ke_ti_name or ke_ti_lower in name.lower():
-                return 30, '大凶课', True
-        
-        return 0, '未知', False
+            if name in ke_ti_name or name in ke_ti_lower:
+                return 40, '大凶课', True
+
+        # 未匹配的课体默认为平课
+        return 10, '普通课', False
 
     def check_single_pillar(self, tian_gan: str, di_zhi: str, 
                            tiandi_pan: Dict, shichen: str,
@@ -808,7 +923,9 @@ class DaLiuRenLuMaGuiRen:
         """
         shan_jia = self.get_shan_jia(mountain)
         xiang_shou = self.get_xiang_shou(mountain)
-        tiandi_pan = arrange_tiandi_pan('亥', shichen)
+        # BUGFIX: 月将应从月支计算，而非硬编码'亥'
+        yuejiang = self.get_yuejiang(yue_zhi) if yue_zhi else '亥'
+        tiandi_pan = arrange_tiandi_pan(yuejiang, shichen)
         
         # 分析各柱
         nian_result = self.check_single_pillar(

@@ -7,7 +7,13 @@ from typing import Dict, List, Tuple, Optional
 
 
 class SiKeSanChuanCalculator:
-    """四课三传计算器"""
+    """四课三传计算器（V1 · 已废弃）
+
+    ⚠️ 2026-08-17 起废弃：P1 起课统一后，生产链路全部使用
+    `SiKeSanChuanCalculator2`（权威 V2，修复别责/遥克/涉害/伏吟 4 个宗门 bug）。
+    本类仅保留为 V2 的基类（V2 复用其 _she_hai_fa/_ang_xing_fa/qi_sike 等方法），
+    禁止在新代码中直接实例化；其 `fa_sanchuan` 入口会发出 DeprecationWarning。
+    """
     
     # 天干寄宫
     TIAN_GAN_JI_GONG = {
@@ -227,8 +233,95 @@ class SiKeSanChuanCalculator:
         else:
             return 0
     
+    # 天干长生位（长生十二宫）
+    TIAN_GAN_CHANG_SHENG = {
+        '甲': '亥', '乙': '午', '丙': '寅', '丁': '酉',
+        '戊': '寅', '己': '酉', '庚': '巳', '辛': '子',
+        '壬': '申', '癸': '卯'
+    }
+    
+    # 天干临官位（禄位）
+    TIAN_GAN_LU_WEI = {
+        '甲': '寅', '乙': '卯', '丙': '巳', '丁': '午',
+        '戊': '巳', '己': '午', '庚': '申', '辛': '酉',
+        '壬': '亥', '癸': '子'
+    }
+    
+    # 自刑地支
+    ZI_XING = ['辰', '午', '酉', '亥']
+    
+    # 五行相生关系
+    WU_XING_SHENG = {
+        '木': '火', '火': '土', '土': '金', '金': '水', '水': '木'
+    }
+    
+    def _check_wuxing_sheng(self, upper: str, lower: str) -> bool:
+        """检查天盘是否生地盘（五行相生）"""
+        wu_xing_map = self.DIZHI_WU_XING
+        sheng_map = self.WU_XING_SHENG
+        upper_wx = wu_xing_map.get(upper, '')
+        lower_wx = wu_xing_map.get(lower, '')
+        if upper_wx and lower_wx:
+            return sheng_map.get(upper_wx) == lower_wx
+        return False
+    
+    def _enrich_ke_ge(self, result: Dict, ri_gan: str, ri_zhi: str,
+                      tiandi_pan: Dict, sike: List, shi_chen: str = None) -> Dict:
+        """识别附加课体课格（杜传、励德、元胎等）"""
+        ke_ge_list = []
+        
+        # 1. 杜传格 - 伏吟课且初传自刑
+        if result.get('课体') == '伏吟课':
+            chu = result.get('初传', '')
+            if chu in self.ZI_XING:
+                ke_ge_list.append('杜传格')
+        
+        # 2. 励德课 - 天乙贵人立卯酉
+        if shi_chen and ri_gan:
+            try:
+                from engine.gui_ren_engine import GuiRenCalculator
+                gr = GuiRenCalculator()
+                tian_pan = {'天地对应': tiandi_pan}
+                gui_ren_result = gr.arrange_gui_ren_pan(ri_gan, tian_pan, shi_chen)
+                gui_ren_pos = gui_ren_result.get('贵人落地盘位置', '')
+                if gui_ren_pos in ['卯', '酉']:
+                    ke_ge_list.append('励德课')
+            except Exception:
+                pass
+        
+        # 3. 元胎课
+        # 定义A：四课上下皆相生（标准课经定义）
+        is_yuan_tai_a = True
+        has_valid_course = False
+        for course in sike:
+            if len(course) >= 3:
+                upper = course[1]
+                lower = course[2]
+                if upper and lower:
+                    has_valid_course = True
+                    if not self._check_wuxing_sheng(upper, lower):
+                        is_yuan_tai_a = False
+                        break
+        if has_valid_course and is_yuan_tai_a:
+            ke_ge_list.append('元胎课')
+        else:
+            # 定义B：伏吟课中，初传为日干之临官（禄位）
+            if result.get('课体') == '伏吟课':
+                chu = result.get('初传', '')
+                lu_wei = self.TIAN_GAN_LU_WEI.get(ri_gan, '')
+                if chu == lu_wei:
+                    ke_ge_list.append('元胎课')
+        
+        if ke_ge_list:
+            result['课体课格'] = ke_ge_list
+        return result
+    
     def fa_sanchuan(self, sike: List[Tuple], ri_gan: str, ri_zhi: str, 
-                    tiandi_pan: Dict[str, str]) -> Dict[str, str]:
+                    tiandi_pan: Dict[str, str], shi_chen: str = None) -> Dict[str, str]:
+        import warnings
+        warnings.warn(
+            'SiKeSanChuanCalculator(V1) 已废弃：P1 起课统一后请改用 SiKeSanChuanCalculator2'
+            '（V1 在反吟/涉害/遥克/伏吟等场景三传有误）', DeprecationWarning, stacklevel=2)
         """
         发三传
         返回：{'初传': str, '中传': str, '末传': str, '课体': str, '起法': str}
@@ -253,88 +346,71 @@ class SiKeSanChuanCalculator:
         
         # 检查是否为伏吟（天地盘相同）
         is_fu_yin = self._is_fu_yin(tiandi_pan)
-        
+
         # 检查是否为反吟（天地盘对冲）
         is_fan_yin = self._is_fan_yin(tiandi_pan)
-        
-        # 1. 贼克法
-        ke_results = []
-        for i, (name, shang, xia, _) in enumerate(sike):
-            ke_type = self.is_ke(shang, xia)
-            if ke_type:
-                ke_results.append((i + 1, ke_type, shang, xia))
-        
-        if len(ke_results) == 1:
-            # 只有一课克贼
-            # 【关键修正】伏吟课优先于八专课
-            if is_fu_yin:
-                # 伏吟课有贼克，也要用伏吟法的中末传规则
-                result = self._fu_yin_fa(ri_gan, ri_zhi, tiandi_pan, sike)
-            else:
-                # 【关键修正】八专课只有在无贼克时才用，有贼克用贼克法
-                # 非伏吟课，用贼克法
-                chu_chuan = ke_results[0][2]
-                zhong_chuan = tiandi_pan[chu_chuan]
-                mo_chuan = tiandi_pan[zhong_chuan]
-                
-                if ke_results[0][1] == '克':
-                    ke_ti = '元首课'
+
+        # 九宗门优先级：伏吟 → 反吟 → 贼克(含比用/涉害) → 遥克 → 昴星 → 别责 → 八专
+        # 别责仅在无克贼、无遥克时才判定，不可在贼克之前检查
+        if is_fu_yin:
+            result = self._fu_yin_fa(ri_gan, ri_zhi, tiandi_pan, sike)
+
+        # 反吟课（天地盘对冲）
+        elif is_fan_yin:
+            result = self._fan_yin_fa(ri_gan, ri_zhi, tiandi_pan, sike)
+
+        # 1. 贼克法（含比用、涉害）
+        else:
+            ke_results = []
+            for i, (name, shang, xia, _) in enumerate(sike):
+                ke_type = self.is_ke(shang, xia)
+                if ke_type:
+                    ke_results.append((i + 1, ke_type, shang, xia))
+
+            if len(ke_results) == 1:
+                # 只有一课克贼
+                # 【关键修正】伏吟课优先于八专课
+                if is_fu_yin:
+                    # 伏吟课有贼克，也要用伏吟法的中末传规则
+                    result = self._fu_yin_fa(ri_gan, ri_zhi, tiandi_pan, sike)
                 else:
-                    ke_ti = '重审课'
-                
-                result = {
-                    '初传': chu_chuan,
-                    '中传': zhong_chuan,
-                    '末传': mo_chuan,
-                    '课体': ke_ti,
-                    '起法': '贼克法'
-                }
-        
-        elif len(ke_results) > 1:
-            # 2. 比用法
-            # 【关键修正】伏吟课优先于八专课
-            if is_fu_yin:
-                # 伏吟课有多课克贼，也要用伏吟法的中末传规则
-                result = self._fu_yin_fa(ri_gan, ri_zhi, tiandi_pan, sike)
-            else:
-                # 【关键修正】八专课只有在无贼克时才用，有贼克用贼克法/比用法/涉害法
-                # 不再判断八专课，直接用比用法/涉害法
-                
-                # 【关键修正】多课克贼，先分优先级：下贼上 > 上克下
-                xia_zei_shang = [(k, t, s, x) for k, t, s, x in ke_results if t == '贼']
-                shang_ke_xia = [(k, t, s, x) for k, t, s, x in ke_results if t == '克']
-                
-                # 优先处理下贼上
-                if xia_zei_shang:
-                    # 有下贼上，优先处理
-                    if len(xia_zei_shang) == 1:
-                        # 只有一个下贼上，直接取用
-                        chu_chuan = xia_zei_shang[0][2]
-                        zhong_chuan = tiandi_pan[chu_chuan]
-                        mo_chuan = tiandi_pan[zhong_chuan]
-                        
-                        result = {
-                            '初传': chu_chuan,
-                            '中传': zhong_chuan,
-                            '末传': mo_chuan,
-                            '课体': '重审课',
-                            '起法': '贼克法（下贼上）'
-                        }
+                    # 非伏吟课，用贼克法
+                    chu_chuan = ke_results[0][2]
+                    zhong_chuan = tiandi_pan[chu_chuan]
+                    mo_chuan = tiandi_pan[zhong_chuan]
+
+                    if ke_results[0][1] == '克':
+                        ke_ti = '元首课'
                     else:
-                        # 多个下贼上，需要比用
-                        # 【有比用比原则】先比较阴阳，阴阳相同再比较数值大小
-                        bi_yong_results = []
-                        for ke_num, ke_type, shang, xia in xia_zei_shang:
-                            if yang_ri and self.is_yang_zhi(shang):
-                                bi_yong_results.append((ke_num, shang, xia))
-                            elif not yang_ri and not self.is_yang_zhi(shang):
-                                bi_yong_results.append((ke_num, shang, xia))
-                        
-                        if len(bi_yong_results) == 1:
-                            chu_chuan = bi_yong_results[0][1]
+                        ke_ti = '重审课'
+
+                    result = {
+                        '初传': chu_chuan,
+                        '中传': zhong_chuan,
+                        '末传': mo_chuan,
+                        '课体': ke_ti,
+                        '起法': '贼克法'
+                    }
+
+            elif len(ke_results) > 1:
+                # 2. 比用法
+                if is_fu_yin:
+                    # 伏吟课有多课克贼，也要用伏吟法的中末传规则
+                    result = self._fu_yin_fa(ri_gan, ri_zhi, tiandi_pan, sike)
+                else:
+                    # 多课克贼，先分优先级：下贼上 > 上克下
+                    xia_zei_shang = [(k, t, s, x) for k, t, s, x in ke_results if t == '贼']
+                    shang_ke_xia = [(k, t, s, x) for k, t, s, x in ke_results if t == '克']
+
+                    # 优先处理下贼上
+                    if xia_zei_shang:
+                        # 有下贼上，优先处理
+                        if len(xia_zei_shang) == 1:
+                            # 只有一个下贼上，直接取用
+                            chu_chuan = xia_zei_shang[0][2]
                             zhong_chuan = tiandi_pan[chu_chuan]
                             mo_chuan = tiandi_pan[zhong_chuan]
-                            
+
                             result = {
                                 '初传': chu_chuan,
                                 '中传': zhong_chuan,
@@ -342,77 +418,84 @@ class SiKeSanChuanCalculator:
                                 '课体': '重审课',
                                 '起法': '贼克法（下贼上）'
                             }
-                        elif len(bi_yong_results) > 1:
-                            # 【关键修正】比用后仍有多课，用涉害法（不是比较数值）
-                            result = self._she_hai_fa([(k, s, x) for k, s, x in bi_yong_results], tiandi_pan, ri_gan)
                         else:
-                            # 【关键修正】比用后无符合，不是取先见者，而是用涉害法！
-                            # 格式：(课次，上神，下神)
-                            result = self._she_hai_fa([(k, s, x) for k, _, s, x in xia_zei_shang], tiandi_pan, ri_gan)
-                else:
-                    # 无下贼上，处理上克下
-                    if len(shang_ke_xia) == 1:
-                        # 只有一个上克下，直接取用
-                        chu_chuan = shang_ke_xia[0][2]
-                        zhong_chuan = tiandi_pan[chu_chuan]
-                        mo_chuan = tiandi_pan[zhong_chuan]
-                        
-                        result = {
-                            '初传': chu_chuan,
-                            '中传': zhong_chuan,
-                            '末传': mo_chuan,
-                            '课体': '元首课',
-                            '起法': '贼克法（上克下）'
-                        }
+                            # 多个下贼上，需要比用
+                            bi_yong_results = []
+                            for ke_num, ke_type, shang, xia in xia_zei_shang:
+                                if yang_ri and self.is_yang_zhi(shang):
+                                    bi_yong_results.append((ke_num, shang, xia))
+                                elif not yang_ri and not self.is_yang_zhi(shang):
+                                    bi_yong_results.append((ke_num, shang, xia))
+
+                            if len(bi_yong_results) == 1:
+                                chu_chuan = bi_yong_results[0][1]
+                                zhong_chuan = tiandi_pan[chu_chuan]
+                                mo_chuan = tiandi_pan[zhong_chuan]
+
+                                result = {
+                                    '初传': chu_chuan,
+                                    '中传': zhong_chuan,
+                                    '末传': mo_chuan,
+                                    '课体': '重审课',
+                                    '起法': '贼克法（下贼上）'
+                                }
+                            elif len(bi_yong_results) > 1:
+                                result = self._she_hai_fa([(k, s, x) for k, s, x in bi_yong_results], tiandi_pan, ri_gan)
+                            else:
+                                result = self._she_hai_fa([(k, s, x) for k, _, s, x in xia_zei_shang], tiandi_pan, ri_gan)
                     else:
-                        # 多个上克下，需要比用
-                        # 【有比用比原则】与下贼上同理，先比较阴阳，阴阳相同再比较数值
-                        bi_yong_results = []
-                        for ke_num, ke_type, shang, xia in shang_ke_xia:
-                            if yang_ri and self.is_yang_zhi(shang):
-                                bi_yong_results.append((ke_num, shang, xia))
-                            elif not yang_ri and not self.is_yang_zhi(shang):
-                                bi_yong_results.append((ke_num, shang, xia))
-                        
-                        if len(bi_yong_results) == 1:
-                            chu_chuan = bi_yong_results[0][1]
+                        # 无下贼上，处理上克下
+                        if len(shang_ke_xia) == 1:
+                            chu_chuan = shang_ke_xia[0][2]
                             zhong_chuan = tiandi_pan[chu_chuan]
                             mo_chuan = tiandi_pan[zhong_chuan]
-                            
+
                             result = {
                                 '初传': chu_chuan,
                                 '中传': zhong_chuan,
                                 '末传': mo_chuan,
                                 '课体': '元首课',
-                                '起法': '贼克法（上克下，比用）'
+                                '起法': '贼克法（上克下）'
                             }
-                        elif len(bi_yong_results) > 1:
-                            # 【关键修正】比用后仍有多课，用涉害法（不是比较数值）
-                            result = self._she_hai_fa([(k, s, x) for k, s, x in bi_yong_results], tiandi_pan, ri_gan)
                         else:
-                            # 【关键修正】比用后无符合，不是取先见者，而是用涉害法！
-                            # 格式：(课次，上神，下神)
-                            result = self._she_hai_fa([(k, s, x) for k, _, s, x in shang_ke_xia], tiandi_pan, ri_gan)
-        
-        else:
-            # 4. 遥克法
-            # 【关键修正】伏吟课优先于八专课
-            if is_fu_yin:
-                result = self._fu_yin_fa(ri_gan, ri_zhi, tiandi_pan, sike)
-            elif is_ba_zhuan:
-                result = self._ba_zhuan_fa(ri_gan, ri_zhi, tiandi_pan, yang_ri)
+                            # 多个上克下，需要比用
+                            bi_yong_results = []
+                            for ke_num, ke_type, shang, xia in shang_ke_xia:
+                                if yang_ri and self.is_yang_zhi(shang):
+                                    bi_yong_results.append((ke_num, shang, xia))
+                                elif not yang_ri and not self.is_yang_zhi(shang):
+                                    bi_yong_results.append((ke_num, shang, xia))
+
+                            if len(bi_yong_results) == 1:
+                                chu_chuan = bi_yong_results[0][1]
+                                zhong_chuan = tiandi_pan[chu_chuan]
+                                mo_chuan = tiandi_pan[zhong_chuan]
+
+                                result = {
+                                    '初传': chu_chuan,
+                                    '中传': zhong_chuan,
+                                    '末传': mo_chuan,
+                                    '课体': '元首课',
+                                    '起法': '贼克法（上克下，比用）'
+                                }
+                            elif len(bi_yong_results) > 1:
+                                result = self._she_hai_fa([(k, s, x) for k, s, x in bi_yong_results], tiandi_pan, ri_gan)
+                            else:
+                                result = self._she_hai_fa([(k, s, x) for k, _, s, x in shang_ke_xia], tiandi_pan, ri_gan)
+
             else:
+                # 无克贼时：遥克 → 别责(四课不全) → 八专(干支同位) → 昴星(四课全无克贼)
                 yao_ke_results = []
                 for i, (name, shang, xia, _) in enumerate(sike):
                     # 上神克日干
                     shang_wuxing = self.DIZHI_WU_XING.get(shang, '')
                     ri_wuxing = self.TIAN_GAN_WU_XING[ri_gan]
-                    
+
                     if self.WU_XING_KE.get(shang_wuxing) == ri_wuxing:
                         yao_ke_results.append((i + 1, '上克干', shang))
                     elif self.WU_XING_KE.get(ri_wuxing) == shang_wuxing:
                         yao_ke_results.append((i + 1, '干克上', shang))
-                
+
                 if yao_ke_results:
                     # 取上克干为先，无则取干克上
                     shang_ke_gan = [r for r in yao_ke_results if r[1] == '上克干']
@@ -428,25 +511,20 @@ class SiKeSanChuanCalculator:
                                     bi_yong_results.append((ke_num, shang))
                                 elif not yang_ri and not self.is_yang_zhi(shang):
                                     bi_yong_results.append((ke_num, shang))
-                            
+
                             if len(bi_yong_results) == 1:
                                 chu_chuan = bi_yong_results[0][1]
                             elif len(bi_yong_results) > 1:
-                                # 比用后仍有多课，用涉害法
                                 bi_yong_with_xia = []
                                 for ke_num, shang in bi_yong_results:
-                                    # 找到对应的下神
                                     for i, (name, s, x, _) in enumerate(sike):
                                         if i + 1 == ke_num:
                                             bi_yong_with_xia.append((ke_num, shang, x))
                                             break
-                                # 调用涉害法
                                 result = self._she_hai_fa(bi_yong_with_xia, tiandi_pan, ri_gan)
-                                # 缓存结果
                                 self.sanchuan_cache[cache_key] = result
                                 return result
                             else:
-                                # 比用后无符合，取先见者
                                 chu_chuan = shang_ke_gan[0][2]
                     else:
                         # 无上克干，取干克上
@@ -461,32 +539,27 @@ class SiKeSanChuanCalculator:
                                     bi_yong_results.append((ke_num, shang))
                                 elif not yang_ri and not self.is_yang_zhi(shang):
                                     bi_yong_results.append((ke_num, shang))
-                            
+
                             if len(bi_yong_results) == 1:
                                 chu_chuan = bi_yong_results[0][1]
                             elif len(bi_yong_results) > 1:
-                                # 比用后仍有多课，用涉害法
                                 bi_yong_with_xia = []
                                 for ke_num, shang in bi_yong_results:
-                                    # 找到对应的下神
                                     for i, (name, s, x, _) in enumerate(sike):
                                         if i + 1 == ke_num:
                                             bi_yong_with_xia.append((ke_num, shang, x))
                                             break
-                                # 调用涉害法
                                 result = self._she_hai_fa(bi_yong_with_xia, tiandi_pan, ri_gan)
-                                # 缓存结果
                                 self.sanchuan_cache[cache_key] = result
                                 return result
                             else:
-                                # 比用后无符合，取先见者
                                 chu_chuan = gan_ke_shang[0][2]
                         if not chu_chuan:
                             chu_chuan = yao_ke_results[0][2]
-                    
+
                     zhong_chuan = tiandi_pan[chu_chuan]
                     mo_chuan = tiandi_pan[zhong_chuan]
-                    
+
                     result = {
                         '初传': chu_chuan,
                         '中传': zhong_chuan,
@@ -495,23 +568,17 @@ class SiKeSanChuanCalculator:
                         '起法': '遥克法'
                     }
                 else:
-                    # 无遥克，检查特殊格局
-                    # 【关键修正】反吟法优先于别责法
-                    # 5. 八专课（无贼克、无遥克时）
-                    if is_ba_zhuan:
+                    # 无遥克：别责(四课不全) → 八专(干支同位) → 昴星(四课全无克贼)
+                    if self._is_bie_ze(sike, ri_gan, ri_zhi):
+                        result = self._bie_ze_fa(ri_gan, ri_zhi, tiandi_pan, sike)
+                    elif is_ba_zhuan:
                         result = self._ba_zhuan_fa(ri_gan, ri_zhi, tiandi_pan, yang_ri)
-                    # 6. 伏吟课
-                    elif is_fu_yin:
-                        result = self._fu_yin_fa(ri_gan, ri_zhi, tiandi_pan, sike)
-                    # 7. 反吟法（天地盘对冲）- 优先于别责
-                    elif is_fan_yin:
-                        result = self._fan_yin_fa(ri_gan, ri_zhi, tiandi_pan, sike)
-                    # 8. 别责法（四课无克贼、无遥克，第一课与第四课相同）
-                    elif self._is_bie_ze(sike, ri_gan):
-                        result = self._bie_ze_fa(ri_gan, ri_zhi, tiandi_pan)
-                    # 9. 默认昂星法
                     else:
+                        # 无克贼、无遥克、四课全 → 昴星法
                         result = self._ang_xing_fa(ri_gan, ri_zhi, tiandi_pan)
+
+        # 识别附加课体课格（杜传、励德、元胎等）
+        result = self._enrich_ke_ge(result, ri_gan, ri_zhi, tiandi_pan, sike, shi_chen)
         
         # 缓存结果
         self.sanchuan_cache[cache_key] = result
@@ -544,14 +611,17 @@ class SiKeSanChuanCalculator:
         """
         # 检查无比用的情况
         if len(bi_yong_results) == 0:
-            # 无比用，取第一课
-            return self._ang_xing_fa(ri_gan, bi_yong_results[0][2] if bi_yong_results else '子', tiandi_pan)
+            # 无比用，返回空结果
+            return {
+                '初传': '', '中传': '', '末传': '',
+                '课体': '涉害课', '起法': '涉害法',
+                '涉害深度': 0, 'error': '无比用候选，无法起课'
+            }
         
         # 1. 计算每个候选的涉害深度
         hai_depths = []
         for ke_num, shang, xia in bi_yong_results:
-            # 计算涉害深度：从本位归原位，数克位数量
-            depth = self._calculate_she_hai_depth(shang, tiandi_pan)
+            depth = self._calculate_she_hai_depth(shang, xia, tiandi_pan)
             hai_depths.append((ke_num, shang, xia, depth))
         
         # 2. 取涉害最深者
@@ -577,9 +647,12 @@ class SiKeSanChuanCalculator:
             ji_candidates = []
             
             for ke_num, shang, xia, depth in deepest:
-                if xia in meng:
+                # Fix B (Task#7)：孟仲季须按上神所加临之地盘判定；
+                # 下神为天干(第一课/日干)时须转寄宫再比对（古籍：子加丙→子临巳(孟)）。
+                xia_pos = self.TIAN_GAN_JI_GONG.get(xia, xia)
+                if xia_pos in meng:
                     meng_candidates.append((ke_num, shang, xia, depth))
-                elif xia in zhong:
+                elif xia_pos in zhong:
                     zhong_candidates.append((ke_num, shang, xia, depth))
                 else:
                     ji_candidates.append((ke_num, shang, xia, depth))
@@ -624,68 +697,40 @@ class SiKeSanChuanCalculator:
             '涉害深度': max_depth
         }
     
-    def _calculate_she_hai_depth(self, shang: str, tiandi_pan: Dict) -> int:
+    def _calculate_she_hai_depth(self, shang: str, xia: str, tiandi_pan: Dict) -> int:
         """
-        计算涉害深度（核心算法）- 修正版
+        计算涉害深度（核心算法）
         
         计算规则：
-        1. 找到天盘上神落地盘的位置（天盘加临位）- 起点
-        2. 从该位置顺时针数到天盘上神本身的位置（不含）- 终点不计
-        3. 统计经过的位置中，所有相克的五行数量
-        
-        核心修正：统计所有相克，包含"我克者"（上克下）和"克我者"（下贼上）
-        
-        例如：天盘酉落地盘巳位
-        从巳位顺时针数到酉位（不含）：巳→午→未→申
-        统计这段路径上所有与酉（金）相克的五行：
-          - 巳：巳火✓ + 丙火✓ = 2（火克金）
-          - 午：午火✓ = 1（火克金）
-          - 未：未土× + 丁火✓ = 1（丁火克金）
-          - 申：申金× = 0（比和）
-          - 涉害深度：4
-        
-        五行生克：
-        - 金克木，木克土，土克水，水克火，火克金
-        - 统计"我克者"（上神克地盘）和"克我者"（地盘克上神）
-        
-        注意事项：
-        - 起点计入，终点不计
-        - 比和者（五行相同）不计为克位
-        - 必须顺时针数
-        - 地支本气和天干寄宫分别计数
+        1. 从四课下神(xia)出发
+        2. 顺时针数到天盘上神本身的位置（不含）
+        3. 只统计下贼上（地盘克天盘）
+        4. 四季土(辰戌丑未)需计算寄宫天干的下贼上
         
         :param shang: 上神（天盘地支）
+        :param xia: 下神（四课下神，起点）
         :param tiandi_pan: 天地盘对应关系
         :return: 涉害深度（经过的克位数）
         """
         # 生成缓存键
         tiandi_pan_key = "-".join([f"{k}:{v}" for k, v in sorted(tiandi_pan.items())])
-        cache_key = f"{shang}:{tiandi_pan_key}"
+        cache_key = f"{shang}:{xia}:{tiandi_pan_key}"
         
         # 检查缓存
         if cache_key in self.she_hai_depth_cache:
             return self.she_hai_depth_cache[cache_key]
         
-        # 1. 找到天盘上神落地盘的位置（起点）
-        start_pos = None
-        for dizhi, tianpan in tiandi_pan.items():
-            if tianpan == shang:
-                start_pos = dizhi
-                break
-        if start_pos is None:
-            start_pos = shang  # 默认情况
+        # 1. 从四课下神出发（如果下神是天干，转换成寄宫地支）
+        if xia in self.TIAN_GAN_JI_GONG:
+            start_pos = self.TIAN_GAN_JI_GONG[xia]
+        else:
+            start_pos = xia
+        end_pos = shang  # 终点：上神本身的位置（不计）
+        start_idx = self.DIZHI_INDEX[start_pos]
+        shang_wuxing = self.DIZHI_WU_XING.get(shang, '')
         
-        # 2. 确定终点：天盘上神本身的位置（终点不计）
-        end_pos = shang  # 天盘上神本身的地支位置
-        
-        # 3. 从起始位顺数到终点位，统计克位（包含天干寄宫）
+        # 2. 顺行计数（只算下贼上）
         depth = 0
-        
-        # 使用预定义的地支索引映射，提高性能
-        start_idx = self.DIZHI_INDEX[start_pos]  # 起始位索引
-        shang_wuxing = self.DIZHI_WU_XING.get(shang, '')  # 上神五行
-        
-        # 4. 顺行计数
         count = 0
         while True:
             current_zhi = self.DIZHI[(start_idx + count) % 12]
@@ -696,29 +741,15 @@ class SiKeSanChuanCalculator:
             
             current_wuxing = self.DIZHI_WU_XING.get(current_zhi, '')
             
-            # 5. 统计所有相克（包含"我克者"和"克我者"）
-            ke_count = 0
-            
-            # a) 地支本气的克
-            # 下贼上（克我者）：地支五行克上神五行
+            # 只统计下贼上：地盘五行克上神五行
             if self.WU_XING_KE.get(current_wuxing) == shang_wuxing:
-                ke_count += 1
-            # 上克下（我克者）：上神五行克地支五行
-            elif self.WU_XING_KE.get(shang_wuxing) == current_wuxing:
-                ke_count += 1
+                depth += 1
             
-            # b) 天干寄宫的克
+            # 四季土寄宫天干的克（只算下贼上）
             if current_zhi in self.GAN_JI_GONG_WUXING_ALL:
                 for ji_gong_wuxing in self.GAN_JI_GONG_WUXING_ALL[current_zhi]:
-                    # 下贼上（克我者）：天干寄宫五行克上神五行
                     if self.WU_XING_KE.get(ji_gong_wuxing) == shang_wuxing:
-                        ke_count += 1
-                    # 上克下（我克者）：上神五行克天干寄宫五行
-                    elif self.WU_XING_KE.get(shang_wuxing) == ji_gong_wuxing:
-                        ke_count += 1
-            
-            # 累加克位数量
-            depth += ke_count
+                        depth += 1
             
             # 安全保护：最多数一圈
             if count > 12:
@@ -805,12 +836,18 @@ class SiKeSanChuanCalculator:
                 return False
         return True
     
-    def _is_bie_ze(self, sike: List[Tuple], ri_gan: str) -> bool:
+    def _is_bie_ze(self, sike: List[Tuple], ri_gan: str, ri_zhi: str = '') -> bool:
         """
         判断是否为别责格
         别责：四课中有两课相同（包括日干寄宫转换后），实际只有三课
         判定规则：日干要转换为寄宫地支后再比较
+        Fix A：八专日(干支同位)四课仅两课，会被误判为不备→别责；
+               八专为独立宗门，须从别责中互斥排除（据《六壬大全》p130
+               "有上下克取克发用，无上下克不取遥克径用八专法"，八专与别责平行）。
         """
+        # Fix A：八专为独立宗门，不参与别责判定
+        if ri_zhi and self._is_ba_zhuan(ri_gan, ri_zhi):
+            return False
         if len(sike) < 4:
             return False  # 四课不全是八专课，不是别责课
         
@@ -841,76 +878,55 @@ class SiKeSanChuanCalculator:
         
         return False
     
-    def _bie_ze_fa(self, ri_gan: str, ri_zhi: str, tiandi_pan: Dict) -> Dict:
+    def _bie_ze_fa(self, ri_gan: str, ri_zhi: str, tiandi_pan: Dict, sike: List[Tuple] = None) -> Dict:
         """
-        别责法（传统规则 - 永久固定）
-        规则：四课中有两课相同（包括日干寄宫转换后），实际只有三课
-        
-        起课原则：
-        - 阳日：取干合上神为初传（日干五合之天干的寄宫位置的天盘）
-        - 阴日：取支前三合为初传（三合局的前一位）
-        - 中传：皆取日干上神（日干寄宫的天盘）
-        - 末传：皆取日干上神（与中传相同）
+        别责法（不备课规则）—【Task #4 修订】据《六壬大全》别责门(p~128-129)正例。
+
+        古籍正例（五源印证 + 本地原典PDF）：
+          - 阳日（刚日）：初传 = 天干五合之神的上神
+                （日干合化之干，取该干寄宫地支的天盘上神）
+          - 阴日（柔日）：初传 = 日支三合局「生支」的上神
+                （申子辰→申 / 寅午戌→寅 / 巳酉丑→巳 / 亥卯未→亥）
+          - 中末传：皆取日干上神（日干寄宫的天盘）
+
+        旧引擎"课位置法"（阳不备取支上/阴不备取干上）与古籍不符，已作废。
+        注意：干合partner寄宫须用本项目标准 TIAN_GAN_JI_GONG（己→未，非丑）。
         """
-        # 阴阳日判定
-        yang_ri_gan = ['甲', '丙', '戊', '庚', '壬']
-        
-        if ri_gan in yang_ri_gan:
-            # 阳日：取干合上神
-            wu_he_map = {
-                '甲': '己', '己': '甲',
-                '乙': '庚', '庚': '乙',
-                '丙': '辛', '辛': '丙',
-                '丁': '壬', '壬': '丁',
-                '戊': '癸', '癸': '戊'
-            }
-            he_gan = wu_he_map[ri_gan]
-            
-            # 五合天干的寄宫
-            ji_gong = self.TIAN_GAN_JI_GONG[he_gan]
-            
-            # 寄宫的天盘为初传
-            chu_chuan = tiandi_pan[ji_gong]
-            
-            rule = '干合上神'
+        # 天干五合 → partner 寄宫（甲己化土、乙庚金、丙辛水、丁壬木、戊癸火）
+        GAN_HE_JI_GONG = {
+            '甲': self.TIAN_GAN_JI_GONG['己'],  # 甲合己 → 未
+            '乙': self.TIAN_GAN_JI_GONG['庚'],  # 乙合庚 → 申
+            '丙': self.TIAN_GAN_JI_GONG['辛'],  # 丙合辛 → 戌
+            '丁': self.TIAN_GAN_JI_GONG['壬'],  # 丁合壬 → 亥
+            '戊': self.TIAN_GAN_JI_GONG['癸'],  # 戊合癸 → 丑
+            '己': self.TIAN_GAN_JI_GONG['甲'],  # 己合甲 → 寅
+            '庚': self.TIAN_GAN_JI_GONG['乙'],  # 庚合乙 → 辰
+            '辛': self.TIAN_GAN_JI_GONG['丙'],  # 辛合丙 → 巳
+            '壬': self.TIAN_GAN_JI_GONG['丁'],  # 壬合丁 → 未
+            '癸': self.TIAN_GAN_JI_GONG['戊'],  # 癸合戊 → 巳
+        }
+        # 地支三合局 → 生支（初传取生支，与四课第几支无关）
+        SAN_HE_SHENG = {
+            '申': '申', '子': '申', '辰': '申',   # 申子辰水局，生=申
+            '寅': '寅', '午': '寅', '戌': '寅',   # 寅午戌火局，生=寅
+            '巳': '巳', '酉': '巳', '丑': '巳',   # 巳酉丑金局，生=巳
+            '亥': '亥', '卯': '亥', '未': '亥',   # 亥卯未木局，生=亥
+        }
+        gan_ji = self.TIAN_GAN_JI_GONG[ri_gan]
+        gan_shang = tiandi_pan[gan_ji]   # 日干上神（中末传）
+        yang_ri = self.is_yang_ri(ri_gan)
+        if yang_ri:
+            chu_chuan = tiandi_pan[GAN_HE_JI_GONG[ri_gan]]
         else:
-            # 阴日：取支前三合（《六壬大全》规则）
-            # 规则：三合局按顺时针排列（长生→帝旺→墓库），取日支顺时针的下一个
-            # 例如：酉的三合局是巳→酉→丑（顺时针），从酉顺时针下一个是丑
-            zhi_san_he_qian = {
-                # 寅午戌三合：寅→午→戌（顺时针）
-                '寅': '午',  # 从寅顺时针下一个是午
-                '午': '戌',  # 从午顺时针下一个是戌
-                '戌': '寅',  # 从戌顺时针下一个是寅
-                # 亥卯未三合：亥→卯→未（顺时针）
-                '亥': '卯',  # 从亥顺时针下一个是卯
-                '卯': '未',  # 从卯顺时针下一个是未
-                '未': '亥',  # 从未顺时针下一个是亥
-                # 申子辰三合：申→子→辰（顺时针）
-                '申': '子',  # 从申顺时针下一个是子
-                '子': '辰',  # 从子顺时针下一个是辰
-                '辰': '申',  # 从辰顺时针下一个是申
-                # 巳酉丑三合：巳→酉→丑（顺时针）
-                '巳': '酉',  # 从巳顺时针下一个是酉
-                '酉': '丑',  # 从酉顺时针下一个是丑 ✓
-                '丑': '巳'   # 从丑顺时针下一个是巳
-            }
-            chu_chuan = zhi_san_he_qian[ri_zhi]
-            rule = '支前三合'
-        
-        # 中传、末传皆用日干上神（日干寄宫的天盘）
-        ri_gan_shang = tiandi_pan[self.TIAN_GAN_JI_GONG[ri_gan]]
-        zhong_chuan = ri_gan_shang
-        mo_chuan = ri_gan_shang
-        
+            chu_chuan = tiandi_pan[SAN_HE_SHENG[ri_zhi]]
         return {
             '初传': chu_chuan,
-            '中传': zhong_chuan,
-            '末传': mo_chuan,
+            '中传': gan_shang,
+            '末传': gan_shang,
             '课体': '别责课',
             '起法': '别责法',
-            '阴阳日': '阳日' if ri_gan in yang_ri_gan else '阴日',
-            '起课规则': rule
+            '阴阳日': '阳日（刚日·干合上神）' if yang_ri else '阴日（柔日·支三合生支）',
+            '起课规则': '干合/支三合（古籍正例）'
         }
     
     def _ba_zhuan_fa(self, ri_gan: str, ri_zhi: str, tiandi_pan: Dict, yang_ri: bool) -> Dict:
@@ -918,11 +934,11 @@ class SiKeSanChuanCalculator:
         八专法
         规则：干支同位，四课只有两课
         
-        起课原则（传统规则 - 永久固定）：
+        起课原则（传统规则 - 永久固定，据《六壬大全》p130"中末总向日上眠"）：
         - 阳日：取日上神（日干寄宫的天盘）顺数第三位为初传
         - 阴日：取第四课上神（支上神的上神）逆数第三位为初传
-        - 中传：皆用日支上神
-        - 末传：皆用日支上神
+        - 中传：皆用日干上神（日干寄宫的天盘）
+        - 末传：皆用日干上神（日干寄宫的天盘）
         
         顺数/逆数说明：
         - 顺数：从本地支开始，顺时针数到目标位置（包括自己）
@@ -950,11 +966,11 @@ class SiKeSanChuanCalculator:
             chu_chuan_index = (zhi_shang_shang_index - 2) % 12  # 逆数第三位
             chu_chuan = DIZHI[chu_chuan_index]
         
-        # 中传：日支上神
-        zhong_chuan = tiandi_pan[ri_zhi]
+        # 中传：日干上神（日干寄宫的天盘）——"中末总向日上眠"
+        zhong_chuan = tiandi_pan[ji_gong]
         
-        # 末传：日支上神
-        mo_chuan = tiandi_pan[ri_zhi]
+        # 末传：日干上神（日干寄宫的天盘）——"中末总向日上眠"
+        mo_chuan = tiandi_pan[ji_gong]
         
         return {
             '初传': chu_chuan,
@@ -971,7 +987,7 @@ class SiKeSanChuanCalculator:
         
         起课顺序：
         1. 若第一课有贼克，仍依贼克法发用
-        2. 柔日（阴日）：取辰上神为发用
+        2. 柔日（阴日）：取支上神为发用
         3. 刚日（阳日）：取日上神为发用
         4. 中传取初传所刑之神
         5. 末传取中传所刑之神
@@ -1030,10 +1046,7 @@ class SiKeSanChuanCalculator:
                 # 【关键修正】末传刑回初传，不能回头刑，改用冲
                 mo_chuan = chong_map.get(zhong_chuan, zhong_chuan)
             
-            if ke_results[0][1] == '克':
-                ke_ti = '元首课'
-            else:
-                ke_ti = '重审课'
+            ke_ti = '不虞格'
             
             return {
                 '初传': chu_chuan,
@@ -1093,7 +1106,7 @@ class SiKeSanChuanCalculator:
                     '初传': chu_chuan,
                     '中传': zhong_chuan,
                     '末传': mo_chuan,
-                    '课体': '比用课',
+                    '课体': '不虞格',
                     '起法': '伏吟法（有贼克）'
                 }
         
@@ -1101,11 +1114,9 @@ class SiKeSanChuanCalculator:
         yang_ri = self.is_yang_ri(ri_gan)
         
         if not yang_ri:
-            # 柔日（阴日）：取辰上神（第四课上神）为发用
-            if len(sike) >= 4:
-                chu_chuan = sike[3][1]  # 第四课上神
-            else:
-                chu_chuan = ri_zhi  # 备用
+            # 柔日（阴日）：取支上神为发用
+            zhi_shang = tiandi_pan.get(ri_zhi, ri_zhi)
+            chu_chuan = zhi_shang
         else:
             # 刚日（阳日）：取日上神（第一课上神）为发用
             if len(sike) >= 1:
@@ -1132,20 +1143,14 @@ class SiKeSanChuanCalculator:
         
         zi_xing = ['辰', '午', '酉', '亥']  # 自刑
         
-        # 5. 中传取法（关键修正：按《六壬大全》规则）
-        zhong_chuan = xing_map.get(chu_chuan, chu_chuan)
+        # 5. 中传取法
         if chu_chuan in zi_xing:
-            # 【关键修正】初传自刑，按阴阳日取中传
-            # 《六壬大全》：阳日取支上神，阴日取干上神
-            if yang_ri:
-                # 阳日：取支上神（第三课上神）
-                zhi_shang = tiandi_pan[ri_zhi]
-                zhong_chuan = zhi_shang
-            else:
-                # 阴日：取干上神（第一课上神，日干寄宫的天盘）
-                ri_gan_ji_gong = self.TIAN_GAN_JI_GONG.get(ri_gan, ri_zhi)
-                gan_shang = tiandi_pan[ri_gan_ji_gong]
-                zhong_chuan = gan_shang
+            # 初传自刑：中传取支上神（不分阴阳日）
+            zhi_shang = tiandi_pan.get(ri_zhi, ri_zhi)
+            zhong_chuan = zhi_shang
+        else:
+            # 初传不自刑：中传取初传所刑
+            zhong_chuan = xing_map.get(chu_chuan, chu_chuan)
         
         # 6. 末传取法（关键修正：按《六壬大全》规则）
         if zhong_chuan in zi_xing:
@@ -1182,21 +1187,9 @@ class SiKeSanChuanCalculator:
            - 初传：驿马（巳酉丑日马在亥，亥卯未日马在巳）
            - 中传：支上神
            - 末传：干上神（日干寄宫的天盘）
-        
-        3. 特别备注：丁未、己未二课列入八专课，不适用反吟法
         """
-        # 特别备注：丁未、己未属于八专课（干支同位）
-        if (ri_gan == '丁' and ri_zhi == '未') or (ri_gan == '己' and ri_zhi == '未'):
-            # 应该由八专法处理，这里返回错误
-            return {
-                '初传': '',
-                '中传': '',
-                '末传': '',
-                '课体': '八专课',
-                '起法': '反吟法（错误：应为八专课）',
-                'error': '丁未、己未日属于八专课，不适用反吟法'
-            }
-        
+        # Fix C：八专+反吟 课按反吟法处理（反吟优先于八专），由下方正常反吟逻辑
+        #        计算真实三传；不再返回空三传/错误标签（原退化分支会产出空三传）。
         # 1. 检查贼克
         ke_results = []
         for i, (name, shang, xia, _) in enumerate(sike):
@@ -1254,12 +1247,406 @@ class SiKeSanChuanCalculator:
             '格局': '井栏格（无亲格）'
         }
     
-    def get_tian_jiang_for_chuan(self, chuan: str, ri_gan: str, shichen: str) -> str:
-        """获取三传的天将"""
-        from engine.gui_ren_engine import GuiRenCalculator
-        
-        gui_ren_calc = GuiRenCalculator()
-        
-        # 需要天盘来计算天将
-        # 这里简化处理，返回空字符串
-        return ''
+class SiKeSanChuanCalculator2(SiKeSanChuanCalculator):
+    """
+    四课三传计算器V2 — 三步决策架构
+
+    基于 collect_info() → decide_method() → execute_method() 标准流程
+    继承 SiKeSanChuanCalculator，复用所有方法实现，仅重写决策流程
+
+    修复清单:
+    ─────────────────────────────────────────────
+    Bug 1: 别责在顶层优先于贼克法 → 移至无克贼无遥克分支
+    Bug 2: 无克贼分支中遥克法应优先于八专/别责
+    Bug 3: _she_hai_fa 空候选崩溃 (line 605 IndexError)
+    Bug 4: 遥克法比用后无比用结果时正确处理
+    ─────────────────────────────────────────────
+    """
+
+    def fa_sanchuan(self, sike: List[Tuple], ri_gan: str, ri_zhi: str,
+                    tiandi_pan: Dict[str, str], shi_chen: str = None) -> Dict[str, str]:
+        """
+        发三传 — 三步决策架构
+
+        流程:
+        1. _collect_info()  — 收集四课克贼/遥克/课体信息
+        2. _decide_method() — 按宗门九课优先级决策起课法
+        3. _execute_method() — 执行对应起课法计算三传
+        """
+        info = self._collect_info(sike, ri_gan, ri_zhi, tiandi_pan)
+        method = self._decide_method(info)
+        result = self._execute_method(method, info, tiandi_pan)
+
+        # 附加课体课格识别
+        result = self._enrich_ke_ge(result, ri_gan, ri_zhi, tiandi_pan, sike, shi_chen)
+
+        # 反吟课体标记: 反吟有贼克/遥克时，课体应包含"反吟"
+        if info['is_fan_yin'] and method != '反吟法':
+            current_ke_ti = result.get('课体', '')
+            if '反吟' not in current_ke_ti:
+                if current_ke_ti:
+                    result['课体'] = f'反吟{current_ke_ti}'
+                else:
+                    result['课体'] = '反吟课'
+
+        return result
+
+    def _collect_info(self, sike: List[Tuple], ri_gan: str, ri_zhi: str,
+                      tiandi_pan: Dict[str, str]) -> Dict:
+        """收集决策所需的所有信息"""
+        yang_ri = self.is_yang_ri(ri_gan)
+
+        # 检查特殊课体
+        is_fu_yin = self._is_fu_yin(tiandi_pan)
+        is_fan_yin = self._is_fan_yin(tiandi_pan)
+        is_ba_zhuan = self._is_ba_zhuan(ri_gan, ri_zhi)
+
+        # 检查四课克贼
+        ke_results = []
+        for i, (name, shang, xia, _) in enumerate(sike):
+            ke_type = self.is_ke(shang, xia)
+            if ke_type:
+                ke_results.append((i + 1, ke_type, shang, xia))
+
+        # 检查别责（四课中有两课相同）；Fix A：八专日已互斥排除
+        is_bie_ze = self._is_bie_ze(sike, ri_gan, ri_zhi)
+
+        # 检查遥克（无克贼时上神与日干相克）
+        yao_ke_results = []
+        if not ke_results:
+            for i, (name, shang, xia, _) in enumerate(sike):
+                shang_wuxing = self.DIZHI_WU_XING.get(shang, '')
+                ri_wuxing = self.TIAN_GAN_WU_XING.get(ri_gan, '')
+                if not shang_wuxing or not ri_wuxing:
+                    continue
+                if self.WU_XING_KE.get(shang_wuxing) == ri_wuxing:
+                    yao_ke_results.append((i + 1, '上克干', shang, xia))
+                elif self.WU_XING_KE.get(ri_wuxing) == shang_wuxing:
+                    yao_ke_results.append((i + 1, '干克上', shang, xia))
+
+        return {
+            'sike': sike,
+            'ri_gan': ri_gan,
+            'ri_zhi': ri_zhi,
+            'tiandi_pan': tiandi_pan,
+            'yang_ri': yang_ri,
+            'is_fu_yin': is_fu_yin,
+            'is_fan_yin': is_fan_yin,
+            'is_ba_zhuan': is_ba_zhuan,
+            'is_bie_ze': is_bie_ze,
+            'ke_results': ke_results,
+            'yao_ke_results': yao_ke_results,
+        }
+
+    def _decide_method(self, info: Dict) -> str:
+        """
+        按宗门九课优先级决策起课法
+
+        完整优先级:
+        1. 伏吟法 — 月将=占时（天地盘相同，无克贼可能）
+        2. 贼克法 — 四课有克贼（反吟有贼克也用贼克法）
+        3. 遥克法 — 无克贼，上神与日干相克（反吟有遥克也用遥克法）
+        4. 反吟法 — 反吟且无克贼无遥克
+        5. 八专法 — 干支同位（无克贼无遥克）
+        6. 别责法 — 四课相同（无克贼无遥克）
+        7. 昴星法 — 普通四课，无克贼无遥克
+
+        注意: 反吟是课体特征而非起课法
+        反吟有贼克 → 贼克法（课体标反吟）
+        反吟无贼克有遥克 → 遥克法（课体标反吟）
+        反吟无贼克无遥克 → 反吟法
+        """
+        # 1. 伏吟法优先（天地盘相同，贼克法无法使用）
+        if info['is_fu_yin']:
+            return '伏吟法'
+
+        ke_results = info['ke_results']
+        yao_ke_results = info['yao_ke_results']
+
+        # 2. 有克贼 → 贼克法（别责课有克贼时仍用贼克法）
+        if ke_results:
+            return '贼克法'
+
+        # 3. 无克贼，有遥克 → 遥克法
+        if yao_ke_results:
+            return '遥克法'
+
+        # 4. 无克贼无遥克 → 反吟优先于别责
+        #    【Task #3 修正】原序为"别责(L1413)→反吟(L1417)"，致反吟+不备课被错归别责。
+        #    天地盘相冲(反吟)是比四课不备(别责)更强的结构态，须先于别责判定；
+        #    反吟有克/遥克已在上方贼克/遥克分支收走，此处仅承接"反吟且无克无遥"。
+        if info['is_fan_yin']:
+            return '反吟法'
+
+        # 5. 无克贼无遥克，四课不全 → 别责法（已排除反吟/伏吟/八专）
+        if info['is_bie_ze']:
+            return '别责法'
+
+        if info['is_ba_zhuan']:
+            return '八专法'
+
+        return '昴星法'
+
+    def _execute_method(self, method: str, info: Dict, tiandi_pan: Dict) -> Dict:
+        """执行决策出的起课法，计算三传"""
+        sike = info['sike']
+        ri_gan = info['ri_gan']
+        ri_zhi = info['ri_zhi']
+        yang_ri = info['yang_ri']
+        ke_results = info['ke_results']
+        yao_ke_results = info['yao_ke_results']
+
+        if method == '伏吟法':
+            return self._fu_yin_fa(ri_gan, ri_zhi, tiandi_pan, sike)
+
+        if method == '反吟法':
+            return self._fan_yin_fa(ri_gan, ri_zhi, tiandi_pan, sike)
+
+        if method == '贼克法':
+            return self._execute_zei_ke(ke_results, ri_gan, ri_zhi, tiandi_pan, yang_ri)
+
+        if method == '遥克法':
+            return self._execute_yao_ke(yao_ke_results, ri_gan, ri_zhi, tiandi_pan, yang_ri, sike)
+
+        if method == '八专法':
+            return self._ba_zhuan_fa(ri_gan, ri_zhi, tiandi_pan, yang_ri)
+
+        if method == '别责法':
+            return self._bie_ze_fa(ri_gan, ri_zhi, tiandi_pan, sike)
+
+        if method == '昴星法':
+            return self._ang_xing_fa(ri_gan, ri_zhi, tiandi_pan)
+
+        return {'初传': '', '中传': '', '末传': '', '课体': '', '起法': method, 'error': f'未知起课法: {method}'}
+
+    def _execute_zei_ke(self, ke_results: List, ri_gan: str, ri_zhi: str,
+                        tiandi_pan: Dict, yang_ri: bool) -> Dict:
+        """
+        贼克法 — 含比用+涉害完整链
+
+        标准流程:
+        1. 贼（下贼上）优先于克（上克下）
+        2. 多个候选 → 比用（阳日取阳支上神，阴日取阴支上神）
+        3. 比用后仍有多候选 → 涉害法
+        4. 比用后无候选 → 取原候选中的第一个
+        """
+        # 分优先级：下贼上 > 上克下
+        zei = [(k, s, x) for k, t, s, x in ke_results if t == '贼']
+        ke = [(k, s, x) for k, t, s, x in ke_results if t == '克']
+
+        if zei:
+            candidates = zei
+            ke_ti = '重审课'
+        else:
+            candidates = ke
+            ke_ti = '元首课'
+
+        # 比用
+        bi_yong = []
+        for ke_num, shang, xia in candidates:
+            if yang_ri and self.is_yang_zhi(shang):
+                bi_yong.append((ke_num, shang, xia))
+            elif not yang_ri and not self.is_yang_zhi(shang):
+                bi_yong.append((ke_num, shang, xia))
+
+        use_candidates = bi_yong if bi_yong else candidates
+
+        if len(use_candidates) == 1:
+            chu_chuan = use_candidates[0][1]
+            zhong_chuan = tiandi_pan[chu_chuan]
+            mo_chuan = tiandi_pan[zhong_chuan]
+            return {
+                '初传': chu_chuan, '中传': zhong_chuan, '末传': mo_chuan,
+                '课体': ke_ti, '起法': '贼克法'
+            }
+
+        # 多候选 → 涉害法
+        return self._she_hai_fa(use_candidates, tiandi_pan, ri_gan)
+
+    def _execute_yao_ke(self, yao_ke_results: List, ri_gan: str, ri_zhi: str,
+                        tiandi_pan: Dict, yang_ri: bool, sike: List) -> Dict:
+        """
+        遥克法 — 含比用+涉害完整链
+
+        标准流程:
+        1. 上克干优先于干克上
+        2. 多个候选 → 比用（阳日取阳支上神，阴日取阴支上神）
+        3. 比用后仍有多候选 → 涉害法
+        4. 比用后无候选 → 取原候选中的第一个
+        """
+        shang_ke_gan = [(k, t, s, x) for k, t, s, x in yao_ke_results if t == '上克干']
+        gan_ke_shang = [(k, t, s, x) for k, t, s, x in yao_ke_results if t == '干克上']
+
+        if shang_ke_gan:
+            candidates = shang_ke_gan
+        else:
+            candidates = gan_ke_shang
+
+        if len(candidates) == 1:
+            # Fix A (Task#7)：yao_ke_results 元组=(ke_num,type,shang,xia)，
+            # 初传必为上神(shang, 索引2)，原[3]=下神(xia)为 BUG（古籍：遥克初传必为四课上神）。
+            chu_chuan = candidates[0][2]
+            zhong_chuan = tiandi_pan[chu_chuan]
+            mo_chuan = tiandi_pan[zhong_chuan]
+            return {
+                '初传': chu_chuan, '中传': zhong_chuan, '末传': mo_chuan,
+                '课体': '遥克课', '起法': '遥克法'
+            }
+
+        # 比用
+        bi_yong = []
+        for ke_num, ke_type, shang, xia in candidates:
+            if yang_ri and self.is_yang_zhi(shang):
+                bi_yong.append((ke_num, shang, xia))
+            elif not yang_ri and not self.is_yang_zhi(shang):
+                bi_yong.append((ke_num, shang, xia))
+
+        use_candidates = bi_yong if bi_yong else [(k, s, x) for k, t, s, x in candidates]
+
+        if len(use_candidates) == 1:
+            chu_chuan = use_candidates[0][1]
+        else:
+            # 多候选 → 涉害法
+            result = self._she_hai_fa(use_candidates, tiandi_pan, ri_gan)
+            if result.get('error'):
+                chu_chuan = use_candidates[0][1]
+                zhong_chuan = tiandi_pan[chu_chuan]
+                mo_chuan = tiandi_pan[zhong_chuan]
+                return {
+                    '初传': chu_chuan, '中传': zhong_chuan, '末传': mo_chuan,
+                    '课体': '遥克课', '起法': '遥克法'
+                }
+            return result
+
+        zhong_chuan = tiandi_pan[chu_chuan]
+        mo_chuan = tiandi_pan[zhong_chuan]
+        return {
+            '初传': chu_chuan, '中传': zhong_chuan, '末传': mo_chuan,
+            '课体': '遥克课', '起法': '遥克法'
+        }
+
+    def calculate(self, ri_gan: str, ri_zhi: str, yue_jiang: str,
+                  shi_chen: str) -> Dict:
+        """
+        完整排盘接口 — 四课+三传一站式计算
+
+        参数:
+            ri_gan: 日干（甲~癸）
+            ri_zhi: 日支（子~亥）
+            yue_jiang: 月将（子~亥）
+            shi_chen: 占时（子~亥）
+
+        返回:
+            {
+                'tiandi_pan': {地盘: 天盘, ...},
+                'sike': [(课名, 上神, 下神, 天将), ...],
+                'sanchuan': {'初传': str, '中传': str, '末传': str, ...},
+                'ri_gan': str,
+                'ri_zhi': str,
+                'yue_jiang': str,
+                'shi_chen': str
+            }
+        """
+        tiandi_pan = self.get_tiandi_pan(yue_jiang, shi_chen)
+        sike = self.qi_sike(ri_gan, ri_zhi, tiandi_pan)
+        sanchuan = self.fa_sanchuan(sike, ri_gan, ri_zhi, tiandi_pan, shi_chen)
+
+        return {
+            'tiandi_pan': tiandi_pan,
+            'sike': sike,
+            'sanchuan': sanchuan,
+            'ri_gan': ri_gan,
+            'ri_zhi': ri_zhi,
+            'yue_jiang': yue_jiang,
+            'shi_chen': shi_chen,
+        }
+
+
+# 修复 _she_hai_fa 中的空候选bug（修补父类方法）
+def _patched_she_hai_fa(self, bi_yong_results, tiandi_pan, ri_gan):
+    """
+    涉害法（修复版）- 修复空候选崩溃bug
+
+    Bug: 原版 line 605-607 在 bi_yong_results 为空时
+    试图访问 bi_yong_results[0][2]，导致 IndexError
+    """
+    if len(bi_yong_results) == 0:
+        return {
+            '初传': '',
+            '中传': '',
+            '末传': '',
+            '课体': '涉害课',
+            '起法': '涉害法',
+            '涉害深度': 0,
+            'error': '无比用候选，无法起课'
+        }
+
+    # 1. 计算每个候选的涉害深度
+    hai_depths = []
+    for ke_num, shang, xia in bi_yong_results:
+        depth = self._calculate_she_hai_depth(shang, xia, tiandi_pan)
+        hai_depths.append((ke_num, shang, xia, depth))
+
+    # 2. 取涉害最深者
+    max_depth = max(h[3] for h in hai_depths)
+    deepest = [h for h in hai_depths if h[3] == max_depth]
+
+    # 3. 判断格局
+    if len(deepest) == 1:
+        chu_chuan = deepest[0][1]
+        ke_ti = '见机格' if max_depth > 3 else '涉害课'
+    else:
+        meng = ['寅', '申', '巳', '亥']
+        zhong = ['子', '午', '卯', '酉']
+        ji = ['辰', '戌', '丑', '未']
+
+        meng_candidates = []
+        zhong_candidates = []
+        ji_candidates = []
+
+        for ke_num, shang, xia, depth in deepest:
+            if xia in meng:
+                meng_candidates.append((ke_num, shang, xia, depth))
+            elif xia in zhong:
+                zhong_candidates.append((ke_num, shang, xia, depth))
+            else:
+                ji_candidates.append((ke_num, shang, xia, depth))
+
+        if meng_candidates:
+            chu_chuan = meng_candidates[0][1]
+            ke_ti = '见机格'
+        elif zhong_candidates:
+            chu_chuan = zhong_candidates[0][1]
+            ke_ti = '察微格'
+        else:
+            if ri_gan in ['甲', '丙', '戊', '庚', '壬']:
+                ri_shang_candidates = [c for c in deepest if c[0] in [1, 2]]
+                if ri_shang_candidates:
+                    chu_chuan = ri_shang_candidates[0][1]
+                else:
+                    chu_chuan = deepest[0][1]
+            else:
+                zhi_shang_candidates = [c for c in deepest if c[0] in [3, 4]]
+                if zhi_shang_candidates:
+                    chu_chuan = zhi_shang_candidates[0][1]
+                else:
+                    chu_chuan = deepest[0][1]
+            ke_ti = '缀瑕格'
+
+    # 4. 确定三传
+    zhong_chuan = tiandi_pan[chu_chuan]
+    mo_chuan = tiandi_pan[zhong_chuan]
+
+    return {
+        '初传': chu_chuan,
+        '中传': zhong_chuan,
+        '末传': mo_chuan,
+        '课体': ke_ti,
+        '起法': '涉害法',
+        '涉害深度': max_depth
+    }
+
+
+# 注：原始 _she_hai_fa 中的空候选bug已在源头上修复（第605-607行），
+# 此补丁保留作为额外的安全防护
+SiKeSanChuanCalculator._she_hai_fa = _patched_she_hai_fa
