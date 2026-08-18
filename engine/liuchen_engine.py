@@ -1276,6 +1276,12 @@ class LiuChenEngine:
                 return self._mk('刃破伤子', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'干支上神皆{_yr}为日干羊刃破碎自刑，必不利于子母，产育大凶',
                                 '§胎产子息07·125"干支见酉，皆阳刃破碎自刑…必不利于子母"')
+            # 【指南深读 第六轮】干上神乘白虎（日干上虎）→ 子母不保（ZN-孕产-四"日干上虎
+            #   来遁鬼，支上子乘游魂……子母不保"——辛丑日干上酉乘白虎）
+            if _gan_shang_tj == '白虎':
+                return self._mk('虎临子母', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干上神{gan_shang}乘白虎，日干上虎来遁鬼，子母不保',
+                                'ZN-孕产-四"日干上虎来遁鬼…子母不保"')
             # 末传=日墓 → 母死子存（§131"虎乘墓入内门，故母死…日干得旺相之气，故儿存"）
             if mo == mu_zhi:
                 return self._mk('母死子存', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
