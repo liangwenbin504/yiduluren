@@ -711,7 +711,7 @@ class DaLiuRenLuMaGuiRen:
                 return 0, '中吉课', False
 
         # 小吉课（扣5分）
-        xiaoji = ['进连茹', '退连茹', '间传', '交车', '刑德', '始破', '平吉', '小成', '守成', '安定']
+        xiaoji = ['进连茹', '退连茹', '间传课', '交车课', '刑德', '始破', '平吉', '小成', '守成', '安定']
         for name in xiaoji:
             if name in ke_ti_name or name in ke_ti_lower:
                 return 5, '小吉课', False
