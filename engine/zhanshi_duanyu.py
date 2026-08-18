@@ -19,6 +19,9 @@ _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if _ROOT not in sys.path:
     sys.path.insert(0, _ROOT)
 
+GAN_SET = set('甲乙丙丁戊己庚辛壬癸')
+ZHI_SET = set('子丑寅卯辰巳午未申酉戌亥')
+
 # ── 前端 category 键 → 占类中文（与 9 抽取器口径一致）──
 CATEGORY_MAP = {
     'general': '其他', 'stock': '求财', 'illness': '疾病', 'travel': '出行',
@@ -64,7 +67,13 @@ def _get_bifa_kb():
 
 
 def paipan_v2(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str) -> Dict[str, Any]:
-    """权威 V2 起课：天地盘/四课/三传/课体/天将"""
+    """权威 V2 起课：天地盘/四课/三传/课体/天将。
+    【BUG-FIX 2026-08-18】非法干支/月将/时辰输入时返回空排盘（原会 KeyError 崩溃）。"""
+    if (ri_gan not in GAN_SET or ri_zhi not in ZHI_SET
+            or yuejiang not in ZHI_SET or shichen not in ZHI_SET):
+        return {'ri_gan': ri_gan, 'ri_zhi': ri_zhi, 'yuejiang': yuejiang, 'shichen': shichen,
+                'tiandi_pan': {}, 'sike': [], 'sanchuan': [],
+                'keti': '', 'qifa': '', 'tianjiang_map': {}, 'tianjiang_list': []}
     from engine.sike_sanchuan_engine import SiKeSanChuanCalculator2
     from engine.gui_ren_engine import GuiRenCalculator
     calc = SiKeSanChuanCalculator2()

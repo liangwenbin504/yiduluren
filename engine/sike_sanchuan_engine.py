@@ -113,6 +113,9 @@ class SiKeSanChuanCalculator:
         
         返回：{地盘地支: 天盘地支}
         """
+        # 【BUG-FIX 2026-08-18】非法月将/时辰兜底（原 KeyError 崩溃）
+        if yuejiang not in self.DIZHI_INDEX or shichen not in self.DIZHI_INDEX:
+            return {}
         # 检查缓存
         cache_key = f"{yuejiang}:{shichen}"
         if cache_key in self.tiandi_pan_cache:
@@ -146,6 +149,10 @@ class SiKeSanChuanCalculator:
         if cache_key in self.sike_cache:
             return self.sike_cache[cache_key]
         
+        # 【BUG-FIX 2026-08-18】非法干支兜底（原 KeyError 崩溃）
+        if ri_gan not in self.TIAN_GAN_JI_GONG or ri_zhi not in self.DIZHI_INDEX:
+            return []
+
         sike = []
         
         # 第一课：日干上神
