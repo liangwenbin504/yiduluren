@@ -1146,8 +1146,13 @@ class BiFaDetector:
     
     def _check_rule_81(self, sanchuan: List[str], ri_gan: str):
         """第81法: 传墓入墓分憎爱
-        初传为长生/财/禄/官 → 中末墓之 = 凶
-        初传为鬼/盗气 → 中末墓之 = 吉
+        初传为长生/财/禄/官（吉神）→ 传入墓位 = 凶（憎）
+        初传为鬼/盗气（凶神）→ 传入墓位 = 吉（爱）
+        【BUG-FIX 2026-08-18 案例实证】"据《毕法赋》传墓入墓分憎爱诀下
+        生我者传墓入墓之议，亦不利也"——生我者(父母印星)传墓入墓不利。
+        原"中传克初传且中传=墓"双条件过苛（墓支通常不克初传）→ 传墓入墓
+        几乎不触发；改为直接判 中传或末传为日墓（传墓/入墓），初传为吉神
+        （父母/财/官/禄/长生）则凶，鬼/盗气入墓为吉（爱，不报）。
         """
         if len(sanchuan) != 3 or not ri_gan:
             return
@@ -1156,19 +1161,22 @@ class BiFaDetector:
         zhong = sanchuan[1]
         mo = sanchuan[2]
         mu_zhi = MU.get(ri_gan, '')
-        
-        # 中传墓初传
-        if _zhi_ke_zhi(zhong, chu) and mu_zhi and zhong == mu_zhi:
-            # 判断初传是吉是凶
-            if _is_gan_parent(ri_gan, chu) or chu == LU_SHEN.get(ri_gan) or _is_gan_wealth(ri_gan, chu):
-                self._add_rule(81, f'初传{chu}(吉神)被中传墓{zhong}，凶')
-            elif _is_gan_ghost(ri_gan, chu) or _is_gan_child(ri_gan, chu):
-                # 鬼入墓为吉
-                pass  # 不报，这是好现象
-        # 末传是墓
-        if mo == mu_zhi:
-            if _is_gan_parent(ri_gan, chu) or chu == LU_SHEN.get(ri_gan):
-                self._add_rule(81, f'初传{chu}(吉神)末传入墓{mo}，不利')
+
+        def _is_ji_shen(z):
+            """吉神：生我者(父母印)/财(我克)/禄/长生。
+            【BUG-FIX 2026-08-18】不含 克我者(鬼/官)：毕法"日鬼盗气却喜中末墓"——
+            鬼入墓为吉（爱），非吉神。"""
+            return (_is_gan_parent(ri_gan, z) or _is_gan_wealth(ri_gan, z)
+                    or z == LU_SHEN.get(ri_gan)
+                    or z in _gan_wx_changsheng(ri_gan))
+
+        if not mu_zhi:
+            return
+        # 传墓（中传为日墓）或 入墓（末传为日墓）
+        if zhong == mu_zhi or mo == mu_zhi:
+            if _is_ji_shen(chu):
+                self._add_rule(81, f'初传{chu}(吉神)传入墓{mu_zhi}，传墓入墓，不利')
+            # 鬼/盗气入墓为吉（爱），不报凶
     
     def _check_rule_82(self, sanchuan: List[str], kongwang: Tuple[str, str]):
         """第82法: 不行传者考初时 — 中末空亡"""

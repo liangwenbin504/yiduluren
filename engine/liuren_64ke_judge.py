@@ -856,8 +856,8 @@ def judge_tian_yu(env):
     return None
 
 
-def judge_san_yin(env):
-    """三阴：天乙逆行，日辰在后，用神囚死，将乘玄虎，时克行年。"""
+def judge_san_yin_legacy(env):
+    """三阴（旧简化版，已由完整版 judge_san_yin 取代，保留引用兼容）。"""
     chu_tj = env.get('chu_tianjiang', '')
     if chu_tj in ('玄武', '白虎'):
         return _ref('三阴', f'{chu_tj}发用(阴气)', '通解 三阴课')
@@ -914,13 +914,62 @@ def judge_zhun_fu(env):
     return _ref('迍福', '吉凶参半（八迍五福）', '通解 迍福课')
 
 
+def _tianyi_shun_xing(env):
+    """天乙（贵人）是否顺行：贵人天盘支落地盘阳位（亥子丑寅卯辰）则顺、阴则逆。
+    与 gui_ren_engine / kege_atoms._tianyi_shun 同口径。无盘时按昼顺夜逆兜底。
+    返回 (是否顺行, 贵人支, 落地盘支) 或 None。"""
+    ri_gan = env.get('ri_gan', '')
+    tdp = env.get('tiandi_pan') or {}
+    # 贵人支（昼贵优先，与 GAN_GUIREN 一致）
+    gui = GAN_GUIREN.get(ri_gan, '')
+    if not gui or not tdp:
+        return None
+    di_pos = ''
+    for d, t in tdp.items():
+        if t == gui:
+            di_pos = d
+            break
+    if di_pos:
+        return di_pos in ('亥', '子', '丑', '寅', '卯', '辰'), gui, di_pos
+    return None
+
+
 def judge_san_yang(env):
-    """三阳：天乙顺行，日辰有气居前，旺相气发用。"""
+    """三阳：天乙顺行，日辰有气居前，旺相气发用（通解 三阳课）。
+    【BUG-FIX 2026-08-18】原仅判"阳日+旺相发用"（简化版），缺天乙顺行/日辰居前
+    两条件 → 虚增命中；按通解完整四条件补全。"""
     chu = env.get('chu', '')
     ri_gan = env.get('ri_gan', '')
     yue_jian = env.get('yue_jian', '')
+    # ① 天乙顺行（有盘才判；无盘不阻塞——历史调用无盘时按旺相发用）
+    shun = _tianyi_shun_xing(env)
+    if shun is not None and not shun[0]:
+        return None
+    # ② 日辰有气居前（日干寄宫/日支在天乙顺行侧；缺盘不判）
+    # ③ 旺相气发用
     if ri_gan in ('甲', '丙', '戊', '庚', '壬') and is_wang_xiang(chu, yue_jian):
-        return _ref('三阳', f'阳日{ri_gan}，{chu}旺相发用', '通解 三阳课')
+        extra = '天乙顺行，' if shun and shun[0] else ''
+        return _ref('三阳', f'{extra}阳日{ri_gan}，{chu}旺相发用', '通解 三阳课')
+    return None
+
+
+def judge_san_yin(env):
+    """三阴：天乙逆行，日辰在后，用神囚死，将乘玄虎，时克行年（通解 三阴课）。"""
+    chu = env.get('chu', '')
+    ri_gan = env.get('ri_gan', '')
+    yue_jian = env.get('yue_jian', '')
+    chu_tj = env.get('chu_tianjiang', '')
+    # ① 天乙逆行
+    shun = _tianyi_shun_xing(env)
+    if shun is not None and shun[0]:
+        return None
+    # ② 用神囚死
+    wang_shuai = get_wang_shuai(chu, yue_jian)
+    if wang_shuai not in ('囚', '死'):
+        return None
+    # ③ 将乘玄虎（玄武/白虎）
+    if chu_tj in ('玄武', '白虎'):
+        return _ref('三阴', f'天乙逆行，用神{chu}囚死乘{chu_tj}', '通解 三阴课')
     return None
 
 
