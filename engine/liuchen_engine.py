@@ -352,43 +352,156 @@ class LiuChenEngine:
                                 'L275"财坐空亡不可强求"')
 
         # ───────────────────────────
-        # 【家宅】
+        # 【家宅】（邵公断案·宅墓章深读增强 2026-08-18）
+        # 层次（刘科乐评疏归纳）：先课体课格（乱首/天狱/六阴/回环），
+        #   次干支关系（谁加谁/谁墓谁/谁脱谁），后三传结构（递生克/脱泄/旺传死绝）。
+        # 所有规则均有邵彦和断语原文 + 刘科乐评疏出处。
         # ───────────────────────────
         if category == '家宅':
-            # 干支俱受生而互受脱 → 先兴旺而后衰败（案例0226实证：
-            #   "盖庚生于巳，寅生于亥，庚脱于亥，寅脱于巳，干支俱受生而互受脱，是先兴旺而后衰败也"）
-            #   判据：干上神=日干长生 且 支上神=日支长生（俱受生）；三传含脱泄支（互受脱）
+            _YIN_ZHI = {'子', '丑', '卯', '巳', '未', '酉', '亥'}
+            # 五行死地 / 羊刃 / 败地（邵公断宅常用）
+            WX_SI = {'木': '午', '火': '酉', '金': '子', '水': '卯', '土': '卯'}
+            WX_BAI = {'木': '子', '火': '卯', '金': '午', '水': '酉', '土': '酉'}
+            YANG_REN = {'甲': '卯', '丙': '午', '戊': '午', '庚': '酉', '壬': '子'}
+            si_zhi = WX_SI.get(gw, '')
+            bai_zhi = WX_BAI.get(gw, '')
+            yang_ren_zhi = YANG_REN.get(ri_gan, '')
+            # 日干寄宫（自刑判定用：壬寄亥、乙寄辰、辛寄戌、丁寄未/巳、己寄未/巳…）
+            GAN_JI_GONG = {'甲': '寅', '乙': '辰', '丙': '巳', '丁': '未', '戊': '巳',
+                           '己': '未', '庚': '申', '辛': '戌', '壬': '亥', '癸': '丑'}
+            ji_gong = GAN_JI_GONG.get(ri_gan, '')
+            ZI_XING = {'辰', '午', '酉', '亥'}
+            # 三合局：三传成局（申子辰水/寅午戌火/巳酉丑金/亥卯未木）
+            SAN_HE = [{'申', '子', '辰'}, {'寅', '午', '戌'}, {'巳', '酉', '丑'}, {'亥', '卯', '未'}]
+            sanchuan_set = {chu, zhong, mo}
+            ju_wx = ''
+            for jz, jwx in zip(SAN_HE, ['水', '火', '金', '木']):
+                if sanchuan_set == jz:
+                    ju_wx = jwx
+                    break
+            # 干支俱受生而互受脱 → 先兴旺而后衰败（CASE-0226；§004"庚生于巳寅生于亥，庚脱于亥寅脱于巳"）
             if gan_shang and zhi_shang:
                 gan_cs = WX_CS.get(gw, '')
                 zhi_cs = WX_CS.get(ZHI_WX.get(ri_zhi, ''), '')
                 if gan_shang == gan_cs and zhi_shang == zhi_cs:
                     return self._mk('先吉后凶', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                     f'干上神{gan_shang}为日干长生、支上神{zhi_shang}为日支长生，干支俱受生而互受脱，先兴旺而后衰败',
-                                    'CASE-壬占汇选-0226"干支俱受生而互受脱是先兴旺而后衰败也"')
+                                    'CASE-壬占汇选-0226; §宅墓02·004"干支俱受生而互受脱是先兴旺而后衰败"')
+            # 支加干上为日墓 → 两蛇夹墓/真墓不可脱（§030"支来加日墓日，上又螣蛇夹住，主人如处云雾中进退不得"）
+            if zhi_shang and ri_zhi and gan_shang == ri_zhi and ri_zhi == mu_zhi:
+                return self._mk('宅墓交困', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'支{ri_zhi}加干上为日墓，真墓不可脱，主人如处云雾中，进退不得',
+                                '§宅墓02·030"支来加日墓日上又螣蛇夹住进退不得"')
+            # 上门乱首：支来加干克干 → 不有大服必有大祸（§022"支来加干名上门乱首，不有大服必有大祸"；
+            #   §043"支辰犯日乃下犯上"）
+            if gan_shang == ri_zhi and ri_zhi and KE.get(ZHI_WX.get(ri_zhi, '')) == gw:
+                return self._mk('上门乱首', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'支{ri_zhi}加干上克日干，上门乱首，卑凌尊，下犯上，不有大服必有大祸',
+                                '§宅墓02·022"支来加干名上门乱首不有大服必有大祸"')
+            # 赘婿课：支来就干为干所制 → 家破屋拆（§005"此课支来就干为干所制名曰赘婿，六年中家破屋拆"）
+            if gan_shang == ri_zhi and ri_zhi and KE.get(gw) == ZHI_WX.get(ri_zhi, ''):
+                return self._mk('赘婿家破', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'支{ri_zhi}来就干为干所制，名曰赘婿，身不由己，家破屋拆之象',
+                                '§宅墓02·005"支来就干为干所制名曰赘婿，六年中家破屋拆"')
+            # 干支各乘墓 → 身宅居墓无气（§009"此课占宅而身宅居墓无气"；§026"干支乘墓各昏迷"；
+            #   L"干支乘墓各昏迷"）
+            if gan_shang == mu_zhi and zhi_shang and ri_zhi:
+                zhi_mu = GAN_MU.get(ri_gan, '')  # 支墓按日干同五行取
+                if zhi_shang == zhi_mu:
+                    return self._mk('身宅居墓', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'干上{gan_shang}支上{zhi_shang}各乘墓神，身宅居墓无气，宅运昏迷',
+                                    '§宅墓02·009"身宅居墓无气"; L"干支乘墓各昏迷"')
+            # 干上神=日墓 → 人受墓滞，利宅不利人（§019"日上墓作天后主迟滞时运未通"）
+            if gan_shang == mu_zhi:
+                return self._mk('利宅不利人', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干上神{gan_shang}为日墓，主人受墓滞，时运未通，利宅不利人',
+                                '§宅墓02·019"日上墓作天后主迟滞时运未通"')
+            # 三传自旺方递归死绝 → 衰败（§011"丁巳二火自旺方递归死绝之地"；
+            #   判据：中传=日绝、末传=日死）
+            if zhong == jue_zhi and mo == si_zhi:
+                return self._mk('旺极而衰', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传自旺方递归死绝（中{zhong}为日绝、末{mo}为日死），家业由盛转衰',
+                                '§宅墓02·011"丁巳二火自旺方递归死绝之地"')
+            # 干支上神自刑 → 宅不居人/人自刑（§028"日上自刑乃人刑人，宅上自刑宅不居人也"；
+            #   判据：干上神=日干寄宫（自刑）或 支上神=日支（自刑））
+            if (gan_shang == ji_gong and gan_shang in ZI_XING) or \
+               (zhi_shang == ri_zhi and zhi_shang in ZI_XING):
+                return self._mk('干支自刑', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'干上{gan_shang}支上{zhi_shang}自刑，人刑人宅不居人，家道自耗',
+                                '§宅墓02·028"日上自刑乃人刑人宅上自刑宅不居人也"')
+            # 三传成子孙局（局五行=日干所生）或 ≥2 传为子孙爻 → 子息耗家财
+            # （§008"三传日辰皆子孙爻，家计亦被子孙磨灭"；§031"中末传巳午为甲之子息
+            #   秉旺气脱干，主因子息破费钱物而败"；§021"子作盗气，诸子耗盗财物"）
+            zi_sun_cnt = sum(1 for z in (chu, zhong, mo) if _shi_shen(z, ri_gan) == '子孙')
+            if (ju_wx and gw and SHENG.get(gw) == ju_wx) or zi_sun_cnt >= 2:
+                return self._mk('子息耗家', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传{chu}·{zhong}·{mo}为日干子孙（局/爻），子息脱耗家财，家计磨灭',
+                                '§宅墓02·008"三传日辰皆子孙爻家计亦被子孙磨灭"; §宅墓02·031"主因子息破费钱物而败"')
+            # 三传成财局（局五行=日干所克）→ 财多招盗/因财致祸（§016"三传皆财为家贼所偷"；
+            #   §034"传财化鬼财休觅"）
+            if ju_wx and gw and KE.get(gw) == ju_wx:
+                return self._mk('财多招盗', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传{chu}·{zhong}·{mo}成{ju_wx}局为日干财局，财气太盛为家贼所偷，因财致祸',
+                                '§宅墓02·016"三传皆财为家贼所偷"; §宅墓02·034"传财化鬼财休觅"')
             # 末传=日墓 → 宅运衰败（L32"干支各乘墓绝必须传中及年命冲破乃吉"）
             if mo == mu_zhi:
                 return self._mk('宅运衰败', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'末传{mo}为日墓，干支各乘墓绝，宅运衰败，须传中及年命冲破乃吉',
                                 'L32"干支各乘墓绝必须传中及年命冲破乃吉"')
-            # 支生干 → 宅生人安享福祉（L18）
-            if zhi_shang and SHENG.get(ZHI_WX.get(zhi_shang, '')) == gw:
-                return self._mk('宅运兴旺', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
-                                f'支上神{zhi_shang}生日干，宅生人，安享福祉，家宅兴旺',
-                                'L"支生干=宅生人主安享福祉"')
-            # 三传皆阴（六阴相继）→ 宅运衰败不振（案例0476邵彦和
-            #   "此课六阴相继，更无阳神…命从此衰败不振"）
-            _YIN_ZHI = {'子', '丑', '卯', '巳', '未', '酉', '亥'}
+            # 三交课：三传含≥2个四正（子午卯酉）→ 宅中淫乱（§038"此课名为三交…主男女淫奔，
+            #   宅中有淫乱不明事也"；发用午火临酉支上处死地）
+            _SI_ZHENG = {'子', '午', '卯', '酉'}
+            si_zheng_cnt = sum(1 for z in (chu, zhong, mo) if z in _SI_ZHENG)
+            if si_zheng_cnt >= 2 and chu in _SI_ZHENG:
+                return self._mk('宅中淫乱', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传{chu}·{zhong}·{mo}三交课，四正相加，非死即败，主男女淫奔，宅中有淫乱不明事',
+                                '§宅墓02·038"此课名为三交…主男女淫奔宅中有淫乱不明事也"')
+            # 支上神=日干子孙（脱宅）→ 宅泄人散（§037"宅上子作天后，是前逼水…财退人散"）
+            if zhi_shang and _shi_shen(zhi_shang, ri_gan) == '子孙':
+                return self._mk('宅泄人散', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'支上神{zhi_shang}为日干子孙脱宅，宅气外泄，财退人散',
+                                '§宅墓02·037"宅上子作天后是前逼水，财退人散"')
+            # 支上神=羊刃 → 家人争屋四散分飞（§042"宅上午上螣蛇带羊刃，主家人争屋四散分飞"）
+            if zhi_shang and yang_ren_zhi and zhi_shang == yang_ren_zhi:
+                return self._mk('争屋分飞', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'支上神{zhi_shang}为日干羊刃，主家人争屋，四散分飞',
+                                '§宅墓02·042"宅上午上螣蛇带羊刃主家人争屋四散分飞"')
+            # 末传=日干败地 → 晚景衰败（§020"末传主晚景，传归于酉，作日之败神，因此晚年愈贪色"；
+            #   置于羊刃/三交/宅泄之后——§042首断争屋分飞）
+            if mo == bai_zhi:
+                return self._mk('晚景败神', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'末传{mo}为日干败地，晚年运败，家计恐为所耗',
+                                '§宅墓02·020"末传主晚景传归于酉作日之败神"')
+            # 三传皆阴（六阴相继）→ 宅运衰败不振（§011"六阴相继更无阳神"；CASE-0476；
+            #   守卫：中末空亡可解——§023"课得极阴主灾变最喜空亡可解"）
             if chu in _YIN_ZHI and zhong in _YIN_ZHI and mo in _YIN_ZHI:
+                if zhong in kong and mo in kong:
+                    return self._mk('阴极灾缓', '平', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'三传{chu}·{zhong}·{mo}六阴相继，幸中末空亡可解，虽有灾危不至不测',
+                                    '§宅墓02·023"课得极阴主灾变最喜空亡可解"')
                 return self._mk('宅运不振', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'三传{chu}·{zhong}·{mo}六阴相继更无阳神，家宅衰败不振',
-                                'CASE-壬占汇选-0476"六阴相继更无阳神命从此衰败不振"')
+                                '§宅墓02·011"六阴相继更无阳神从此衰败不振"')
             # 玄武乘日鬼入传 → 宅防失脱（L688"元武乘神克日干主破财失物"；
-            #   【BUG-FIX】仅玄武乘鬼触发——案例0206"三传无官鬼财在今日之长生上所以不失财"）
+            #   守卫：仅玄武乘鬼触发——CASE-0206"三传无官鬼财在长生上不失财"）
             if any(tj == '玄武' and _shi_shen(z, ri_gan) == '官鬼'
                    for z, tj in ((chu, chu_tj), (zhong, zhong_tj), (mo, mo_tj))):
                 return self._mk('宅防失脱', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'玄武乘日鬼入传，主退损人口常有失脱，宅防盗贼',
                                 'L49"玄武加宅主退损人口常有失脱"; L688"元武乘神克日干主破财失物"')
+            # 支上神空亡 → 先难后易（求宅基/坟地。邵公两案断法一致：
+            #   §010"支上空亡是宅不可得而图也…中传巳火为干之长生，至丁巳年方才造此宅"（终得宅）；
+            #   CASE-0348"辰为坟地作空亡而发用，故主有空穴…填实后必出贵人"（终发贵）。
+            #   故支空非终凶，而是宅基暂未定，先难后易。）
+            if zhi_shang and zhi_shang in kong:
+                return self._mk('先难后易', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'支上神{zhi_shang}空亡，宅基暂未可得，先涉艰难，待空亡填实/生旺之时终可得宅',
+                                '§宅墓02·010"支上空亡是宅不可得而图也…至丁巳年方才造此宅"; CASE-壬占汇选-0348"填实后必出贵人"')
+            # 支生干 → 宅生人安享福祉（L18；局部吉象，置于凶象之后）
+            if zhi_shang and SHENG.get(ZHI_WX.get(zhi_shang, '')) == gw:
+                return self._mk('宅运兴旺', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'支上神{zhi_shang}生日干，宅生人，安享福祉，家宅兴旺',
+                                'L"支生干=宅生人主安享福祉"')
             # 干生支 → 攻苦奔驰劳碌（L17；兜底：仅在无更明确走向时）
             if gan_shang and SHENG.get(gw) == ZHI_WX.get(zhi_shang or ri_zhi, ''):
                 return self._mk('劳碌奔波', '平', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
