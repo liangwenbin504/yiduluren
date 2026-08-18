@@ -11,6 +11,7 @@
 """
 import json
 import os
+import re
 import sys
 from typing import Dict, List, Any
 
@@ -29,6 +30,28 @@ CATEGORY_MAP = {
     'exam': '功名', 'lost': '贼盗', 'child': '胎产', 'house': '家宅',
     'business': '求财',
 }
+
+# ── 家宅子类识别（阳宅/阴宅/迁移，2026-08-18 三分）──
+# 依据邵公断案：阴宅"占阴地总以辰为坟茔穴口"（§040）、迁移"迁店居住其户遂宁"（§014）。
+# 注意：六壬术语"日墓/墓神/墓库"非坟地；断语中"遂成墓地""空坟"是阳宅凶应结果非占阴宅。
+# 面向**占辞/问事描述**（question/shishi），非断语正文。
+_ZHAIMU_YIN_PAT = re.compile(
+    r'占坟|占阴宅|看地|寻地|寻穴|点穴|行龙|落脉|龙脉|入首|坐山|朝山|砂水|窀穸|'
+    r'阴坟|坟地|墓地风水|阴宅风水|风水(?!不)|卜地|求地|坟山')
+_ZHAIMU_QIAN_PAT = re.compile(r'迁居|移居|搬家|别迁|出外居|改造|修造|开店|移灶|他居|另居|移出|迁移|迁店|迁坟|移宅|改宅')
+_ZHAIMU_YANG_PAT = re.compile(r'占宅|居宅|宅运|家宅|阳宅|宅基|买宅|新宅|宅上|入宅|破宅|修屋|造宅|求宅|宅内|宅前|宅后|屋|住|动土')
+
+
+def classify_zhaimu_sub(text: str) -> str:
+    """从占事描述/问事文本识别家宅子类：阴宅/迁移/阳宅（默认）。"""
+    t = str(text or '')
+    if _ZHAIMU_YIN_PAT.search(t):
+        return '阴宅'
+    if _ZHAIMU_QIAN_PAT.search(t):
+        return '迁移'
+    if _ZHAIMU_YANG_PAT.search(t):
+        return '阳宅'
+    return '阳宅'
 
 # ── 占类中文 → 抽取器（惰性 import，避免模块级重依赖）──
 _EXTRACTORS = None
@@ -313,8 +336,9 @@ def _sanchuan_time_sequence(sanchuan: List[str], tianjiang_list: List[str],
 
 
 def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
-             zhanshi: str = '其他', category: str = '') -> Dict[str, Any]:
-    """按占事生成完整断语。zhanshi 为中文占类；category 为前端英文键（二选一，category 优先映射）。"""
+             zhanshi: str = '其他', category: str = '', zishu: str = '') -> Dict[str, Any]:
+    """按占事生成完整断语。zhanshi 为中文占类；category 为前端英文键（二选一，category 优先映射）；
+    zishu 为家宅子类（阳宅/阴宅/迁移），仅 zhanshi==家宅 时生效。"""
     if category:
         zhanshi = CATEGORY_MAP.get(category, zhanshi)
     pan = paipan_v2(ri_gan, ri_zhi, yuejiang, shichen)
@@ -356,7 +380,7 @@ def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
         from engine.liuchen_engine import LiuChenEngine
         liuchen_out = LiuChenEngine().analyze(
             ri_gan, ri_zhi, pan['sanchuan'], pan['tianjiang_list'], kw, pan['keti'], pan['sike'],
-            category=zhanshi)
+            category=zhanshi, zishu=zishu)
     except Exception:
         liuchen_out = {'走向': '未定', '终局': '平', '叙事': '', '阶段': {}, '三传': ''}
 

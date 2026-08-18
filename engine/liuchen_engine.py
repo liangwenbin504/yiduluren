@@ -111,7 +111,8 @@ class LiuChenEngine:
     def _category_rules(self, category: str, ri_gan: str, ri_zhi: str,
                         chu: str, zhong: str, mo: str,
                         chu_tj: str, zhong_tj: str, mo_tj: str,
-                        kong: set, keti: str, sike: List) -> Optional[Dict]:
+                        kong: set, keti: str, sike: List,
+                        zishu: str = '') -> Optional[Dict]:
         gw = GAN_WX.get(ri_gan, '')
         mu_zhi = GAN_MU.get(ri_gan, '')
         cs_zhi = WX_CS.get(gw, '')
@@ -379,6 +380,79 @@ class LiuChenEngine:
                 if sanchuan_set == jz:
                     ju_wx = jwx
                     break
+
+            # ══════════════════════════════════════════════════════════
+            # 【阴宅】（占坟地/风水，邵公"占阴地总以辰为坟茔穴口"§040刘评）
+            # 阴宅专看：辰为坟茔穴口、初传主山穴、朱雀论朝案、龙砂水向。
+            # ══════════════════════════════════════════════════════════
+            if zishu == '阴宅':
+                # ① 辰为坟茔穴口（§040刘评"占阴地总以辰为坟茔穴口"）；穴口空亡=虚穴
+                #    → 先难后易（§041/CASE-0348"辰为坟地作空亡而发用故主有空穴…填实后必出贵人"）
+                if chu == '辰' and chu in kong:
+                    return self._mk('先难后易', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'初传辰为坟茔穴口而空亡，主有空穴虚坟，须填实之后方可安葬，先难后易，葬后发贵',
+                                    '§宅墓02·041"辰为坟地作空亡而发用故主有空穴"; CASE-壬占汇选-0348"填实后必出贵人"')
+                # ② 干为人、支为地（CASE-0465"夫占风水以支为地干为人"）；干上长生=吉地
+                #    （CASE-0465"干乘长生六合…其平稳之地可知也"——邵公首判吉地，优先于凶将判）
+                if gan_shang == cs_zhi:
+                    return self._mk('风水吉地', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'干上神{gan_shang}为日干长生，干为人得生，风水不碍，平稳之地',
+                                    'CASE-壬占汇选-0465"干乘长生六合…风水不碍"')
+                # ③ 初传主山穴（§040"以初传为主山穴"）；白虎临传=两重白虎穴凶
+                #    → 阴宅不吉（§040"艮山行龙坎山落穴不是正龙…有两重白虎…白蚁食尸"）
+                if chu_tj == '白虎' or zhong_tj == '白虎':
+                    return self._mk('阴宅不吉', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'白虎临穴（{chu if chu_tj=="白虎" else zhong}乘白虎），龙虎不真，两重白虎，阴宅不吉，主子孙耗败',
+                                    '§宅墓02·040"有两重白虎第三重为案…主子孙贪淫好酒"')
+                # ④ 朱雀论朝案（§041"卜地以朱雀为论朝案"）；朱雀乘贵人/生主山=文笔峰
+                if chu_tj == '朱雀' or mo_tj == '朱雀':
+                    return self._mk('朝案有情', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'朱雀论朝案，峰峦秀丽文星得用，有文笔双峰之奇，葬后出贵人',
+                                    '§宅墓02·041"卜地以朱雀为论朝案…文笔双峰"')
+                # ⑤ 支上神克干/墓 → 阴宅不利（CASE-0465"支见纯土风水不碍"反用：支上克干为碍）
+                if zhi_shang and KE.get(ZHI_WX.get(zhi_shang, '')) == gw:
+                    return self._mk('阴宅克人', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'支上神{zhi_shang}克日干，地不载人，阴宅不利，葬后损人',
+                                    'CASE-壬占汇选-0465"以支为地干为人"（反用：支上克干为碍）')
+
+            # ══════════════════════════════════════════════════════════
+            # 【迁移】（占迁居/移宅/修造）
+            # 迁移看丁马动象：凶课遇迁移可解（§014"迁店居住其户遂宁"）、
+            # 人广宅狭宜分迁（§017"若移出各人自为活计"）、支空求新宅（§010）。
+            # ══════════════════════════════════════════════════════════
+            if zishu == '迁移':
+                # ① 凶课（干支互脱/六阴/墓/空）→ 迁移可解，先凶后吉（§014"德丧神消人亡家破…迁店居住其户遂宁而祸亦解"；
+                #    §035"急移可免"；§043"若不肯迁移必主十二年而死，次年即迁居"；§008"宅出怪住不得必别迁"）
+                if (gan_shang == mu_zhi or (chu in kong and zhong in kong) or
+                        (chu in _YIN_ZHI and zhong in _YIN_ZHI and mo in _YIN_ZHI) or
+                        (chu in kong and mo in kong)):
+                    return self._mk('宜迁避祸', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'课呈凶象（墓/空/六阴），旧宅不可安居，迁移可以避祸，宜速迁居，先凶后吉',
+                                    '§宅墓02·014"迁店居住其户遂宁而祸亦解"; §宅墓02·035"急移可免"; §宅墓02·008"住不得必别迁"')
+                # ② 人广宅狭（初传=支上神=宅上发用 或 三传脱支生日干）→ 宜分迁
+                #    （§017"日往加辰是人广而宅狭也…宅居不得许多人…若移出各人自为活计"；
+                #     §012"人盛宅狭人与宅替"）
+                _zhi_wx = ZHI_WX.get(ri_zhi, '')
+                _tuo_zhi_wx = SHENG.get(_zhi_wx, '') if _zhi_wx else ''
+                _sheng_gan_wx = [w for w, v in SHENG.items() if v == gw]
+                _ren_guang = (chu == zhi_shang) or (
+                    _tuo_zhi_wx and mo_wx in (_tuo_zhi_wx,) and
+                    any(w in {ZHI_WX.get(z) for z in (chu, zhong, mo)} for w in _sheng_gan_wx))
+                if _ren_guang:
+                    return self._mk('分迁为宜', '平', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'人广宅狭（宅居不得许多人），宅上发用传日，宜移出分居，各人自为活计',
+                                    '§宅墓02·017"日往加辰是人广而宅狭也…若移出各人自为活计"; §宅墓02·012"人盛宅狭"')
+                # ③ 支上空亡 → 求新宅（§010"支上空亡是宅不可得而图也…求新宅看何方生旺即是"）
+                if zhi_shang and zhi_shang in kong:
+                    return self._mk('求新宅', '平', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'支上神{zhi_shang}空亡，旧宅不可图，宜另求新宅，看何方生旺即是',
+                                    '§宅墓02·010"支上空亡是宅不可得而图也…求新宅看何方生旺即是"')
+                # ④ 课吉宅稳 → 不宜轻动（§031"只宜守分不宜运用，一运用便有艰辛"）
+                if chu_shi == '吉' and mo_shi == '吉':
+                    return self._mk('不宜轻动', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'课吉宅稳，只宜守分不宜运用，一运用便有艰辛',
+                                    '§宅墓02·031"只宜守分不宜运用，一运用便有艰辛"')
+
             # 干支俱受生而互受脱 → 先兴旺而后衰败（CASE-0226；§004"庚生于巳寅生于亥，庚脱于亥寅脱于巳"）
             if gan_shang and zhi_shang:
                 gan_cs = WX_CS.get(gw, '')
@@ -653,13 +727,14 @@ class LiuChenEngine:
     def analyze(self, ri_gan: str, ri_zhi: str,
                 sanchuan: List[str], tianjiang_list: List[str] = None,
                 kongwang=('', ''), keti: str = '', sike: List = None,
-                category: str = '') -> Dict[str, Any]:
+                category: str = '', zishu: str = '') -> Dict[str, Any]:
         """
         主入口。返回事体走向分析。
         sanchuan: [初传, 中传, 末传]
         tianjiang_list: [初传天将, 中传天将, 末传天将]
         sike: 四课（用于循环格/干支上神判定）
         category: 占类（功名/疾病/官讼/求财/家宅/胎产/出行/婚姻/贼盗/行人/其他）
+        zishu: 家宅子类（阳宅/阴宅/迁移；空=阳宅默认）。阴宅看辰穴/朝案，迁移看丁马/宜迁。
         """
         if not sanchuan or len(sanchuan) < 3:
             return {'走向': '未定', '阶段': {}, '叙事': '三传不全，无法判断事体走向', '终局': '平'}
@@ -681,7 +756,8 @@ class LiuChenEngine:
 
         # ── 占类化走向规则（v2：占类专属，优先于通用规则）──
         cat_out = self._category_rules(category, ri_gan, ri_zhi, chu, zhong, mo,
-                                       chu_tj, zhong_tj, mo_tj, kong, keti, sike)
+                                       chu_tj, zhong_tj, mo_tj, kong, keti, sike,
+                                       zishu=zishu)
         if cat_out:
             return cat_out
 
@@ -785,9 +861,10 @@ class LiuChenEngine:
 
 def analyze_liuchen(ri_gan: str, ri_zhi: str, sanchuan: List[str],
                     tianjiang_list: List[str] = None, kongwang=('', ''), keti: str = '',
-                    sike: List = None, category: str = '') -> Dict[str, Any]:
+                    sike: List = None, category: str = '', zishu: str = '') -> Dict[str, Any]:
     """便捷入口"""
-    return LiuChenEngine().analyze(ri_gan, ri_zhi, sanchuan, tianjiang_list, kongwang, keti, sike, category)
+    return LiuChenEngine().analyze(ri_gan, ri_zhi, sanchuan, tianjiang_list, kongwang, keti, sike,
+                                  category, zishu)
 
 
 if __name__ == '__main__':

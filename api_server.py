@@ -1949,6 +1949,7 @@ def liuren_zhanshi_duanyu():
         data = request.json or {}
         category = data.get('category', '')
         zhanshi = data.get('zhanshi', '')
+        zishu = data.get('zishu', '')  # 家宅子类：阳宅/阴宅/迁移（可选，缺省自动识别）
         ri_gan = data.get('dayGan', '') or data.get('ri_gan', '')
         ri_zhi = data.get('dayZhi', '') or data.get('ri_zhi', '')
         yuejiang = data.get('yuejiang', '')
@@ -1986,8 +1987,14 @@ def liuren_zhanshi_duanyu():
         if not (ri_gan and ri_zhi and yuejiang and shichen):
             return jsonify({'error': '排盘参数不完整（需 dayGan/dayZhi/yuejiang/shichen，或 year/month/day/hour）', 'success': False}), 400
 
-        from engine.zhanshi_duanyu import generate
-        result = generate(ri_gan, ri_zhi, yuejiang, shichen, zhanshi=zhanshi, category=category)
+        from engine.zhanshi_duanyu import generate, classify_zhaimu_sub
+        # 家宅子类：显式 zishu 优先；缺省按占事描述自动识别（category==house 或 zhanshi==家宅 时）
+        _zishu_eff = zishu
+        if not _zishu_eff and (category in ('house',) or zhanshi == '家宅'):
+            _zishu_eff = classify_zhaimu_sub(str(data.get('question', '')) + str(data.get('shishi', '')))
+        result = generate(ri_gan, ri_zhi, yuejiang, shichen, zhanshi=zhanshi, category=category, zishu=_zishu_eff)
+        if _zishu_eff:
+            result['zishu'] = _zishu_eff
         return jsonify({'success': True, 'data': result})
 
     except Exception as e:
