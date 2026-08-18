@@ -384,6 +384,19 @@ def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
     except Exception:
         liuchen_out = {'走向': '未定', '终局': '平', '叙事': '', '阶段': {}, '三传': ''}
 
+    # ── 应期（邵彦和洛书数法 + 阴宅期候应象，叙事层不参与评分）──
+    # 支数法/月建法/太岁法三支柱；阴宅(zishu)启用邵公"取数增一半/减一半"期候应象
+    # （§040"酉六数故主六年酒败，更三年死，酉增一半也"；§043"未八数先个八年全用后用一半故十二年"）。
+    yingqi_desc = ''
+    try:
+        from engine.liuren_keti_bifa import get_yingqi_unified
+        yingqi_desc = get_yingqi_unified(
+            ri_gan, ri_zhi, pan['sanchuan'], tiandi_pan=pan.get('tiandi_pan'),
+            si_ke=pan['sike'], shichen=pan['shichen'],
+            tai_sui_zhi=pan.get('tai_sui_zhi', ''), zhanlei=zhanshi, zishu=zishu)
+    except Exception:
+        yingqi_desc = ''
+
     # ── 支上神（宅/事体·根基）信号（案例实证：支上泄克冲刑墓日干+凶将→凶）──
     # 支=事体/内/静，三传=过程/外/动。支上受损即使三传吉，无解神最终凶。
     zs = _zhi_shang_signal(ri_gan, ri_zhi, pan['sike'], yuejiang, zhanshi)
@@ -460,6 +473,7 @@ def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
         },
         'level': level,
         'liuchen': liuchen_out,
+        'yingqi': yingqi_desc,
         'seq_desc': seq_desc,
         'seq_score': seq.get('score', 0),
         'zhi_shang_desc': zs_desc,

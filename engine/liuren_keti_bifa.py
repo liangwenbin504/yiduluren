@@ -876,7 +876,7 @@ ZHI_NUMBER = {'子': 9, '午': 9, '丑': 8, '未': 8, '寅': 7, '申': 7,
 
 
 def get_yingqi_text(ri_gan: str, ri_zhi: str, sanchuan_dizhi: list, si_ke=None,
-                    zhanlei: str = '其他') -> str:
+                    zhanlei: str = '其他', zishu: str = '') -> str:
     """应期断法·多运算模式（记录层·叙事用，不参与 valence——应期=何时发生，非吉凶方向）。
     邵彦和洛书数法（通解下卷「后天五行数」+ 219 案回测，见 docs/reports/_应期断法体系研究.md）：
       支数表：子午9 丑未8 寅申7 卯酉6 辰戌5 巳亥4（ZHI_NUMBER）。
@@ -887,6 +887,11 @@ def get_yingqi_text(ri_gan: str, ri_zhi: str, sanchuan_dizhi: list, si_ke=None,
         ④ 支位计数：行年支至课中支位差 → 年（从酉数至辰八位故八年）
       ⚠️ 邵彦和取「断句内特定支组合」非三传全支，运算选择依占类/所问而定（同一课可多解），
       故本函数输出**全部可行候选**，由用户/上层按所问选用；不武断选一。
+    阴宅专属（zishu=='阴宅'，2026-08-18 邵公断案宅墓章深读）：
+      ⑤ 取数增一半：主数 + 其半 → 先X年后更X年（§040/0344"酉六数故主六年酒败，更三年死，酉增一半也"；
+         刘评"六年病者酉数为六…更三年死者顺数三年为丁巳水之绝地"）
+      ⑥ 取数减一半：主数 前全用 后减半 → 十二年断（§043"未乃八数，两个八年十六年，先个八年全用后用一半，故十二年"；
+         刘评"未八数，两个八年是十六年"）
     返回叙事文本；无可断时返回 ''。"""
     if not sanchuan_dizhi:
         return ''
@@ -924,6 +929,41 @@ def get_yingqi_text(ri_gan: str, ri_zhi: str, sanchuan_dizhi: list, si_ke=None,
             if 2 <= _d <= 11:
                 cands.append(('支位%d' % _d, '%s至%s%d位' % (ri_z, _z, _d)))
                 break
+    # ⑤ 阴宅专属：取数增一半（§040/0344"壬日酉作天空故主酒败，酉六数故主六年酒败，更三年死，酉增一半也"）
+    #   取数源：优先干上神（si_ke 第一课上神——邵公断阴宅寿数/应期多取干上，如§040酉=干上、§043未=干上），
+    #   无干上神时退回三传首支。
+    if zishu == '阴宅':
+        _pick = ''
+        if si_ke and len(si_ke) >= 1:
+            _k0 = si_ke[0]
+            if isinstance(_k0, (list, tuple)) and len(_k0) >= 2 and _k0[1] in ZHI_NUMBER:
+                _pick = _k0[1]
+            elif isinstance(_k0, dict):
+                _pick = _k0.get('上神', '')
+        if _pick not in ZHI_NUMBER:
+            _pick = sc[0] if sc else ''
+        if _pick:
+            _main = ZHI_NUMBER[_pick]
+            _half = _main // 2
+            if _half >= 1:
+                cands.append(('增半%d' % (_main + _half), '干上%s数%d增一半→先%d年后更%d年' % (_pick, _main, _main, _half)))
+    # ⑥ 阴宅专属：取数减一半（§043"未乃八数，两个八年是十六年，先个八年全用后用一半，故十二年"；
+    #   亦取干上神，与⑤同源）
+    if zishu == '阴宅':
+        _pick2 = ''
+        if si_ke and len(si_ke) >= 1:
+            _k0 = si_ke[0]
+            if isinstance(_k0, (list, tuple)) and len(_k0) >= 2 and _k0[1] in ZHI_NUMBER:
+                _pick2 = _k0[1]
+            elif isinstance(_k0, dict):
+                _pick2 = _k0.get('上神', '')
+        if _pick2 not in ZHI_NUMBER:
+            _pick2 = sc[0] if sc else ''
+        if _pick2:
+            _main2 = ZHI_NUMBER[_pick2]
+            _half2 = _main2 // 2
+            if _half2 >= 1:
+                cands.append(('减半%d' % (_main2 * 2 - _half2), '干上%s数%d两倍%d先全用后减半→%d年' % (_pick2, _main2, _main2 * 2, _main2 * 2 - _half2)))
     # 输出（按占类权重排序：家宅/功名→相加年断、出行→单支、疾病/官讼→相乘寿数；2026-08-02 219案统计）
     if not cands:
         return '邵彦和应期法：%s → 取用神支之数' % '、'.join(parts)
@@ -937,6 +977,9 @@ def get_yingqi_text(ri_gan: str, ri_zhi: str, sanchuan_dizhi: list, si_ke=None,
                   '失物': '日', '天时': '日'}
     _up = _unit_pref.get(zhanlei, '')
     _prefer = _pref.get(zhanlei, '')
+    if zishu == '阴宅':
+        # 阴宅偏好：增半/减半（邵公阴宅期候应象）优先于普通单支/相加
+        _prefer = '增半'
     if _prefer:
         cands.sort(key=lambda x: (0 if x[0].startswith(_prefer) else 1, x[0]))
     uniq_c = []
@@ -948,6 +991,8 @@ def get_yingqi_text(ri_gan: str, ri_zhi: str, sanchuan_dizhi: list, si_ke=None,
         _mark = '★' if (_i == 0 and _prefer and _k.startswith(_prefer)) else ''
         uniq_c.append('%s%s=%s' % (_mark, _k, _v))
     _tail = '（%s占宜%s断）' % (zhanlei, _up) if _up else ''
+    if zishu == '阴宅':
+        _tail = '（阴宅宜年断：邵公期候应象"取数增一半/减一半"）'
     return '邵彦和应期法：%s → %s%s' % ('、'.join(parts), '；'.join(uniq_c), _tail)
 
 
@@ -1057,13 +1102,14 @@ def get_yuejian_yingqi_text(ri_gan: str, ri_zhi: str, sanchuan_dizhi: list,
 # 物数法（get_wushu_text）= 数量非时间，单独输出（不混入应期）。
 def get_yingqi_unified(ri_gan: str, ri_zhi: str, sanchuan_dizhi: list,
                        tiandi_pan: dict = None, si_ke=None, shichen: str = '',
-                       tai_sui_zhi: str = '', zhanlei: str = '其他') -> str:
+                       tai_sui_zhi: str = '', zhanlei: str = '其他', zishu: str = '') -> str:
     """应期三法统一输出（叙事层·不参与 valence）。
     整合：支数法 + 月建法 + 太岁法（有参才输出），各法换行分块。
+    zishu：家宅子类（阳宅/阴宅/迁移），阴宅时支数法启用邵公"增半/减半"期候应象。
     返回统一叙事文本；全部无可断时返回 ''。"""
     blocks = []
     # ① 支数法
-    t1 = get_yingqi_text(ri_gan, ri_zhi, sanchuan_dizhi, si_ke=si_ke, zhanlei=zhanlei)
+    t1 = get_yingqi_text(ri_gan, ri_zhi, sanchuan_dizhi, si_ke=si_ke, zhanlei=zhanlei, zishu=zishu)
     if t1:
         blocks.append(t1)
     # ② 月建法
