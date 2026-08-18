@@ -380,7 +380,7 @@ def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
         from engine.liuchen_engine import LiuChenEngine
         liuchen_out = LiuChenEngine().analyze(
             ri_gan, ri_zhi, pan['sanchuan'], pan['tianjiang_list'], kw, pan['keti'], pan['sike'],
-            category=zhanshi, zishu=zishu)
+            category=zhanshi, zishu=zishu, yuejiang=yuejiang)
     except Exception:
         liuchen_out = {'走向': '未定', '终局': '平', '叙事': '', '阶段': {}, '三传': ''}
 
@@ -450,7 +450,9 @@ def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
     # 婚姻/求财/出行/胎产）接入评分——深读成果从"叙事"传导到"吉凶分"。
     # 权重 218 案实例反推（_memory/_link_search4.py）：liu 权重 0.5 时主集符合率
     # 0.419→0.636、验证集(壬占汇选+指南261案) 0.387→0.456，四分量保留正权重不偏废。
-    _liu_score = {'吉': 2.5, '凶': -2.5, '平': 0}.get(liuchen_out.get('终局', '平'), 0)
+    # 【2026-08-18 第四轮】liu ±2.5→±3：±3×0.5=±1.5 稳过阈值 ±1.2，防 zl/seq 抵消——
+    # 仕宦-八/选举-二/仕宦-二十五 analyze 已判凶/吉但合成落平/小凶（指南合成边缘案修复）
+    _liu_score = {'吉': 3, '凶': -3, '平': 0}.get(liuchen_out.get('终局', '平'), 0)
     # 权重（218 案实例反推，2026-08-18 v2）：占类0.2 / 时序0.2 / 支上0.1 / 深读终局0.5。
     # 支上=事体根基：支上泄克冲刑墓日干+凶将且无解神 → 凶（"支上动出午鬼克身"§疾病13·174）；
     # 有解神（末传吉将/制鬼）→ 可解不判凶（"末天喜乘龙作解神先凶后吉"§官讼16·212）。

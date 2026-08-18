@@ -20,6 +20,11 @@ import os
 import sys
 from typing import Dict, List, Any, Optional
 
+try:
+    from engine.liuchen_shensha import you_du, jie_sha, tian_ma, tian_she, xue_ji
+except Exception:
+    you_du = jie_sha = tian_ma = tian_she = xue_ji = lambda *a, **k: ''
+
 _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if _ROOT not in sys.path:
     sys.path.insert(0, _ROOT)
@@ -115,7 +120,7 @@ class LiuChenEngine:
                         chu: str, zhong: str, mo: str,
                         chu_tj: str, zhong_tj: str, mo_tj: str,
                         kong: set, keti: str, sike: List,
-                        zishu: str = '') -> Optional[Dict]:
+                        zishu: str = '', yuejiang: str = '') -> Optional[Dict]:
         gw = GAN_WX.get(ri_gan, '')
         mu_zhi = GAN_MU.get(ri_gan, '')
         cs_zhi = WX_CS.get(gw, '')
@@ -152,6 +157,14 @@ class LiuChenEngine:
         cai_zhi = [z for z in (chu, zhong, mo) if _shi_shen(z, ri_gan) == '妻财']
         # 日干禄神（功名/求财等占类共用；甲禄寅、乙禄卯、丙戊禄巳、丁己禄午、庚禄申、辛禄酉、壬禄亥、癸禄子）
         lu_zhi = LU_SHEN.get(ri_gan, '')
+        # 【神煞占类化 2026-08-18】游都/劫煞按日干日支恒可算；天马/天赦/血忌需月将（yuejiang）。
+        # 口诀出处见 engine/liuchen_shensha.py（游都"丙辛只向功曹上"、劫煞"中传劫煞"、
+        # 天马"中传天罡为天马"、天赦"春三月天赦在寅"、血忌"五月应在卯"）
+        _ss_yd = you_du(ri_gan)          # 游都
+        _ss_js = jie_sha(ri_zhi)         # 劫煞
+        _ss_tm = tian_ma(yuejiang) if yuejiang else ''   # 天马
+        _ss_ts = tian_she(yuejiang) if yuejiang else ''  # 天赦
+        _ss_xj = xue_ji(yuejiang) if yuejiang else ''    # 血忌
         # 官星发用（L"求官用起官星"）
         guan_xing_fa_yong = _shi_shen(chu, ri_gan) == '官鬼'
         # 白虎乘鬼（L545"虎乘日鬼同入三传主大凶"）
@@ -424,10 +437,32 @@ class LiuChenEngine:
             # ② 官星发用 + 得地 → 得官升迁（原有；加禄临干强化）
             #   【指南深读 2026-08-18】守卫：末传=日墓 → 不判升迁吉，落"功名难久"凶
             #   （ZN-仕宦-五"干支乘墓，禄马空陷……不能久任"）
-            if guan_xing_fa_yong and chu_shi != '凶' and chu not in kong and mo != mu_zhi:
+            #   【指南深读 第四轮】守卫：初传=驿马且马临五行墓（日马坐墓库）→ 不判升迁吉
+            #   （ZN-仕宦-十六"日马坐墓库，禄神临绝地，传将逆行……不能迁"——丁酉日初传亥=马，
+            #   亥加辰水墓）
+            _MA4 = {'申': '寅', '子': '寅', '辰': '寅', '寅': '申', '午': '申', '戌': '申',
+                    '巳': '亥', '酉': '亥', '丑': '亥', '亥': '巳', '卯': '巳', '未': '巳'}
+            _WX_MU4 = {'水': '辰', '木': '未', '火': '戌', '金': '丑'}
+            _ma4 = _MA4.get(ri_zhi, '')
+            _chu_xia = ''
+            if sike:
+                for _k in sike:
+                    if isinstance(_k, (list, tuple)) and len(_k) > 2 and str(_k[1]) == chu:
+                        _chu_xia = str(_k[2])
+                        break
+                    if isinstance(_k, dict) and str(_k.get('上神', '')) == chu:
+                        _chu_xia = str(_k.get('下神', ''))
+                        break
+            _ma_mu = _WX_MU4.get(ZHI_WX.get(_ma4, ''), '')
+            if guan_xing_fa_yong and chu_shi != '凶' and chu not in kong and mo != mu_zhi and \
+                    not (_ma4 and chu == _ma4 and _ma_mu and _chu_xia == _ma_mu):
                 return self._mk('得官升迁', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'官星{chu}发用，官星得地，求官有望，升迁在望',
                                 'L求官用起官星; CASE-壬占汇选-0117/0287')
+            if guan_xing_fa_yong and _ma4 and chu == _ma4 and _ma_mu and _chu_xia == _ma_mu:
+                return self._mk('日马坐墓', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'官星{chu}发用而{chu}为驿马{_ma4}，马坐墓库（{_chu_xia}），禄马空陷，传将逆行，不能迁转',
+                                'ZN-仕宦-十六"日马坐墓库，禄神临绝地，传将逆行…不能迁"')
             # ②b 禄临支（权摄不正禄临支）→ 正任不可望但食禄（§058"戊禄临支…正任不可望却乃食禄"；
             #   §069/097邵公"权摄不正禄临支"）
             if lu_zhi and zhi_shang == lu_zhi:
@@ -837,6 +872,15 @@ class LiuChenEngine:
                 return self._mk('恩宥转吉', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'干上神{gan_shang}为日干长生，长生临身，天赦加支，罪虽至重亦能转凶为吉',
                                 'ZN-占讼-六"长生临身…遇赦转凶为吉"')
+            # ⑪ 【神煞占类化 2026-08-18】天赦临干支 → 恩赦相救转凶为吉
+            #   （ZN-占讼-二"支见天赦（春三月天赦在寅）……罪虽至重亦能转凶为吉"）
+            #   守卫：螣蛇/白虎在传（蛇虎墓门，冢墓门开）→ 不判恩宥——ZN-占讼-十九
+            #   "占讼最凶全无救解……蛇虎二墓加临卯酉，此为冢墓门开"
+            if _ss_ts and (_ss_ts == gan_shang or _ss_ts == zhi_shang) and \
+                    '螣蛇' not in (chu_tj, zhong_tj, mo_tj) and '白虎' not in (chu_tj, zhong_tj, mo_tj):
+                return self._mk('天赦恩宥', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'天赦{_ss_ts}临干支，天赦加支，罪虽至重亦能转凶为吉',
+                                'ZN-占讼-二"天赦居支…转凶为吉"')
 
         # ───────────────────────────
         # 【求财】
@@ -1418,21 +1462,47 @@ class LiuChenEngine:
             # ③ 【指南深读 第四轮】末传克初传（非三合局）→ 以凶制凶，凶可解
             #   （ZN-兵斗-七"末传…蛇冲克初传，此为以凶制凶，不过虎头蛇尾，不日围解"——
             #   庚子日午酉子末子克初午；守卫：三合局不从革兵斗-二"合中刑干害支"仍凶）
-            if not _zz_ju and mo_wx and chu_wx and KE.get(mo_wx) == chu_wx:
+            #   守卫：中末空亡（初实中末空）→ 不判吉——ZN-兵斗-九"中末俱空，岂能前进？
+            #   凡初实中末空者……主事中途而止，强进必有祸也"
+            if not _zz_ju and mo_wx and chu_wx and KE.get(mo_wx) == chu_wx and \
+                    zhong not in kong and mo not in kong:
                 return self._mk('以凶制凶', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'末传{mo}克初传{chu}，以凶制凶，不过虎头蛇尾，凶必无虞，不日围解',
                                 'ZN-兵斗-七"末传…蛇冲克初传，此为以凶制凶…不日围解"')
             # ④ 【指南深读 第四轮】末传=日禄（健旺制劫）→ 守坚敌弱，吉
             #   （ZN-兵斗-四"末传健旺制劫，是守坚敌弱，故知必不能东下"——乙亥日末卯=乙禄）
-            if lu_zhi and mo == lu_zhi:
+            #   守卫：三合局=日干财局（传课纯财/合中刑干害支）→ 不判吉——ZN-兵斗-二
+            #   "课传从革，合中刑干害支……死又何疑"（丙午日酉丑巳金局=丙财局，末巳=丙禄）
+            if lu_zhi and mo == lu_zhi and not (_zz_ju and KE.get(gw) == _zz_ju):
                 return self._mk('守坚敌弱', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'末传{mo}为日禄健旺制劫，守坚敌弱，必不能久持，围自解',
                                 'ZN-兵斗-四"末传健旺制劫，是守坚敌弱"')
+            # ⑤ 【神煞占类化 2026-08-18】劫煞入传 → 兵戈凶（ZN-出行-一"中传劫煞旬丁刑克支干"；
+            #   ZN-兵斗-五"中传月建克末传，必然破城杀将"）
+            if _ss_js and _ss_js in (chu, zhong, mo):
+                return self._mk('劫煞兵戈', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'劫煞{_ss_js}入传，刑克支干，兵戈动扰，破城杀将之象',
+                                'ZN-出行-一"中传劫煞旬丁刑克支干"; ZN-兵斗-五"中传月建克末传"')
+            # ⑥ 【神煞占类化 2026-08-18】游都入传 → 贼兵据城（ZN-兵斗-五"游都居支前……
+            #   贼符侵酉地……据城无疑"；守卫：游都离日辰远（不在传）不判——ZN-兵斗-四
+            #   "游都居西南恋生，且离日辰远……守坚敌弱"）
+            #   守卫：三合局生日干 → 不判凶——ZN-兵斗-十一"结水局生日……大吉之兆"
+            #   （乙酉日申子辰水局生乙木，游都子在中传仍大吉）
+            if _ss_yd and _ss_yd in (chu, zhong, mo) and not (_zz_ju and SHENG.get(_zz_ju) == gw):
+                return self._mk('游都兵警', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'游都{_ss_yd}入传，贼兵据城，兵戈动扰之象',
+                                'ZN-兵斗-五"游都居支前…据城无疑"')
 
         # ───────────────────────────
         # 【贼盗】（失物/捕盗）
         # ───────────────────────────
         if category == '贼盗':
+            # 【神煞占类化 2026-08-18】游都入传 → 贼盗之象（ZN-应候-二"游都贼符临干支，
+            #   主有贼……自东北来劫邻人衣物银钱"）
+            if _ss_yd and _ss_yd in (chu, zhong, mo):
+                return self._mk('游都贼至', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'游都{_ss_yd}入传，贼盗将至，防劫夺失脱',
+                                'ZN-应候-二"游都贼符临干支…主有贼"')
             # 元武乘鬼现传 → 盗难寻（L688"元武不克日辰而空亡脱气日鬼...必盗贼失脱之事"）
             if xuan_wu_zai_chuan and any(_shi_shen(z, ri_gan) == '官鬼' for z in (chu, zhong, mo)):
                 return self._mk('失物难寻', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
@@ -1488,7 +1558,7 @@ class LiuChenEngine:
     def analyze(self, ri_gan: str, ri_zhi: str,
                 sanchuan: List[str], tianjiang_list: List[str] = None,
                 kongwang=('', ''), keti: str = '', sike: List = None,
-                category: str = '', zishu: str = '') -> Dict[str, Any]:
+                category: str = '', zishu: str = '', yuejiang: str = '') -> Dict[str, Any]:
         """
         主入口。返回事体走向分析。
         sanchuan: [初传, 中传, 末传]
@@ -1496,6 +1566,7 @@ class LiuChenEngine:
         sike: 四课（用于循环格/干支上神判定）
         category: 占类（功名/疾病/官讼/求财/家宅/胎产/出行/婚姻/贼盗/行人/其他）
         zishu: 家宅子类（阳宅/阴宅/迁移；空=阳宅默认）。阴宅看辰穴/朝案，迁移看丁马/宜迁。
+        yuejiang: 月将（'申将'或'申'），供神煞占类化规则（游都/劫煞/天马/天赦等）使用。
         """
         if not sanchuan or len(sanchuan) < 3:
             return {'走向': '未定', '阶段': {}, '叙事': '三传不全，无法判断事体走向', '终局': '平'}
@@ -1518,7 +1589,7 @@ class LiuChenEngine:
         # ── 占类化走向规则（v2：占类专属，优先于通用规则）──
         cat_out = self._category_rules(category, ri_gan, ri_zhi, chu, zhong, mo,
                                        chu_tj, zhong_tj, mo_tj, kong, keti, sike,
-                                       zishu=zishu)
+                                       zishu=zishu, yuejiang=yuejiang)
         if cat_out:
             return cat_out
 
@@ -1622,10 +1693,11 @@ class LiuChenEngine:
 
 def analyze_liuchen(ri_gan: str, ri_zhi: str, sanchuan: List[str],
                     tianjiang_list: List[str] = None, kongwang=('', ''), keti: str = '',
-                    sike: List = None, category: str = '', zishu: str = '') -> Dict[str, Any]:
+                    sike: List = None, category: str = '', zishu: str = '',
+                    yuejiang: str = '') -> Dict[str, Any]:
     """便捷入口"""
     return LiuChenEngine().analyze(ri_gan, ri_zhi, sanchuan, tianjiang_list, kongwang, keti, sike,
-                                  category, zishu)
+                                  category, zishu, yuejiang)
 
 
 if __name__ == '__main__':
