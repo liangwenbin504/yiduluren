@@ -1492,6 +1492,13 @@ class LiuChenEngine:
                 return self._mk('游都兵警', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'游都{_ss_yd}入传，贼兵据城，兵戈动扰之象',
                                 'ZN-兵斗-五"游都居支前…据城无疑"')
+            # ⑦ 【神煞占类化 2026-08-18】三合局=日干财局 且 初传临干（合中刑干害支）→ 凶
+            #   （ZN-兵斗-二"课传从革，合中刑干害支……干乘死气，支乘干支之墓，死又何疑"——
+            #   丙午日酉丑巳金局=丙财局，初传酉临干）
+            if _zz_ju and KE.get(gw) == _zz_ju and gan_shang == chu:
+                return self._mk('财局犯干', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                f'三传{chu}·{zhong}·{mo}财局而初传{chu}临干，合中刑干害支，干乘死气，兵败之象',
+                                'ZN-兵斗-二"课传从革，合中刑干害支…死又何疑"')
 
         # ───────────────────────────
         # 【贼盗】（失物/捕盗）
