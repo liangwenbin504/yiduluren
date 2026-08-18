@@ -213,7 +213,9 @@ class LiuChenEngine:
         # 【指南深读 第五轮】末传空亡 且 中传=日干官鬼（初末逢空，独存中传，鬼临中途结局落空）
         #   → 文书得罪/事败于中途（ZN-章奏-五"初末逢空，独存中传，岁破为鬼……
         #   恐得罪于君相，于公不利"——癸卯日三传酉丑巳，末巳空、中传丑=癸之官鬼）
-        if mo in kong and zhong_wx and KE.get(zhong_wx) == gw:
+        #   【疏正补强 2026-08-18】守卫：贼盗/亡盗占不判（§亡盗15·194"其物在厕屋左右"吉，
+        #   中传巳=庚官鬼末申空而邵公断物可寻）
+        if mo in kong and zhong_wx and KE.get(zhong_wx) == gw and category != '贼盗':
             return self._mk('中鬼末空', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                             f'末传{mo}空亡而中传{zhong}为日干官鬼，初末逢空独存中鬼，事败于中途，恐得罪于人',
                             'ZN-章奏-五"初末逢空，独存中传，岁破为鬼…恐得罪于君相"')
@@ -364,15 +366,19 @@ class LiuChenEngine:
             # ⑥g5 【指南深读 第三轮】支上神=官星：=贵人 → 官星临支吉（ZN-仕宦-二十九
             #   "亥贵作官星临支"）；非贵人 → 鬼临三四凶（ZN-仕宦-二十一"鬼临三四必主他非退位"）
             #   守卫（官星临支）：干支自刑（§062/081自满失宠）与赘婿（§065）不判吉
+            #   【疏正补强 2026-08-18】守卫（鬼临三四）：禄临干（§044"午乃丁禄临干日禄扶身"）
+            #   或幕贵临干（§052"幕贵乃科名第一吉神"）不判凶
             if zhi_shang and _shi_shen(zhi_shang, ri_gan) == '官鬼':
                 if zhi_shang in gui_zhi_set and not zi_xing and \
                         not (gan_shang == ri_zhi and ri_zhi and KE.get(gw) == ZHI_WX.get(ri_zhi, '')):
                     return self._mk('官星临支', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                     f'支上神{zhi_shang}为官星又系贵人，官星临支，功名先推之征',
                                     'ZN-仕宦-二十九"亥贵作官星临支"')
-                return self._mk('鬼临三四', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
-                                f'支上神{zhi_shang}为日干官鬼，鬼临三四课，必主他非退位',
-                                'ZN-仕宦-二十一"鬼临三四，必主他非退位"')
+                _guilu_wei = bool(lu_lin_gan or (gan_shang in gui_zhi_set and gan_shang not in kong))
+                if not _guilu_wei:
+                    return self._mk('鬼临三四', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'支上神{zhi_shang}为日干官鬼，鬼临三四课，必主他非退位',
+                                    'ZN-仕宦-二十一"鬼临三四，必主他非退位"')
             # ⑥g6 【指南深读 第四轮】干支上神皆=天罗（日干寄宫前一位）→ 罗网退职凶
             #   （ZN-仕宦-八"干支年命俱见罗网……仕宦忌罗网，以罗网为丁忧之象，主退职也"——
             #   己未日己寄未，天罗申，干支上皆申；八专自他处发用）
@@ -1561,7 +1567,26 @@ class LiuChenEngine:
         if category == '贼盗':
             # 【神煞占类化 2026-08-18】游都入传 → 贼盗之象（ZN-应候-二"游都贼符临干支，
             #   主有贼……自东北来劫邻人衣物银钱"）
+            #   【疏正补强 2026-08-18】守卫：三传皆阴 → 伏匿不失吉（§亡盗15·191"日辰三传
+            #   俱在阴位，阴主伏匿…此婢不失"）；三合局 → 类神可寻（§亡盗15·195"又是三合…
+            #   不落空亡"）
             if _ss_yd and _ss_yd in (chu, zhong, mo):
+                _all_yin = (chu in ('丑', '卯', '巳', '未', '酉', '亥') and
+                            zhong in ('丑', '卯', '巳', '未', '酉', '亥') and
+                            mo in ('丑', '卯', '巳', '未', '酉', '亥'))
+                _zz_ju_wd = ''
+                for _jz, _jwx in zip([{'申', '子', '辰'}, {'寅', '午', '戌'}, {'巳', '酉', '丑'}, {'亥', '卯', '未'}], ['水', '火', '金', '木']):
+                    if {chu, zhong, mo} == _jz:
+                        _zz_ju_wd = _jwx
+                        break
+                if _all_yin:
+                    return self._mk('伏匿不失', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'游都{_ss_yd}入传而日辰三传俱在阴位，阴主伏匿，此婢不失，往来处寻之必见',
+                                    '§亡盗15·191"日辰三传俱在阴位，阴主伏匿…此婢不失"')
+                if _zz_ju_wd:
+                    return self._mk('类神可寻', '吉', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
+                                    f'游都{_ss_yd}入传而三传成三合局，类神不落空亡，失物可寻',
+                                    '§亡盗15·195"又是三合…不落空亡"')
                 return self._mk('游都贼至', '凶', chu_shi, zhong_shi, mo_shi, chu, zhong, mo,
                                 f'游都{_ss_yd}入传，贼盗将至，防劫夺失脱',
                                 'ZN-应候-二"游都贼符临干支…主有贼"')
