@@ -1510,6 +1510,15 @@ def api_zeri_analyze():
             'summary': analysis['summary'],
         }
 
+        # ── 古籍合参警示层（2026-08-19 接线：单课页与批量同源，警示/佐证层不参与评分）──
+        try:
+            from zeri_hecan_bridge2 import zeri_hecan_eval
+            _zt_an = request.values.get('zetiri_type', '') or ''
+            result['hecan'] = zeri_hecan_eval(ri_gan, ri_zhi, sike, sanchuan, _tjm,
+                                              raw.get('课体', ''), yuejiang, _zt_an)
+        except Exception:
+            result['hecan'] = {'hits': [], 'narr': '', '警告': [], '佐证': [], 'zeri_rules': {'hits': [], 'narr': ''}}
+
         # ── 三流派扩展：斗首 / 演禽（惰性导入 + 异常隔离，单家挂不影响其余）──
         sizhu4 = {'年柱': f'{nian_gan}{nian_zhi}', '月柱': f'{yue_gan}{yue_zhi}',
                   '日柱': f'{ri_gan}{ri_zhi}', '时柱': f'{shi_gan}{shi_zhi}'}
