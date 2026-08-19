@@ -1943,8 +1943,20 @@ class LiuChenEngine:
                                          kong, chu_tj, zhong_tj, mo_tj, sike,
                                          liuchu=leishen_liuchu, ri_zhi=ri_zhi)
                     if _ls_out and _ls_out.get('end') in ('吉', '凶'):
+                        _narr = _ls_out['narr']
+                        # 【方位引擎 2026-08-18】方位叙事（类神所加方/初传定向；不参与评分）
+                        try:
+                            from fangwei_engine_v2 import leishen_jia_fang, huanjing_of
+                            _fw = leishen_jia_fang(leishen, sike, None, [chu, zhong, mo])
+                            if _fw.get('fang'):
+                                _narr += f'，当往{_fw["fang"]}方寻之'
+                            _hj = huanjing_of(leishen, _fw.get('zhi', ''), '')
+                            if _hj:
+                                _narr += f'（{_hj}）'
+                        except ImportError:
+                            pass
                         return self._mk('类神判法', _ls_out['end'], chu_shi, zhong_shi, mo_shi,
-                                        chu, zhong, mo, _ls_out['narr'], _ls_out.get('src', ''))
+                                        chu, zhong, mo, _narr, _ls_out.get('src', ''))
             # 【壬占汇选深读 2026-08-18】鬼墓覆日（干上=日墓又为官鬼）→ 人已死/失不可寻
             #   （CASE-416 癸卯日干上辰=癸墓又为鬼，"干乘鬼墓……死气在支……必死。
             #   落水死者，辰为水库，天后乘之墓神作鬼"——酒后落水已死）
