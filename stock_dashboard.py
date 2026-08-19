@@ -1787,6 +1787,14 @@ def api_zeri_analyze():
             # 2026-08-17：优先用择日类型（提车/开业等专属尾注），未选则退回占事（zhanlei）
             _piyu_type = (request.values.get('zetiri_type', '') or '').strip() or zhanlei
             result['zonghe_piyu'] = _build_zonghe_piyu(result, _piyu_type)
+            # 2026-08-19 合参示警联动：古籍合参凶规则命中时，综合批语加警示前缀，消除"满分纯吉"误导
+            _hc_warns = (result.get('hecan') or {}).get('警告', [])
+            if _hc_warns:
+                _zp = result.get('zonghe_piyu') or {}
+                _warn_txt = '；'.join(str(w) for w in _hc_warns[:2])
+                _zp['wen'] = ('古籍合参示警：' + _warn_txt + '。' + str(_zp.get('wen', '')))
+                _zp['bai'] = ('⚠ 合参警示：' + _warn_txt + '。' + str(_zp.get('bai', '')))
+                result['zonghe_piyu'] = _zp
         except Exception as _e_zp:
             result['zonghe_piyu'] = {'wen': '', 'bai': '', 'error': str(_e_zp)}
 
