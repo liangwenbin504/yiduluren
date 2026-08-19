@@ -1946,7 +1946,7 @@ class LiuChenEngine:
                         _narr = _ls_out['narr']
                         # 【方位引擎 2026-08-18】方位叙事（类神所加方/初传定向；不参与评分）
                         try:
-                            from fangwei_engine_v2 import leishen_jia_fang, huanjing_of
+                            from fangwei_engine_v5 import leishen_jia_fang, huanjing_of
                             _fw = leishen_jia_fang(leishen, sike, None, [chu, zhong, mo])
                             if _fw.get('fang'):
                                 _narr += f'，当往{_fw["fang"]}方寻之'
