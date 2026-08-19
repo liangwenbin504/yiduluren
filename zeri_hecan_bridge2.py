@@ -64,8 +64,10 @@ def zeri_hecan_eval(ri_gan: str, ri_zhi: str, sike, sanchuan, tianjiang_map: dic
         return {
             'hits': hits,
             'narr': narr,
-            '警告': ["合参[%s]：%s" % (o['id'], o['叙事']) for o in hc[:2] if o['结论'] == '凶'],
-            '佐证': ["合参[%s]：%s" % (o['id'], o['叙事']) for o in hc[:2] if o['结论'] == '吉'],
+            '警告': (["合参[%s]：%s" % (o['id'], o['叙事']) for o in hc[:2] if o['结论'] == '凶'] +
+                    ["择日合参[%s]：%s" % (o['id'], o['叙事']) for o in zr['hits'] if o['结论'] == '凶']),
+            '佐证': (["合参[%s]：%s" % (o['id'], o['叙事']) for o in hc[:2] if o['结论'] == '吉'] +
+                    ["择日合参[%s]：%s" % (o['id'], o['叙事']) for o in zr['hits'] if o['结论'] == '吉']),
             'zeri_rules': zr,
         }
     except Exception:
