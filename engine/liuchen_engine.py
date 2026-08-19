@@ -121,7 +121,8 @@ class LiuChenEngine:
                         chu_tj: str, zhong_tj: str, mo_tj: str,
                         kong: set, keti: str, sike: List,
                         zishu: str = '', yuejiang: str = '', year: str = '',
-                        sike_tj: Dict = None) -> Optional[Dict]:
+                        sike_tj: Dict = None, leishen: str = '',
+                        leishen_liuchu: bool = False) -> Optional[Dict]:
         gw = GAN_WX.get(ri_gan, '')
         _tjmap = sike_tj or {}
         mu_zhi = GAN_MU.get(ri_gan, '')
@@ -1926,6 +1927,24 @@ class LiuChenEngine:
         # 【贼盗】（失物/捕盗）
         # ───────────────────────────
         if category == '贼盗':
+            # 【类神引擎 2026-08-18】邵公失物法（leishen 非空时优先判；每条出处见 leishen_engine）：
+            #   优先级：受克乘虎/乘杀神(凶) > 乘后阴藏匿(吉) > 加长生(吉) > 入传(吉) >
+            #   加日辰(空凶/实吉) > 临墓(平) > 六畜不入传(凶) > 器物同气初传吉将(吉)
+            if leishen:
+                try:
+                    from leishen_engine_v5 import judge_lost
+                except ImportError:
+                    try:
+                        from leishen_engine_v3 import judge_lost
+                    except ImportError:
+                        judge_lost = None
+                if judge_lost:
+                    _ls_out = judge_lost(leishen, [chu, zhong, mo], gan_shang, zhi_shang,
+                                         kong, chu_tj, zhong_tj, mo_tj, sike,
+                                         liuchu=leishen_liuchu, ri_zhi=ri_zhi)
+                    if _ls_out and _ls_out.get('end') in ('吉', '凶'):
+                        return self._mk('类神判法', _ls_out['end'], chu_shi, zhong_shi, mo_shi,
+                                        chu, zhong, mo, _ls_out['narr'], _ls_out.get('src', ''))
             # 【壬占汇选深读 2026-08-18】鬼墓覆日（干上=日墓又为官鬼）→ 人已死/失不可寻
             #   （CASE-416 癸卯日干上辰=癸墓又为鬼，"干乘鬼墓……死气在支……必死。
             #   落水死者，辰为水库，天后乘之墓神作鬼"——酒后落水已死）
@@ -2193,7 +2212,8 @@ class LiuChenEngine:
                 sanchuan: List[str], tianjiang_list: List[str] = None,
                 kongwang=('', ''), keti: str = '', sike: List = None,
                 category: str = '', zishu: str = '', yuejiang: str = '',
-                year: str = '', sike_tj: Dict = None) -> Dict[str, Any]:
+                year: str = '', sike_tj: Dict = None,
+                leishen: str = '', leishen_liuchu: bool = False) -> Dict[str, Any]:
         """
         主入口。返回事体走向分析。
         sanchuan: [初传, 中传, 末传]
@@ -2230,7 +2250,8 @@ class LiuChenEngine:
         cat_out = self._category_rules(category, ri_gan, ri_zhi, chu, zhong, mo,
                                        chu_tj, zhong_tj, mo_tj, kong, keti, sike,
                                        zishu=zishu, yuejiang=yuejiang, year=year,
-                                       sike_tj=sike_tj)
+                                       sike_tj=sike_tj, leishen=leishen,
+                                       leishen_liuchu=leishen_liuchu)
         if cat_out:
             return cat_out
 
