@@ -1987,7 +1987,7 @@ def liuren_zhanshi_duanyu():
         if not (ri_gan and ri_zhi and yuejiang and shichen):
             return jsonify({'error': '排盘参数不完整（需 dayGan/dayZhi/yuejiang/shichen，或 year/month/day/hour）', 'success': False}), 400
 
-        from engine.zhanshi_duanyu import generate, classify_zhaimu_sub
+        from engine.zhanshi_duanyu_patched11 import generate, classify_zhaimu_sub
         # 家宅子类：显式 zishu 优先；缺省按占事描述自动识别（category==house 或 zhanshi==家宅 时）
         _zishu_eff = zishu
         if not _zishu_eff and (category in ('house',) or zhanshi == '家宅'):
