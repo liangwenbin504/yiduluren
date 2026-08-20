@@ -244,6 +244,23 @@ def yingqi_v2(ri_gan, ri_zhi, sanchuan, tiandi_pan=None, si_ke=None, shichen='',
     return '\n'.join(blocks)
 
 
+def yingqi_v2_struct(ri_gan, ri_zhi, sanchuan, tiandi_pan=None, si_ke=None, shichen='',
+                     tai_sui_zhi='', zhanlei='其他', ben_ming_zhi='', ben_ming_age=0,
+                     sex='', text='', leishen='', wangshuai_fn=None, yuejiang='') -> list:
+    """结构化应期（前端可视化用）：[{法, 粒度, 文本}]。粒度：日/旬/月/年/速迟/方位。"""
+    out = []
+    def add(name, gran, txt):
+        if txt:
+            out.append({'法': name, '粒度': gran, '文本': txt})
+    add('旬空填实', '日', fa_xunkong_tianshi(ri_gan, ri_zhi, sanchuan))
+    add('三传合冲', '日', fa_sanchuan_hechong(ri_gan, ri_zhi, sanchuan))
+    add('太岁行年', '年', fa_taisui_chonghe(tai_sui_zhi, ben_ming_zhi, ben_ming_age, sex=sex, text=text))
+    add('类神速迟', '速迟', fa_leishen_suchi(sanchuan, wangshuai_fn, yuejiang))
+    add('失物应期', '方位', fa_wangdao_shichen(zhanlei, sanchuan, leishen=leishen, sike=si_ke, tdp=tiandi_pan))
+    add('旬级应期', '旬', fa_xun_ji(ri_gan, ri_zhi, sanchuan, sike=si_ke))
+    return out
+
+
 if __name__ == '__main__':
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')

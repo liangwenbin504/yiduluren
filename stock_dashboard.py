@@ -1871,8 +1871,39 @@ def api_zeri_analyze():
                 wangshuai_fn=_ws_yq, yuejiang=yuejiang,
             )
             result['yingqi'] = '\n'.join(x for x in (_yq_base, _yq_v2) if x)
+            # 2026-08-20 应期结构化（前端卡片可视化：法门/粒度/文本）
+            result['yingqi_struct'] = []
+            try:
+                from yingqi_engine_v2 import yingqi_v2_struct
+                _base_struct = []
+                for _l in str(_yq_base or '').split('\n'):
+                    _l = _l.strip()
+                    if not _l:
+                        continue
+                    if '邵彦和' in _l:
+                        _base_struct.append({'法': '邵彦和应期法', '粒度': '月', '文本': _l})
+                    elif '月建' in _l:
+                        _base_struct.append({'法': '月建应期', '粒度': '月', '文本': _l})
+                    elif '太岁临身' in _l:
+                        _base_struct.append({'法': '太岁临身', '粒度': '年', '文本': _l})
+                    else:
+                        _base_struct.append({'法': '应期', '粒度': '月', '文本': _l})
+                _yst = yingqi_v2_struct(
+                    ri_gan, ri_zhi, _yq_sc,
+                    tai_sui_zhi=nian_zhi, zhanlei=zhanlei,
+                    ben_ming_zhi=ben_ming_zhi, ben_ming_age=_bm_age,
+                    sex=_bm_sex,
+                    text=f'{_zt_an} {zhanlei} {date_str} {shichen}',
+                    leishen=_ls_eff,
+                    si_ke=result.get('sike', []), tiandi_pan=result.get('tiandi_pan', {}),
+                    wangshuai_fn=_ws_yq, yuejiang=yuejiang,
+                )
+                result['yingqi_struct'] = _base_struct + _yst
+            except Exception:
+                result['yingqi_struct'] = []
         except Exception as _e_yq:
             result['yingqi'] = ''
+            result['yingqi_struct'] = []
 
         # ── 综合批语（斗首/演禽/六壬 → 文言+白话括注，详情区「综合批语」栏）──
         try:
