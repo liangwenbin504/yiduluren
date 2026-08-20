@@ -1432,6 +1432,33 @@ def _build_zonghe_piyu(result, zetiri_type='立碑'):
     grade = result.get('grade') or ''
     tail_wen, tail_bai = _ZONGHE_TYPE_TAIL.get((zetiri_type or '').strip(), _ZONGHE_DEFAULT_TAIL)
     wen.append(tail_wen)
+
+    # ⑤ 三派冲突点透（2026-08-20：斗首/演禽/六壬吉凶不一致时显式点出"吉中藏忌/凶中有救"）
+    def _pai_side(g):
+        g = str(g or '')
+        if any(k in g for k in ('大吉', '上吉', '吉', '得令', '入垣', '拱照')):
+            return '吉'
+        if any(k in g for k in ('大凶', '凶', '失令', '失位')):
+            return '凶'
+        return '中'
+    _sides = []
+    for _s, _nm in ((detail.get('doushou'), '斗首'), (detail.get('yanqin'), '演禽'), (detail.get('liuren'), '六壬')):
+        if _s:
+            _sides.append((_nm, _pai_side(str(_s.get('grade', _s.get('wen', ''))))))
+    _ji = [n for n, s in _sides if s == '吉']
+    _xiong = [n for n, s in _sides if s == '凶']
+    _hc_warns = (result.get('hecan') or {}).get('警告') or []
+    _chong = []
+    if _ji and _xiong:
+        _chong.append('「%s得吉」而「%s见凶」——吉中藏忌，宜慎择动期、避开凶应之方' % ('、'.join(_ji), '、'.join(_xiong)))
+    elif _hc_warns and _ji:
+        _chong.append('三派皆吉而古籍合参示警（%s）——吉中藏忌，宜慎择动期' % str(_hc_warns[0])[:56])
+    elif _hc_warns and not _sides:
+        _chong.append('古籍合参示警：%s' % str(_hc_warns[0])[:56])
+    if _chong:
+        wen.append(_chong[0])
+        bai.append('⚠ 三派异断：' + _chong[0])
+
     bai.append(f'综合评分{score}分（{grade or "未评"}），{tail_bai}')
 
     wen = [str(x).rstrip('。，,、；;') for x in wen if x]
@@ -1813,15 +1840,26 @@ def api_zeri_analyze():
         # ── 应期（叙事层：支数法+月建法+太岁法；何时发生，非吉凶方向）──
         try:
             from engine.liuren_keti_bifa import get_yingqi_unified
+            from yingqi_engine_v2 import yingqi_v2
+            from engine.liuchen_shensha import wang_shuai as _ws_yq
             _yq_sc = [(result.get('sanchuan') or {}).get('初传', ''),
                       (result.get('sanchuan') or {}).get('中传', ''),
                       (result.get('sanchuan') or {}).get('末传', '')]
-            result['yingqi'] = get_yingqi_unified(
+            _yq_base = get_yingqi_unified(
                 ri_gan, ri_zhi, _yq_sc,
                 tiandi_pan=result.get('tiandi_pan', {}),
                 si_ke=result.get('sike', []),
                 shichen=shichen, tai_sui_zhi=nian_zhi, zhanlei=zhanlei,
             )
+            # 2026-08-20 应期增强四法（旬空填实日/三传合冲日/太岁冲合年/类神速迟）——
+            # 疏正43案回测：古籍应期主流为干支年/干支日，原三法仅"到月"不够
+            _yq_v2 = yingqi_v2(
+                ri_gan, ri_zhi, _yq_sc,
+                tai_sui_zhi=nian_zhi,
+                ben_ming_zhi=ben_ming_zhi, ben_ming_age=_bm_age,
+                wangshuai_fn=_ws_yq, yuejiang=yuejiang,
+            )
+            result['yingqi'] = '\n'.join(x for x in (_yq_base, _yq_v2) if x)
         except Exception as _e_yq:
             result['yingqi'] = ''
 
@@ -1830,13 +1868,12 @@ def api_zeri_analyze():
             # 2026-08-17：优先用择日类型（提车/开业等专属尾注），未选则退回占事（zhanlei）
             _piyu_type = (request.values.get('zetiri_type', '') or '').strip() or zhanlei
             result['zonghe_piyu'] = _build_zonghe_piyu(result, _piyu_type)
-            # 2026-08-19 合参示警联动：古籍合参凶规则命中时，综合批语加警示前缀，消除"满分纯吉"误导
+            # 2026-08-19 合参示警联动：凶规则命中加短标记，详情由批语内"冲突点透"展开（不重复全文）
             _hc_warns = (result.get('hecan') or {}).get('警告', [])
             if _hc_warns:
                 _zp = result.get('zonghe_piyu') or {}
-                _warn_txt = '；'.join(str(w) for w in _hc_warns[:2])
-                _zp['wen'] = ('古籍合参示警：' + _warn_txt + '。' + str(_zp.get('wen', '')))
-                _zp['bai'] = ('⚠ 合参警示：' + _warn_txt + '。' + str(_zp.get('bai', '')))
+                _zp['wen'] = ('⚠ 合参示警：' + str(_zp.get('wen', '')))
+                _zp['bai'] = ('⚠ 合参示警（详见文末点透）：' + str(_zp.get('bai', '')))
                 result['zonghe_piyu'] = _zp
         except Exception as _e_zp:
             result['zonghe_piyu'] = {'wen': '', 'bai': '', 'error': str(_e_zp)}
