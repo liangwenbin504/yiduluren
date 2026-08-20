@@ -1485,6 +1485,42 @@ def _build_zonghe_piyu(result, zetiri_type='立碑'):
         wen.append(_ren_wen)
         bai.append('應人：' + '；'.join(ren_txt[:3]))
 
+    # ⑦ 要诀精华（2026-08-20 张九仪《仪度六壬择日要诀》：斗首六亲化气应人 + 禁忌应事）
+    _ri_zhi7 = str((result.get('sizhu') or {}).get('日', ''))[-1:] or ''
+    _nian_zhi7 = str((result.get('sizhu') or {}).get('年', ''))[-1:] or ''
+    _yuejiang7 = str(result.get('yuejiang', '') or '')
+    _DOU_LIUQIN = {'元辰': '兄弟朋友（同气帮扶）', '武财': '妻财（我生为财）', '廉子': '子孙（我克）',
+                   '贪官': '官鬼是非（克我）', '破鬼': '破耗鬼祟（我生为鬼）'}
+    _dou_ren = []
+    for _col, _st in (result.get('doushou_full') or {}).get('sizhu_stars', {}).items():
+        _xing = str(_st.get('星曜', ''))
+        if _xing in _DOU_LIUQIN:
+            _dou_ren.append(f'{_col}{_xing}应{_DOU_LIUQIN[_xing]}')
+    if _dou_ren:
+        bai.append('要诀應人（斗首六亲化气）：' + '；'.join(_dou_ren[:4]))
+    # 禁忌应事（冲山/岁破/月破/三煞——要诀"日课不可犯"）
+    _CH12 = {'子': '午', '午': '子', '丑': '未', '未': '丑', '寅': '申', '申': '寅',
+             '卯': '酉', '酉': '卯', '辰': '戌', '戌': '辰', '巳': '亥', '亥': '巳'}
+    _jinji = []
+    _shan_zhi = str(result.get('shan_jia') or '')
+    if _shan_zhi and _ri_zhi7 == _CH12.get(_shan_zhi, ''):
+        _jinji.append(f'日支{_ri_zhi7}冲山{_shan_zhi}——大忌动土修造（要诀"冲山者，日支与山家相冲也，大忌"）')
+    if _nian_zhi7 and _ri_zhi7 == _CH12.get(_nian_zhi7, ''):
+        _jinji.append(f'日支{_ri_zhi7}与太岁{_nian_zhi7}相冲——岁破，日课忌（要诀"日支不可与太岁相冲"）')
+    _yuejian = {'寅': '亥', '卯': '戌', '辰': '酉', '巳': '申', '午': '未', '未': '午',
+                '申': '巳', '酉': '辰', '戌': '卯', '亥': '寅', '子': '丑', '丑': '子'}.get(_yuejiang7, '')
+    if _yuejian and _ri_zhi7 == _CH12.get(_yuejian, ''):
+        _jinji.append(f'日支{_ri_zhi7}冲月建{_yuejian}——月破，日课忌（要诀"日支不可与月建相冲"）')
+    _SANSHA = {'申': ('巳', '午', '未'), '子': ('巳', '午', '未'), '辰': ('巳', '午', '未'),
+               '寅': ('申', '酉', '戌'), '午': ('申', '酉', '戌'), '戌': ('申', '酉', '戌'),
+               '亥': ('寅', '卯', '辰'), '卯': ('寅', '卯', '辰'), '未': ('寅', '卯', '辰'),
+               '巳': ('亥', '子', '丑'), '酉': ('亥', '子', '丑'), '丑': ('亥', '子', '丑')}
+    if _nian_zhi7 and _shan_zhi in _SANSHA.get(_nian_zhi7, ()):
+        _jinji.append(f'山家{_shan_zhi}落{_nian_zhi7}年三煞方——日课不可犯（要诀"三煞者，劫煞灾煞岁煞也…日课不可犯"）')
+    if _jinji:
+        wen.append('犯煞有忌，详见白话')
+        bai.append('要訣禁忌：' + '；'.join(_jinji))
+
     bai.append(f'综合评分{score}分（{grade or "未评"}），{tail_bai}')
 
     wen = [str(x).rstrip('。，,、；;') for x in wen if x]
