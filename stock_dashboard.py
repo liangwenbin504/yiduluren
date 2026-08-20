@@ -1521,6 +1521,22 @@ def _build_zonghe_piyu(result, zetiri_type='立碑'):
         wen.append('犯煞有忌，详见白话')
         bai.append('要訣禁忌：' + '；'.join(_jinji))
 
+    # ⑧ 要诀应人应期（张九仪"两因字是大窍"：禄马贵之支命者发福、其支之年应；发传=天机灵动）
+    _ddx8 = result.get('daoshan_daoxiang') or {}
+    _hm8 = result.get('huoma_huolu') or {}
+    _lu_z8 = (_ddx8.get('lu') or {}).get('lu_zhi', '')
+    _ma_z8 = (_ddx8.get('ma') or {}).get('ma_zhi', '')
+    _yq_sents = []
+    if _hm8.get('huo_lu') and _lu_z8:
+        _yq_sents.append(f'禄神{_lu_z8}发传（天机灵动）——{_lu_z8}命人发福，应于{_lu_z8}年')
+    if _hm8.get('huo_ma') and _ma_z8:
+        _yq_sents.append(f'马神{_ma_z8}发传——{_ma_z8}命人发福，应于{_ma_z8}年')
+    if not (_ddx8.get('total_count') or 0):
+        _yq_sents.append('禄马贵未到山到向，福力不实——宜择到山到向且发传之课（要诀"住而不去，且要发出三传…方得确实灵验"）')
+    if _yq_sents:
+        wen.append('禄马发传，应命应年详见白话')
+        bai.append('要訣應人應期（两因字是大窍）：' + '；'.join(_yq_sents))
+
     bai.append(f'综合评分{score}分（{grade or "未评"}），{tail_bai}')
 
     wen = [str(x).rstrip('。，,、；;') for x in wen if x]
