@@ -59,7 +59,8 @@ def zeri_hecan_eval(ri_gan: str, ri_zhi: str, sike, sanchuan, tianjiang_map: dic
             from zeri_hecan_engine import zeri_signals as _zs, zeri_hecan_judge as _zj
             _zsig = _zs(keti, zetiri_type, sizhu=sizhu, shan_wx=shan_wx,
                         shan=shan, xiang=xiang, sanchuan=sanchuan,
-                        ri_gan=ri_gan, ri_zhi=ri_zhi, ming=ming)
+                        ri_gan=ri_gan, ri_zhi=ri_zhi, ming=ming,
+                        yuejiang=yuejiang)
             _zout = _zj(_zsig)
             _ztop = _zout[:6]
             zr['hits'] = [{'id': o['id'], '结论': o['结论'], '叙事': o['叙事'], '出处': o['出处']} for o in _ztop]

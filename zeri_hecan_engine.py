@@ -85,7 +85,8 @@ def _shan_lu(shan: str):
 
 def zeri_signals(keti: str, zetiri_type: str, sizhu: dict = None, shan_wx: str = '',
                  shan: str = '', xiang: str = '', sanchuan=None,
-                 ri_gan: str = '', ri_zhi: str = '', ming: str = '') -> dict:
+                 ri_gan: str = '', ri_zhi: str = '', ming: str = '',
+                 yuejiang: str = '') -> dict:
     """择日合参信号：课体键 + 类型键 + 斗首四柱星曜 + 禄马贵/旬空/三传美格。
     2026-08-20 第二批：注解2 五~四章实战案例（两破鬼两支生旺损妻/星陷马空/贪官制化/
     拱禄拱贵/山贵同日禄/龙德课/真朱雀/十三美格），全部可计算、全部出自书例。"""
@@ -108,7 +109,11 @@ def zeri_signals(keti: str, zetiri_type: str, sizhu: dict = None, shan_wx: str =
               '主命禄马_犯旬空', '主命禄马_不空坐日柱',
               '山贵_同日禄', '山禄贵_同太岁', '山禄贵_发传', '三传贵_落旬空',
               '拱日禄', '三传_禄马贵全备', '三传_连续相生', '三传_二贵',
-              '三传_午卯子', '三传_斩轮铸印', '四柱_六合在课', '真朱雀_乘传'):
+              '三传_午卯子', '三传_斩轮', '三传_铸印乘轩', '四柱_六合在课', '真朱雀_乘传',
+              '三传_三合局', '三传_三合拱贵', '三传_三合拱禄',
+              '龙德_太岁为日贵', '龙德_太阳缠太岁', '龙德_发传',
+              '官爵_四马归一', '官爵_马为山向贵', '官爵_马发传',
+              '时泰_太岁月建发传', '德庆_四德发传'):
         sig[k] = False
     try:
         _sizhu = sizhu or {}
@@ -237,9 +242,36 @@ def zeri_signals(keti: str, zetiri_type: str, sizhu: dict = None, shan_wx: str =
                                                or (_WX_SHENG.get(wx[2], '') == wx[1] and _WX_SHENG.get(wx[1], '') == wx[0]))
                 sig['三传_二贵'] = ok and _gui_ri and _gui_ri <= set(_sc)
                 sig['三传_午卯子'] = set(_sc) == {'午', '卯', '子'}
-                sig['三传_斩轮铸印'] = set(_sc) == {'卯', '戌', '巳'}
+                # 斩轮课（卯戌巳，卯为车轮）/铸印乘轩课（巳戌卯，巳中丙火合戌中辛金铸印）——
+                # 十三美格之11/12，按三传顺序区分
+                sig['三传_斩轮'] = _sc == ['卯', '戌', '巳']
+                sig['三传_铸印乘轩'] = _sc == ['巳', '戌', '卯']
                 # 真朱雀：日干贵支含申者（乙己）自申贵逆数朱雀到午（注解2第十章四）
                 sig['真朱雀_乘传'] = bool(_gui_ri & {'申'}) and '午' in _sc
+        # ── 2026-08-21 十三美格剩余八课：龙德/官爵/时泰/和美合欢回环/德庆 ──
+        _scs = set(_sc)
+        _he_sanj = _scs in ({'亥', '卯', '未'}, {'寅', '午', '戌'}, {'巳', '酉', '丑'}, {'申', '子', '辰'})
+        sig['三传_三合局'] = len(_sc) == 3 and _he_sanj
+        sig['三传_三合拱贵'] = sig['三传_三合局'] and bool(_scs & _gui_sx)
+        sig['三传_三合拱禄'] = sig['三传_三合局'] and bool(_lu_ri) and _lu_ri in _sc
+        # 龙德课：太岁之支为本日贵人 + 月将太阳缠临太岁支 + 发三传
+        _yj = str(yuejiang or '')
+        if _yj and _rg and _nian_zhi:
+            sig['龙德_太岁为日贵'] = _nian_zhi in _GUI10.get(_rg, set())
+            sig['龙德_太阳缠太岁'] = _yj == _nian_zhi
+            sig['龙德_发传'] = _yj in _sc
+        # 官爵课：太岁/月建/日元/生命四者共为一马 + 该马发用（书例丁亥癸卯乙未+乙亥命均马巳）
+        _mgb = str(ming or '')
+        _mz4 = [_nian_zhi, _yue_zhi, _rz, (_mgb[1] if len(_mgb) >= 2 else '')]
+        _ma4 = [_MA12.get(z, '') for z in _mz4]
+        sig['官爵_四马归一'] = bool(_ma4[0]) and all(m == _ma4[0] for m in _ma4)
+        sig['官爵_马为山向贵'] = bool(_ma4[0]) and _ma4[0] in (_gui_sx | ({_sl} if _sl else set()))
+        sig['官爵_马发传'] = bool(_ma4[0]) and _ma4[0] in _sc
+        # 时泰课：太岁、月建之支皆发传
+        sig['时泰_太岁月建发传'] = bool(_nian_zhi) and bool(_yue_zhi) and _nian_zhi in _sc and _yue_zhi in _sc
+        # 德庆课：止有二日——九月丙子（德神巳发传）、三月壬午（德神亥发传）
+        sig['德庆_四德发传'] = ((_rg == '丙' and _rz == '子' and _yue_zhi == '戌' and '巳' in _sc)
+                                or (_rg == '壬' and _rz == '午' and _yue_zhi == '辰' and '亥' in _sc))
     except Exception:
         pass
     return sig
