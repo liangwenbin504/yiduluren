@@ -1459,6 +1459,32 @@ def _build_zonghe_piyu(result, zetiri_type='立碑'):
         wen.append(_chong[0])
         bai.append('⚠ 三派异断：' + _chong[0])
 
+    # ⑥ 应事应人（2026-08-20 叙事层接批语：应何事=类象所主/乘神断语；应何人=六亲+类象人物）
+    lx = result.get('leixiang') or []
+    lq = result.get('liuqin_struct') or {}
+    shi_txt = []
+    ren_txt = []
+    for x in lx[:2]:
+        sw = str(x.get('所主') or '')
+        dj = str(x.get('乘神断语') or '')
+        if sw:
+            shi_txt.append(f"{x.get('位置', '')}{x.get('天将', '')}主{sw}" + (f'（{dj}）' if dj else ''))
+        rw = str((x.get('类象') or {}).get('人物') or '')
+        if rw:
+            ren_txt.append(f"{x.get('天将', '')}应{rw[:40]}")
+    if lq.get('断'):
+        ren_txt.append(f"六亲[{lq.get('将', '')}{lq.get('关系', '')}]：{lq.get('断', '')}")
+    if shi_txt:
+        _first_shi = shi_txt[0].split('主', 1)[-1].split('、')[0].split('（')[0] if '主' in shi_txt[0] else shi_txt[0][:10]
+        _shi_wen = f'事主{_first_shi}'
+        wen.append(_shi_wen)
+        bai.append('應事：' + '；'.join(shi_txt))
+    if ren_txt:
+        _rel_map = {'生日': '上人恩惠', '克日': '官灾口舌', '日克': '财利妻妾', '比和': '兄弟朋友', '日生': '子孙耗脱'}
+        _ren_wen = '人应' + _rel_map.get(str(lq.get('关系', '')), '六亲')
+        wen.append(_ren_wen)
+        bai.append('應人：' + '；'.join(ren_txt[:3]))
+
     bai.append(f'综合评分{score}分（{grade or "未评"}），{tail_bai}')
 
     wen = [str(x).rstrip('。，,、；;') for x in wen if x]
@@ -1587,6 +1613,28 @@ def api_zeri_analyze():
                                               raw.get('课体', ''), yuejiang, _zt_an)
         except Exception:
             result['hecan'] = {'hits': [], 'narr': '', '警告': [], '佐证': [], 'zeri_rules': {'hits': [], 'narr': ''}}
+
+        # 2026-08-20 六亲接入（应何人断：干上神乘天将与日干生克五断，东方朔卷之二）
+        result['liuqin_duanyu'] = ''
+        result['liuqin_struct'] = {}
+        try:
+            from liuqin_engine import liuqin_judge
+            _gs_lq = sike or []
+            _gan_s_lq = _gs_lq[0][1] if _gs_lq and len(_gs_lq[0]) > 1 else ''
+            # 现排天将（局部 sike 无天将列，result['sike'] 在后方才组装）
+            _gan_tj_lq = ''
+            try:
+                from engine.gui_ren_engine import GuiRenCalculator
+                _tjm_lq = GuiRenCalculator().arrange_gui_ren_pan(ri_gan, {'天地对应': tiandi_pan}, shichen).get('天将映射', {})
+                _gan_tj_lq = _tjm_lq.get(_gan_s_lq, '')
+            except Exception:
+                _gan_tj_lq = ''
+            _lq_an = liuqin_judge(ri_gan, _gan_tj_lq)
+            result['liuqin_struct'] = _lq_an
+            if _lq_an.get('断'):
+                result['liuqin_duanyu'] = "六亲[" + _lq_an['将'] + _lq_an['关系'] + "]：" + _lq_an['断']
+        except Exception:
+            pass
 
         # ── 三流派扩展：斗首 / 演禽（惰性导入 + 异常隔离，单家挂不影响其余）──
         sizhu4 = {'年柱': f'{nian_gan}{nian_zhi}', '月柱': f'{yue_gan}{yue_zhi}',
