@@ -62,8 +62,32 @@ def fa_sanchuan_hechong(rg, rz, sanchuan):
     return ''
 
 
-def fa_taisui_chonghe(tai_sui_zhi, ben_ming_zhi='', ben_ming_age=0):
-    """③ 太岁/行年冲合年：当年（太岁）应；冲太岁之年应动；行年（本命+岁数）冲合之年应。"""
+def infer_sex(text: str) -> str:
+    """性别从求测人身份推断（古籍惯例：看求测何事即知男女）。
+    占妻/妾/妇/室→男（为己测妻）；占夫/婿→女；功名仕宦科举→男（古代皆男子为之）。
+    文本不明 → ''（行年不启用，不臆造）。"""
+    t = str(text or '')
+    if any(k in t for k in ('妻', '妾', '妇', '婢', '室')):
+        return '男'
+    if any(k in t for k in ('夫', '婿', '郎君')):
+        return '女'
+    if any(k in t for k in ('官', '仕', '任', '赴任', '差委', '科', '试', '举')):
+        return '男'
+    return ''
+
+
+def xing_nian_zhen(ben_ming_zhi: str, age: int, sex: str) -> str:
+    """真行年：男命一岁起丙寅顺数（寅顺推 age-1）；女命一岁起壬申逆行（申逆推 age-1）。
+    《六壬大全》行年例："男一岁起丙寅，女一岁起壬申"。"""
+    if ben_ming_zhi not in _ZHI or not age or age < 1 or sex not in ('男', '女'):
+        return ''
+    if sex == '男':
+        return _ZHI[(_ZHI.index('寅') + (age - 1)) % 12]
+    return _ZHI[(_ZHI.index('申') - (age - 1)) % 12]
+
+
+def fa_taisui_chonghe(tai_sui_zhi, ben_ming_zhi='', ben_ming_age=0, sex='', text=''):
+    """③ 太岁/行年冲合年：当年（太岁）应；冲太岁之年应动；真行年（男女分起）冲合之年应。"""
     if tai_sui_zhi not in _ZHI:
         return ''
     lines = [f'太岁{tai_sui_zhi}：当年应']
@@ -75,10 +99,11 @@ def fa_taisui_chonghe(tai_sui_zhi, ben_ming_zhi='', ben_ming_age=0):
             _age = int(ben_ming_age)
         except Exception:
             _age = 0
-        if _age and _age >= 1:
-            bi = _ZHI.index(ben_ming_zhi)
-            xn = _ZHI[(bi + _age - 1) % 12]  # 行年：男一岁起丙寅……近似取本命顺推
-            lines.append(f'行年{xn}：值{xn}年应，冲{_CHONG.get(xn, "")}之年应动')
+        _sex = sex if sex in ('男', '女') else infer_sex(text)
+        if _age and _age >= 1 and _sex:
+            xn = xing_nian_zhen(ben_ming_zhi, _age, _sex)
+            if xn:
+                lines.append(f'行年{xn}（{_sex}命{_age}岁起{("丙寅顺数" if _sex == "男" else "壬申逆行")}）：值{xn}年应，冲{_CHONG.get(xn, "")}之年应动')
     return '太岁行年法：' + '；'.join(lines) + '（疏正例"至辛亥年十月方得身动"——冲合填实之年）'
 
 
@@ -108,9 +133,38 @@ def fa_leishen_suchi(sanchuan, wangshuai_fn=None, yuejiang=''):
     return speed + '（《六壬大全·旺相休囚死》"类神旺相应期在月内；休囚月后；死绝年外"）'
 
 
+def fa_wangdao_shichen(zhanlei, sanchuan, leishen='', sike=None, tdp=None):
+    """⑤ 亡盗/失物时辰+方位级应期：类神临四孟→当日速获；临四仲→数日中获；临四季→旬月迟获。
+    出处：疏正亡盗案"申牌后于厕坑左右寻得"（庚辰日，类神申为孟支，当日申时寻得）、
+    "炉下寻见"（己丑）、"东方园内羊群中寻见"（己卯）——失物以类神临孟仲季断速迟。"""
+    if str(zhanlei or '') not in ('亡盗', '六畜走失', '走失', '失物', '贼盗'):
+        return ''
+    ys = str(leishen or '')
+    if ys not in _ZHI and sanchuan:
+        ys = str(sanchuan[0] or '')
+    if ys not in _ZHI:
+        return ''
+    if ys in ('寅', '申', '巳', '亥'):
+        spd = f'失物应期：类神{ys}临四孟，主当日速获（疏正亡盗例庚辰日类神申"申牌后于厕坑左右寻得"——孟支当日应）'
+    elif ys in ('子', '午', '卯', '酉'):
+        spd = f'失物应期：类神{ys}临四仲，主数日方获'
+    else:
+        spd = f'失物应期：类神{ys}临四季，主旬月迟获'
+    # 方位联动（fangwei 引擎：类神加临方位）
+    try:
+        from fangwei_engine_v7 import leishen_jia_fang
+        r = leishen_jia_fang(ys, sike, tdp, sanchuan)
+        fw = (r or {}).get('叙事') or (r or {}).get('方位') or ''
+        if fw:
+            spd += '；寻方：' + str(fw)[:60]
+    except Exception:
+        pass
+    return spd
+
+
 def yingqi_v2(ri_gan, ri_zhi, sanchuan, tiandi_pan=None, si_ke=None, shichen='',
               tai_sui_zhi='', zhanlei='其他', zishu='', ben_ming_zhi='', ben_ming_age=0,
-              wangshuai_fn=None, yuejiang='') -> str:
+              sex='', text='', leishen='', wangshuai_fn=None, yuejiang='') -> str:
     """应期增强总输出：原三法（支数/月建/太岁临身）由调用方 get_yingqi_unified 提供；
     本函数追加四法块（填实日/合冲日/太岁冲合年/类神速迟）。返回追加文本。"""
     blocks = []
@@ -120,12 +174,15 @@ def yingqi_v2(ri_gan, ri_zhi, sanchuan, tiandi_pan=None, si_ke=None, shichen='',
     t2 = fa_sanchuan_hechong(ri_gan, ri_zhi, sanchuan)
     if t2:
         blocks.append(t2)
-    t3 = fa_taisui_chonghe(tai_sui_zhi, ben_ming_zhi, ben_ming_age)
+    t3 = fa_taisui_chonghe(tai_sui_zhi, ben_ming_zhi, ben_ming_age, sex=sex, text=text)
     if t3:
         blocks.append(t3)
     t4 = fa_leishen_suchi(sanchuan, wangshuai_fn, yuejiang)
     if t4:
         blocks.append(t4)
+    t5 = fa_wangdao_shichen(zhanlei, sanchuan, leishen=leishen, sike=si_ke, tdp=tiandi_pan)
+    if t5:
+        blocks.append(t5)
     return '\n'.join(blocks)
 
 
