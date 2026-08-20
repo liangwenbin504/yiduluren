@@ -1537,6 +1537,39 @@ def _build_zonghe_piyu(result, zetiri_type='立碑'):
         wen.append('禄马发传，应命应年详见白话')
         bai.append('要訣應人應期（两因字是大窍）：' + '；'.join(_yq_sents))
 
+    # ⑨ 巧取法（2026-08-20 张九仪"巧在马而兼贵/妙在贵而兼禄"：三吉同支=兼格，应命尤速）
+    _gui_z9 = (_ddx8.get('guiren') or {}).get('guiren_zhi') or []
+    _GUI_GAN = {'甲': {'丑', '未'}, '乙': {'子', '申'}, '丙': {'亥', '酉'}, '丁': {'亥', '酉'}, '戊': {'丑', '未'},
+                '己': {'子', '申'}, '庚': {'丑', '未'}, '辛': {'午', '寅'}, '壬': {'巳', '卯'}, '癸': {'巳', '卯'}}
+    _shan_gan9 = str(result.get('mountain') or result.get('shan_jia') or '')
+    _DUI24 = {'壬': '丙', '子': '午', '癸': '丁', '丑': '未', '艮': '坤', '寅': '申', '甲': '庚', '卯': '酉',
+              '乙': '辛', '辰': '戌', '巽': '乾', '巳': '亥', '丙': '壬', '午': '子', '丁': '癸', '未': '丑',
+              '坤': '艮', '申': '寅', '庚': '甲', '酉': '卯', '辛': '乙', '戌': '辰', '乾': '巽', '亥': '巳'}
+    _xiang_gan9 = _DUI24.get(_shan_gan9, '')
+    _gui_shanxiang = set()
+    for _g in (_shan_gan9, _xiang_gan9):
+        if _g in _GUI_GAN:
+            _gui_shanxiang |= _GUI_GAN.get(_g, set())
+    _jian = []
+    _tdp9 = result.get('tiandi_pan') or {}
+    if _hm8.get('huo_ma') and _ma_z8 and _ma_z8 in (_gui_z9 + list(_gui_shanxiang)):
+        _src = '日贵' if _ma_z8 in _gui_z9 else '山向之贵'
+        _jian.append(f'马神{_ma_z8}兼{_src}（马而兼贵）——{_ma_z8}命人发福尤速（要诀"论寅日则以申为马，论乙向兼以申为贵，马而兼贵"）')
+    if _hm8.get('huo_lu') and _lu_z8 and _lu_z8 in (_gui_z9 + list(_gui_shanxiang)):
+        _src = '日贵' if _lu_z8 in _gui_z9 else '山向之贵'
+        _jian.append(f'禄神{_lu_z8}兼{_src}（贵而兼禄）——{_lu_z8}命人发福尤速（要诀"论壬日固以亥为禄，论丁山又以亥为贵人，贵而兼禄"）')
+    if _hm8.get('huo_ma') and _ma_z8 and _tdp9:
+        _lin_d = next((d for d, t in _tdp9.items() if t == _ma_z8), '')
+        if _lin_d and _lin_d != _ma_z8:
+            _jian.append(f'活马{_ma_z8}加临{_lin_d}宫（不在本宫——巧取"辛山乙向"之类迎之方得）')
+    if _hm8.get('huo_lu') and _lu_z8 and _tdp9:
+        _lin_d2 = next((d for d, t in _tdp9.items() if t == _lu_z8), '')
+        if _lin_d2 and _lin_d2 != _lu_z8:
+            _jian.append(f'活禄{_lu_z8}加临{_lin_d2}宫（巧取"丁山癸向"之类乘之方得）')
+    if _jian:
+        wen.append('马兼贵禄，巧取见白话')
+        bai.append('要訣巧取（马兼贵/贵兼禄）：' + '；'.join(_jian))
+
     bai.append(f'综合评分{score}分（{grade or "未评"}），{tail_bai}')
 
     wen = [str(x).rstrip('。，,、；;') for x in wen if x]
