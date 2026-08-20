@@ -1570,6 +1570,19 @@ def _build_zonghe_piyu(result, zetiri_type='立碑'):
         wen.append('马兼贵禄，巧取见白话')
         bai.append('要訣巧取（马兼贵/贵兼禄）：' + '；'.join(_jian))
 
+    # ⑩ 五吉时（要诀"取元辰时，五吉时内己巳为优"——时柱斗首化气为吉星之时辰）
+    _wjs = result.get('wujishi') or {}
+    _wj_ji = _wjs.get('吉时') or []
+    if _wj_ji:
+        _cur_shi = str(result.get('shichen') or '') + '时'
+        _ji_names = '、'.join(f"{r['时']}{r['星曜']}" for r in _wj_ji[:5])
+        if any(r['时'] == _cur_shi for r in _wj_ji):
+            wen.append('所选时辰合五吉时')
+            bai.append(f'五吉时：所选{_cur_shi}合吉时（{_ji_names}等）——时辰得吉星，天机灵动')
+        else:
+            wen.append('所选时辰非五吉时，宜改择')
+            bai.append(f'五吉时：所选{_cur_shi}非吉时，宜选{_ji_names}等（要诀"取元辰时，五吉时内己巳为优；取武财时，五吉时内甲辰最善"）')
+
     bai.append(f'综合评分{score}分（{grade or "未评"}），{tail_bai}')
 
     wen = [str(x).rstrip('。，,、；;') for x in wen if x]
@@ -1720,6 +1733,22 @@ def api_zeri_analyze():
                 result['liuqin_duanyu'] = "六亲[" + _lq_an['将'] + _lq_an['关系'] + "]：" + _lq_an['断']
         except Exception:
             pass
+
+        # 2026-08-20 五吉时引擎（要诀"取元辰时，五吉时内己巳为优"——时柱斗首化气为吉星之时辰）
+        result['wujishi'] = {'吉时': [], '叙事': ''}
+        try:
+            from wujishi_engine import wujishi
+            _SHAN_DX = {'壬': '土', '子': '土', '巽': '土', '巳': '土', '辛': '土', '戌': '土',
+                        '癸': '火', '丑': '火', '丙': '火', '午': '火', '乾': '火', '亥': '火',
+                        '艮': '木', '寅': '木', '丁': '木', '未': '木',
+                        '坤': '水', '申': '水', '甲': '水', '卯': '水',
+                        '乙': '金', '辰': '金', '庚': '金', '酉': '金'}
+            _mnt9 = str(mountain or '')
+            _shan_wx9 = _SHAN_DX.get(_mnt9, '')
+            _wj = wujishi(ri_gan, _shan_wx9) if _shan_wx9 else {'吉时': [], '叙事': ''}
+            result['wujishi'] = _wj
+        except Exception:
+            result['wujishi'] = {'吉时': [], '叙事': ''}
 
         # ── 三流派扩展：斗首 / 演禽（惰性导入 + 异常隔离，单家挂不影响其余）──
         sizhu4 = {'年柱': f'{nian_gan}{nian_zhi}', '月柱': f'{yue_gan}{yue_zhi}',
