@@ -1851,12 +1851,23 @@ def api_zeri_analyze():
                 si_ke=result.get('sike', []),
                 shichen=shichen, tai_sui_zhi=nian_zhi, zhanlei=zhanlei,
             )
-            # 2026-08-20 应期增强四法（旬空填实日/三传合冲日/太岁冲合年/类神速迟）——
-            # 疏正43案回测：古籍应期主流为干支年/干支日，原三法仅"到月"不够
+            # 2026-08-20 应期增强四法（旬空填实日/三传合冲日/太岁冲合年/类神速迟+亡盗时辰方位）——
+            # 疏正127案回测：古籍应期主流为干支年/干支日，原三法仅"到月"不够
+            _zt_an = (request.values.get('zetiri_type', '') or '')
+            _ls_eff = ''
+            try:
+                from leishen_engine_v5 import leishen_from_text
+                _ls_eff = leishen_from_text(f'{_zt_an} {zhanlei} {date_str}') or ''
+            except Exception:
+                _ls_eff = ''
             _yq_v2 = yingqi_v2(
                 ri_gan, ri_zhi, _yq_sc,
-                tai_sui_zhi=nian_zhi,
+                tai_sui_zhi=nian_zhi, zhanlei=zhanlei,
                 ben_ming_zhi=ben_ming_zhi, ben_ming_age=_bm_age,
+                sex=_bm_sex,
+                text=f'{_zt_an} {zhanlei} {date_str} {shichen}',
+                leishen=_ls_eff,
+                si_ke=result.get('sike', []), tiandi_pan=result.get('tiandi_pan', {}),
                 wangshuai_fn=_ws_yq, yuejiang=yuejiang,
             )
             result['yingqi'] = '\n'.join(x for x in (_yq_base, _yq_v2) if x)
