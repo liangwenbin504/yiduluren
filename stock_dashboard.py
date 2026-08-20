@@ -1708,7 +1708,13 @@ def api_zeri_analyze():
             from zeri_hecan_bridge2 import zeri_hecan_eval
             _zt_an = request.values.get('zetiri_type', '') or ''
             result['hecan'] = zeri_hecan_eval(ri_gan, ri_zhi, sike, sanchuan, _tjm,
-                                              raw.get('课体', ''), yuejiang, _zt_an)
+                                              raw.get('课体', ''), yuejiang, _zt_an,
+                                              sizhu=sizhu,
+                                              shan_wx=({'壬': '土', '子': '土', '巽': '土', '巳': '土', '辛': '土', '戌': '土',
+                                                        '癸': '火', '丑': '火', '丙': '火', '午': '火', '乾': '火', '亥': '火',
+                                                        '艮': '木', '寅': '木', '丁': '木', '未': '木',
+                                                        '坤': '水', '申': '水', '甲': '水', '卯': '水',
+                                                        '乙': '金', '辰': '金', '庚': '金', '酉': '金'}.get(str(mountain or ''), '')))
         except Exception:
             result['hecan'] = {'hits': [], 'narr': '', '警告': [], '佐证': [], 'zeri_rules': {'hits': [], 'narr': ''}}
 
@@ -4358,7 +4364,8 @@ def _build_zeri_candidate(env, current, shichen, sizhu):
     try:
         from zeri_hecan_bridge2 import zeri_hecan_eval
         _tjm_c = locals().get('_tjm') or {}
-        _hecan = zeri_hecan_eval(ri_gan, ri_zhi, _sike4, _sc3, _tjm_c, _keti, _yj, zetiri_type)
+        _hecan = zeri_hecan_eval(ri_gan, ri_zhi, _sike4, _sc3, _tjm_c, _keti, _yj, zetiri_type,
+                                 sizhu=sizhu, shan_wx=str(_ds.get('山家五行', '') or ''))
     except Exception:
         _hecan = {'hits': [], 'narr': '', '警告': [], '佐证': [], 'zeri_rules': {'hits': [], 'narr': ''}}
 

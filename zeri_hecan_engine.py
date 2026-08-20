@@ -28,7 +28,7 @@ def zeri_type_class(zetiri_type: str) -> str:
     return '其他'
 
 
-def zeri_signals(keti: str, zetiri_type: str) -> dict:
+def zeri_signals(keti: str, zetiri_type: str, sizhu: dict = None, shan_wx: str = '') -> dict:
     """择日合参信号：课体键 + 类型键（全部可计算）。"""
     sig = {}
     ks = str(keti or '')
@@ -37,6 +37,41 @@ def zeri_signals(keti: str, zetiri_type: str) -> dict:
     cls = zeri_type_class(zetiri_type)
     for k in ('出行', '动土', '安葬', '上任', '开业', '考试', '婚嫁', '立碑', '催龙补气', '其他'):
         sig['类型_' + k] = cls == k
+    # 斗首四柱星曜信号（2026-08-20 注解2实战案例：四廉/破鬼把门/三武一元等，需 sizhu+山家五行）
+    for k in ('斗首_四柱全廉', '斗首_年柱破鬼', '斗首_月柱武财', '斗首_日时柱元辰武财',
+              '斗首_一破鬼两支生旺', '斗首_两破鬼一支生旺', '斗首_三武一元', '斗首_廉子一位无贪官',
+              '斗首_双廉休囚元辰弱', '日支_冲山', '日支_冲月建'):
+        sig[k] = False
+    try:
+        _sizhu = sizhu or {}
+        _shan_wx = shan_wx or ''
+        _STAR = {
+            ('土', '土'): '元辰', ('土', '金'): '廉贞', ('土', '水'): '武财', ('土', '木'): '破鬼', ('土', '火'): '贪官',
+            ('金', '金'): '元辰', ('金', '水'): '廉贞', ('金', '木'): '武财', ('金', '火'): '破鬼', ('金', '土'): '贪官',
+            ('水', '水'): '元辰', ('水', '木'): '廉贞', ('水', '火'): '武财', ('水', '土'): '破鬼', ('水', '金'): '贪官',
+            ('木', '木'): '元辰', ('木', '火'): '廉贞', ('木', '土'): '武财', ('木', '金'): '破鬼', ('木', '水'): '贪官',
+            ('火', '火'): '元辰', ('火', '土'): '廉贞', ('火', '金'): '武财', ('火', '水'): '破鬼', ('火', '木'): '贪官'}
+        _HUQI = {'甲': '土', '己': '土', '乙': '金', '庚': '金', '丙': '水', '辛': '水',
+                 '丁': '木', '壬': '木', '戊': '火', '癸': '火'}
+        _stars = []
+        for _col, _alt in (('年', '年柱'), ('月', '月柱'), ('日', '日柱'), ('时', '时柱')):
+            _gz = str(_sizhu.get(_col, _sizhu.get(_alt, '')))
+            if len(_gz) >= 2:
+                _stars.append(_STAR.get((_shan_wx, _HUQI.get(_gz[0], '')), ''))
+        _stars = [s for s in _stars if s]
+        sig['斗首_四柱全廉'] = len(_stars) == 4 and all(s == '廉贞' for s in _stars)
+        sig['斗首_年柱破鬼'] = bool(_stars) and _stars[0] == '破鬼'
+        sig['斗首_月柱武财'] = len(_stars) > 1 and _stars[1] == '武财'
+        sig['斗首_日时柱元辰武财'] = len(_stars) > 2 and _stars[2] in ('元辰', '武财') and _stars[3] in ('元辰', '武财')
+        n_po = _stars.count('破鬼')
+        n_sheng = sum(1 for _g in _stars if _g in ('武财', '元辰'))
+        sig['斗首_一破鬼两支生旺'] = n_po == 1 and n_sheng >= 2
+        sig['斗首_两破鬼一支生旺'] = n_po >= 2 and n_sheng >= 1
+        sig['斗首_三武一元'] = _stars.count('武财') >= 3 and _stars.count('元辰') >= 1
+        sig['斗首_廉子一位无贪官'] = _stars.count('廉贞') == 1 and _stars.count('贪官') == 0
+        sig['斗首_双廉休囚元辰弱'] = _stars.count('廉贞') >= 2 and _stars.count('元辰') <= 1
+    except Exception:
+        pass
     return sig
 
 
