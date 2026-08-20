@@ -28,8 +28,67 @@ def zeri_type_class(zetiri_type: str) -> str:
     return '其他'
 
 
-def zeri_signals(keti: str, zetiri_type: str, sizhu: dict = None, shan_wx: str = '') -> dict:
-    """择日合参信号：课体键 + 类型键（全部可计算）。"""
+# ── 通用查表（2026-08-20 第二批注解2实战案例：禄马贵/旬空/三传美格/贪官制化）──
+_LU10 = {'甲': '寅', '乙': '卯', '丙': '巳', '丁': '午', '戊': '巳', '己': '午',
+         '庚': '申', '辛': '酉', '壬': '亥', '癸': '子'}
+_MA12 = {'申': '寅', '子': '寅', '辰': '寅', '寅': '申', '午': '申', '戌': '申',
+         '巳': '亥', '酉': '亥', '丑': '亥', '亥': '巳', '卯': '巳', '未': '巳'}
+_GUI10 = {'甲': {'丑', '未'}, '乙': {'子', '申'}, '丙': {'亥', '酉'}, '丁': {'亥', '酉'},
+          '戊': {'丑', '未'}, '己': {'子', '申'}, '庚': {'丑', '未'}, '辛': {'午', '寅'},
+          '壬': {'巳', '卯'}, '癸': {'巳', '卯'}}
+_CH12 = {'子': '午', '午': '子', '丑': '未', '未': '丑', '寅': '申', '申': '寅',
+         '卯': '酉', '酉': '卯', '辰': '戌', '戌': '辰', '巳': '亥', '亥': '巳'}
+_HE12 = {'子': '丑', '丑': '子', '寅': '亥', '亥': '寅', '卯': '戌', '戌': '卯',
+         '辰': '酉', '酉': '辰', '巳': '申', '申': '巳', '午': '未', '未': '午'}
+_SANHE = {'寅': ('午', '戌'), '午': ('戌', '寅'), '戌': ('寅', '午'),
+          '申': ('子', '辰'), '子': ('辰', '申'), '辰': ('申', '子'),
+          '巳': ('酉', '丑'), '酉': ('丑', '巳'), '丑': ('巳', '酉'),
+          '亥': ('卯', '未'), '卯': ('未', '亥'), '未': ('亥', '卯')}
+_ZHI_WX = {'寅': '木', '卯': '木', '巳': '火', '午': '火', '申': '金', '酉': '金',
+           '亥': '水', '子': '水', '辰': '土', '戌': '土', '丑': '土', '未': '土'}
+_WX_SHENG = {'木': '火', '火': '土', '土': '金', '金': '水', '水': '木'}
+# 十二长生生旺位（阳长生态：长生/临官/帝旺——注解2实例"生寅旺午""旺卯养戌胎酉"口径）
+_WX_SHENGWEI = {'木': ('亥', '寅', '卯'), '火': ('寅', '巳', '午'), '土': ('寅', '巳', '午'),
+                '金': ('巳', '申', '酉'), '水': ('申', '亥', '子')}
+_GZ60 = ['甲乙丙丁戊己庚辛壬癸'[i % 10] + '子丑寅卯辰巳午未申酉戌亥'[i % 12] for i in range(60)]
+
+
+def _xun_kong_of(gan: str, zhi: str):
+    """日柱干支 → 所在旬空亡二支（按 60 干支序号定位，勿用字符下标）。"""
+    gz = str(gan) + str(zhi)
+    try:
+        idx = _GZ60.index(gz)
+    except ValueError:
+        return set()
+    base = (idx // 10) * 10
+    return {_GZ60[(base + 10) % 60][1], _GZ60[(base + 11) % 60][1]}
+
+
+def _shan_xiang_gui(shan: str, xiang: str = ''):
+    """山向贵支集合：干山取干贵、支山以山支为贵位（"丑山作甲戊庚命贵人"），卦山无干不取。"""
+    out = set()
+    if str(shan or '') in _GUI10:
+        out |= _GUI10[str(shan)]
+    elif str(shan or '') in _CH12:
+        out.add(str(shan))
+    if str(xiang or '') in _GUI10:
+        out |= _GUI10[str(xiang)]
+    elif str(xiang or '') in _CH12:
+        out.add(str(xiang))
+    return out
+
+
+def _shan_lu(shan: str):
+    """山家禄支：干山取干禄（"癸山禄居子"），支山/卦山无禄。"""
+    return _LU10.get(str(shan or ''), '')
+
+
+def zeri_signals(keti: str, zetiri_type: str, sizhu: dict = None, shan_wx: str = '',
+                 shan: str = '', xiang: str = '', sanchuan=None,
+                 ri_gan: str = '', ri_zhi: str = '', ming: str = '') -> dict:
+    """择日合参信号：课体键 + 类型键 + 斗首四柱星曜 + 禄马贵/旬空/三传美格。
+    2026-08-20 第二批：注解2 五~四章实战案例（两破鬼两支生旺损妻/星陷马空/贪官制化/
+    拱禄拱贵/山贵同日禄/龙德课/真朱雀/十三美格），全部可计算、全部出自书例。"""
     sig = {}
     ks = str(keti or '')
     for k in _KETI_KEYS:
@@ -37,10 +96,19 @@ def zeri_signals(keti: str, zetiri_type: str, sizhu: dict = None, shan_wx: str =
     cls = zeri_type_class(zetiri_type)
     for k in ('出行', '动土', '安葬', '上任', '开业', '考试', '婚嫁', '立碑', '催龙补气', '其他'):
         sig['类型_' + k] = cls == k
-    # 斗首四柱星曜信号（2026-08-20 注解2实战案例：四廉/破鬼把门/三武一元等，需 sizhu+山家五行）
     for k in ('斗首_四柱全廉', '斗首_年柱破鬼', '斗首_月柱武财', '斗首_日时柱元辰武财',
               '斗首_一破鬼两支生旺', '斗首_两破鬼一支生旺', '斗首_三武一元', '斗首_廉子一位无贪官',
-              '斗首_双廉休囚元辰弱', '日支_冲山', '日支_冲月建'):
+              '斗首_双廉休囚元辰弱',
+              '斗首_两破鬼两支生旺', '斗首_破鬼休囚', '斗首_年柱贪官', '斗首_贪官重见',
+              '斗首_四柱全贪官', '斗首_贪官生元辰', '斗首_年贪月廉', '斗首_年贪月元',
+              '斗首_两印夹一元', '斗首_日时柱贪破', '斗首_廉贪并坐', '斗首_武财旺',
+              '斗首_元辰旺', '斗首_日时柱元辰',
+              '日支_冲山', '日支_冲向', '日支_冲月建',
+              '禄马_犯旬空', '禄马_均不落旬空', '日柱_坐禄马',
+              '主命禄马_犯旬空', '主命禄马_不空坐日柱',
+              '山贵_同日禄', '山禄贵_同太岁', '山禄贵_发传', '三传贵_落旬空',
+              '拱日禄', '三传_禄马贵全备', '三传_连续相生', '三传_二贵',
+              '三传_午卯子', '三传_斩轮铸印', '四柱_六合在课', '真朱雀_乘传'):
         sig[k] = False
     try:
         _sizhu = sizhu or {}
@@ -53,23 +121,125 @@ def zeri_signals(keti: str, zetiri_type: str, sizhu: dict = None, shan_wx: str =
             ('火', '火'): '元辰', ('火', '土'): '廉贞', ('火', '金'): '武财', ('火', '水'): '破鬼', ('火', '木'): '贪官'}
         _HUQI = {'甲': '土', '己': '土', '乙': '金', '庚': '金', '丙': '水', '辛': '水',
                  '丁': '木', '壬': '木', '戊': '火', '癸': '火'}
-        _stars = []
+        _gz_list = []
         for _col, _alt in (('年', '年柱'), ('月', '月柱'), ('日', '日柱'), ('时', '时柱')):
             _gz = str(_sizhu.get(_col, _sizhu.get(_alt, '')))
             if len(_gz) >= 2:
-                _stars.append(_STAR.get((_shan_wx, _HUQI.get(_gz[0], '')), ''))
-        _stars = [s for s in _stars if s]
+                _gz_list.append(_gz)
+            else:
+                _gz_list.append('')
+        _stars = [_STAR.get((_shan_wx, _HUQI.get(g[0], '')), '') for g in _gz_list if g]
+        _zhis = [g[1] for g in _gz_list if g]
         sig['斗首_四柱全廉'] = len(_stars) == 4 and all(s == '廉贞' for s in _stars)
         sig['斗首_年柱破鬼'] = bool(_stars) and _stars[0] == '破鬼'
         sig['斗首_月柱武财'] = len(_stars) > 1 and _stars[1] == '武财'
         sig['斗首_日时柱元辰武财'] = len(_stars) > 2 and _stars[2] in ('元辰', '武财') and _stars[3] in ('元辰', '武财')
         n_po = _stars.count('破鬼')
-        n_sheng = sum(1 for _g in _stars if _g in ('武财', '元辰'))
-        sig['斗首_一破鬼两支生旺'] = n_po == 1 and n_sheng >= 2
-        sig['斗首_两破鬼一支生旺'] = n_po >= 2 and n_sheng >= 1
+        # 破鬼生旺支数：四柱地支落在破鬼化气生旺位（长生/临官/帝旺）的个数——注解2
+        # "两破鬼生寅旺午"（火长生寅帝旺午）、"破鬼火死酉病申败卯墓戌…无一个扶助"口径
+        _po_wx = ''
+        for _g, _s in zip(_gz_list, _stars):
+            if _s == '破鬼' and _g:
+                _po_wx = _HUQI.get(_g[0], '')
+                break
+        _po_sw = _WX_SHENGWEI.get(_po_wx, ())
+        n_po_sheng = sum(1 for z in _zhis if z in _po_sw)
+        sig['斗首_一破鬼两支生旺'] = n_po == 1 and n_po_sheng >= 2
+        sig['斗首_两破鬼一支生旺'] = n_po >= 2 and n_po_sheng >= 1
+        sig['斗首_两破鬼两支生旺'] = n_po >= 2 and n_po_sheng >= 2
+        sig['斗首_破鬼休囚'] = n_po >= 1 and n_po_sheng == 0
         sig['斗首_三武一元'] = _stars.count('武财') >= 3 and _stars.count('元辰') >= 1
         sig['斗首_廉子一位无贪官'] = _stars.count('廉贞') == 1 and _stars.count('贪官') == 0
         sig['斗首_双廉休囚元辰弱'] = _stars.count('廉贞') >= 2 and _stars.count('元辰') <= 1
+        # 第八章太岁遇贪官系列
+        n_tan = _stars.count('贪官')
+        sig['斗首_年柱贪官'] = bool(_stars) and _stars[0] == '贪官'
+        sig['斗首_贪官重见'] = n_tan >= 2
+        sig['斗首_四柱全贪官'] = len(_stars) == 4 and n_tan == 4
+        _tan_wx = ''
+        for _g, _s in zip(_gz_list, _stars):
+            if _s == '贪官' and _g:
+                _tan_wx = _HUQI.get(_g[0], '')
+                break
+        sig['斗首_贪官生元辰'] = bool(_tan_wx) and _WX_SHENG.get(_tan_wx, '') == _shan_wx
+        sig['斗首_年贪月廉'] = len(_stars) > 1 and _stars[0] == '贪官' and _stars[1] == '廉贞'
+        sig['斗首_年贪月元'] = len(_stars) > 1 and _stars[0] == '贪官' and _stars[1] == '元辰'
+        sig['斗首_两印夹一元'] = (len(_stars) > 3 and _stars[1] == '武财' and _stars[2] == '元辰'
+                                  and _stars[3] == '武财')
+        sig['斗首_日时柱贪破'] = len(_stars) > 2 and (_stars[2] in ('贪官', '破鬼') or _stars[3] in ('贪官', '破鬼'))
+        sig['斗首_廉贪并坐'] = _stars.count('廉贞') >= 2 and n_tan >= 2
+        sig['斗首_武财旺'] = any(_s == '武财' and z in _WX_SHENGWEI.get(_HUQI.get(g[0], ''), ())
+                                 for g, _s, z in zip(_gz_list, _stars, _zhis))
+        sig['斗首_元辰旺'] = any(_s == '元辰' and z in _WX_SHENGWEI.get(_HUQI.get(g[0], ''), ())
+                                 for g, _s, z in zip(_gz_list, _stars, _zhis))
+        sig['斗首_日时柱元辰'] = len(_stars) > 3 and _stars[2] == '元辰' and _stars[3] == '元辰'
+        # 日支冲山/向/月建（要诀禁忌：日支与山家相冲=冲山）
+        _rg = str(ri_gan or '')
+        _rz = str(ri_zhi or '')
+        if not _rz and _gz_list and len(_gz_list) > 2:
+            _rz = _gz_list[2][1] if _gz_list[2] else ''
+        _xiang = xiang or _CH12.get(str(shan or ''), '')
+        _yue_zhi = (_gz_list[1][1] if len(_gz_list) > 1 and _gz_list[1] else '')
+        if _rz:
+            sig['日支_冲山'] = bool(shan) and _rz == _CH12.get(str(shan), '')
+            sig['日支_冲向'] = bool(_xiang) and _rz == _CH12.get(str(_xiang), '')
+            sig['日支_冲月建'] = bool(_yue_zhi) and _rz == _CH12.get(_yue_zhi, '')
+            # 旬空（以日柱定旬——"四柱皆是甲辰旬中，空亡寅卯"）
+            _day_gz = (_gz_list[2] if len(_gz_list) > 2 else '') or ''
+            if not _rg and _day_gz:
+                _rg = _day_gz[0]
+            if not _rz and _day_gz:
+                _rz = _day_gz[1]
+            _kw = _xun_kong_of(_rg, _rz)
+            _lu = _LU10.get(_rg, '')
+            _ma = _MA12.get(_rz, '')
+            sig['禄马_犯旬空'] = bool(_kw) and ((_lu in _kw) or (_ma in _kw))
+            sig['禄马_均不落旬空'] = bool(_kw) and bool(_lu) and bool(_ma) and (_lu not in _kw) and (_ma not in _kw)
+            sig['日柱_坐禄马'] = bool(_rz) and (_rz == _lu or _rz == _ma)
+            # 主命禄马（注解2六/七：甲子命禄马寅落甲辰旬空→考退前程；甲申命庚寅日不空坐日柱→官至太守）
+            _mg = str(ming or '')
+            if len(_mg) >= 2 and _mg[0] in _LU10 and _mg[1] in _MA12 and _kw:
+                _mlu = _LU10.get(_mg[0], '')
+                _mma = _MA12.get(_mg[1], '')
+                sig['主命禄马_犯旬空'] = (_mlu in _kw) or (_mma in _kw)
+                sig['主命禄马_不空坐日柱'] = (_mlu not in _kw) and (_mma not in _kw) and _rz in (_mlu, _mma)
+            # 四柱含日支六合（注解2"卯戌六合不能化解卯酉相冲"）
+            sig['四柱_六合在课'] = bool(_rz) and bool(_HE12.get(_rz, '')) and _HE12.get(_rz, '') in _zhis
+        # 山向贵禄与三传
+        _sc = ([sanchuan.get('初传', ''), sanchuan.get('中传', ''), sanchuan.get('末传', '')]
+               if isinstance(sanchuan, dict) else list(sanchuan or []))
+        _sc = [str(z) for z in _sc if z]
+        _gui_sx = _shan_xiang_gui(shan, _xiang)
+        _lu_ri = _LU10.get(_rg, '')
+        if _gui_sx and _lu_ri:
+            sig['山贵_同日禄'] = _lu_ri in _gui_sx
+        _nian_zhi = (_gz_list[0][1] if _gz_list and _gz_list[0] else '')
+        _sl = _shan_lu(shan)
+        if _nian_zhi:
+            sig['山禄贵_同太岁'] = _nian_zhi in (_gui_sx | ({_sl} if _sl else set()))
+        if _sc and _gui_sx:
+            sig['山禄贵_发传'] = bool(set(_sc) & (_gui_sx | ({_sl} if _sl else set())))
+        if _sc and _rz:
+            _kw2 = _xun_kong_of(_rg, _rz)
+            _gui_all = (_GUI10.get(_rg, set()) | _gui_sx)
+            sig['三传贵_落旬空'] = bool(_kw2) and any(z in _kw2 and z in _gui_all for z in _sc)
+        if _lu_ri and _zhis and _lu_ri in _SANHE:
+            _gong = _SANHE[_lu_ri]
+            sig['拱日禄'] = _lu_ri not in _zhis and all(x in _zhis for x in _gong)
+        if _sc and _lu_ri:
+            _ma_ri = _MA12.get(_rz, '')
+            _gui_ri = _GUI10.get(_rg, set())
+            sig['三传_禄马贵全备'] = _lu_ri in _sc and bool(_ma_ri) and _ma_ri in _sc and bool(set(_sc) & _gui_ri)
+            if len(_sc) == 3:
+                wx = [_ZHI_WX.get(z, '') for z in _sc]
+                ok = all(wx)
+                sig['三传_连续相生'] = ok and ((_WX_SHENG.get(wx[0], '') == wx[1] and _WX_SHENG.get(wx[1], '') == wx[2])
+                                               or (_WX_SHENG.get(wx[2], '') == wx[1] and _WX_SHENG.get(wx[1], '') == wx[0]))
+                sig['三传_二贵'] = ok and _gui_ri and _gui_ri <= set(_sc)
+                sig['三传_午卯子'] = set(_sc) == {'午', '卯', '子'}
+                sig['三传_斩轮铸印'] = set(_sc) == {'卯', '戌', '巳'}
+                # 真朱雀：日干贵支含申者（乙己）自申贵逆数朱雀到午（注解2第十章四）
+                sig['真朱雀_乘传'] = bool(_gui_ri & {'申'}) and '午' in _sc
     except Exception:
         pass
     return sig
