@@ -1323,8 +1323,18 @@ def _grade_wen(g, ok_w, mid_w, bad_w):
     return mid_w
 
 
+def _pat_txt(p):
+    """格局对象 → '名称（吉凶）'。"""
+    if isinstance(p, dict):
+        name = str(p.get('格局名称', p.get('name', '')) or '')
+        jx = str(p.get('吉凶', '') or '')
+        return (name + ('（' + jx + '）' if jx else '')) if name else str(p)[:24]
+    return str(p)
+
+
 def _build_zonghe_piyu(result, zetiri_type='立碑'):
-    """斗首/演禽/六壬 → {wen: 文言主批语, bai: 白话括注, detail: {流派明细}}"""
+    """斗首/演禽/六壬 → {wen: 文言主批语, bai: 白话详批, detail: 流派明细}
+    深度版（2026-08-20）：每家分"等级句 + 古籍断语 + 格局/星曜 + 应期/合参"——引擎产出吃透，不空泛。"""
     wen = []
     bai = []
     detail = {}
@@ -1332,41 +1342,63 @@ def _build_zonghe_piyu(result, zetiri_type='立碑'):
     # ① 斗首
     ds = result.get('doushou_full') or {}
     if isinstance(ds, dict) and 'error' not in ds:
-        ds_dy = _pick_first(ds.get('duanyu') or [])
-        ds_pat = _pick_first(ds.get('patterns') or [])
+        ds_dys = [str(x).strip() for x in (ds.get('duanyu') or []) if str(x).strip()][:2]
+        ds_pats = [_pat_txt(x) for x in (ds.get('patterns') or [])][:2]
         ds_grade = ds.get('grade') or ''
-        ds_shan = ds.get('shan_wuxing') or ''
-        if ds_grade or ds_dy or ds_pat:
-            ds_wen = _grade_wen(ds_grade, '斗首得令，山家獲吉', '斗首平穩，山家中和', '斗首失令，山家欠吉')
-            wen.append(ds_wen)
-            ds_bai = ds_dy or ds_pat or (f'综合评分{ds.get("score", "")}分（{ds_grade or "未评"}）' if ds.get('score') else (ds_grade or '未评'))
-            bai.append(f'斗首：{ds_bai}')
-            detail['doushou'] = {'wen': ds_wen, 'bai': ds_bai, 'grade': ds_grade, 'shan_wuxing': ds_shan}
+        stars = ds.get('sizhu_stars') or {}
+        _XIONG_XING = ('破鬼', '贪官', '元辰')
+        _JI_XING = ('武财', '廉贞')
+        star_bad = [f'{k}{v.get("星曜", "")}' for k, v in stars.items() if str(v.get('星曜', '')) in _XIONG_XING]
+        star_good = [f'{k}{v.get("星曜", "")}' for k, v in stars.items() if str(v.get('星曜', '')) in _JI_XING]
+        ds_wen = _grade_wen(ds_grade, '斗首得令，山家获吉', '斗首平稳，山家中和', '斗首失令，山家欠吉')
+        if star_bad and ('失令' in ds_wen or '平稳' in ds_wen):
+            ds_wen += '，' + '、'.join(star_bad[:2]) + '为忌'
+        elif star_good:
+            ds_wen += '，' + '、'.join(star_good[:2]) + '为用'
+        wen.append(ds_wen)
+        b_parts = []
+        if ds_dys:
+            b_parts.append('古籍断曰：' + '；'.join(ds_dys))
+        if ds_pats:
+            b_parts.append('课格：' + '、'.join(ds_pats))
+        if stars:
+            b_parts.append('四柱星曜：' + '、'.join(f'{k}{v.get("星曜", "")}' for k, v in list(stars.items())[:4]))
+        bai.append('斗首：' + '。'.join(b_parts))
+        detail['doushou'] = {'wen': ds_wen, 'duanyu': ds_dys, 'patterns': ds_pats, 'stars': stars, 'grade': ds_grade}
 
     # ② 演禽
     yq = result.get('yanqin_full') or {}
     if isinstance(yq, dict) and 'error' not in yq:
-        yq_dy = _pick_first(yq.get('duanyu') or [])
-        yq_pat = _pick_first(yq.get('patterns') or [])
-        yq_grade = yq.get('grade') or ''
-        yq_score = yq.get('score')
+        yq_dys = [str(x).strip() for x in (yq.get('duanyu') or []) if str(x).strip()][:2]
+        yq_pats = [_pat_txt(x) for x in (yq.get('patterns') or [])][:2]
+        yq_grade = yq.get('grade') or yq.get('吉凶等级') or ''
         yq_po = yq.get('po_gong') or ''
-        yq_xiu = _pick_first(yq.get('xiu_jixiong') or [])
-        if yq_grade or yq_dy or yq_pat:
-            yq_wen = _grade_wen(yq_grade, '演禽入垣，星辰拱照', '演禽中平，星辰相安', '演禽失位，星辰欠照')
-            wen.append(yq_wen)
-            yq_bai = yq_dy or yq_pat or (f'综合评分{yq_score}分（{yq_grade or "未评"}）' if yq_score else (yq_grade or '未评'))
-            if yq_po:
-                yq_bai += f'（泊宫：{_po_gong_txt(yq_po)}）'
-            bai.append(f'演禽：{yq_bai}')
-            detail['yanqin'] = {'wen': yq_wen, 'bai': yq_bai, 'po_gong': _po_gong_txt(yq_po)}
+        yq_xj = yq.get('xiu_jixiong') or {}
+        yq_wen = _grade_wen(yq_grade, '演禽入垣，星辰拱照', '演禽中平，星辰相安', '演禽失位，星辰欠照')
+        if yq_pats:
+            yq_wen += '，' + '、'.join(yq_pats[:2])
+        wen.append(yq_wen)
+        b_parts = []
+        if yq_dys:
+            b_parts.append('古籍断曰：' + '；'.join(yq_dys))
+        if yq_pats:
+            b_parts.append('格局：' + '、'.join(yq_pats))
+        if yq_po:
+            b_parts.append('泊宫：' + _po_gong_txt(yq_po))
+        if yq_xj:
+            b_parts.append('宿曜吉凶：' + '、'.join(f'{k}{v}' for k, v in list(yq_xj.items())[:4] if v))
+        bai.append('演禽：' + '。'.join(b_parts))
+        detail['yanqin'] = {'wen': yq_wen, 'duanyu': yq_dys, 'patterns': yq_pats, 'po_gong': _po_gong_txt(yq_po), 'grade': yq_grade}
 
-    # ③ 六壬（grade → 古法短句 + 课体 + 命中格局名；summary 是技术摘要不灌入文言）
+    # ③ 六壬（课体判定依据 + 毕法断法原文 + 十三吉课 + 占类断语 + 应期）
     sc = result.get('sanchuan') or {}
     keti = sc.get('课体') or ''
-    kege = sc.get('课格列表') or []
-    bifa = sc.get('毕法赋命中') or []
     gong_names = [p.get('name', '') for p in (result.get('gong_patterns') or []) if p.get('name')]
+    kj = result.get('keti_judged') or []
+    bj = (result.get('bifa_judged') or {}).get('断法') or []
+    jk = (result.get('jike_13') or {}).get('hits') or []
+    yq_str = str(result.get('yingqi') or '')
+    zl_lines = (result.get('zhanlei_duanyu') or {}).get('duanyu_lines') or []
     _lr_grade = result.get('grade') or ''
     _lr_score = result.get('score')
     if _lr_grade or keti or gong_names:
@@ -1376,13 +1408,24 @@ def _build_zonghe_piyu(result, zetiri_type='立碑'):
         if gong_names:
             lr_wen += f'，{"、".join(gong_names[:3])}並見'
         wen.append(lr_wen)
-        lr_bai = f'六壬：{_lr_score}分（{_lr_grade or "未评"}）'
-        if kege:
-            lr_bai += f'，課格：{"、".join(str(x) for x in kege[:3])}'
-        if bifa:
-            lr_bai += f'，畢法賦：{bifa[0]}'
-        bai.append(lr_bai)
-        detail['liuren'] = {'wen': lr_wen, 'bai': lr_bai, 'keti': keti, 'kege': kege, 'gong_names': gong_names}
+        b_parts = [f'六壬：{_lr_score}分（{_lr_grade or "未评"}）']
+        if kj:
+            b_parts.append('課體判定：' + '；'.join(
+                f'{x.get("課体", x.get("课体", ""))}（{str(x.get("依据", ""))[:26]}）' for x in kj[:4]))
+        if bj:
+            b_parts.append('畢法賦：' + '；'.join(
+                f'【{x.get("法句", "")}】{str(x.get("断法依据", ""))[:72]}' for x in bj[:2]))
+        if jk:
+            b_parts.append('十三吉課：' + '、'.join(str(x) for x in jk))
+        if zl_lines:
+            _zl = [l for l in zl_lines if str(l).strip() and not str(l).startswith('◆')][:2]
+            if _zl:
+                b_parts.append('占類要訣：' + '；'.join(str(x)[:56] for x in _zl))
+        if yq_str:
+            b_parts.append('應期：' + yq_str.replace('\n', '；')[:160])
+        bai.append('。'.join(b_parts))
+        detail['liuren'] = {'wen': lr_wen, 'keti': keti, 'keti_judged': kj, 'bifa_duanfa': bj[:2],
+                            'jike_13': jk, 'yingqi': yq_str}
 
     # ④ 总断（评分 + 等级 + 类型落点）
     score = result.get('score')
@@ -1391,7 +1434,6 @@ def _build_zonghe_piyu(result, zetiri_type='立碑'):
     wen.append(tail_wen)
     bai.append(f'综合评分{score}分（{grade or "未评"}），{tail_bai}')
 
-    # 清洗片段尾部标点（句号/逗号），统一用逗号连接
     wen = [str(x).rstrip('。，,、；;') for x in wen if x]
 
     return {
@@ -1559,6 +1601,7 @@ def api_zeri_analyze():
                     'po_gong': _yq.get('泊宫', {}),
                     'patterns': _yq.get('格局判定', []),
                     'score': _yq.get('综合评分', 0),
+                    'grade': _yqa.get_score_description(_yq.get('综合评分', 0)),
                     'duanyu': _yq.get('吉凶断语', []),
                     'riqin_algo': 'sxtwl精算',
                     'qiyuan': _yq.get('七元演禽', {}),
