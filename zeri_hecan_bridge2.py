@@ -36,7 +36,8 @@ def zeri_zhanlei(zetiri_type: str) -> str:
 
 def zeri_hecan_eval(ri_gan: str, ri_zhi: str, sike, sanchuan, tianjiang_map: dict,
                     keti: str, yuejiang: str, zetiri_type: str = '',
-                    sizhu: dict = None, shan_wx: str = '') -> dict:
+                    sizhu: dict = None, shan_wx: str = '',
+                    shan: str = '', xiang: str = '', ming: str = '') -> dict:
     """择日单课合参评估。sanchuan 可为 dict({'初传'..}) 或 list；返回
     {'hits': [{id,结论,叙事,出处}...], 'narr': 拼接判语, '警告': 凶规则判语列表, '佐证': 吉规则判语列表}。"""
     try:
@@ -56,10 +57,13 @@ def zeri_hecan_eval(ri_gan: str, ri_zhi: str, sike, sanchuan, tianjiang_map: dic
         zr = {'hits': [], 'narr': ''}
         try:
             from zeri_hecan_engine import zeri_signals as _zs, zeri_hecan_judge as _zj
-            _zsig = _zs(keti, zetiri_type, sizhu=sizhu, shan_wx=shan_wx)
+            _zsig = _zs(keti, zetiri_type, sizhu=sizhu, shan_wx=shan_wx,
+                        shan=shan, xiang=xiang, sanchuan=sanchuan,
+                        ri_gan=ri_gan, ri_zhi=ri_zhi, ming=ming)
             _zout = _zj(_zsig)
-            zr['hits'] = [{'id': o['id'], '结论': o['结论'], '叙事': o['叙事'], '出处': o['出处']} for o in _zout[:2]]
-            zr['narr'] = '；'.join("择日合参[%s]：%s（%s）" % (o['id'], o['叙事'], o['出处']) for o in _zout[:2])
+            _ztop = _zout[:6]
+            zr['hits'] = [{'id': o['id'], '结论': o['结论'], '叙事': o['叙事'], '出处': o['出处']} for o in _ztop]
+            zr['narr'] = '；'.join("择日合参[%s]：%s（%s）" % (o['id'], o['叙事'], o['出处']) for o in _ztop)
         except Exception:
             zr = {'hits': [], 'narr': ''}
         return {
