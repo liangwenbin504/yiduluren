@@ -1258,10 +1258,7 @@ tbody tr:hover { background:#f8f9ff; }
           <label>日期</label>
           <input id="zeriDate" type="date">
         </div>
-        <div style="display:none;">
-          <label>坐山</label>
-          <select id="zeriMountain"></select>
-        </div>
+        <div style="margin:8px 0;"><label style="color:#a5b4fc;">坐山</label><select id="zeriMountain" onchange="zeriOnTypeChange()" style="width:100%;background:#1e1e3a;color:#e2e8f0;border:1px solid #3a3a6a;border-radius:6px;padding:6px;"></select></div>
         <div id="zeriLailongRow" style="display:none;">
           <label>来龙（二十四山）</label>
           <select id="zeriLailong"></select>
@@ -2122,6 +2119,22 @@ function plRenderDetail(d, dateStr, shichen, it) {
   // 综合批语栏（斗首/演禽/六壬 → 文言主批语 + 白话括注，普通人看得懂）
   var zp = d.zonghe_piyu || {};
   // 古籍合参警示层（2026-08-19：后端 hecan 字段，警示/佐证/择日合参三栏）
+  // 应期结构化卡片（2026-08-20：粒度徽标+法门+文本）
+  if (d.yingqi_struct && d.yingqi_struct.length) {
+    var GRAN_COL = {'日': '#22c55e', '旬': '#a78bfa', '月': '#60a5fa', '年': '#f59e0b', '速迟': '#f472b6', '方位': '#34d399'};
+    html += '<div style="margin:8px 0;padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid #3a3a6a;border-radius:8px;">';
+    html += '<div style="font-size:13px;font-weight:600;color:#8ea2ff;margin-bottom:6px;">⏳ 应期（何时应验）</div>';
+    for (var qi = 0; qi < d.yingqi_struct.length; qi++) {
+      var it = d.yingqi_struct[qi] || {};
+      var gc = GRAN_COL[it.粒度] || '#94a3b8';
+      html += '<div style="margin:4px 0;padding:5px 8px;background:rgba(30,30,58,.6);border-radius:6px;display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;">';
+      html += '<span style="flex:none;font-size:11px;color:#fff;background:' + gc + ';border-radius:4px;padding:1px 6px;">' + (it.粒度 || '') + '</span>';
+      html += '<span style="flex:none;font-size:12px;color:#c4b5fd;">' + (it.法 || '') + '</span>';
+      html += '<span style="font-size:12px;color:#e0e0e0;line-height:1.55;min-width:0;">' + (it.文本 || '') + '</span>';
+      html += '</div>';
+    }
+    html += '</div>';
+  }
   var hc = d.hecan || {};
   var warns = hc['警告'] || [];
   var proofs = hc['佐证'] || [];
@@ -4247,6 +4260,14 @@ var TYPE_TO_ZHANLEI = {
 var ZERI_YINZHAI = ['立碑','安葬','阴宅动土','迁坟','催龙补气','召山买土'];
 // 单课联动：选择日类型 → 隐藏无关选项
 function zeriOnTypeChange() {
+  // 2026-08-19：指定日 tab 坐山/类型改动反向同步顶部配置卡（双控件一致）
+  try {
+    var zm = document.getElementById('zeriMountain');
+    if (zm && document.getElementById('zMountain')) document.getElementById('zMountain').value = zm.value;
+    var zt = document.getElementById('zeriZetiriType');
+    if (zt && document.getElementById('zType')) document.getElementById('zType').value = zt.value;
+  } catch (e) {}
+
   var t = document.getElementById('zeriZetiriType').value;
   var isYin = (ZERI_YINZHAI.indexOf(t) >= 0);
   document.getElementById('zeriLailongRow').style.display = isYin ? 'block' : 'none';
@@ -4602,8 +4623,23 @@ function openZeriModal(pai) {
       body += '<div style="margin-top:8px;padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid #3a3a6a;border-radius:8px;">' +
         '<div style="font-size:12px;font-weight:600;color:#8ea2ff;margin-bottom:4px;">🐘 神将类象（应属相·应物）</div>' + lxHtml + '</div>';
     }
-    // ── 应期（支数法+月建法+太岁法；何时应验，非吉凶方向）──
-    if (d.yingqi) {
+    // ── 应期（结构化卡片：粒度徽标 + 法门 + 文本；何时应验，非吉凶方向）──
+    if (d.yingqi_struct && d.yingqi_struct.length) {
+      var GRAN_COL = {'日': '#22c55e', '旬': '#a78bfa', '月': '#60a5fa', '年': '#f59e0b', '速迟': '#f472b6', '方位': '#34d399'};
+      body += '<div style="margin-top:8px;padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid #3a3a6a;border-radius:8px;">';
+      body += '<div style="font-size:12px;font-weight:600;color:#8ea2ff;margin-bottom:6px;">⏳ 应期（何时应验）</div>';
+      for (var qi = 0; qi < d.yingqi_struct.length; qi++) {
+        var it = d.yingqi_struct[qi] || {};
+        var gc = GRAN_COL[it.粒度] || '#94a3b8';
+        body += '<div style="margin:4px 0;padding:5px 8px;background:rgba(30,30,58,.6);border-radius:6px;">' +
+          '<div style="display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;">' +
+          '<span style="flex:none;font-size:11px;color:#fff;background:' + gc + ';border-radius:4px;padding:1px 6px;">' + (it.粒度 || '') + '</span>' +
+          '<span style="flex:none;font-size:12px;color:#c4b5fd;">' + (it.法 || '') + '</span>' +
+          '<span style="font-size:12px;color:#e0e0e0;line-height:1.55;white-space:pre-wrap;min-width:0;">' + (it.文本 || '') + '</span>' +
+          '</div></div>';
+      }
+      body += '</div>';
+    } else if (d.yingqi) {
       body += '<div style="margin-top:8px;padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid #3a3a6a;border-radius:8px;">' +
         '<div style="font-size:12px;font-weight:600;color:#8ea2ff;margin-bottom:4px;">⏳ 应期（何时应验）</div>' +
         '<div style="font-size:12px;color:#e0e0e0;white-space:pre-wrap;line-height:1.6;">' + d.yingqi + '</div>' +
