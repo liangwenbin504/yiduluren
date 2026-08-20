@@ -162,6 +162,61 @@ def fa_wangdao_shichen(zhanlei, sanchuan, leishen='', sike=None, tdp=None):
     return spd
 
 
+def _xun_shouwei(rg, rz):
+    """日干支所在旬：返回（旬首支, 旬尾支）。甲子旬→(子,亥)；甲戌旬→(戌,酉)…"""
+    if rg not in '甲乙丙丁戊己庚辛壬癸' or rz not in _ZHI:
+        return '', ''
+    shou_i = (_ZHI.index(rz) - '甲乙丙丁戊己庚辛壬癸'.index(rg)) % 12
+    return _ZHI[shou_i], _ZHI[(shou_i + 9) % 12]
+
+
+def _gan_zhi_shang(sike):
+    """四课 → (干上神, 支上神)。兼容 tuple/dict 两种四课格式。"""
+    gan = zhi = ''
+    for i, k in enumerate(sike or []):
+        us = ''
+        if isinstance(k, (list, tuple)) and len(k) >= 2:
+            us = str(k[1])
+        elif isinstance(k, dict):
+            us = str(k.get('上神', ''))
+        if i == 0:
+            gan = us
+        if i == 2:
+            zhi = us
+    return gan, zhi
+
+
+def fa_xun_ji(rg, rz, sanchuan, sike=None):
+    """⑥ 旬级应期（疏正18案旬语境归纳）：
+    ① 旬空出旬：旬内空亡不应，出旬填实/冲动方应；
+    ② 干上旬尾+支上旬首 = 一旬周遍格（周而复始，首起尾止）；
+    ③ 旬尾加旬首 = 闭口（旬内难言难成，出旬方动）。
+    出处：疏正例"甲子旬亥戌空亡…虚名文学""甲申旬未乃空亡，渐次脱去"
+    "旬首加旬尾，乃周而复始格""干上旬尾支上旬首，为一旬周遍格，来了又去"
+    "甲申旬末，故闭口不能言也""旬末加旬首，名闭口，仕途不通"。"""
+    if rg not in '甲乙丙丁戊己庚辛壬癸' or rz not in _ZHI:
+        return ''
+    shou, wei = _xun_shouwei(rg, rz)
+    if not shou:
+        return ''
+    lines = []
+    # ① 旬空出旬
+    kw = sorted(_xunkong(rg, rz))
+    if kw:
+        lines.append('旬空出旬：旬空%s本旬不应；出旬后值%s之日填实而应，冲动值%s之日亦应（疏正例"甲申旬未乃空亡，渐次脱去"）'
+                     % ('、'.join(kw), '、'.join(kw), '、'.join(_CHONG.get(x, '') for x in kw)))
+    # ②③ 干上旬尾/支上旬首
+    gan_s, zhi_s = _gan_zhi_shang(sike)
+    if gan_s == wei and zhi_s == shou:
+        lines.append(f'干上旬尾{wei}加支上旬首{shou}：一旬周遍格，周而复始——应于值{shou}（旬首）之期起、值{wei}（旬尾）之期止；'
+                     f'兼旬尾加旬首闭口之象，旬内难言难成，出旬方动（疏正例"干上旬尾支上旬首，一旬周遍格，来了又去"、"旬末加旬首，名闭口"）')
+    elif gan_s == wei:
+        lines.append(f'干上旬尾{wei}：事近旬终，值{wei}之日应止，出旬方启新事')
+    elif zhi_s == shou:
+        lines.append(f'支上旬首{shou}：事起旬首，值{shou}之日应起')
+    return '旬级应期法：' + '；'.join(lines)
+
+
 def yingqi_v2(ri_gan, ri_zhi, sanchuan, tiandi_pan=None, si_ke=None, shichen='',
               tai_sui_zhi='', zhanlei='其他', zishu='', ben_ming_zhi='', ben_ming_age=0,
               sex='', text='', leishen='', wangshuai_fn=None, yuejiang='') -> str:
@@ -183,6 +238,9 @@ def yingqi_v2(ri_gan, ri_zhi, sanchuan, tiandi_pan=None, si_ke=None, shichen='',
     t5 = fa_wangdao_shichen(zhanlei, sanchuan, leishen=leishen, sike=si_ke, tdp=tiandi_pan)
     if t5:
         blocks.append(t5)
+    t6 = fa_xun_ji(ri_gan, ri_zhi, sanchuan, sike=si_ke)
+    if t6:
+        blocks.append(t6)
     return '\n'.join(blocks)
 
 
