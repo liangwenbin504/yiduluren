@@ -66,6 +66,14 @@ _WX_CS12 = {
 _WX_WEI_NAMES = ('长生', '沐浴', '冠带', '临官', '帝旺', '衰', '病', '死', '墓', '绝', '胎', '养')
 # 休囚位集合（注解2"死酉病申败卯墓戌"：败即沐浴）
 _XIUQIU = {'沐浴', '衰', '病', '死', '墓', '绝'}
+# 六相支=长生冠带临官帝旺胎养；六替支=沐浴衰病死墓绝（注解1第三章六相六替诀）
+_XIANG_WEI = ('长生', '冠带', '临官', '帝旺', '胎', '养')
+# 文昌速查（注解1第四章五："甲丙文昌在巳猴，乙丁在午酉戊申。已酉庚亥辛子位，壬寅癸卯食禄荣"）
+_WENCHANG = {'甲': '巳', '乙': '午', '丙': '申', '丁': '酉', '戊': '申',
+             '己': '酉', '庚': '亥', '辛': '子', '壬': '寅', '癸': '卯'}
+# 红鸾（逆行起例：子卯丑寅…；天喜=红鸾对宫——注解1第四章六"祈子传家，生气元廉抱天喜"）
+_HONGLUAN = {'子': '卯', '丑': '寅', '寅': '丑', '卯': '子', '辰': '亥', '巳': '戌',
+             '午': '酉', '未': '申', '申': '未', '酉': '午', '戌': '巳', '亥': '辰'}
 
 
 def _wx_position(wx: str, zhi: str) -> str:
@@ -143,7 +151,12 @@ def zeri_signals(keti: str, zetiri_type: str, sizhu: dict = None, shan_wx: str =
               '斗首_破鬼坐死绝', '斗首_双廉休囚', '斗首_廉子入墓',
               '斗首_元辰弱', '斗首_年贪官休囚',
               '斗首_廉子坐禄贵生旺', '斗首_廉子年月生旺', '斗首_廉子坐休囚',
-              '斗首_日时柱贪官'):
+              '斗首_日时柱贪官',
+              '斗首_四柱全元辰', '斗首_三元一武', '斗首_三元一廉', '斗首_二元二武',
+              '斗首_两元夹一廉', '斗首_岁日夹战', '斗首_破鬼月',
+              '斗首_贪破居六相', '斗首_凶宜在外', '斗首_元辰居墓绝',
+              '斗首_元武贴命禄马', '斗首_元武加命',
+              '文昌_入课', '天喜_入课', '拱日贵', '建贵', '禄马贵三秀'):
         sig[k] = False
     try:
         _sizhu = sizhu or {}
@@ -241,6 +254,73 @@ def zeri_signals(keti: str, zetiri_type: str, sizhu: dict = None, shan_wx: str =
             sig['斗首_廉子年月生旺'] = bool(_lian_ym) and all(z in _lian_sheng_wei for z in _lian_ym)
         # 日时柱贪官（书"日时又遇贪官"——与日时柱贪破（含破鬼）区分）
         sig['斗首_日时柱贪官'] = len(_stars) > 2 and (_stars[2] == '贪官' or _stars[3] == '贪官')
+        # ── 2026-08-21 注解1第三批：第四章元辰诀六用 + 第三章六相六替诀 ──
+        _n_yuan = _stars.count('元辰')
+        _n_wu = _stars.count('武财')
+        _n_lian = _stars.count('廉贞')
+        sig['斗首_四柱全元辰'] = len(_stars) == 4 and _n_yuan == 4
+        sig['斗首_三元一武'] = _n_yuan == 3 and _n_wu == 1
+        sig['斗首_三元一廉'] = _n_yuan == 3 and _n_lian == 1
+        sig['斗首_二元二武'] = _n_yuan == 2 and _n_wu == 2
+        _s0 = _stars[0] if _stars else ''
+        _s1 = _stars[1] if len(_stars) > 1 else ''
+        _s2 = _stars[2] if len(_stars) > 2 else ''
+        _s3 = _stars[3] if len(_stars) > 3 else ''
+        sig['斗首_两元夹一廉'] = _s0 == '元辰' and _s1 == '廉贞' and _s2 == '元辰'
+        sig['斗首_岁日夹战'] = _s0 == '元辰' and _s1 == '贪官' and _s2 == '元辰'
+        sig['斗首_破鬼月'] = _s1 == '破鬼'
+        # 贪破居六相支（"贪狼和破鬼居在六相的地支上便能生灾祸了"）
+        _tp_zhis = [g[1] for g, _s in zip(_gz_list, _stars) if _s in ('贪官', '破鬼') and g]
+        _tp_wx = ''
+        for _g, _s in zip(_gz_list, _stars):
+            if _s in ('贪官', '破鬼') and _g:
+                _tp_wx = _HUQI.get(_g[0], '')
+                break
+        sig['斗首_贪破居六相'] = bool(_tp_zhis) and bool(_tp_wx) and any(
+            _wx_position(_tp_wx, z) in _XIANG_WEI for z in _tp_zhis)
+        # 凶宜在外：贪破只在年月、日时必元武（"唯求二凶在年月，日时断要元武"）
+        sig['斗首_凶宜在外'] = (len(_stars) == 4 and (_s0 in ('贪官', '破鬼') or _s1 in ('贪官', '破鬼'))
+                                and _s2 in ('元辰', '武财') and _s3 in ('元辰', '武财'))
+        # 元辰居墓绝（"元廉居墓绝，人才不得兴"）
+        _y_zhis = [g[1] for g, _s in zip(_gz_list, _stars) if _s == '元辰' and g]
+        _y_wx = ''
+        for _g, _s in zip(_gz_list, _stars):
+            if _s == '元辰' and _g:
+                _y_wx = _HUQI.get(_g[0], '')
+                break
+        sig['斗首_元辰居墓绝'] = bool(_y_zhis) and bool(_y_wx) and any(
+            _wx_position(_y_wx, z) in ('墓', '绝') for z in _y_zhis)
+        # 财马贴元辰/元武逢岁驾：本山元武加本命禄马支/本命支（第四章三/四）
+        _mgd = str(ming or '')
+        if len(_mgd) >= 2 and _mgd[1] in _MA12:
+            _yw_zhis = [g[1] for g, _s in zip(_gz_list, _stars) if _s in ('元辰', '武财') and g]
+            _m_lu = _LU10.get(_mgd[0], '')
+            _m_ma = _MA12.get(_mgd[1], '')
+            sig['斗首_元武贴命禄马'] = bool(_yw_zhis) and (bool(_m_lu) and _m_lu in _yw_zhis
+                                                          or bool(_m_ma) and _m_ma in _yw_zhis)
+            sig['斗首_元武加命'] = bool(_yw_zhis) and _mgd[1] in _yw_zhis
+        # 贵人会文昌：命干文昌优先、日干兜底（"甲午命以巳为文昌…造屋会元及第"）
+        _wc_g = (_mgd[0] if len(_mgd) >= 2 and _mgd[0] in _WENCHANG else '') or _rg
+        if _wc_g in _WENCHANG and _zhis:
+            sig['文昌_入课'] = _WENCHANG[_wc_g] in _zhis
+        # 生气元廉抱天喜：主命天喜支（红鸾对宫）入四柱
+        if len(_mgd) >= 2 and _mgd[1] in _HONGLUAN:
+            _tx = _CH12.get(_HONGLUAN[_mgd[1]], '')
+            sig['天喜_入课'] = bool(_tx) and _tx in _zhis
+        # 拱贵建贵（"癸未癸亥名拱卯贵。癸卯癸巳名建贵"——日干/命干贵支）
+        _gui_all2 = set(_GUI10.get(_rg, set()))
+        if len(_mgd) >= 2 and _mgd[0] in _GUI10:
+            _gui_all2 |= _GUI10[_mgd[0]]
+        if _gui_all2 and _zhis:
+            sig['建贵'] = bool(set(_zhis) & _gui_all2)
+            sig['拱日贵'] = any(g in _SANHE and g not in _zhis and all(x in _zhis for x in _SANHE[g])
+                                for g in _gui_all2)
+        # 禄马贵三秀（"取卯年为壬命建贵，取亥月壬命建禄，取申日为午命建马。三秀俱全"）
+        if len(_mgd) >= 2 and _mgd[0] in _LU10 and _mgd[1] in _MA12:
+            _m3_lu = _LU10.get(_mgd[0], '')
+            _m3_ma = _MA12.get(_mgd[1], '')
+            _m3_gui = _GUI10.get(_mgd[0], set())
+            sig['禄马贵三秀'] = bool(_m3_lu) and _m3_lu in _zhis and bool(_m3_ma) and _m3_ma in _zhis                                 and bool(_m3_gui & set(_zhis))
         # 元辰衰弱（柱数近似：≤1柱——待样本复核的"元辰又衰弱"口径）
         sig['斗首_元辰弱'] = _stars.count('元辰') <= 1
         # 年柱贪官坐休囚支（书"贪官止一位在年休囚"）
