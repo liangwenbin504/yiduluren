@@ -46,18 +46,20 @@ def build_judge_env(ri_gan, ri_zhi, nian_zhi, yue_zhi, yuejiang,
     except Exception:
         pass
 
-    # 农历月/日 + 节气
+    # 农历月/日 + 节气（2026-08-21 修复：y=0 无效日期不得调 sxtwl.fromSolar(0,0,0)，
+    # 否则产生错乱农历月（如 11 月→冬），导致 qike 手工起课（无日期）毕法季节错判）
     lm = ld = 0
     jieqi = ''
-    try:
-        import sxtwl as _sx
-        _lunar = _sx.fromSolar(y, m, d)
-        lm = _lunar.getLunarMonth()
-        ld = _lunar.getLunarDay()
-        if _lunar.hasJieQi():
-            jieqi = _lunar.getJieQi()
-    except Exception:
-        pass
+    if y > 0 and m > 0 and d > 0:
+        try:
+            import sxtwl as _sx
+            _lunar = _sx.fromSolar(y, m, d)
+            lm = _lunar.getLunarMonth()
+            ld = _lunar.getLunarDay()
+            if _lunar.hasJieQi():
+                jieqi = _lunar.getJieQi()
+        except Exception:
+            pass
 
     season = _season_by_lunar_month(lm)
     is_day = shichen in ('卯', '辰', '巳', '午', '未', '申')

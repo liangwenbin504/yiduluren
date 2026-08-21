@@ -2467,6 +2467,7 @@ def api_qike():
             sex = p.get('sex', '')
             tai_sui = p.get('tai_sui', '')
             zhanlei_param = p.get('zhanlei', '其他')
+            date_param = p.get('date', '')
         else:
             ri_gan = request.args.get('ri_gan', '')
             ri_zhi = request.args.get('ri_zhi', '')
@@ -2479,6 +2480,7 @@ def api_qike():
             sex = request.args.get('sex', '')
             tai_sui = request.args.get('tai_sui', '')
             zhanlei_param = request.args.get('zhanlei', '其他')
+            date_param = request.args.get('date', '')
 
         if not all([ri_gan, ri_zhi, yue_jiang, shi_chen]):
             return jsonify({'success': False,
@@ -2605,15 +2607,34 @@ def api_qike():
                 sc['课格列表'] = []
         else:
             sc['课格列表'] = []
-        if _BFD:
+        # 2026-08-21 统一口径（前后端一致性）：毕法赋与 /api/zeri/analyze 同走 judge_orchestrator；
+        # 四课补天将列（analyze 同款，前端 ke[3] 展示天将；judge_bifa 依赖 sike 天将判断干上/支上乘将）
+        if sike and _tj_ys:
             try:
-                _br = _BFD().detect(sc_list, ri_gan=ri_gan, ri_zhi=ri_zhi,
-                                   ganzhi=ri_gan + ri_zhi, yuejiang=yue_jiang, si_ke_info=sike,
-                                   tian_jiang=_tj_ys, keti=sc.get('课体', ''))
-                sc['毕法赋命中'] = _br.get('匹配法条', [])
+                sike = [[k[0], k[1], k[2], _tj_ys.get(k[1], '') or ''] for k in sike]
             except Exception:
-                sc['毕法赋命中'] = []
-        else:
+                pass
+        try:
+            from engine.judge_orchestrator import build_judge_env as _bje_q, judge_all as _jall_q
+            _tj3l_q = [_tj_ys.get(c, '') for c in sc_list]
+            _bm_z = ben_ming[1] if isinstance(ben_ming, str) and len(ben_ming) >= 2 else ''
+            _qy = _qm = _qd = 0
+            if isinstance(date_param, str) and len(date_param) >= 10:
+                try:
+                    _qy, _qm, _qd = int(date_param[:4]), int(date_param[5:7]), int(date_param[8:10])
+                except (ValueError, TypeError):
+                    _qy = _qm = _qd = 0
+            _env_q = _bje_q(ri_gan, ri_zhi, tai_sui or '', '', yue_jiang,
+                            sike, sc_list, sc.get('课体', ''), _tj_ys, tdp,
+                            shi_chen, zhanlei=zhanlei_param,
+                            ben_ming_zhi=_bm_z,
+                            ben_ming_age=(str(age).strip() if str(age).strip().isdigit() else ''),
+                            ben_ming_sex=sex if sex in ('男', '女') else '男',
+                            y=_qy, m=_qm, d=_qd, sanchuan_tianjiang=_tj3l_q)
+            _jres_q = _jall_q(_env_q)
+            _bfq = (_jres_q.get('bifa_judged') or {}).get('匹配法句', []) or []
+            sc['毕法赋命中'] = [x.get('name', x) if isinstance(x, dict) else x for x in _bfq]
+        except Exception as _e_bfq:
             sc['毕法赋命中'] = []
         _stem_list, _ganzhi_list, _liuqin_list, _kw_list = [], [], [], []
         for c in sc_list:
