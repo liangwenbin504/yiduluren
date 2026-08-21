@@ -1914,19 +1914,43 @@ class BiFaDetector:
 
     def _check_rule_67(self, ri_gan: str, sanchuan: List[str], gan_shang: str, zhi_shang: str, tian_jiang: Optional[Dict] = None):
         """第67法: 受虎克神为病症
-        白虎所乘地支五行对应被克脏腑:
-        金乘虎→肝(金克木), 木乘虎→脾(木克土), 水乘虎→心(水克火), 火乘虎→肺(火克金), 土乘虎→肾(土克水)
+        古籍注解（毕法赋_古籍注解_下 第六七，脏腑口径=神之所克）：
+        "金神乘白虎，必是肝经受病，可治肺而不可治肝。木神乘白虎，必是脾经受病…
+        水→心、火→肺、土→肾。受虎克之国民流兵疫。"
+        【2026-08-21 修复（用户指正"辰为子孙乘白虎不算受虎克神"）】：
+        ① 范围：只查课传六处（三传+干上+支上），不再全盘扫描天将（原实现任何支乘白虎即触发，
+           天盘无关支也报病）；
+        ② 正格：神受虎克者方名"受虎克神为病症"——白虎属庚申金，金克木，木神乘虎为正受虎克；
+           其余五行乘虎为变格"虎乘X神，X经受病"（古籍注解明列五神，不属正格但仍作脏腑提示）；
+        ③ 六亲辅助：神为日干官鬼者病难速愈（古籍"白虎乘日鬼而作空亡，必已病而未瘥"），
+           为子孙（制虎之神）者可疗（68法"制鬼之位乃良医"）。
         """
         if not tian_jiang:
             return
         organ_map = {'金': '肝', '木': '脾', '水': '心', '火': '肺', '土': '肾'}
-        for zhi, jiang in tian_jiang.items():
-            if jiang == '白虎':
-                wx = ZHI_WUXING.get(zhi, '')
-                organ = organ_map.get(wx, '')
-                if organ:
-                    self._add_rule(67, f'白虎乘{zhi}({wx}神)，{organ}经受病，受虎克神为病症')
-                    return
+        check_positions = list(sanchuan or [])
+        for _p in (gan_shang, zhi_shang):
+            if _p:
+                check_positions.append(_p)
+        for zhi in check_positions:
+            if tian_jiang.get(zhi, '') != '白虎':
+                continue
+            wx = ZHI_WUXING.get(zhi, '')
+            organ = organ_map.get(wx, '')
+            if not organ:
+                continue
+            zheng = (wx == '木')  # 白虎庚申金，金克木→木神正受虎克
+            lq = ''
+            if ri_gan:
+                if _is_gan_ghost(ri_gan, zhi):
+                    lq = '；神为日干官鬼，病难速愈'
+                elif _is_gan_child(ri_gan, zhi):
+                    lq = '；神为日干子孙（制虎之神），病可疗'
+            if zheng:
+                self._add_rule(67, f'白虎乘{zhi}(木神，金克木正受虎克)，{organ}经受病，受虎克神为病症{lq}')
+            else:
+                self._add_rule(67, f'虎乘{zhi}({wx}神)，{organ}经受病（受虎克神为病症·变格）{lq}')
+            return
 
     def _check_rule_68(self, sanchuan: List[str], ri_gan: str, gan_shang: str = ''):
         """第68法: 制鬼之位乃良医
