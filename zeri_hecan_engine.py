@@ -141,7 +141,9 @@ def zeri_signals(keti: str, zetiri_type: str, sizhu: dict = None, shan_wx: str =
               '官爵_四马归一', '官爵_马为山向贵', '官爵_马发传',
               '时泰_太岁月建发传', '德庆_四德发传',
               '斗首_破鬼坐死绝', '斗首_双廉休囚', '斗首_廉子入墓',
-              '斗首_元辰弱', '斗首_年贪官休囚'):
+              '斗首_元辰弱', '斗首_年贪官休囚',
+              '斗首_廉子坐禄贵生旺', '斗首_廉子年月生旺', '斗首_廉子坐休囚',
+              '斗首_日时柱贪官'):
         sig[k] = False
     try:
         _sizhu = sizhu or {}
@@ -219,10 +221,26 @@ def zeri_signals(keti: str, zetiri_type: str, sizhu: dict = None, shan_wx: str =
                 break
         n_lian = _stars.count('廉贞')
         _lian_zhis = [g[1] for g, _s in zip(_gz_list, _stars) if _s == '廉贞' and g]
+        _rg = str(ri_gan or '')  # 日干（廉子诀断需禄贵；日支段后文会重赋）
         if _lian_wx and _lian_zhis:
             _lian_pos = [_wx_position(_lian_wx, z) for z in _lian_zhis]
             sig['斗首_双廉休囚'] = n_lian >= 2 and all(p in _XIUQIU for p in _lian_pos)
             sig['斗首_廉子入墓'] = any(p == '墓' for p in _lian_pos)
+            # 廉子诀四断补全（书"廉子宜一位坐禄贵生旺支不入墓…定生贵子"）：
+            # 坐禄贵生旺 = 廉贞柱支落廉化气生旺位（长生/临官/帝旺）或日干禄贵支
+            _lian_sheng_wei = {_WX_CS12.get(_lian_wx, {}).get(n, '') for n in ('长生', '临官', '帝旺')}
+            _lu_gui = set()
+            if _rg:
+                _lu_gui.add(_LU10.get(_rg, ''))
+                _lu_gui |= _GUI10.get(_rg, set())
+            sig['斗首_廉子坐禄贵生旺'] = bool(set(_lian_zhis) & (_lian_sheng_wei | _lu_gui))
+            sig['斗首_廉子坐休囚'] = all(p in _XIUQIU for p in _lian_pos)
+            # 廉子居年月且年月支生旺（"若在年月坐生旺，而日时遇贪官以枭之主过房"）
+            _lian_ym = [g[1] for i, (g, _s) in enumerate(zip(_gz_list, _stars))
+                        if _s == '廉贞' and g and i < 2]
+            sig['斗首_廉子年月生旺'] = bool(_lian_ym) and all(z in _lian_sheng_wei for z in _lian_ym)
+        # 日时柱贪官（书"日时又遇贪官"——与日时柱贪破（含破鬼）区分）
+        sig['斗首_日时柱贪官'] = len(_stars) > 2 and (_stars[2] == '贪官' or _stars[3] == '贪官')
         # 元辰衰弱（柱数近似：≤1柱——待样本复核的"元辰又衰弱"口径）
         sig['斗首_元辰弱'] = _stars.count('元辰') <= 1
         # 年柱贪官坐休囚支（书"贪官止一位在年休囚"）
