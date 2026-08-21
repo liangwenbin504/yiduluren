@@ -1424,9 +1424,11 @@ class BiFaDetector:
             mu_pos = f'支上{zhi_shang}'
         if not mu_pos:
             return
-        # 天将乘螣蛇（蛇）
-        if tian_jiang and '螣蛇' in tian_jiang.values():
-            self._add_rule(53, f'{mu_pos}为日干墓神，天将乘螣蛇，两蛇夹墓凶难免')
+        # 天将乘螣蛇（蛇）：墓神本身乘螣蛇方为两蛇夹墓
+        # （2026-08-21 修复：原实现全盘扫螣蛇，盘外之蛇也命中）
+        mu_zhi = gan_shang if gan_shang == gan_mu else (zhi_shang if zhi_shang == gan_mu else '')
+        if tian_jiang and mu_zhi and tian_jiang.get(mu_zhi, '') == '螣蛇':
+            self._add_rule(53, f'{mu_pos}为日干墓神乘螣蛇，两蛇夹墓凶难免')
 
     def _check_rule_57(self, sanchuan: List[str], ri_gan: str, kongwang: Tuple[str, str]):
         """第57法: 费有余而得不足
