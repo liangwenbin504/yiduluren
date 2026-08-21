@@ -803,7 +803,7 @@ class BiFaDetector:
 
         # === Batch3: 虎龙病讼凶灾系列 ===
         # 54. 虎视逢虎力难施
-        self._check_rule_54(ri_gan, tian_jiang, keti)
+        self._check_rule_54(ri_gan, sanchuan_dizhi, tian_jiang, keti)
         # 56. 天网自裹己招非
         self._check_rule_56(ri_gan, gan_shang_shen, ben_ming_zhi)
         # 61. 干乘墓虎无占病
@@ -1852,19 +1852,20 @@ class BiFaDetector:
 
     # === Batch3: 虎龙病讼凶灾系列 ===
 
-    def _check_rule_54(self, ri_gan: str, tian_jiang: Optional[Dict] = None, keti: str = ''):
+    def _check_rule_54(self, ri_gan: str, sanchuan: List[str], tian_jiang: Optional[Dict] = None, keti: str = ''):
         """第54法: 虎视逢虎力难施
         昴星课（虎视课）中天将又乘白虎，前后皆虎，力难施。
         ⚠️ 专指昴星课（虎视课），非昴星课不构成（2026-08-15 憨爷纠错：别责课不可误判）。
+        【2026-08-21 修复】：白虎须乘三传之神（古籍例"寅加亥作白虎在末传"），不再全盘扫天将。
         """
         if not tian_jiang:
             return
         # 必须昴星课（虎视课）
         if '昴星' not in (keti or '') and '虎视' not in (keti or ''):
             return
-        if '白虎' in tian_jiang.values():
-            bai_hu_pos = [k for k, v in tian_jiang.items() if v == '白虎']
-            self._add_rule(54, f'昴星课（虎视课）天将{bai_hu_pos}乘白虎，虎视逢虎力难施')
+        bai_hu_pos = [z for z in (sanchuan or []) if tian_jiang.get(z, '') == '白虎']
+        if bai_hu_pos:
+            self._add_rule(54, f'昴星课（虎视课）三传{bai_hu_pos}乘白虎，虎视逢虎力难施')
 
     def _check_rule_56(self, ri_gan: str, gan_shang: str, ben_ming_zhi: str = ''):
         """第56法: 天网自裹己招非
@@ -1987,14 +1988,20 @@ class BiFaDetector:
         dun_map = XUN_DUNGAN.get(xun_shou, {})
         if not dun_map:
             return
-        for zhi, jiang in tian_jiang.items():
-            if jiang != '白虎':
+        # 2026-08-21 修复：范围限定课传六处（古籍例"虎加庚午临戌为用/临子在支上/作虎加干"）
+        check_positions = list(sanchuan or [])
+        for _p in (gan_shang, zhi_shang):
+            if _p:
+                check_positions.append(_p)
+        for zhi in check_positions:
+            if tian_jiang.get(zhi, '') != '白虎':
                 continue
             dun_gan = dun_map.get(zhi, '')
             if not dun_gan:
                 continue
             if _gan_ke_gan(dun_gan, ri_gan):
-                self._add_rule(69, f'白虎乘{zhi}，遁干{dun_gan}为日干{ri_gan}之鬼，虎乘遁鬼殃非浅')
+                loc = '干上' if zhi == gan_shang else ('支上' if zhi == zhi_shang else '三传')
+                self._add_rule(69, f'白虎乘{zhi}（{loc}），遁干{dun_gan}为日干{ri_gan}之鬼，虎乘遁鬼殃非浅')
                 return
 
     def _check_rule_70(self, ri_gan: str, si_ke_info: Optional[List[str]] = None):
@@ -2052,31 +2059,48 @@ class BiFaDetector:
 
     def _check_rule_91(self, ri_gan: str, sanchuan: List[str], gan_shang: str, zhi_shang: str, tian_jiang: Optional[Dict] = None):
         """第91法: 虎临干鬼凶速速
-        日干之鬼上乘白虎者，凶祸速中又速。
+        古籍注解："谓日干之鬼上乘白虎者，凡占凶祸速中又速。如六己日卯加未夜占…
+        乃虎鬼临干者。辛日申乘白虎…不临干而在五处。"
+        【2026-08-21 修复】：范围限定课传六处（干上+支上+三传），不再全盘扫天将；
+        虎鬼临干（干上）者凶尤速，在五处（支上/三传）者亦应。
         """
         if not ri_gan or not tian_jiang:
             return
-        for zhi, jiang in tian_jiang.items():
-            if jiang != '白虎':
+        check_positions = list(sanchuan or [])
+        for _p in (gan_shang, zhi_shang):
+            if _p:
+                check_positions.append(_p)
+        for zhi in check_positions:
+            if tian_jiang.get(zhi, '') != '白虎':
                 continue
             if _is_gan_ghost(ri_gan, zhi):
-                self._add_rule(91, f'{zhi}为日干{ri_gan}之鬼乘白虎，虎临干鬼凶速速')
+                if zhi == gan_shang:
+                    self._add_rule(91, f'{zhi}为日干{ri_gan}之鬼乘白虎且临干，虎临干鬼凶速速（凶祸速中又速）')
+                else:
+                    self._add_rule(91, f'{zhi}为日干{ri_gan}之鬼乘白虎（在五处），虎临干鬼凶速速')
                 return
 
     def _check_rule_92(self, ri_gan: str, yuejiang: str, sanchuan: List[str], gan_shang: str, zhi_shang: str, tian_jiang: Optional[Dict] = None):
         """第92法: 龙加生气吉迟迟
-        青龙乘生干之神又作月内生气，徐徐发福。
+        古籍注解："谓青龙乘生干之神，又作月内之生气者，虽目下未足峥嵘，却徐徐而发福也。
+        如六丁日干上寅夜将，三月占尤的；六戊日干上申昼将乘青龙，九月占。"
+        【2026-08-21 修复】：范围限定课传六处（干上+支上+三传），不再全盘扫天将。
         """
         if not ri_gan or not tian_jiang or not yuejiang:
             return
         sheng_qi = _get_sheng_qi(yuejiang)
         if not sheng_qi:
             return
-        for zhi, jiang in tian_jiang.items():
-            if jiang != '青龙':
+        check_positions = list(sanchuan or [])
+        for _p in (gan_shang, zhi_shang):
+            if _p:
+                check_positions.append(_p)
+        for zhi in check_positions:
+            if tian_jiang.get(zhi, '') != '青龙':
                 continue
             if _is_gan_parent(ri_gan, zhi) and zhi == sheng_qi:
-                self._add_rule(92, f'{zhi}乘青龙，生干且为月令生气{sheng_qi}，龙加生气吉迟迟')
+                loc = '干上' if zhi == gan_shang else ('支上' if zhi == zhi_shang else '三传')
+                self._add_rule(92, f'{zhi}乘青龙（{loc}），生干且为月令生气{sheng_qi}，龙加生气吉迟迟')
                 return
 
     # === Batch3: 第9,10,23,24,34,37,38,93-100 ===
