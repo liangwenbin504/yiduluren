@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
-"""长征第1期 · CBR 案例检索（基于 218 案六壬断案古例特征向量）
+"""长征第1期 · CBR 案例检索（基于古例特征向量）
 ================================================================
 给定一课（四课三传 + 占类），按「综合特征向量」检索最相似的古例，
 返回其断语（duanyu）、吉凶（label）、标注四元组，供「依样断课」参考。
+
+数据源（合并加载）：
+  - data/longmarch_feature_vectors.json  ← 218 案断案疏正（Corpus_B）
+  - data/rzhy_feature_vectors.json       ← 529 案壬占汇选（Corpus_A，V2 引擎重算三传）
 
 相似度（0-100 加权合成）：
   占类匹配        25  （同类占事才有可比性）
@@ -21,6 +25,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 DATA = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data')
 VEC_FILE = os.path.join(DATA, 'longmarch_feature_vectors.json')
+RZHY_VEC_FILE = os.path.join(DATA, 'rzhy_feature_vectors.json')
 
 
 def _jaccard(a, b):
@@ -38,9 +43,10 @@ def similarity(q_vec, q_feat, c_vec, c_feat) -> float:
     # 1. 占类匹配
     if q_vec.get('zhanlei') and q_vec.get('zhanlei') == c_vec.get('zhanlei'):
         score += 25.0
-    # 2. 课格 Jaccard
-    qk = [k for k in (q_feat.get('keti') or [])]
-    ck = [k for k in (c_feat.get('keti') or [])]
+    # 2. 课格+变格 Jaccard（2026-08-21 修复：原无变格维度——变格是从属格，与课格同属格局语义，
+    #    联合计算；索引端 features.bianjie 一直有数据但从未参与打分）
+    qk = [k for k in (q_feat.get('keti') or [])] + [k for k in (q_feat.get('bianjie') or [])]
+    ck = [k for k in (c_feat.get('keti') or [])] + [k for k in (c_feat.get('bianjie') or [])]
     score += 30.0 * _jaccard(qk, ck)
     # 3. 毕法赋 Jaccard
     qb = [b[0] for b in (q_feat.get('bifa') or [])]
@@ -54,17 +60,28 @@ def similarity(q_vec, q_feat, c_vec, c_feat) -> float:
         score += 5.0
     if q_vec.get('fayong_ri_gan') and q_vec.get('fayong_ri_gan') == c_vec.get('fayong_ri_gan'):
         score += 5.0
-    # 6. 神煞吉凶接近
-    qj, cj = q_vec.get('ji_sha_count', 0) or 0, c_vec.get('ji_sha_count', 0) or 0
-    qx, cx = q_vec.get('xiong_sha_count', 0) or 0, c_vec.get('xiong_sha_count', 0) or 0
-    d = abs(qj - cj) + abs(qx - cx)
-    score += 10.0 * (1.0 - d / (d + 4.0))
+    # 6. 神煞吉凶接近（2026-08-21 修复：查询端未提供神煞计数时跳过该维度——
+    #    原实现查询端恒 0，d=|0-cj|+|0-cx| 对神煞多的案例系统性扣分，负贡献）
+    qj, qx = q_vec.get('ji_sha_count', 0) or 0, q_vec.get('xiong_sha_count', 0) or 0
+    if qj or qx:
+        cj, cx = c_vec.get('ji_sha_count', 0) or 0, c_vec.get('xiong_sha_count', 0) or 0
+        d = abs(qj - cj) + abs(qx - cx)
+        score += 10.0 * (1.0 - d / (d + 4.0))
     return round(score, 1)
 
 
 def _load_cases():
-    d = json.load(open(VEC_FILE, encoding='utf-8'))
-    return d['cases']
+    """合并加载断案疏正（218 案）+ 壬占汇选（529 案）特征向量。"""
+    cases = []
+    # 1. 断案疏正（Corpus_B）
+    if os.path.exists(VEC_FILE):
+        d = json.load(open(VEC_FILE, encoding='utf-8'))
+        cases.extend(d.get('cases', []))
+    # 2. 壬占汇选（Corpus_A）
+    if os.path.exists(RZHY_VEC_FILE):
+        d = json.load(open(RZHY_VEC_FILE, encoding='utf-8'))
+        cases.extend(d.get('cases', []))
+    return cases
 
 
 def retrieve(query_vec, query_feat, cases=None, top_k=5):
@@ -80,6 +97,7 @@ def retrieve(query_vec, query_feat, cases=None, top_k=5):
         ann = c.get('annotation') or {}
         out.append({
             'case_id': c['case_id'],
+            'source': c.get('source', 'Corpus_B'),
             'similarity': s,
             'zhanlei': c.get('zhanlei', ''),
             'label': c.get('label', ''),
@@ -169,9 +187,20 @@ def retrieve_by_ke(day_ganzhi, yuejiang, shichen, zhanlei='', top_k=5, cases=Non
 
 
 if __name__ == '__main__':
-    # 自检：检索一课，看相似古例
+    # 自检：加载量 + 检索一课
+    cases = _load_cases()
+    print(f'CBR index: {len(cases)} cases')
+    # 来源统计
+    src_count = {}
+    for c in cases:
+        s = c.get('source', 'Corpus_B')
+        src_count[s] = src_count.get(s, 0) + 1
+    print(f'  Sources: {src_count}')
+
     r = retrieve_by_ke('己卯', '子', '申', zhanlei='其他', top_k=5)
-    print('查询:', r['query'])
-    print('Top 相似古例:')
+    print(f'\nQuery: {r["query"]}')
+    print('Top相似古例:')
     for m in r['matches']:
-        print(f"  {m['similarity']:>5}分  {m['case_id']}  [{m['zhanlei']}/{m['label']}] 三传{''.join(m['sanchuan'])} 课格{m['keti'][:3]}")
+        src_tag = '[疏正]' if m['source'] == 'Corpus_B' else '[汇选]'
+        print(f"  {m['similarity']:>5}分  {src_tag} {m['case_id']}  [{m['zhanlei']}/{m['label']}] "
+              f"三传{''.join(m['sanchuan'])} 课格{m['keti'][:3]}")
