@@ -2144,6 +2144,28 @@ function zrHitsBadgesHtml(zrHits) {
       (xiong ? '⚠' : '✨') + ' ' + lbl + ' <span style="opacity:.6;font-weight:400;">' + (h.id || '') + '</span></span>';
   }).join('');
 }
+function guliCardHtml(g) {
+  // 2026-08-21 古例印证栏（项目核心：同课古例 → A 基调直迁 / B 占类桥 / C 应期重算）
+  if (!g || !g.matched) return '';
+  var s = '<div style="margin:8px 0;background:rgba(168,85,247,.06);border-radius:8px;padding:10px;border:1px solid #7c3aed;border-left:3px solid #a855f7;">';
+  s += '<div style="font-size:13px;font-weight:700;color:#c4b5fd;margin-bottom:6px;">📜 古例印证（同课 ' + (g.cases||[]).length + ' 例 · 置信度 ' + (g['置信度']||'') + '）</div>';
+  var caseTxt = (g.cases||[]).map(function(c){
+    return c.day_ganzhi + '日' + (c.yue_jiang||'') + '将' + c.shichen + '时 ' + c.source + '·' + c.zhanlei + '占 ' +
+      '<span style="color:' + ((c.label==='凶')?'#ff6b6b':'#7ee2b8') + ';">' + (c.label||'未详') + '</span>';
+  }).join('　');
+  if (caseTxt) s += '<div style="font-size:12px;color:#a78bfa;margin-bottom:6px;">🔑 ' + caseTxt + '</div>';
+  if ((g['基调']||[]).length) {
+    s += '<div style="font-size:12.5px;color:#e9d5ff;line-height:1.8;margin-bottom:4px;"><b>① 基调（课体/毕法直迁）：</b>' + g['基调'].join('<br>') + '</div>';
+  }
+  if ((g['变通']||[]).length) {
+    s += '<div style="font-size:12.5px;color:#ddd6fe;line-height:1.8;margin-bottom:4px;"><b>② 变通（占类桥翻译）：</b>' + g['变通'].join('<br>') + '</div>';
+  }
+  if ((g['应期']||[]).length) {
+    s += '<div style="font-size:12.5px;color:#fbcfe8;line-height:1.8;"><b>③ 应期（按主命重算）：</b>' + g['应期'].join('；') + '</div>';
+  }
+  s += '</div>';
+  return s;
+}
 function plRenderDetail(d, dateStr, shichen, it) {
   var sizhu = d.sizhu || {};
   var yq = d.yanqin_full || {};
@@ -2200,6 +2222,7 @@ function plRenderDetail(d, dateStr, shichen, it) {
     html += '<div style="font-size:12.5px;color:#c7d2fe;line-height:1.8;">🔍 ' + zrn + '</div>';
     html += '</div>';
   }
+  html += guliCardHtml(hc.guli);
   if (zp.wen) {
     html += '<div style="margin:10px 0;background:rgba(255,255,255,.04);border-radius:8px;padding:10px;border:1px solid #3a3a6a;border-left:3px solid #a855f7;">';
     html += '<div style="font-size:13px;font-weight:700;color:#c4b5fd;margin-bottom:6px;">📜 综合批语</div>';
@@ -4431,6 +4454,7 @@ function zeriAnalyze() {
     html += '<div style="font-size:12.5px;color:#c7d2fe;line-height:1.8;">🔍 ' + zrn + '</div>';
     html += '</div>';
   }
+  html += guliCardHtml(hc.guli);
       if (zp.wen) {
         html += '<div style="margin:10px 0;background:rgba(255,255,255,.04);border-radius:8px;padding:10px;border:1px solid #3a3a6a;border-left:3px solid #a855f7;">';
         html += '<div style="font-size:13px;font-weight:700;color:#c4b5fd;margin-bottom:6px;">📜 综合批语</div>';

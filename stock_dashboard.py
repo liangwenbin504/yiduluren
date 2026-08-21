@@ -1726,6 +1726,17 @@ def api_zeri_analyze():
         except Exception:
             result['hecan'] = {'hits': [], 'narr': '', '警告': [], '佐证': [], 'zeri_rules': {'hits': [], 'narr': ''}}
 
+        # 2026-08-21 古例变通桥：同课古例印证（A 基调直迁 / B 占类桥 / C 应期重算）
+        result['guli'] = {'matched': False}
+        try:
+            from engine.zeri_cbr_bridge import find_same_ke, bridge_to_zeri
+            _same_ke = find_same_ke(ri_gan, ri_zhi, yuejiang, shichen)
+            if _same_ke:
+                result['guli'] = bridge_to_zeri(_same_ke, _zt_an, shan=str(mountain or ''),
+                                                ming=ben_ming, ri_gan=ri_gan, ri_zhi=ri_zhi)
+        except Exception:
+            pass
+
         # 2026-08-20 六亲接入（应何人断：干上神乘天将与日干生克五断，东方朔卷之二）
         result['liuqin_duanyu'] = ''
         result['liuqin_struct'] = {}
@@ -4385,6 +4396,18 @@ def _build_zeri_candidate(env, current, shichen, sizhu):
             pass
     except Exception:
         _hecan = {'hits': [], 'narr': '', '警告': [], '佐证': [], 'zeri_rules': {'hits': [], 'narr': ''}}
+
+    # ②d 古例变通桥（2026-08-21）：同课古例印证（A 基调直迁 / B 占类桥 / C 应期重算）
+    _hecan['guli'] = {'matched': False}
+    try:
+        from engine.zeri_cbr_bridge import find_same_ke, bridge_to_zeri
+        _same_ke = find_same_ke(ri_gan, ri_zhi, _yj, shichen)
+        if _same_ke:
+            _hecan['guli'] = bridge_to_zeri(_same_ke, zetiri_type, shan=str(mtn or ''),
+                                            ming=(bm_gan + bm_zhi) if bm_zhi else '',
+                                            ri_gan=ri_gan, ri_zhi=ri_zhi)
+    except Exception:
+        pass
 
     # ③ 禄马贵人引擎（四柱年/月/日/时 + 三传 + 课体扣分 + 大凶排除）
     _ns = _luma.calculate_new_score(
