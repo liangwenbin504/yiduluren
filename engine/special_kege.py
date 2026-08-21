@@ -103,8 +103,8 @@ class SpecialKegeDetector:
             self._ls_jiamu(ri_gan, gan_shang_shen, zhi_shang_shen, tian_jiang)
             self._she_hua_long(sc, tian_jiang)
             self._long_hua_she(sc, tian_jiang)
-            self._hu_lin_gangui(ri_gan, tian_jiang)
-            self._long_jia_shengqi(ri_gan, tian_jiang, yuejiang)
+            self._hu_lin_gangui(ri_gan, sc, gan_shang_shen, zhi_shang_shen, tian_jiang)
+            self._long_jia_shengqi(ri_gan, sc, gan_shang_shen, zhi_shang_shen, tian_jiang, yuejiang)
             self._longhu_jiaochi(sc, tian_jiang)
             self._chuzao_jiake(sc, tian_jiang, tiandi_pan)
             self._jiangfeng_neizhan(sc, tian_jiang)
@@ -122,7 +122,7 @@ class SpecialKegeDetector:
         self._jiaoche_hai(ri_gan, ganzhi, gan_shang_shen, zhi_shang_shen)    # 交车害
         self._mumen_kai(ri_gan, ganzhi, zhi_shang_shen, tian_jiang)          # 墓门开
         self._biandi_guiren(ri_gan, sc, gan_shang_shen, zhi_shang_shen, tian_jiang)  # 遍地贵人
-        self._guiren_rigui(ri_gan, tian_jiang)                               # 贵人作日鬼
+        self._guiren_rigui(ri_gan, sc, gan_shang_shen, zhi_shang_shen, tian_jiang)   # 贵人作日鬼
         self._zhen_jieli(ri_gan, ganzhi, gan_shang_shen, zhi_shang_shen)     # 真解离
 
         return self._build_result()
@@ -231,21 +231,23 @@ class SpecialKegeDetector:
         if tj.get(sc[0],'')=='青龙' and tj.get(sc[2],'')=='螣蛇':
             self._add('龙化蛇','凶','初龙末蛇，始吉终凶','跌',2)
 
-    def _hu_lin_gangui(self, ri_gan, tj):
-        """虎临干鬼: 白虎在日鬼之位"""
+    def _hu_lin_gangui(self, ri_gan, sc, gs, zs, tj):
+        """虎临干鬼: 白虎在日鬼之位（2026-08-21 修复：限课传六处，不再全盘扫天将）"""
         if not ri_gan: return
-        for z, t in tj.items():
-            if t=='白虎' and _is_gan_ghost(ri_gan, z):
-                self._add('虎临干鬼','凶',f'白虎临{ri_gan}日鬼{z}上，凶速速','跌',3)
+        for z in list(sc) + [gs, zs]:
+            if z and tj.get(z, '')=='白虎' and _is_gan_ghost(ri_gan, z):
+                loc = '干上' if z == gs else ('支上' if z == zs else '三传')
+                self._add('虎临干鬼','凶',f'白虎临{ri_gan}日鬼{z}上（{loc}），凶速速','跌',3)
                 return
 
-    def _long_jia_shengqi(self, ri_gan, tj, yj):
-        """龙加生气: 青龙乘生干之神且作月内生气"""
+    def _long_jia_shengqi(self, ri_gan, sc, gs, zs, tj, yj):
+        """龙加生气: 青龙乘生干之神且作月内生气（2026-08-21 修复：限课传六处）"""
         if not ri_gan: return
         sq = _get_sheng_qi(yj)
-        for z, t in tj.items():
-            if t=='青龙' and z==sq and _is_gan_parent(ri_gan, z):
-                self._add('龙加生气','大吉',f'青龙临生气{z}生{ri_gan}干，吉迟迟','涨',3)
+        for z in list(sc) + [gs, zs]:
+            if z and tj.get(z, '')=='青龙' and z==sq and _is_gan_parent(ri_gan, z):
+                loc = '干上' if z == gs else ('支上' if z == zs else '三传')
+                self._add('龙加生气','大吉',f'青龙临生气{z}生{ri_gan}干（{loc}），吉迟迟','涨',3)
                 return
 
     def _longhu_jiaochi(self, sc, tj):
@@ -383,12 +385,13 @@ class SpecialKegeDetector:
         if zhis and all(tj.get(z,'')=='贵人' for z in zhis):
             self._add('遍地贵人','凶','四课三传皆贵人，贵多不贵反无依','跌',2)
 
-    def _guiren_rigui(self, ri_gan, tj):
-        """贵人作日鬼: 贵人乘日鬼"""
+    def _guiren_rigui(self, ri_gan, sc, gs, zs, tj):
+        """贵人作日鬼: 贵人乘日鬼（2026-08-21 修复：限课传六处，不再全盘扫天将）"""
         if not ri_gan or not tj: return
-        for z,t in tj.items():
-            if t=='贵人' and _is_gan_ghost(ri_gan, z):
-                self._add('贵人作日鬼','凶',f'贵人乘{z}为日干{ri_gan}之鬼，贵人作日鬼','跌',2)
+        for z in list(sc) + [gs, zs]:
+            if z and tj.get(z, '')=='贵人' and _is_gan_ghost(ri_gan, z):
+                loc = '干上' if z == gs else ('支上' if z == zs else '三传')
+                self._add('贵人作日鬼','凶',f'贵人乘{z}为日干{ri_gan}之鬼（{loc}），贵人作日鬼','跌',2)
                 return
 
     def _zhen_jieli(self, ri_gan, ganzhi, gs, zs):
