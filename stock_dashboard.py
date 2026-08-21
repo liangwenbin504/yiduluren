@@ -4369,6 +4369,13 @@ def _build_zeri_candidate(env, current, shichen, sizhu):
                                  sizhu=sizhu, shan_wx=str(_ds.get('山家五行', '') or ''),
                                  shan=str(mtn or ''), xiang='',
                                  ming=(bm_gan + bm_zhi) if bm_zhi else '')
+        # 2026-08-21 批量格局统计：命中规则附短标签（前端徽标/统计用）
+        try:
+            from zeri_hecan_engine import zeri_rule_label as _zrl
+            for _h in _hecan.get('zeri_rules', {}).get('hits', []):
+                _h['标签'] = _zrl(_h.get('id', ''))
+        except Exception:
+            pass
     except Exception:
         _hecan = {'hits': [], 'narr': '', '警告': [], '佐证': [], 'zeri_rules': {'hits': [], 'narr': ''}}
 
@@ -4729,10 +4736,29 @@ def api_zeri_batch():
             -x.get('liuren_score', 0),
             -x.get('total_score', 0),
         ))
+
+        # ── 2026-08-21 范围格局统计：截断前遍历全部候选，统计美格/凶格命中次数 ──
+        try:
+            from zeri_hecan_engine import zeri_rule_label as _zrl
+        except Exception:
+            _zrl = lambda rid: str(rid or '')
+        _meige_cnt, _xiong_cnt = {}, {}
+        for _r in results:
+            for _h in (_r.get('hecan') or {}).get('zeri_rules', {}).get('hits', []):
+                _bid = str(_h.get('id', ''))
+                if _h.get('结论') == '吉':
+                    _meige_cnt[_bid] = _meige_cnt.get(_bid, 0) + 1
+                elif _h.get('结论') == '凶':
+                    _xiong_cnt[_bid] = _xiong_cnt.get(_bid, 0) + 1
+        _stats = {
+            'meige': {_zrl(k): v for k, v in sorted(_meige_cnt.items(), key=lambda kv: (-kv[1], kv[0]))},
+            'xiong': {_zrl(k): v for k, v in sorted(_xiong_cnt.items(), key=lambda kv: (-kv[1], kv[0]))},
+        }
         results = results[:jiri_count]
 
         return jsonify({
             'success': True, 'results': results,
+            'stats': _stats,
             'meta': {'start_date': start_str, 'end_date': end_str,
                      'mountain': mountain, 'zetiri_type': zetiri_type,
                      'days': (_ed - _sd).days + 1,

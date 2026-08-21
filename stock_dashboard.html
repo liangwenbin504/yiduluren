@@ -1587,6 +1587,7 @@ tbody tr:hover { background:#f8f9ff; }
       <div class="pl-error" id="plError"></div>
       <div class="pl-result" id="plResult">
         <div style="font-size:15px;color:#fff;margin-bottom:10px;">🏔 筛选出的吉日列表 <span id="plResultInfo" style="font-size:12px;color:#9fb3d1;"></span></div>
+        <div id="plStats" style="margin:0 0 10px 0;"></div>
         <div class="pl-list" id="plList"></div>
         <div id="plDetail" style="margin-top:12px;"></div>
       </div>
@@ -1898,6 +1899,20 @@ function plBatchZeri() {
     document.getElementById('plResultInfo').textContent =
       (resp.meta ? ('范围 ' + resp.meta.start_date + ' ~ ' + resp.meta.end_date + '，遍历 ' + resp.meta.days + ' 天') : '') +
       '，命中 ' + _plResults.length + ' 个吉期';
+    // 2026-08-21 范围格局统计（古籍合参美格/凶格命中次数，遍历全部候选）
+    var st = resp.stats || {};
+    var mgKeys = Object.keys(st.meige || {}), xgKeys = Object.keys(st.xiong || {});
+    var stHtml = '';
+    if (mgKeys.length || xgKeys.length) {
+      var mgTxt = mgKeys.map(function(k){ return '<b style="color:#7ee2b8;">' + k + '</b>×' + st.meige[k]; }).join('　');
+      var xgTxt = xgKeys.map(function(k){ return '<b style="color:#ff6b6b;">' + k + '</b>×' + st.xiong[k]; }).join('　');
+      stHtml = '<div style="padding:10px 12px;background:rgba(255,255,255,.03);border:1px solid #3a3a6a;border-radius:8px;font-size:12.5px;line-height:1.9;">' +
+        '<div style="font-weight:700;color:#8ea2ff;margin-bottom:4px;">📊 范围格局统计（' + (resp.meta ? resp.meta.candidates : '') + ' 个候选课）</div>' +
+        (mgTxt ? '<div>✨ 美格/吉格：' + mgTxt + '</div>' : '') +
+        (xgTxt ? '<div>⚠️ 凶格警示：' + xgTxt + '</div>' : '') +
+        '</div>';
+    }
+    document.getElementById('plStats').innerHTML = stHtml;
     renderPlList(_plResults);
     document.getElementById('plResult').classList.add('show');
     document.getElementById('plExport').style.display = 'inline-block';
@@ -2043,6 +2058,14 @@ function renderPlList(list) {
     if (it.gong_names && it.gong_names.length) tags.push('拱格：<b>' + it.gong_names.join('、') + '</b>');
     // 达成矩阵（2026-08-17：13吉课/禄马贵发传/到向 分层展示；杀师标红）
     if (it.jike_13 && it.jike_13.hits && it.jike_13.hits.length) tags.push('13吉课：<b style="color:#7ee2b8;">' + it.jike_13.hits.join('、') + '</b>');
+    // 2026-08-21 古籍合参美格/凶格徽标（候选 hecan.zeri_rules.hits，悬停看叙事）
+    var zrHits = ((it.hecan || {}).zeri_rules || {}).hits || [];
+    if (zrHits.length) {
+      tags.push(zrHits.map(function(h){
+        var col = (h['结论'] === '凶') ? '#ff6b6b' : '#7ee2b8';
+        return '<span style="color:' + col + ';font-size:11px;border:1px solid ' + col + '66;border-radius:4px;padding:0 5px;margin:0 2px;cursor:help;" title="' + (h['叙事'] || '') + '">' + (h['标签'] || h.id || '') + '</span>';
+      }).join(''));
+    }
     if (it.constraint_matrix && it.constraint_matrix.bonus) {
       var _b = it.constraint_matrix.bonus;
       if (_b.luma_fachuan) tags.push('禄马贵发传：<b style="color:#fbbf24;">' + _b.luma_fachuan + '</b>');
