@@ -1398,14 +1398,13 @@ class BiFaDetector:
     def _check_rule_52(self, sanchuan: List[str], ri_gan: str, tiandi_pan: Optional[Dict] = None):
         """第52法: 罡塞鬼户任谋为
         辰（天罡）加寅（鬼户），百邪不侵。
-        即：初传为辰，且天盘辰临地盘寅（辰加寅）。
+        【2026-08-21 审计修正】古籍注解："凡辰加寅为罡塞鬼门，不论在传不在传，皆名罡塞鬼户"——
+        原实现误加"初传为辰"限制致漏报；本函数为已迁移 data/bifa_rules.json 后的死代码，口径同步修正。
         """
-        if len(sanchuan) != 3 or not ri_gan:
-            return
-        if sanchuan[0] != '辰':
+        if not ri_gan:
             return
         if tiandi_pan and tiandi_pan.get('寅') == '辰':
-            self._add_rule(52, f'初传辰（天罡）加寅（鬼户），罡塞鬼户任谋为')
+            self._add_rule(52, f'天罡辰加寅（鬼户），罡塞鬼户任谋为（不论在传不在传）')
 
     def _check_rule_53(self, ri_gan: str, gan_shang: str, zhi_shang: str, tian_jiang: Optional[Dict] = None):
         """第53法: 两蛇夹墓凶难免
