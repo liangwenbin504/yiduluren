@@ -2131,6 +2131,19 @@ function _plJxColor(jx) {
   if (jx === '凶' || jx === '大凶') return '#ff6b6b';
   return '#9fb3d1';
 }
+function zrHitsBadgesHtml(zrHits) {
+  // 2026-08-21 择日合参美格/凶格徽标：吉=绿✨ 凶=红⚠，悬停显示叙事+出处
+  if (!zrHits || !zrHits.length) return '';
+  return zrHits.map(function(h){
+    var xiong = (h['结论'] === '凶');
+    var col = xiong ? '#ff6b6b' : '#7ee2b8';
+    var bg = xiong ? 'rgba(255,107,107,.08)' : 'rgba(126,226,184,.08)';
+    var lbl = h['标签'] || h.id || '';
+    var tip = (h['叙事'] || '') + (h['出处'] ? '　【' + h['出处'] + '】' : '');
+    return '<span style="display:inline-block;margin:2px 4px 2px 0;padding:2px 9px;border-radius:10px;font-size:11.5px;font-weight:600;color:' + col + ';background:' + bg + ';border:1px solid ' + col + '66;cursor:help;" title="' + tip + '">' +
+      (xiong ? '⚠' : '✨') + ' ' + lbl + ' <span style="opacity:.6;font-weight:400;">' + (h.id || '') + '</span></span>';
+  }).join('');
+}
 function plRenderDetail(d, dateStr, shichen, it) {
   var sizhu = d.sizhu || {};
   var yq = d.yanqin_full || {};
@@ -2172,6 +2185,14 @@ function plRenderDetail(d, dateStr, shichen, it) {
     html += '<div style="margin:8px 0;background:rgba(34,197,94,.05);border-radius:8px;padding:10px;border:1px solid #15803d;border-left:3px solid #22c55e;">';
     html += '<div style="font-size:13px;font-weight:700;color:#4ade80;margin-bottom:6px;">✅ 古籍合参佐证</div>';
     for (var pi=0; pi<proofs.length; pi++) html += '<div style="font-size:12.5px;color:#bbf7d0;line-height:1.8;">· ' + proofs[pi] + '</div>';
+    html += '</div>';
+  }
+  var zrHits = (hc.zeri_rules || {}).hits || [];
+  var zrBadges = zrHitsBadgesHtml(zrHits);
+  if (zrBadges) {
+    html += '<div style="margin:8px 0;background:rgba(99,102,241,.05);border-radius:8px;padding:10px;border:1px solid #4f46e5;border-left:3px solid #818cf8;">';
+    html += '<div style="font-size:13px;font-weight:700;color:#8ea2ff;margin-bottom:6px;">🏷️ 择日合参格局（美格徽标 ' + zrHits.length + '）</div>';
+    html += '<div style="line-height:1.9;">' + zrBadges + '</div>';
     html += '</div>';
   }
   if (zrn) {
@@ -4395,6 +4416,14 @@ function zeriAnalyze() {
     html += '<div style="margin:8px 0;background:rgba(34,197,94,.05);border-radius:8px;padding:10px;border:1px solid #15803d;border-left:3px solid #22c55e;">';
     html += '<div style="font-size:13px;font-weight:700;color:#4ade80;margin-bottom:6px;">✅ 古籍合参佐证</div>';
     for (var pi=0; pi<proofs.length; pi++) html += '<div style="font-size:12.5px;color:#bbf7d0;line-height:1.8;">· ' + proofs[pi] + '</div>';
+    html += '</div>';
+  }
+  var zrHits2 = (hc.zeri_rules || {}).hits || [];
+  var zrBadges2 = zrHitsBadgesHtml(zrHits2);
+  if (zrBadges2) {
+    html += '<div style="margin:8px 0;background:rgba(99,102,241,.05);border-radius:8px;padding:10px;border:1px solid #4f46e5;border-left:3px solid #818cf8;">';
+    html += '<div style="font-size:13px;font-weight:700;color:#8ea2ff;margin-bottom:6px;">🏷️ 择日合参格局（美格徽标 ' + zrHits2.length + '）</div>';
+    html += '<div style="line-height:1.9;">' + zrBadges2 + '</div>';
     html += '</div>';
   }
   if (zrn) {

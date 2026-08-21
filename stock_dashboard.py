@@ -1716,6 +1716,13 @@ def api_zeri_analyze():
                                                         '艮': '木', '寅': '木', '丁': '木', '未': '木',
                                                         '坤': '水', '申': '水', '甲': '水', '卯': '水',
                                                         '乙': '金', '辰': '金', '庚': '金', '酉': '金'}.get(str(mountain or ''), '')))
+            # 2026-08-21 命中规则附短标签（前端美格徽标用，与批量候选同口径）
+            try:
+                from zeri_hecan_engine import zeri_rule_label as _zrl2
+                for _h in result['hecan'].get('zeri_rules', {}).get('hits', []):
+                    _h['标签'] = _zrl2(_h.get('id', ''))
+            except Exception:
+                pass
         except Exception:
             result['hecan'] = {'hits': [], 'narr': '', '警告': [], '佐证': [], 'zeri_rules': {'hits': [], 'narr': ''}}
 
