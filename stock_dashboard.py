@@ -1665,13 +1665,22 @@ def _build_zonghe_piyu(result, zetiri_type='立碑'):
         ds_pats = [_pat_txt(x) for x in (ds.get('patterns') or [])][:2]
         ds_grade = ds.get('grade') or ''
         stars = ds.get('sizhu_stars') or {}
-        _XIONG_XING = ('破鬼', '贪官', '元辰')
-        _JI_XING = ('武财', '廉贞')
+        # 【2026-09-07 审计修复 BUG-2】星曜吉凶分组错乱：原 _XIONG_XING 含'元辰'(吉星)
+        #   且不含'破鬼'，导致破鬼被漏提示、反误称"为用"。正确斗首星曜吉凶：
+        #   吉=元辰(同气)/武财(我生)；中=廉贞(我克/子)；凶=贪官(克我)/破鬼(我生为鬼·耗)。
+        _XIONG_XING = ('贪官', '破鬼')
+        _JI_XING = ('元辰', '武财')
         star_bad = [f'{k}{v.get("星曜", "")}' for k, v in stars.items() if str(v.get('星曜', '')) in _XIONG_XING]
         star_good = [f'{k}{v.get("星曜", "")}' for k, v in stars.items() if str(v.get('星曜', '')) in _JI_XING]
         ds_wen = _grade_wen(ds_grade, '斗首得令，山家获吉', '斗首平稳，山家中和', '斗首失令，山家欠吉')
-        if star_bad and ('失令' in ds_wen or '平稳' in ds_wen):
-            ds_wen += '，' + '、'.join(star_bad[:2]) + '为忌'
+        # 凶星（贪官/破鬼）无论得令与否均须显式点忌——否则"破鬼为用"式语义矛盾：
+        #   破鬼为耗泄之星，克/泄山家，必为忌；仅当武财≥2 制化（武财关鬼）方转吉。
+        if star_bad:
+            _wc_cnt2 = sum(1 for v in stars.values() if str(v.get('星曜', '')) == '武财')
+            if _wc_cnt2 >= 2:
+                ds_wen += '，' + '、'.join(star_bad[:2]) + '得武财关鬼制化为用'
+            else:
+                ds_wen += '，' + '、'.join(star_bad[:2]) + '为忌'
         elif star_good:
             ds_wen += '，' + '、'.join(star_good[:2]) + '为用'
         wen.append(ds_wen)
@@ -1720,6 +1729,26 @@ def _build_zonghe_piyu(result, zetiri_type='立碑'):
     zl_lines = (result.get('zhanlei_duanyu') or {}).get('duanyu_lines') or []
     _lr_grade = result.get('grade') or ''
     _lr_score = result.get('score')
+    # 【2026-09-07 审计修复 BUG-4】六壬层等级须取六壬独立分(luma final_score)推导，
+    #   不得用总评 grade（总评含斗首一票否决/加分项，会污染六壬narra，如总评"不宜"误为"六壬欠吉"）。
+    try:
+        _luma_f = (result.get('luma_detail') or {}).get('final_score')
+        if _luma_f is not None:
+            _lr_score = round(float(_luma_f), 1)
+            if _lr_score >= 90:
+                _lr_grade = '上上吉'
+            elif _lr_score >= 80:
+                _lr_grade = '上吉'
+            elif _lr_score >= 70:
+                _lr_grade = '中吉'
+            elif _lr_score >= 60:
+                _lr_grade = '吉'
+            elif _lr_score >= 40:
+                _lr_grade = '平'
+            else:
+                _lr_grade = '凶'
+    except Exception:
+        pass
     if _lr_grade or keti or gong_names:
         lr_wen = _grade_wen(_lr_grade, '六壬得吉，課體清明', '六壬中平，課體尚可', '六壬欠吉，課體有疵')
         if keti:
@@ -1747,10 +1776,11 @@ def _build_zonghe_piyu(result, zetiri_type='立碑'):
                             'jike_13': jk, 'yingqi': yq_str}
 
     # ④ 总断（评分 + 等级 + 类型落点）
+    # 【2026-09-07 审计修复 BUG-1/BUG-5】文言尾缀不再在此追加——统一在⑩末尾按
+    #   grade 吉凶分支拼接（凶/不宜课不得再续"诸事合宜/福荫后代"式吉语）。
     score = result.get('score')
     grade = result.get('grade') or ''
-    tail_wen, tail_bai = _ZONGHE_TYPE_TAIL.get((zetiri_type or '').strip(), _ZONGHE_DEFAULT_TAIL)
-    wen.append(tail_wen)
+    wen.append('综合评分{0}分（{1}）'.format(score, grade or '未评'))
 
     # ⑤ 三派冲突点透（2026-08-20：斗首/演禽/六壬吉凶不一致时显式点出"吉中藏忌/凶中有救"）
     def _pai_side(g):
@@ -1850,7 +1880,31 @@ def _build_zonghe_piyu(result, zetiri_type='立碑'):
         _yq_sents.append(f'禄神{_lu_z8}发传（天机灵动）——{_lu_z8}命人发福，应于{_lu_z8}年')
     if _hm8.get('huo_ma') and _ma_z8:
         _yq_sents.append(f'马神{_ma_z8}发传——{_ma_z8}命人发福，应于{_ma_z8}年')
-    if not (_ddx8.get('total_count') or 0):
+    # 【2026-09-07 审计修复 BUG-3】"福力不实"须同时检查互禄互贵通道：
+    #   原 total_count==0 即写"禄马贵未到山到向，福力不实"，与互禄互贵顶格课
+    #   （如 2056-04-15 互禄4项+互贵3项·summary已显示）自相矛盾。
+    #   互禄互贵命中 → 转"互禄互贵顶格，福力足"，仅双通道皆空才判"福力不实"。
+    try:
+        _hulu_hh = None
+        _sz4_r = result.get('sizhu') or {}
+        _n_gan = str(_sz4_r.get('年', ''))[:1] or ''
+        _y_gan = str(_sz4_r.get('月', ''))[:1] or ''
+        _r_gan = str(_sz4_r.get('日', ''))[:1] or ''
+        _y_zhi = str(_sz4_r.get('月', ''))[-1:] or ''
+        if _n_gan and _y_gan and _r_gan:
+            from engine.daliuren_luma_guiren import DaLiuRenLuMaGuiRen as _LRM2
+            _hulu_hh = _LRM2().check_hulu_hugui(
+                _n_gan, _y_gan, _r_gan,
+                str(result.get('ben_ming_gan') or '') or '',
+                str(result.get('mountain') or result.get('shan_jia') or ''), _y_zhi)
+    except Exception:
+        _hulu_hh = None
+    _hulu_hit = bool(_hulu_hh and _hulu_hh.get('is_mutual_lu_gui'))
+    if _hulu_hit:
+        _hn = int((_hulu_hh or {}).get('hulu_count', 0) or 0)
+        _hgn = int((_hulu_hh or {}).get('hugui_count', 0) or 0)
+        _yq_sents.append(f'互禄互贵命中（互禄{_hn}项+互贵{_hgn}项），禄马贵虽未加临山向亦不落空——福力足')
+    elif not (_ddx8.get('total_count') or 0):
         _yq_sents.append('禄马贵未到山到向，福力不实——宜择到山到向且发传之课（要诀"住而不去，且要发出三传…方得确实灵验"）')
     if _yq_sents:
         wen.append('禄马发传，应命应年详见白话')
@@ -1902,6 +1956,14 @@ def _build_zonghe_piyu(result, zetiri_type='立碑'):
             wen.append('所选时辰非五吉时，宜改择')
             bai.append(f'五吉时：所选{_cur_shi}非吉时，宜选{_ji_names}等（要诀"取元辰时，五吉时内己巳为优；取武财时，五吉时内甲辰最善"）')
 
+    # 【2026-09-07 审计修复 BUG-1/BUG-5】总断尾缀按 grade 分支：
+    #   凶/不宜课不得再续"吉祥如意/福荫后代"等吉语（原无条件拼接造成"39分不宜却吉祥如意"矛盾）；
+    #   凶课尾缀降级为"慎用/另择"，且类型吉语（安葬福荫等）仅吉课使用。
+    grade = result.get('grade') or ''
+    _is_bad = any(k in str(grade) for k in ('不宜', '凶'))
+    tail_wen, tail_bai = _ZONGHE_TYPE_TAIL.get((zetiri_type or '').strip(), _ZONGHE_DEFAULT_TAIL)
+    if _is_bad:
+        tail_wen, tail_bai = '宜慎用，另择吉期', '宜谨慎选用或另择吉日吉时'
     bai.append(f'综合评分{score}分（{grade or "未评"}），{tail_bai}')
 
     wen = [str(x).rstrip('。，,、；;') for x in wen if x]
