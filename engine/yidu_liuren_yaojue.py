@@ -390,6 +390,14 @@ def check_sanyuan_sanwu_yilian(year_class: str, month_class: str,
         grade = '第一吉课'
     elif yuanchen == 4:
         grade = '四元大吉'
+    elif wucai == 4:
+        # 【2026-09-06】四武财与四元辰同为最高档（用户拍板"四元辰/四武财最吉"），
+        #   原落到 wucai>=3 的"三武格局"，与四元大吉不对等。
+        grade = '四武大吉'
+    elif pogui == 1 and classes['年'] == '破鬼':
+        # 【2026-09-06 破鬼把门（用户拍板）】破鬼独居年干=把门守户，反凶为吉，A档次优。
+        #   注意：其余任何柱见破鬼仍按凶处理（见 return 的 has_xiong）。
+        grade = '破鬼把门'
     elif yuanchen == 3 and wucai == 1:
         grade = '三元一武大吉'
     elif yuanchen >= 3:
@@ -402,7 +410,7 @@ def check_sanyuan_sanwu_yilian(year_class: str, month_class: str,
         'grade': grade,
         'yuanchen': yuanchen, 'wucai': wucai, 'lianzi': lianzi,
         'tanguan': tanguan, 'pogui': pogui,
-        'has_xiong': tanguan > 0 or pogui > 0,
+        'has_xiong': tanguan > 0 or (pogui > 1 or (pogui == 1 and classes['年'] != '破鬼')),
     }
 
 
@@ -985,9 +993,196 @@ def check_buyuan_methods(pillars: Dict[str, str], shan: str, ri_gan: str) -> dic
     }
 
 
+# ═════════ 三煞方判定（《要诀》ZR_15_02 择日禁忌；2026-09-05 接入） ═════════
+# 原文："三煞者，劫煞、灾煞、岁煞也。申子辰年煞在南方巳午未，亥卯未年煞在西方申酉戌，
+#        寅午戌年煞在北方亥子丑，巳酉丑年煞在东方寅卯辰。日课不可犯。"
+# 年支三合局 → 对冲方位的地支三合为三煞方；日课四柱地支任一落入即犯三煞。
+SAN_SHA_MAP = {
+    '申': ['巳','午','未'], '子': ['巳','午','未'], '辰': ['巳','午','未'],
+    '亥': ['申','酉','戌'], '卯': ['申','酉','戌'], '未': ['申','酉','戌'],
+    '寅': ['亥','子','丑'], '午': ['亥','子','丑'], '戌': ['亥','子','丑'],
+    '巳': ['寅','卯','辰'], '酉': ['寅','卯','辰'], '丑': ['寅','卯','辰'],
+}
+
+def check_san_sha(nian_zhi: str, yue_zhi: str = '', pillars: Dict[str, str] = None) -> dict:
+    """
+    三煞方判定（《要诀》"日课不可犯"）
+    - 年支三合局的对冲方位三地支 = 三煞方（SAN_SHA_MAP）
+    - 月支可作次判（三煞随年为主，随月为辅——年煞最重）
+    - pillars: {'年':'甲子','月':'丙寅','日':'戊辰','时':'庚午'}，取其地支判定落入
+    返回 { hit, shan_sha_zhi, hit_pillars, level }
+    """
+    zhis = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥']
+    if nian_zhi not in SAN_SHA_MAP:
+        return {'hit': False, 'shan_sha_zhi': [], 'hit_pillars': [], 'level': ''}
+    san_sha = SAN_SHA_MAP[nian_zhi]
+    # 月支三煞（次判，年为主月为辅）
+    yue_sha = SAN_SHA_MAP.get(yue_zhi, []) if yue_zhi else []
+    hit_pillars = []
+    if pillars:
+        for label in ['年', '月', '日', '时']:
+            p = pillars.get(label, '')
+            if len(p) >= 2 and p[1] in san_sha:
+                hit_pillars.append(label)
+    level = ''
+    if hit_pillars:
+        # 日时为内（最忌），年月为外
+        inner = [x for x in hit_pillars if x in ('日', '时')]
+        level = '犯三煞(日时·内，最忌)' if inner else '犯三煞(年月·外)'
+    return {
+        'hit': bool(hit_pillars),
+        'shan_sha_zhi': san_sha,
+        'yue_sha_zhi': yue_sha,
+        'hit_pillars': hit_pillars,
+        'level': level,
+    }
+
+
 # ══════════════════════════════════════════════════════════════
 # F. 综合评分
 # ══════════════════════════════════════════════════════════════
+
+# ── 演禽窃要（《要诀》秘传；2026-09-05 接入）──
+# 原文锚点（《仪度六壬选日要诀》李佳明注）：
+#   ① 第73-75页：「甲山坐尾火宿，丑中斗木加来木下生火，竞含演禽真法」
+#       甲山→寅宫→尾火宿（坐山宿）；丑宫→斗木宿；木（斗木）生火（尾火）→ 合演禽真法
+#   ② 第75-76页：「演禽尾火毕月互相比旺」（庚山→申宫→毕月宿；三传寅→尾火宿；尾火毕月
+#       均为七元将头高禽，比旺而吉）
+# 判据（用户拍板 2026-09-05：到山+10 / 生+8 / 高禽+3；泊宫得地+8 / 失地-8；
+#   比和仅展示不加分——无原文正面吉验例）：
+#   · 坐山宿：二十四山 → 地支宫 → 宫首宿（甲→尾火、庚→毕月，与罗盘二十八宿分金等价）
+#   · 日课宿：四柱地支 → 宫首宿（丑→斗木、寅→尾火、申→毕月）
+#   · 相生：初传宿五行 生 坐山宿五行 → +8（例1「木下生火」；日→火、月→水归一同 yanqin_analyzer）
+#   · 到山：坐山宿入初传/中传 → +10/个（例2 中传申=庚山毕月）
+#   · 高禽：三传高禽宿≥2 且含坐山宿 → +3/个（例2 尾火毕月比旺）
+#   · 比和：中传宿与坐山宿同五行 → 仅展示不加分（无原文正面吉验例）
+#   · 泊宫：日禽锁泊得地+8/失地-8（需公历日期，经sxtwl 日禽；无日期安全跳过）
+
+# 地支宫 → 宫首宿（辰角亢→角、巳翼轸→翼、午星张→星、未柳鬼→柳、
+#   申毕觜参→毕、酉胃昴→胃、戌奎娄→奎、亥室壁→室、子虚危→虚、丑斗牛→斗、寅尾箕→尾、卯房心→房）
+_YQ_ZHI_XIU = {'子': '虚', '丑': '斗', '寅': '尾', '卯': '房', '辰': '角', '巳': '翼',
+               '午': '星', '未': '柳', '申': '毕', '酉': '胃', '戌': '奎', '亥': '室'}
+# 二十四山 → 地支宫（双山归宫：壬子→子、癸丑→丑、艮寅→寅、甲卯→卯、乙辰→辰、
+#   巽巳→巳、丙午→午、丁未→未、坤申→申、庚酉→酉、辛戌→戌、乾亥→亥）
+_YQ_SHAN_TO_ZHI = {'壬': '子', '子': '子', '癸': '丑', '丑': '丑',
+                   '艮': '寅', '寅': '寅', '甲': '寅', '卯': '卯',
+                   '乙': '辰', '辰': '辰', '巽': '巳', '巳': '巳',
+                   '丙': '午', '午': '午', '丁': '未', '未': '未',
+                   '坤': '申', '申': '申', '庚': '申', '酉': '酉',
+                   '辛': '戌', '戌': '戌', '乾': '亥', '亥': '亥'}
+# 七元将头（七高禽）：能降伏诸禽，遇之比旺（原文「尾火毕月互相比旺」）
+_YQ_GAO_QIN = ('尾', '毕', '井', '奎', '箕', '角', '亢')
+_YQ_ZHISHENG = {'木': '火', '火': '土', '土': '金', '金': '水', '水': '木'}
+
+
+def _yq_xiu_wuxing(xiu: str, _wx_map: dict) -> str:
+    """宿五行取用（日→火、月→水归一，与 yanqin_analyzer._xiu_wuxing 一致）。"""
+    wx = _wx_map.get(xiu, '')
+    if wx == '日':
+        return '火'
+    if wx == '月':
+        return '水'
+    return wx if wx in ('木', '火', '土', '金', '水') else ''
+
+
+def check_yanqin_qieyao(shan: str, pillars: Dict[str, str],
+                        shichen: str = '',
+                        year: int = None, month: int = None, day: int = None,
+                        sanchuan_dizhi: list = None) -> dict:
+    """演禽窃要判定（《要诀》秘传 + 《禽星易见》泊宫）。
+
+    判据载体 = 三传地支（原文例均以三传宿加临坐山，防空判过宽）：
+      ① 例1（73-75页）：甲山尾火，三传丑亥酉「丑中斗木加来木下生火」——初传丑=斗木，生坐山尾火
+      ② 例2（75-76页）：庚山毕月，三传寅申寅「演禽尾火毕月互相比旺」——中传申=毕月=坐山宿（演禽到山），
+         初末寅=尾火（七元将头高禽比旺）
+    ——所以相生/比和只认 初传+中传；坐山宿入三传=「演禽到山」；高禽≥2 才比旺。
+
+    返回 {shan_xiu, shan_wx, hits, ds_count, sheng_count, bihe_count,
+          gaoqin_count, po_gong, bonus}。bonus = 到山×10 + 相生×8 + 高禽×3 + 泊宫±8
+    （比和仅展示不加分——无原文正面吉验例，2026-09-05 用户拍板）。
+    """
+    # 二十八宿五行表（从 yanqin_analyzer 取，避免双份数据）
+    try:
+        from engine.yanqin_analyzer import YanQinAnalyzer as _YQA
+        _wx_map = dict(_YQA.XIU_WUXING)
+    except Exception:
+        _wx_map = {}
+    if not _wx_map:
+        _wx_map = {  # 降级内置表（与 yanqin_analyzer.XIU_WUXING 一致）
+            '角': '木', '亢': '金', '氐': '土', '房': '日', '心': '月',
+            '尾': '火', '箕': '水', '斗': '木', '牛': '金', '女': '土', '虚': '日', '危': '月',
+            '室': '火', '壁': '水', '奎': '木', '娄': '金', '胃': '土', '昴': '日', '毕': '月',
+            '觜': '火', '参': '水', '井': '木', '鬼': '金', '柳': '土', '星': '日', '张': '月',
+            '翼': '火', '轸': '水',
+        }
+
+    # ① 坐山宿：二十四山 → 宫 → 宫首宿
+    shan_zhi = _YQ_SHAN_TO_ZHI.get(shan, '')
+    shan_xiu = _YQ_ZHI_XIU.get(shan_zhi, '')
+    shan_wx = _yq_xiu_wuxing(shan_xiu, _wx_map)
+
+    hits = []          # 命中明细 {position, zhi, xiu, wx, relation}
+    ds_count = sheng_count = bihe_count = gaoqin_count = 0
+
+    # ② 三传承载判据；无三传则仅返回坐山宿信息（不加分，防空判过宽）
+    sc = [z for z in (sanchuan_dizhi or []) if z]
+    if shan_wx and len(sc) >= 2:
+        # 坐山宿入初传/中传 = 演禽到山（例2：中传申=庚山毕月；收敛只认前两传防过宽）
+        for i, z in enumerate(sc[:2]):
+            if _YQ_ZHI_XIU.get(z) == shan_xiu:
+                ds_count += 1
+                hits.append({'position': '初传' if i == 0 else ('中传' if i == 1 else '末传'),
+                             'zhi': z, 'xiu': shan_xiu, 'relation': '到山'})
+        # 相生/比和：相生只认初传（例1「丑中斗木加来」丑在初传，见原文三传丑亥酉），
+        #   比和只认中传（例2「尾火毕月互相比旺」毕月=庚山宿在中传）——收敛命中率防过宽
+        for i, z in enumerate(sc[:2]):
+            xiu = _YQ_ZHI_XIU.get(z, '')
+            wx = _yq_xiu_wuxing(xiu, _wx_map)
+            rel = ''
+            if xiu != shan_xiu and wx:
+                if i == 0 and _YQ_ZHISHENG.get(wx) == shan_wx:
+                    sheng_count += 1
+                    rel = '相生'
+                elif i == 1 and wx == shan_wx:
+                    # 比和：无原文正面吉验例（例2「比旺」实指高禽），只展示不加分（2026-09-05 用户拍板）
+                    bihe_count += 1
+                    rel = '比和'
+            if rel:
+                hits.append({'position': '初传' if i == 0 else '中传',
+                             'zhi': z, 'xiu': xiu, 'wx': wx, 'relation': rel})
+        # 高禽比旺：三传高禽宿≥2 且含坐山宿（原文例2：庚山毕月=高禽在传，与初末尾火「互相比旺」；
+        #   坐山宿非高禽（如尾/毕/角/奎外）则不判——收敛命中率防过宽）
+        _gx = {z for z in sc if _YQ_ZHI_XIU.get(z) in _YQ_GAO_QIN}
+        if shan_xiu in _YQ_GAO_QIN and len(_gx) >= 2:
+            gaoqin_count = len(_gx)
+            hits.append({'position': '三传', 'zhi': '、'.join(sc),
+                         'relation': f'{shan_xiu}宿比旺({len(_gx)}高禽)'})
+
+    po_gong = {}
+    if year and month and day:
+        try:
+            from engine.yanqin_analyzer import YanQinAnalyzer as _YQA2
+            _yq_res = _YQA2().analyze_yanqin_with_calendar(
+                {'年柱': pillars.get('年', ''), '月柱': pillars.get('月', ''),
+                 '日柱': pillars.get('日', ''), '时柱': pillars.get('时', '')},
+                year, month, day)
+            po_gong = _yq_res.get('泊宫', {}).get('日禽', {}) or {}
+        except Exception:
+            po_gong = {}
+
+    bonus = ds_count * 10 + sheng_count * 8 + gaoqin_count * 3
+    if po_gong.get('吉凶') == '吉':
+        bonus += 8
+    elif po_gong.get('吉凶') == '凶':
+        bonus -= 8
+
+    return {
+        'shan_xiu': shan_xiu, 'shan_wx': shan_wx,
+        'hits': hits, 'ds_count': ds_count, 'sheng_count': sheng_count,
+        'bihe_count': bihe_count, 'gaoqin_count': gaoqin_count,
+        'po_gong': po_gong, 'bonus': bonus,
+    }
+
 
 def score_doushou_liuxiang(year_pillar: str, month_pillar: str,
                             day_pillar: str, hour_pillar: str,
@@ -1033,9 +1228,20 @@ def analyze_yidu_full(shan: str,
                        tiandi_pan: dict = None,
                        tianjiang_map: dict = None,
                        yue_jiang: str = None,
-                       nian_zhi: str = None) -> dict:
+                       nian_zhi: str = None,
+                       shichen: str = None,
+                       ke_ti: str = None,
+                       year: int = None, month: int = None, day: int = None,
+                       ben_ming: str = None, ben_ming_gan: str = None,
+                       zeri_type: str = '', kong: list = None) -> dict:
     """
-    完整的仪度六壬择日分析
+    完整的仪度六壬择日分析（2026-08-31 统一评分口径）
+
+    评分口径（用户拍板）：
+        权威骨架 = calculate_new_score 禄马贵人到山到向分（四柱到山到向 + 三传禄马贵
+                  + 课体扣分 + 秘诀调整 + 太阳太岁）
+        加分项   = 斗首六想增量 + 三元三武 + 凶在外吉在内 + 拱格 + 活禄马 + 高级课格 + 补元
+        一票否决 = 斗首凶在日时(内)（贪官/破鬼临日时）→ 一定不能用（grade=不宜）
 
     参数:
         shan: 坐山（如'壬'）
@@ -1047,6 +1253,10 @@ def analyze_yidu_full(shan: str,
         tianjiang_map: 天将映射 {地盘: 天将}
         yue_jiang: 月将
         nian_zhi: 年支
+        shichen: 时辰（缺省用 时支 推导）
+        ke_ti: 课体名称（供禄马贵人骨架课体扣分；缺省不扣课体分）
+        ben_ming: 祭主（福主）本命地支（如'子'；2026-09-05 接入本命贵人/作禄作马加分）
+        ben_ming_gan: 祭主（福主）本命天干（如'甲'；判定命禄用，可缺省）
 
     返回: 完整分析报告
     """
@@ -1104,9 +1314,29 @@ def analyze_yidu_full(shan: str,
     shan_jia = SHAN_JIA_MAP.get(shan, '')
     xiang_shou = XIANG_SHOU.get(shan, shan_jia)
     
-    lu_dsdx = check_lu_daoshan_daoxiang(lu_zhi, shan_jia, xiang_shou)
-    ma_dsdx = check_ma_daoshan_daoxiang(ma_zhi, shan_jia, xiang_shou)
-    guiren_dsdx = check_guiren_daoshan_daoxiang(guiren_zhi, shan_jia, xiang_shou)
+    # 【2026-09-07 用户拍板：严格直达】daoshan_daoxiang 改"天盘加临后直达"口径（原静态日柱禄马贵
+    #   直接比山向 → 与 luma_detail(calculate_new_score 加临口径) 矛盾，前端显示"0 vs 满分"）。
+    #   现统一：禄马贵加临后正好落山家/向首才算到（不含三合次吉）。
+    try:
+        from engine.daliuren_luma_guiren import DaLiuRenLuMaGuiRen as _LUM
+        _spj = _LUM().check_single_pillar(ri_gan, ri_zhi, tiandi_pan or {}, shichen or '午',
+                                          shan_jia, xiang_shou, '日')
+        _lu_z = _spj.get('lu_zhi', '') or ''
+        _ma_z = _spj.get('ma_zhi', '') or ''
+        _gr_z = _spj.get('guiren_zhi', '') or ''
+        lu_dsdx = {'lu_zhi': _lu_z, 'is_daoshan_daoxiang': bool(_spj.get('lu_to_shan') or _spj.get('lu_to_xiang')),
+                   'to_shan': [_lu_z] if _spj.get('lu_to_shan') else [], 'to_xiang': [_lu_z] if _spj.get('lu_to_xiang') else []}
+        ma_dsdx = {'ma_zhi': _ma_z, 'is_daoshan_daoxiang': bool(_spj.get('ma_to_shan') or _spj.get('ma_to_xiang')),
+                   'to_shan': [_ma_z] if _spj.get('ma_to_shan') else [], 'to_xiang': [_ma_z] if _spj.get('ma_to_xiang') else []}
+        guiren_dsdx = {'guiren_zhi': [_gr_z] if _gr_z else [],
+                       'is_daoshan_daoxiang': bool(_spj.get('guiren_to_shan') or _spj.get('guiren_to_xiang')),
+                       'to_shan': [_gr_z] if _spj.get('guiren_to_shan') else [],
+                       'to_xiang': [_gr_z] if _spj.get('guiren_to_xiang') else []}
+    except Exception:
+        # 降级：退回静态口径（不阻断）
+        lu_dsdx = check_lu_daoshan_daoxiang(lu_zhi, shan_jia, xiang_shou)
+        ma_dsdx = check_ma_daoshan_daoxiang(ma_zhi, shan_jia, xiang_shou)
+        guiren_dsdx = check_guiren_daoshan_daoxiang(guiren_zhi, shan_jia, xiang_shou)
     
     # 活马活禄
     huoma_huolu = check_huoma_huolu(sanchuan, lu_zhi, ma_zhi, guiren_zhi) if sanchuan else {
@@ -1124,66 +1354,311 @@ def analyze_yidu_full(shan: str,
         {'年': year_pillar, '月': month_pillar, '日': day_pillar, '时': hour_pillar},
         shan, ri_gan
     )
+
+    # === E2. 三煞方判定（《要诀》ZR_15_02"日课不可犯"；2026-09-05 接入，择日禁忌）===
+    #    年支三合对冲方位；四柱地支任一落入 = 犯三煞。日时(内)最忌。
+    san_sha = check_san_sha(
+        nian_zhi,
+        month_pillar[1] if month_pillar and len(month_pillar) >= 2 else '',
+        {'年': year_pillar, '月': month_pillar, '日': day_pillar, '时': hour_pillar},
+    )
     
-    # === F. 综合评分 ===
-    total_score = liuxiang_score['score']
+    # === F. 综合评分（2026-08-31 统一口径：禄马贵人到山到向为权威骨架 + 加分项 + 斗首凶在内一票否决）===
     matched_patterns = []
-    
-    # 斗首得分
+    # 时辰缺省用 时支 推导（六壬时辰 = 时柱地支）
+    if not shichen and len(hour_pillar) >= 2:
+        shichen = hour_pillar[1]
+    if not shichen:
+        shichen = '子'
+
+    # 0) 斗首凶在日时(内) → 一票否决（用户拍板：一定不能用）
+    #    check_jixiong_position 仅「凶在日时(内)」会产生负分（-15/-10），score<0 即命中
+    jx_score = jixiong_check['score']
+    vetoed = jx_score < 0
+    veto_reason = '斗首凶在日时(内)（贪官/破鬼临日时），一定不能用' if vetoed else ''
+
+    # 1) 禄马贵人到山到向权威骨架（calculate_new_score：四柱到山到向 + 三传禄马贵 + 课体扣分
+    #    + 秘诀调整 + 太阳太岁；到山到向已含其中，不再另行加分避免重复）
+    luma_base = 60.0
+    luma_detail = {}
+    try:
+        # 【2026-09-05 单课日期传参】若调用方传了公历日期 → 用节气精确月将(get_yuejiang_by_date)
+        #   覆盖外部 yue_jiang，使单课与批量同口径；未传日期则保持外部 yue_jiang（行为不变）。
+        _lrm_yj = yue_jiang
+        _cns_date = {}
+        if year and month and day:
+            _lrm_yj = _LRM().get_yuejiang_by_date(year, month, day)
+            _cns_date = {'year': year, 'month': month, 'day': day}
+        _ns = _LRM().calculate_new_score(
+            shan, shichen,
+            year_pillar[0], year_pillar[1], month_pillar[0], month_pillar[1],
+            day_pillar[0], day_pillar[1], hour_pillar[0], hour_pillar[1],
+            sanchuan=sanchuan,
+            ke_ti_list=[ke_ti] if ke_ti else None,
+            yuejiang=_lrm_yj,
+            **_cns_date,
+        )
+        luma_base = float(_ns.get('final_score', 60) or 60)
+        luma_detail = _ns
+    except Exception:
+        luma_base = 60.0
+
+    # 1b) 课体修正明细透出（十三吉课加分/凶课减分：已在 luma_base 骨架内生效，此处仅展示不重复加分；
+    #     2026-09-05 细化透出，供加分项明细可查）
+    _kadj = luma_detail.get('keti_adjust') if isinstance(luma_detail, dict) else None
+    if isinstance(_kadj, dict) and _kadj.get('ke_score'):
+        _ks = int(_kadj['ke_score'])
+        _knote = _kadj.get('note', '课体修正')
+        matched_patterns.append(f'{_ks:+d} {_knote}')
+
+    # 2) 加分项（斗首吉格 / 拱格 / 活禄马 / 高级课格 / 补元）
+    bonus = 0.0
+    # 斗首六想强弱增量（60 为基准压缩到 ±10 量级）
+    doushou_delta = (liuxiang_score['score'] - 60) // 4
+    if doushou_delta:
+        bonus += doushou_delta
+        matched_patterns.append(f'{doushou_delta:+d} 斗首六想')
+    # 三元三武一廉（第一吉课）
     if sanyuan_check['is_first_jike']:
-        total_score += 15
+        bonus += 15
         matched_patterns.append(f'+15 {sanyuan_check["grade"]}')
     elif sanyuan_check['grade']:
-        total_score += 8
+        bonus += 8
         matched_patterns.append(f'+8 {sanyuan_check["grade"]}')
-    
-    if jixiong_check['is_ideal']:
-        total_score += jixiong_check['score']
-        matched_patterns.append(f'+{jixiong_check["score"]} 凶在外吉在内')
-    
+    # 凶在外吉在内（正向加分；凶在日时(内)已一票否决，不再罚分）
+    if jx_score > 0:
+        bonus += jx_score
+        matched_patterns.append(f'+{jx_score} 凶在外吉在内')
     # 拱格得分
+    # 【2026-09-05 同源去重】课体修正命中"禄马贵在三传"类十三吉课（亨通/和美/荣华——
+    #   判据本身含"禄马贵到山向/三传全备"）时，"三传中之禄马贵"已有课体修正 +10~20 计分；
+    #   活禄马与拱格的禄马贵类（拱贵/拱禄/拱马/干支拱日禄）不再重复加分，仅展示。
+    _lmg_jike = any(k in str(luma_detail.get('keti_adjust', {}).get('jike_details', []))
+                    if isinstance(luma_detail, dict) else ''
+                    for k in ('亨通', '和美', '三传全备', '天干二贵', '发用为山向禄马贵'))
     for gp in gong_patterns:
-        if gp['matched']:
-            total_score += 5
-            matched_patterns.append(f'+5 {gp["name"]}')
-    
-    # 到山到向得分
+        if not gp['matched']:
+            continue
+        if _lmg_jike and any(k in gp['name'] for k in ('拱贵', '拱禄', '拱马', '日禄')):
+            matched_patterns.append(f'拱格 {gp["name"]}（禄马贵已计入课体修正，仅示）')
+            continue
+        bonus += 5
+        matched_patterns.append(f'+5 {gp["name"]}')
+    # 到山到向计数（仅用于明细展示，不参与加分——已在禄马贵人骨架内）
     dsdx_count = sum([lu_dsdx['is_daoshan_daoxiang'], ma_dsdx['is_daoshan_daoxiang'], guiren_dsdx['is_daoshan_daoxiang']])
-    total_score += dsdx_count * 5
-    if dsdx_count > 0:
-        matched_patterns.append(f'+{dsdx_count*5} {dsdx_count}项到山到向')
-    
     # 活马活禄
     if huoma_huolu['count'] > 0:
-        total_score += huoma_huolu['count'] * 5
-        matched_patterns.append(f'+{huoma_huolu["count"]*5} 活禄马({huoma_huolu["count"]}项)')
-    
+        if _lmg_jike:
+            matched_patterns.append(f'活禄马({huoma_huolu["count"]}项·禄马贵已计入课体修正，仅示)')
+        else:
+            bonus += huoma_huolu['count'] * 5
+            matched_patterns.append(f'+{huoma_huolu["count"]*5} 活禄马({huoma_huolu["count"]}项)')
     # 高级课格
     for pattern in [chaotian, guiyuan, luowen, longde]:
         if pattern.get('matched'):
-            total_score += 5
+            if pattern.get('name') == '龙德课' and '龙德' in str(
+                    (sanchuan or {}).get('课体') if isinstance(sanchuan, dict) else ''):
+                # 龙德课已由 luma_base 骨架课体修正（十三吉课 +10/+20）计分，此处不再重复加（2026-09-05 去重）
+                matched_patterns.append('命中 龙德课（已在十三吉课课体修正计分）')
+                continue
+            bonus += 5
             matched_patterns.append(f'+5 {pattern["name"]}')
-    
     # 补元
     if buyuan['method']:
-        total_score += 3
+        bonus += 3
         matched_patterns.append(f'+3 {buyuan["method"]}')
-    
-    total_score = max(20, min(100, total_score))
-    
-    # 评级
-    if total_score >= 90:
-        grade = '上上吉'
-    elif total_score >= 80:
-        grade = '上吉'
-    elif total_score >= 70:
-        grade = '中吉'
-    elif total_score >= 60:
-        grade = '吉'
-    elif total_score >= 40:
-        grade = '平'
+    # 斗首四柱结构格局加分（天地同流/一气/三朋/五常/秀气/三合/方局/官旺/三奇；2026-09-05 接入）
+    #   分值表与 DouhouKegeAnalyzer._calculate_score 一致（天地同流+15、一气+8、三朋+5、五常+6、
+    #   秀气+5、三合局/方局+4、官旺+3、三奇+4）；复用其判格局函数避免双份判据
+    sizhu_patterns = []
+    try:
+        from engine.douhou_analyzer import DouhouKegeAnalyzer as _DHA
+        _dh = _DHA()
+        _dh._judge_sizhu_structure_patterns(
+            sizhu_patterns,
+            {'年柱': year_pillar, '月柱': month_pillar, '日柱': day_pillar, '时柱': hour_pillar},
+        )
+    except Exception:
+        sizhu_patterns = []
+    _SZ_STRUCT_SCORES = [
+        ('天地同流', 15),
+        ('天元一气', 8),
+        ('地支一气', 8),
+        ('三朋', 5),
+        ('曲直', 6), ('炎上', 6), ('从革', 6), ('润下', 6), ('稼穑', 6),
+        ('秀气', 5),
+        # 三合局：格局名为「申子辰水局」等（douhou_analyzer 原用'三合'关键字不命中，此处按实名校准）
+        ('水局', 4), ('木局', 4), ('火局', 4), ('金局', 4),
+        ('方局', 4),
+        ('官旺', 3),
+        ('三奇', 4),
+    ]
+    for _pt in sizhu_patterns:
+        if _pt.get('吉凶') not in ('吉', '大吉'):
+            continue
+        _pn = _pt.get('格局名称', '')
+        _sv = 0
+        for _kw, _v in _SZ_STRUCT_SCORES:
+            if _kw in _pn:
+                _sv = _v
+                break
+        if _sv:
+            bonus += _sv
+            matched_patterns.append(f'+{_sv} {_pn}')
+    # 祭主（福主）本命应福加分（2026-09-05 接入；用户拍板：本命贵人+8/柱，作禄/作马+5/项）
+    #   · 本命贵人：本命支落在某柱天干之天乙贵人地支集合 → 该柱为命主贵人到位（发贵应主）
+    #   · 本命作禄：命干之禄支出现在四柱地支 → 坐命禄（发财应主）；本命作马：命支之驿马支在四柱 → 坐命马
+    if ben_ming:
+        try:
+            _bmg = _LRM().check_ben_ming_guiren(
+                ben_ming, year_pillar[0], month_pillar[0], day_pillar[0], hour_pillar[0])
+            if _bmg.get('count'):
+                _bm_a = _bmg['count'] * 8
+                bonus += _bm_a
+                matched_patterns.append(f'+{_bm_a} 本命贵人({_bmg["count"]}柱)')
+            _bml = _LRM().check_ben_ming_ma_lu(
+                ben_ming, ben_ming_gan,
+                year_pillar[1], month_pillar[1], day_pillar[1], hour_pillar[1])
+            _bm_lm = _bml.get('lu_count', 0) + _bml.get('ma_count', 0)
+            if _bm_lm:
+                _bm_b = _bm_lm * 5
+                bonus += _bm_b
+                matched_patterns.append(
+                    f'+{_bm_b} 本命作禄作马({_bml.get("lu_count", 0)}禄/{_bml.get("ma_count", 0)}马)')
+        except Exception:
+            pass
+    # 演禽窃要加分（《要诀》秘传；2026-09-05 接入，用户拍板：到山+10/生+8/比和+5/高禽+3，结合泊宫）
+    #   判据载体=三传（原文「丑中斗木加来木下生火」「演禽尾火毕月互相比旺」皆指三传宿加临坐山）
+    yanqin_detail = {}
+    try:
+        _yq_sc = []
+        if sanchuan and isinstance(sanchuan, dict):
+            _yq_sc = [sanchuan.get('初传', ''), sanchuan.get('中传', ''), sanchuan.get('末传', '')]
+        yanqin_detail = check_yanqin_qieyao(
+            shan,
+            {'年': year_pillar, '月': month_pillar, '日': day_pillar, '时': hour_pillar},
+            shichen=shichen or (hour_pillar[1] if len(hour_pillar) >= 2 else ''),
+            year=year, month=month, day=day,
+            sanchuan_dizhi=_yq_sc,
+        )
+        if yanqin_detail['ds_count']:
+            _yd2 = yanqin_detail['ds_count'] * 10
+            bonus += _yd2
+            matched_patterns.append(f'+{_yd2} 演禽到山({yanqin_detail["shan_xiu"]}宿入三传)')
+        if yanqin_detail['sheng_count']:
+            _ys = yanqin_detail['sheng_count'] * 8
+            bonus += _ys
+            matched_patterns.append(f'+{_ys} 演禽相生({_ys//8}传生{yanqin_detail["shan_xiu"]}宿)')
+        if yanqin_detail['bihe_count']:
+            _yb = yanqin_detail['bihe_count'] * 5
+            bonus += _yb
+            matched_patterns.append(f'+{_yb} 演禽比和({_yb//5}传同{yanqin_detail["shan_xiu"]}宿)')
+        if yanqin_detail['gaoqin_count']:
+            _yg = yanqin_detail['gaoqin_count'] * 3
+            bonus += _yg
+            matched_patterns.append(f'+{_yg} 演禽高禽比旺({_yg//3}宿)')
+        _ypg = yanqin_detail.get('po_gong', {}) or {}
+        if _ypg.get('吉凶') == '吉':
+            bonus += 8
+            matched_patterns.append('+8 日禽得地(泊{})'.format(_ypg.get('宫', '') + '宫'))
+        elif _ypg.get('吉凶') == '凶':
+            bonus -= 8
+            matched_patterns.append('-8 日禽失地(泊{})'.format(_ypg.get('宫', '') + '宫'))
+    except Exception:
+        yanqin_detail = {}
+    # 三煞方禁忌（《要诀》"日课不可犯"；日时内最忌从重，年月外从轻）
+    #   2026-09-05 接入：犯三煞作负分禁忌，不推翻斗首一票否决，只降综合分/降评级
+    san_sha_penalty = 0
+    if san_sha['hit']:
+        inner = any(x in san_sha['hit_pillars'] for x in ('日', '时'))
+        san_sha_penalty = -15 if inner else -8
+        bonus += san_sha_penalty
+        matched_patterns.append(f'{san_sha_penalty} {san_sha["level"]}')
+
+    # 3.5) 择日类型类神吉应（2026-09-06 方案A-L3 接线：事件类神入课吉应 → 加分/减分）
+    #   接入点：add_year 权威骨架 + 加分项之后、综合分合成之前——与三煞禁忌同级作微调项。
+    #   吉应 +4（类神入传/临长生/加日辰实）、凶应 -6（类神受克/乘虎玄/加日辰空）、平 ±0（不入传只减应验）。
+    leishen_detail = {}
+    if zeri_type and sanchuan:
+        try:
+            from engine.leishen_engine import judge_zeri_leishen, get_xunkong
+            _sc_ls = [sanchuan.get('初传', ''), sanchuan.get('中传', ''), sanchuan.get('末传', '')]
+            # 三传可能带干支全名（古例口径"甲子"）→ 取地支末字
+            _sc_ls = [str(z)[-1] if str(z) else '' for z in _sc_ls]
+            _kong_ls = list(kong) if kong else get_xunkong(day_pillar[0], day_pillar[1])
+            # 干上/支上神（六壬寄宫：甲寅乙辰丙戊巳丁己未庚申辛戌壬亥癸丑）
+            _JIG = {'甲': '寅', '乙': '辰', '丙': '巳', '丁': '未', '戊': '巳',
+                    '己': '未', '庚': '申', '辛': '戌', '壬': '亥', '癸': '丑'}
+            _gs_ls = (tiandi_pan or {}).get(_JIG.get(day_pillar[0], ''), '')
+            _zs_ls = (tiandi_pan or {}).get(day_pillar[1], '')
+            _ls = judge_zeri_leishen(
+                zeri_type, _sc_ls,
+                gan_shang=_gs_ls, zhi_shang=_zs_ls, kong=_kong_ls,
+                chu_tj=(tianjiang_map or {}).get(_sc_ls[0], '') if _sc_ls[0] else '',
+                zhong_tj=(tianjiang_map or {}).get(_sc_ls[1], '') if _sc_ls[1] else '',
+                mo_tj=(tianjiang_map or {}).get(_sc_ls[2], '') if _sc_ls[2] else '',
+                ri_gan=day_pillar[0], ri_zhi=day_pillar[1], tai_sui=nian_zhi or '',
+                # 2026-09-06 随山向重排：丧葬/祭祀主类神=山家支+向首支（安葬立碑看山向）
+                shan=shan)
+            if _ls and _ls.get('end'):
+                _leq = {'吉': 4, '凶': -6, '平': 0}.get(_ls['end'], 0)
+                if _leq:
+                    bonus += _leq
+                    matched_patterns.append(
+                        f'{_leq:+d} {zeri_type}类神吉应[{_ls.get("leishen", "")}]({_ls.get("narr", "")[:16]})')
+                leishen_detail = _ls
+        except Exception:
+            leishen_detail = {}
+
+    # 3) 综合分 = 禄马贵人权威骨架 + 加分项
+    total_score = round(luma_base + bonus, 1)
+    # 【2026-09-06 铁律硬闸·禄马贵人发三传】六壬未达标(<2)的课，加分项再高也不得满分/上上吉：
+    #   综合分封顶 89（配合 daliuren_luma_guiren 六壬分降档，双闸防"base灌满+bonus顶回100"）
+    try:
+        _fc_ls = (luma_detail or {}).get('sanchuan_luma_count', 0)
+        if _fc_ls < 2 and total_score > 89:
+            total_score = 89
+    except Exception:
+        pass
+    # 斗首贡献加分（六想增量 + 三元三武 + 凶在外吉在内）——供前端"斗首/到向/六壬"拆解
+    doushou_bonus = doushou_delta + (15 if sanyuan_check['is_first_jike'] else 8 if sanyuan_check['grade'] else 0) + (jx_score if jx_score > 0 else 0)
+
+    # 【2026-09-07 前端SUMMARY补齐·互禄互贵】与批量优化器顶格判定同源（check_hulu_hugui）。
+    #   生成如 "\n互禄互贵: 命中(互禄4项+互贵3项)" 的展示片段；未命中返回 ''，不影响旧输出。
+    _hulu_hugui_summary = ''
+    try:
+        _hh = _LRM().check_hulu_hugui(
+            year_pillar[0] if len(year_pillar) >= 2 else '甲',
+            month_pillar[0] if len(month_pillar) >= 2 else '甲',
+            day_pillar[0] if len(day_pillar) >= 2 else '甲',
+            ben_ming_gan or '', shan,
+            month_pillar[1] if len(month_pillar) >= 2 else '子')
+        if _hh.get('is_mutual_lu_gui'):
+            _hulu_n = int(_hh.get('hulu_count', 0) or 0)
+            _hugui_n = int(_hh.get('hugui_count', 0) or 0)
+            _hulu_hugui_summary = f'\n互禄互贵: 命中(互禄{_hulu_n}项+互贵{_hugui_n}项)'
+    except Exception:
+        _hulu_hugui_summary = ''
+
+    # 4) 评级
+    if vetoed:
+        # 斗首凶在日时(内)：一票否决，压到 39 以下（平/凶域）+ 标记不宜
+        total_score = min(total_score, 39)
+        grade = '不宜'
     else:
-        grade = '凶'
+        total_score = max(20, min(100, total_score))
+        if total_score >= 90:
+            grade = '上上吉'
+        elif total_score >= 80:
+            grade = '上吉'
+        elif total_score >= 70:
+            grade = '中吉'
+        elif total_score >= 60:
+            grade = '吉'
+        elif total_score >= 40:
+            grade = '平'
+        else:
+            grade = '凶'
     
     return {
         'shan': shan,
@@ -1214,13 +1689,32 @@ def analyze_yidu_full(shan: str,
             '龙德课': longde,
         },
         'buyuan': buyuan,
+        'san_sha': san_sha,              # 三煞方判定（《要诀》ZR_15_02 禁忌；2026-09-05）
+        'san_sha_penalty': san_sha_penalty,  # 三煞扣分（日时内-15/年月外-8）
+        'sizhu_patterns': sizhu_patterns,  # 斗首四柱结构格局（天地同流/一气等；2026-09-05 接入）
+        'yanqin_detail': yanqin_detail,  # 演禽窃要（山宿/生克/高禽/泊宫；2026-09-05 接入）
         'matched_patterns': matched_patterns,
+        # 统一口径拆解（2026-08-31）：禄马贵人骨架 + 加分项 + 一票否决标记
+        'luma_base': round(luma_base, 1),
+        'luma_detail': luma_detail,
+        'bonus': round(bonus, 1),
+        # 择日类型类神吉应（2026-09-06 方案A-L3：{end,narr,leishen,zhi_list,tianjiang_table}）
+        'leishen_detail': leishen_detail,
+        # 斗首贡献加分（六想增量 + 三元三武 + 凶在外吉在内）——供前端"斗首/到向/六壬"拆解
+        'doushou_bonus': round(doushou_bonus, 1),
+        'vetoed': vetoed,
+        'veto_reason': veto_reason,
+        # 【2026-09-07 前端SUMMARY补齐】互禄互贵命中：与批量优化器顶格判定同源
+        #   （DaLiuRenLuMaGuiRen.check_hulu_hugui：年干丙禄巳→月干贵人…交叉互禄互贵），
+        #   使前端 summary 能解释"互禄互贵通道"顶格课的依据（原来只显示 到山到向/拱格=0）。
+        '_hulu_hugui_summary': _hulu_hugui_summary,
         'summary': f'[{grade}] {shan}山{xiang_shou}向 评分{total_score}分\n' +
                    yuan_check['recommendation'] + '\n' +
                    (sanyuan_check['grade'] + '\n' if sanyuan_check['grade'] else '') +
                    f'拱格: {len([p for p in gong_patterns if p["matched"]])}个, ' +
                    f'到山到向: {dsdx_count}项, ' +
-                   f'活禄马: {huoma_huolu["count"]}项',
+                   f'活禄马: {huoma_huolu["count"]}项' +
+                   (_hulu_hugui_summary or ''),
     }
 
 
