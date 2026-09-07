@@ -27,36 +27,344 @@ from flask_cors import CORS
 
 ROOT = Path(__file__).parent
 
-# ── 达标择日付费档位（憨爷定价：1年内免费，按"最多扫天数"阶梯；按次解锁，24h 有效）──
-# 每档: (档位名, 最大天数, 价格元/次)
+# ═════════════════════════════════════════════════════════════════
+# 达标择日收费体系（2026-08-21 憨爷新定价 v2）
+# 方式一「扫码按次」：按"目标跨度天数"自动计价；≤3天免费；另每日限免1次
+# 方式二「会员」：48元/月(每月5次+限1年跨度) / 98元/月(不限次数+不限跨度)，支持月/季/年
+# 内测：本地IP白名单 / 指定时间段 / 手机号+姓名+短信验证码白名单 → 免费放行
+# ═════════════════════════════════════════════════════════════════
+# 每档: (档位名, 最大天数, 价格元/次, 跨度描述)
 SCAN_PRICE_TIERS = [
-    ('1y',  365,   0),
-    ('2y',  730,  15),
-    ('5y',  1825, 30),
-    ('10y', 3650, 66),
-    ('60y', 21915, 360),
+    ('3d',     3,    0,   '3天以内'),
+    ('15d',   15,  9.8,   '3天-15天'),
+    ('1m',    30,   36,   '15天-1个月'),
+    ('6m',   180,   98,   '1个月-半年'),
+    ('1y',   365,  168,   '半年-1年'),
+    ('3y',  1095,  360,   '1年-3年'),
+    ('10y', 3650, 1680,   '3年-10年'),
+    ('60y', 21915, 1680,  '10年-60年'),
 ]
-FREE_SCAN_DAYS = 365          # 免费额度 = 高档快弃默认 1 年
+FREE_SCAN_DAYS = 3            # 默认免扫描跨度 = 3 天内
 UNLOCK_FILE = ROOT / '_zeri_unlock.json'
-UNLOCK_HOURS = 24             # 解锁有效期（按次解锁后 24h 内任意扫描放行）
+UNLOCK_HOURS = 24             # 按次解锁有效期（24h 内任意扫描放行）
+
+# ── 会员定价（元）：键=input周期 → (价, 月数, 48档每月次数, 48档跨度上限天数)
+PLAN_VIP_BASIC = 'vip48'      # 会员·体验档
+PLAN_VIP_PRO   = 'vip98'      # 会员·尊享档
+PLAN_LIFETIME  = 'lifetime'   # 终身免费用户
+VIP_MONTHS = {'m': 1, 'q': 3, 'y': 12}
+VIP_PRICE = {
+    # plan -> {period: price}
+    PLAN_VIP_BASIC: {'m': 48, 'q': 128, 'y': 360},
+    PLAN_VIP_PRO:   {'m': 98, 'q': 258, 'y': 720},
+}
+VIP48_MONTHLY_QUOTA = 5        # 体验档每月可用次数
+VIP48_MAX_DAYS = 365           # 体验档跨度上限 = 1 年
+# 新用户每日限免：每天默认给非付费、非内测用户 1 次免费机会（限跨度 <=3天）
+DAILY_FREE_LIMIT = 1
+DAILY_FREE_MAX_DAYS = 3
+# 超选预览每日配额：按权益档次（0=不限）。免费/内测=1，体验会员=3，尊享全选6属授权益内不触预览
+LMG_OVERSEE_DAILY_LIMIT = 1
+LMG_OVERSEE_DAILY_LIMIT_EXP = 3
+
+# ── 用户/会员/内测数据存储 ──
+USER_DATA_FILE = ROOT / '_sys_users.json'        # 用户注册与会员信息
+INVITE_FILE    = ROOT / '_sys_invite.json'       # 内测白名单(手机号->姓名 / 本地IP)
+MEMBERSHIP_FILE= ROOT / '_sys_membership.json'   # 会员权益记录(手机号->权益)
+QR_CODE_IMG    = ROOT / 'static' / 'pay_qr.png'  # 静态收款码图片(付费入口)
+FREE_USAGE_FILE= ROOT / '_sys_free_usage.json'   # 每日限免/首免计数  key:手机号/IP_日期
+
+_SP = lambda p: str(ROOT / p)
+
+def _load_json(path, default=None):
+    try:
+        if Path(path).exists():
+            return json.loads(Path(path).read_text('utf-8'))
+    except Exception:
+        pass
+    return default
+
+def _save_json(path, data):
+    try:
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
+        Path(path).write_text(json.dumps(data, ensure_ascii=False, indent=2), 'utf-8')
+        return True
+    except Exception:
+        return False
 
 def _scan_price(max_days):
-    """按 max_days 返回 (价格, 档位名)。"""
-    for name, days, price in SCAN_PRICE_TIERS:
+    """按最大跨度天数返回 (价格, 档位名)。跨度为0(不扫长)→最低免费档。"""
+    if max_days <= 0:
+        return 0, '3d'
+    for name, days, price, _desc in SCAN_PRICE_TIERS:
         if max_days <= days:
             return price, name
-    return 360, '60y'
+    # 超60年（一甲子）：仍按10年以上档，此处不给免费（走内测/会员解锁）
+    return 1680, '10y'
+
 
 def _tier_days(amount):
-    """按金额反查该档允许的最大天数（解锁档位校验）。"""
-    for name, days, price in SCAN_PRICE_TIERS:
+    """按金额反查该档允许的最大天数（按次解锁档位校验）。"""
+    for name, days, price, _desc in SCAN_PRICE_TIERS:
         if price > 0 and abs(price - amount) < 0.01:
             return days
     return 0
 
-def _write_unlock(amount, tier):
+
+def _tier_desc_by_amount(amount):
+    for name, days, price, desc in SCAN_PRICE_TIERS:
+        if price > 0 and abs(price - amount) < 0.01:
+            return desc
+    return ''
+
+# ═════════════════════════════════════════════════════════════════
+# 内测/会员/身份 判定模块
+# ═════════════════════════════════════════════════════════════════
+def _client_ip():
+    """取客户端IP（优先代理头）。"""
+    try:
+        fwd = request.headers.get('X-Forwarded-For', '')
+        if fwd:
+            return fwd.split(',')[0].strip()
+    except Exception:
+        pass
+    try:
+        return request.remote_addr or ''
+    except Exception:
+        return ''
+
+def _today_str():
+    return date.today().isoformat()
+
+def _is_local_ip(ip):
+    """本地机/IP 白名单判断（内测直放）。"""
+    ip = (ip or '').strip()
+    if not ip:
+        return False
+    local_ips = {'127.0.0.1', '::1', 'localhost'}
+    # 本机自 IP / 内网段 / 本地授权IP
+    if ip in local_ips:
+        return True
+    if ip.startswith('192.168.') or ip.startswith('10.') or ip.startswith('172.16.'):
+        return True
+    invoke = _load_json(str(INVITE_FILE), {}) or {}
+    allowed = invoke.get('local_ips', []) or []
+    for a in allowed:
+        if ip == str(a).strip():
+            return True
+        if str(a).strip().endswith('.*') and ip.startswith(str(a).strip().rstrip('.*')):
+            return True
+    return False
+
+def _is_in_beta_window():
+    """是否处于内测免费时间段。config.BETA_WINDOW_ENABLED / START / END 配置。"""
+    try:
+        from config import BETA_WINDOW_ENABLED, BETA_WINDOW_START, BETA_WINDOW_END
+    except Exception:
+        return False
+    if not BETA_WINDOW_ENABLED:
+        return False
+    if not BETA_WINDOW_START or not BETA_WINDOW_END:
+        return False
+    try:
+        today = date.today()
+        s = date.fromisoformat(str(BETA_WINDOW_START))
+        e = date.fromisoformat(str(BETA_WINDOW_END))
+        return s <= today <= e
+    except Exception:
+        return False
+
+def _is_invite(mobile):
+    """手机号+姓名 内测白名单校验（配置于 _sys_invite.json）。"""
+    if not mobile:
+        return False
+    invite = _load_json(str(INVITE_FILE), {}) or {}
+    mobs = invite.get('mobiles', {}) or {}
+    return str(mobile).strip() in mobs
+
+def _is_beta_whitelisted(mobile=None):
+    """是否内测免费：本地IP / 时间段 / 手机号白名单 任一命中。"""
+    if _is_local_ip(_client_ip()):
+        return True
+    if _is_in_beta_window():
+        return True
+    if mobile and _is_invite(mobile):
+        return True
+    return False
+
+def _membership(mobile):
+    """查会员权益：返回 dict 或 None。结构 {plan, expires_at, source_mobile}。"""
+    if not mobile:
+        return None
+    data = _load_json(str(MEMBERSHIP_FILE), {}) or {}
+    return data.get(str(mobile).strip())
+
+def _membership_valid(mem):
+    if not mem:
+        return False
+    # 终身免费用户永不过期
+    if mem.get('plan') == PLAN_LIFETIME:
+        return True
+    try:
+        exp = datetime.fromisoformat(mem.get('expires_at', ''))
+        return exp >= datetime.now()
+    except Exception:
+        return False
+
+def _consume_vip(mobile):
+    """消费一次会员次数（48档限次；98档/终身不限）。返回剩余次数。"""
+    if not mobile:
+        return 0
+    mem = _membership(mobile)
+    if not mem or not _membership_valid(mem):
+        return -1
+    if mem.get('plan') in (PLAN_VIP_PRO, PLAN_LIFETIME):
+        return 9999  # 尊享档/终身免费不限次
+    try:
+        data = _load_json(str(MEMBERSHIP_FILE), {}) or {}
+        cur = data.get(str(mobile)) or {}
+        used = int(cur.get('used_this_period', 0) or 0)
+        cur['used_this_period'] = used + 1
+        data[str(mobile)] = cur
+        _save_json(str(MEMBERSHIP_FILE), data)
+        return VIP48_MONTHLY_QUOTA - used - 1
+    except Exception:
+        return -1
+
+def _consume_daily_free(mobile):
+    """每日限免计数消费。返回 (是否放行, 剩余)。key=手机号或IP_日期。"""
+    key = (mobile or _client_ip() or 'anon') + '_' + _today_str()
+    data = _load_json(str(FREE_USAGE_FILE), {}) or {}
+    used = int(data.get(key, 0) or 0)
+    if used >= DAILY_FREE_LIMIT:
+        return False, 0
+    data[key] = used + 1
+    _save_json(str(FREE_USAGE_FILE), data)
+    return True, DAILY_FREE_LIMIT - used - 1
+
+def _consume_lmg_oversee(mobile, limit=LMG_OVERSEE_DAILY_LIMIT):
+    """每日“超选预览”配额消费（与限免同文件，独立前缀 preview_）。返回 (是否放行, 剩余)。
+    limit<=0 视作不限；按 手机号/IP + 日期 计数。"""
+    limit = limit or 0
+    if limit <= 0:
+        return True, -1
+    key = 'preview_' + (mobile or _client_ip() or 'anon') + '_' + _today_str()
+    data = _load_json(str(FREE_USAGE_FILE), {}) or {}
+    used = int(data.get(key, 0) or 0)
+    if used >= limit:
+        return False, 0
+    data[key] = used + 1
+    _save_json(str(FREE_USAGE_FILE), data)
+    return True, limit - used - 1
+
+def _resolve_access(max_days, mobile=None, is_first=None):
+    """综合计费决策。返回 dict：
+    {free, is_beta, is_vip, vip_plan, vip_left, price, tier, tier_desc,
+     daily_free, daily_left, must_pay, qr_amount, message}
+    规则优先级：内测/本地 → 会员 → 6天外免费 → 每日限免 → 按次付费。
+    """
+    max_days = max_days or 0
+    if _is_beta_whitelisted(mobile):
+        return {'free': True, 'is_beta': True, 'is_vip': False, 'vip_plan': '',
+                'vip_left': 0, 'price': 0, 'tier': '', 'tier_desc': '内测免费',
+                'daily_free': False, 'daily_left': 0, 'must_pay': False,
+                'qr_amount': 0, 'message': '内测期/本机/白名单用户免费'}
+
+    mem = _membership(mobile)
+    if mem and _membership_valid(mem):
+        plan = mem.get('plan')
+        # 终身免费用户：不限次数/跨度
+        if plan == PLAN_LIFETIME:
+            return {'free': True, 'is_beta': False, 'is_vip': True, 'vip_plan': '终身免费',
+                    'vip_left': 9999, 'price': 0, 'tier': '', 'tier_desc': '终身免费(不限次数跨度)',
+                    'daily_free': False, 'daily_left': 0, 'must_pay': False,
+                    'qr_amount': 0, 'message': '终身免费用户，不限次数/跨度'}
+        exp = datetime.fromisoformat(mem.get('expires_at', ''))
+        left_days = (exp - datetime.now()).days
+        if plan == PLAN_VIP_PRO:
+            return {'free': True, 'is_beta': False, 'is_vip': True, 'vip_plan': '尊享档',
+                    'vip_left': 0, 'price': 0, 'tier': '', 'tier_desc': '会员·尊享(不限次数跨度)',
+                    'daily_free': False, 'daily_left': 0, 'must_pay': False,
+                    'qr_amount': 0, 'message': f'尊享会员有效期剩余 {left_days} 天，不限次数/跨度'}
+        # vip48 体验档：次数 + 跨度限制
+        if max_days > VIP48_MAX_DAYS:
+            # 超出跨度 → 需补按次差价或升级
+            price, tier = _scan_price(max_days)
+            return {'free': False, 'is_beta': False, 'is_vip': True, 'vip_plan': '体验档',
+                    'vip_left': 0, 'price': price, 'tier': tier,
+                    'tier_desc': _tier_desc_by_amount(price) or '跨度超限',
+                    'daily_free': False, 'daily_left': 0, 'must_pay': True,
+                    'qr_amount': price,
+                    'message': f'体验档限{int(VIP48_MAX_DAYS/30)}个月跨度，本次跨度超限需补差价 {price}元/次'}
+        left = _consume_vip(mobile)
+        if left is not None and left >= 0:
+            return {'free': True, 'is_beta': False, 'is_vip': True, 'vip_plan': '体验档',
+                    'vip_left': left, 'price': 0, 'tier': '', 'tier_desc': '会员·体验(已计次)',
+                    'daily_free': False, 'daily_left': 0, 'must_pay': False,
+                    'qr_amount': 0, 'message': f'体验档已计次，本月剩余 {left} 次'}
+        # 次数用完 → 降级按次（同跨度）
+        price, tier = _scan_price(max_days)
+        return {'free': False, 'is_beta': False, 'is_vip': True, 'vip_plan': '体验档',
+                'vip_left': 0, 'price': price, 'tier': tier,
+                'tier_desc': _tier_desc_by_amount(price) or '已用尽次数',
+                'daily_free': False, 'daily_left': 0, 'must_pay': True,
+                'qr_amount': price,
+                'message': '体验档次数已用尽，可按次付费或升级尊享档'}
+
+    # 非会员：跨度免费档（≤3天）
+    price, tier = _scan_price(max_days)
+    if price == 0:
+        return {'free': True, 'is_beta': False, 'is_vip': False, 'vip_plan': '',
+                'vip_left': 0, 'price': 0, 'tier': tier,
+                'tier_desc': '本次跨度免费', 'daily_free': False, 'daily_left': 0,
+                'must_pay': False, 'qr_amount': 0,
+                'message': '本次目标跨度≤3天，免费'}
+
+    # 每日限免（独立于3天免费，用于促销非付费用户）
+    # 说明：每日限免仅覆盖跨度<=3天档，长跨度不参与，避免滥用
+    if max_days <= DAILY_FREE_MAX_DAYS:
+        ok, left = _consume_daily_free(mobile)
+        if ok:
+            return {'free': True, 'is_beta': False, 'is_vip': False, 'vip_plan': '',
+                    'vip_left': 0, 'price': 0, 'tier': tier,
+                    'tier_desc': '每日限免', 'daily_free': True, 'daily_left': left,
+                    'must_pay': False, 'qr_amount': 0,
+                    'message': '今日每日限免额度已用' if not ok else f'今日免费体验已用，剩余 {left} 次'}
+
+    # 长跨度：需按次付费
+    return {'free': False, 'is_beta': False, 'is_vip': False, 'vip_plan': '',
+            'vip_left': 0, 'price': price, 'tier': tier,
+            'tier_desc': _tier_desc_by_amount(price) or '按次付费',
+            'daily_free': False, 'daily_left': 0, 'must_pay': True,
+            'qr_amount': price,
+            'message': f'该档位（{_tier_desc_by_amount(price)}）需付费 {price} 元/次'}
+
+
+def _unlock_key(mobile=None):
+    """按手机号隔离解锁：优先用手机号，无则退回客户端 IP，再退回匿名通道。"""
+    k = (mobile or '').strip()
+    if k:
+        return k
+    ip = _client_ip() or ''
+    return 'ip:' + ip if ip else 'anon'
+
+def _load_unlocks():
+    """读取解锁存档；兼容旧版"单条记录"格式，自动迁移为 {用户:记录}。"""
+    try:
+        data = _load_json(str(UNLOCK_FILE), {}) or {}
+    except Exception:
+        return {}
+    if not isinstance(data, dict):
+        return {}
+    # 旧版单条记录（顶层直接含 expires_at）→ 迁移到统一字典结构
+    if 'expires_at' in data:
+        return {'legacy': data}
+    return data
+
+def _write_unlock(amount, tier, mobile=None):
     import secrets
-    rec = {
+    data = _load_unlocks()
+    data[_unlock_key(mobile)] = {
         'unlock_key': secrets.token_hex(16),
         'tier': tier, 'amount': amount,
         'max_days': _tier_days(amount),
@@ -65,18 +373,18 @@ def _write_unlock(amount, tier):
     }
     try:
         with open(UNLOCK_FILE, 'w', encoding='utf-8') as f:
-            json.dump(rec, f, ensure_ascii=False, indent=2)
+            json.dump(data, f, ensure_ascii=False, indent=2)
     except Exception:
         return False
     return True
 
-def _check_unlock(max_days):
-    """校验解锁文件：存在、未过期、且解锁档位覆盖本次 max_days → (ok, 剩余小时)。"""
+def _check_unlock(max_days, mobile=None):
+    """按用户解锁记录校验：存在、未过期、且解锁档位覆盖本次 max_days → (ok, 剩余小时)。"""
     try:
-        if not UNLOCK_FILE.exists():
+        data = _load_unlocks()
+        rec = data.get(_unlock_key(mobile))
+        if not rec:
             return False, 0
-        with open(UNLOCK_FILE, encoding='utf-8') as f:
-            rec = json.load(f)
         exp = datetime.fromisoformat(rec.get('expires_at', ''))
         if exp < datetime.now():
             return False, 0
@@ -193,6 +501,17 @@ def get_trades(cat):
 
 def get_predictions():
     return read_json(MEMORY / 'stock_predictions.json')
+
+@app.route('/static/<path:filename>')
+def serve_static_file(filename):
+    """服务 static/ 目录（收款码、前端静态资源）。"""
+    from flask import send_from_directory
+    static_dir = ROOT / 'static'
+    try:
+        return send_from_directory(str(static_dir), filename)
+    except Exception:
+        return jsonify({'error': 'Not found'}), 404
+
 
 @app.route('/')
 def index():
@@ -1678,6 +1997,10 @@ def api_zeri_analyze():
             ri_gan=ri_gan, ri_zhi=ri_zhi,
             sanchuan=sanchuan, tiandi_pan=tiandi_pan,
             tianjiang_map=_tjm, yue_jiang=yuejiang, nian_zhi=nian_zhi,
+            shichen=shichen, ke_ti=raw.get('课体', '') or None,
+            year=y, month=m, day=d,
+            # 2026-09-06 方案A-L3：择日类型类神吉应（未选类型则跳过）
+            zeri_type=request.values.get('zetiri_type', '') or '',
         )
 
         result = {
@@ -1701,7 +2024,63 @@ def api_zeri_analyze():
                 'luowen': analysis['advanced_patterns']['罗纹格']['matched'],
             },
             'summary': analysis['summary'],
+            # 2026-08-31 统一口径拆解 + 斗首凶在内一票否决
+            'luma_base': analysis.get('luma_base', 0),
+            'bonus': analysis.get('bonus', 0),
+            'doushou_bonus': analysis.get('doushou_bonus', 0),
+            'vetoed': analysis.get('vetoed', False),
+            'veto_reason': analysis.get('veto_reason', ''),
+            # 2026-09-05 太阳躔度·合方之法：透传 luma_detail（含 sun_chanhe_details/bonus）供前端逐柱明细
+            'luma_detail': analysis.get('luma_detail', {}),
+            # 2026-09-05 加分项明细透传：四柱结构格局（天地同流/一气等）、演禽窃要、加分项列表
+            'matched_patterns': analysis.get('matched_patterns', []),
+            'sizhu_patterns': analysis.get('sizhu_patterns', []),
+            'yanqin_detail': analysis.get('yanqin_detail', {}),
+            # 2026-09-06 方案A-L3：择日类型类神吉应（{end,narr,leishen,zhi_list}，供前端叙事）
+            'leishen_detail': analysis.get('leishen_detail', {}),
         }
+
+        # ── 空亡三铁律审计（2026-08-25 憨爷拍板：本命落旬空可填补 / 踏空致命 / 乘天空=真空）──
+        result['void_audit'] = {'level': '干净', 'pass': True, 'xunkong': [], 'ben_ming_void': False,
+                                'tread_zhi': '', 'tread_void': False, 'ride_general': '', 'ride_sky': False,
+                                'reasons': []}
+        try:
+            from engine.void_audit import audit_void
+            result['void_audit'] = audit_void(ri_gan + ri_zhi, tiandi_pan, _tjm, ben_ming)
+        except Exception:
+            pass
+
+        # ── 十二建星（2026-08-25 用户拍板：月建起建，只进批语叙事不加减分）──
+        result['jianxing'] = {'name': '', 'huang_dao': False, 'level': '', 'desc': '', 'narrative': ''}
+        try:
+            from engine.jianxing import get_jianxing, jianxing_narrative
+            _jx = get_jianxing(yue_zhi, ri_zhi)
+            result['jianxing'] = dict(_jx)
+            # 课体吉凶倾向：以 grade 判定（上上吉/上吉=吉，凶/平=凶）
+            _gx = '吉' if result.get('grade', '') in ('上上吉', '上吉') else ('凶' if '凶' in result.get('grade', '') else '平')
+            # 三传地支 + 天将（类象叙事）
+            _jx_sc = [sanchuan.get('初传', ''), sanchuan.get('中传', ''), sanchuan.get('末传', '')]
+            _jx_tj = [_tjm.get(z, '') for z in _jx_sc]
+            result['jianxing']['narrative'] = jianxing_narrative(_jx, _gx, _jx_sc, _jx_tj)
+        except Exception:
+            pass
+
+        # ── 现代类象推演入库（2026-08-25 用户拍板：按择日类型推演+存历史库+反馈校准）──
+        # 字段名 modern_leixiang（避开已有 result['leixiang']=初传类象）
+        result['modern_leixiang'] = {'推演': [], '历史佐证': '', 'narrative': '', 'zeri_type': ''}
+        try:
+            from engine.leixiang_kb import LeixiangKB
+            _kb = LeixiangKB()
+            _zt = request.values.get('zetiri_type', '') or ''
+            _lx = _kb.push_leixiang(_zt, date=date_str, shichen=shichen)
+            result['modern_leixiang'] = {
+                '推演': _lx.get('推演', []),
+                '历史佐证': _lx.get('历史佐证', ''),
+                'narrative': _kb.get_narrative(_zt),
+                'zeri_type': _zt,
+            }
+        except Exception:
+            pass
 
         # ── 古籍合参警示层（2026-08-19 接线：单课页与批量同源，警示/佐证层不参与评分）──
         try:
@@ -1798,6 +2177,9 @@ def api_zeri_analyze():
                     'score': _ds.get('综合评分', 0),
                     'grade': _ds.get('吉凶等级', ''),
                     'duanyu': _ds.get('吉凶断语', []),
+                    # 2026-09-07 补齐：六相断语 + 扣分原因（破鬼/贪官/廉子加减分明细）
+                    '六相断语': _ds.get('六相断语', []),
+                    '扣分原因': _ds.get('扣分原因', []),
                 }
             except Exception as e:
                 result['doushou_full'] = {'error': str(e)}
@@ -2306,6 +2688,74 @@ def api_zeri_case_feedback():
         return jsonify({'error': str(e)[:120]}), 500
 
 
+@app.route('/api/lost/find', methods=['GET', 'POST'])
+def api_lost_find():
+    """寻物速断（亡盗独立入口 2026-09-06）：输入丢失物件 → 自动按当前时辰起课 → 类神入课吉应。
+
+    参数: item=丢失物件名（必填）; date=YYYY-MM-DD（缺省今天）; shichen=时辰（缺省当前时辰）。
+    判法与叙事引擎同源：judge_lost_modern（现代静态表 → 物性规则 → LLM 三级 + 方位断语）。
+    返回 {item, end, narr, src, leishen, date, shichen, sizhu, sanchuan, keti}。
+    """
+    from datetime import datetime as _dt
+    try:
+        item = (request.values.get('item') or (request.get_json(silent=True) or {}).get('item') or '').strip()
+        if not item:
+            return jsonify({'error': '缺少 item 参数（丢失物件名）'}), 400
+        date_str = (request.values.get('date') or '').strip() or _dt.now().strftime('%Y-%m-%d')
+        shichen = (request.values.get('shichen') or '').strip()
+        if not shichen:
+            # 当前时辰（子23-1、丑1-3…）
+            _Z = '子丑寅卯辰巳午未申酉戌亥'
+            shichen = _Z[((_dt.now().hour + 1) // 2) % 12]
+        try:
+            y, m, dd = int(date_str[:4]), int(date_str[5:7]), int(date_str[8:10])
+            _dt(y, m, dd)  # 值域校验（2026-13-99 → ValueError → 400）
+        except Exception:
+            return jsonify({'error': 'date 格式应为 YYYY-MM-DD'}), 400
+
+        # ── 起课（与 /api/zeri/analyze 统一起课引擎同口径）──
+        from engine.sizhu_engine import get_sizhu
+        from engine.daliuren_luma_guiren import DaLiuRenLuMaGuiRen, arrange_tiandi_pan
+        from engine.sike_sanchuan_engine import SiKeSanChuanCalculator2
+        from engine.gui_ren_engine import GuiRenCalculator
+        from engine.leishen_engine import judge_lost_modern, leishen_from_text, get_xunkong
+
+        sizhu = get_sizhu(y, m, dd, shichen)
+        ri_gan, ri_zhi = sizhu['日柱'][0], sizhu['日柱'][1]
+        _lm = DaLiuRenLuMaGuiRen()
+        yuejiang = _lm.get_yuejiang_by_date(y, m, dd)
+        _tdp = arrange_tiandi_pan(yuejiang, shichen)
+        _calc = SiKeSanChuanCalculator2()
+        _tdpU = _calc.get_tiandi_pan(yuejiang, shichen)
+        _sike4 = _calc.qi_sike(ri_gan, ri_zhi, _tdpU)
+        _raw = _calc.fa_sanchuan(_sike4, ri_gan, ri_zhi, _tdpU)
+        _sc = [_raw.get('初传', ''), _raw.get('中传', ''), _raw.get('末传', '')]
+        _tjm = GuiRenCalculator().arrange_gui_ren_pan(
+            ri_gan, {'天地对应': _tdp}, shichen).get('天将映射', {})
+        _ctj, _ztj, _mtj = [_tjm.get(z, '') for z in _sc]
+        _kong = get_xunkong(ri_gan, ri_zhi)
+        # 干上/支上神（六壬寄宫，与评分接线同口径）
+        _JIG = {'甲': '寅', '乙': '辰', '丙': '巳', '丁': '未', '戊': '巳',
+                '己': '未', '庚': '申', '辛': '戌', '壬': '亥', '癸': '丑'}
+        _gs = _tdpU.get(_JIG.get(ri_gan, ''), '')
+        _zs = _tdpU.get(ri_zhi, '')
+
+        jt = judge_lost_modern(item, _sc, _gs, _zs, _kong, _ctj, _ztj, _mtj,
+                               sike=_sike4, force_lost=True) or {}
+        leishen = jt.get('leishen') or leishen_from_text(item, force_lost=True)
+        return jsonify({
+            'item': item, 'end': jt.get('end', '平'),
+            'leishen': leishen, 'narr': jt.get('narr', ''), 'src': jt.get('src', ''),
+            'date': date_str, 'shichen': shichen,
+            'sizhu': f"{sizhu['年柱'][0]}{sizhu['年柱'][1]} {sizhu['月柱'][0]}{sizhu['月柱'][1]} "
+                     f"{sizhu['日柱'][0]}{sizhu['日柱'][1]} {sizhu['时柱'][0]}{sizhu['时柱'][1]}",
+            'sanchuan': {'初传': _sc[0], '中传': _sc[1], '末传': _sc[2]},
+            'keti': _raw.get('课体', ''),
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)[:200]}), 500
+
+
 @app.route('/api/zeri/optimize', methods=['POST'])
 def api_zeri_optimize():
     """运行批量择日优化 POST /api/zeri/optimize"""
@@ -2321,6 +2771,13 @@ def api_zeri_optimize():
             start_date=start, end_date=end, mountains=mountains,
             phase1_top=data.get('p1', 500), phase2_top=data.get('p2', 50),
             phase3_top=data.get('p3', 20), verbose=False,
+            # 2026-09-06 方案A-L3：择日类型类神吉应（与单课/批量同口径）
+            zeri_type=(data.get('zetiri_type') or data.get('zeri_type') or ''),
+            # 2026-09-06 顶格择日：三维（斗首/演禽/六壬）顶格排序 + 窗口顺延（一直往后推）
+            top_triple=bool(data.get('top_triple', False)),
+            auto_extend=bool(data.get('auto_extend', False)),
+            min_top=int(data.get('min_top', 5) or 5),
+            max_years=int(data.get('max_years', 30) or 30),
         )
         results = optimizer.optimize()
         summary = {}
@@ -2410,6 +2867,16 @@ def api_training_status():
         correct = [p for p in completed if p.get('trend_prediction') == p.get('actual_result')]
         lr_acc = len(correct) / max(len(completed), 1) * 100
 
+        # 统计训练知识库案例数
+        stock_cases_count = 0
+        stock_cases_path = ROOT / 'data' / 'stock_training_cases.json'
+        if stock_cases_path.exists():
+            try:
+                stock_cases = json.loads(stock_cases_path.read_text(encoding='utf-8'))
+                stock_cases_count = len(stock_cases)
+            except Exception:
+                pass
+
         return jsonify({
             'total_predictions': len(completed),
             'liuren_accuracy': round(lr_acc, 1),
@@ -2418,9 +2885,168 @@ def api_training_status():
             'liuren_reference_only': LIUREN_REFERENCE_ONLY,
             'observation_start': LIUREN_OBSERVATION_START,
             'validation_years': LIUREN_VALIDATION_YEARS,
+            # 训练知识库统计
+            'knowledge_total_cases': stock_cases_count,
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/knowledge/refresh', methods=['POST'])
+def api_knowledge_refresh():
+    """刷新训练知识库：重新加载案例并重建向量索引"""
+    try:
+        import sys
+        _p = str(Path(__file__).parent)
+        if _p not in sys.path:
+            sys.path.insert(0, _p)
+        from engine.liuren_training_knowledge import LiuRenTrainingKnowledge
+        
+        global _training_knowledge_instance
+        _training_knowledge_instance = LiuRenTrainingKnowledge()
+        
+        stats = _training_knowledge_instance.get_statistics()
+        return jsonify({
+            'success': True,
+            'message': '知识库已刷新',
+            'stats': stats
+        })
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+def _get_training_knowledge():
+    """获取训练知识库实例（懒加载 + 缓存）"""
+    global _training_knowledge_instance
+    if '_training_knowledge_instance' not in globals() or _training_knowledge_instance is None:
+        import sys
+        _p = str(Path(__file__).parent)
+        if _p not in sys.path:
+            sys.path.insert(0, _p)
+        from engine.liuren_training_knowledge import LiuRenTrainingKnowledge
+        _training_knowledge_instance = LiuRenTrainingKnowledge()
+    return _training_knowledge_instance
+
+
+def _refresh_training_knowledge():
+    """触发知识库刷新（重新加载案例并重建向量索引）"""
+    try:
+        import sys
+        _p = str(Path(__file__).parent)
+        if _p not in sys.path:
+            sys.path.insert(0, _p)
+        from engine.liuren_training_knowledge import LiuRenTrainingKnowledge
+        
+        global _training_knowledge_instance
+        _training_knowledge_instance = LiuRenTrainingKnowledge()
+        print(f"[知识库] 已刷新，总案例数: {_training_knowledge_instance.knowledge_base.get('元数据', {}).get('总案例数', 0)}")
+        return True
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return False
+
+
+@app.route('/api/knowledge/search', methods=['POST'])
+def api_knowledge_search():
+    """语义搜索知识库：POST {query: '搜索内容', top_k: 5, zhanshi: 'stock'}"""
+    try:
+        import json
+        data = request.get_json() or {}
+        query = data.get('query', '')
+        top_k = int(data.get('top_k', 5))
+        zhanshi = data.get('zhanshi', None)
+        
+        if not query and not zhanshi:
+            return jsonify({'success': False, 'error': '缺少 query 或 zhanshi 参数'}), 400
+        
+        kb = _get_training_knowledge()
+        results = kb.query_similar_cases(raw_text=query, zhanshi=zhanshi, limit=top_k)
+        
+        return jsonify({
+            'success': True,
+            'query': query,
+            'zhanshi': zhanshi,
+            'results_count': len(results),
+            'results': results
+        })
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/knowledge/cases')
+def api_knowledge_cases():
+    """获取知识库案例列表 GET /api/knowledge/cases?source=择日&limit=50"""
+    try:
+        import json
+        
+        stock_cases_path = ROOT / 'data' / 'stock_training_cases.json'
+        if not stock_cases_path.exists():
+            return jsonify({'success': True, 'cases': [], 'total': 0})
+        
+        with open(stock_cases_path, 'r', encoding='utf-8') as f:
+            cases = json.load(f)
+        
+        # 筛选参数
+        source_filter = request.args.get('source', '').strip()
+        zhanshi_filter = request.args.get('zhanshi', '').strip()
+        limit = min(int(request.args.get('limit', 100)), 500)
+        offset = max(int(request.args.get('offset', 0)), 0)
+        
+        # 应用筛选
+        filtered = cases
+        if source_filter:
+            filtered = [c for c in filtered if source_filter in c.get('source', '')]
+        if zhanshi_filter:
+            filtered = [c for c in filtered if zhanshi_filter in c.get('zhanshi_type', '')]
+        
+        # 按日期降序排序
+        filtered.sort(key=lambda x: x.get('date', ''), reverse=True)
+        
+        total = len(filtered)
+        paginated = filtered[offset:offset + limit]
+        
+        # 精简返回字段
+        result = []
+        for case in paginated:
+            result.append({
+                'id': case.get('id', ''),
+                'date': case.get('date', ''),
+                'title': case.get('title', ''),
+                'grade': case.get('grade', ''),
+                'keti': case.get('keti', ''),
+                'source': case.get('source', ''),
+                'zhanshi_type': case.get('zhanshi_type', ''),
+                'mountain': case.get('mountain', ''),
+                'total_score': case.get('total_score', 0),
+                'sanchuan': case.get('sanchuan', {}),
+                'confidence': case.get('confidence', ''),
+                'cast_datetime': case.get('cast_datetime', ''),
+                'is_manual': case.get('is_manual', False),
+            })
+        
+        # 统计来源分布
+        source_stats = {}
+        for case in cases:
+            src = case.get('source', '未知')
+            source_stats[src] = source_stats.get(src, 0) + 1
+        
+        return jsonify({
+            'success': True,
+            'cases': result,
+            'total': total,
+            'offset': offset,
+            'limit': limit,
+            'source_stats': source_stats,
+        })
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 
 @app.route('/api/zeri/results')
@@ -3436,6 +4062,231 @@ def _build_tianji_prediction_record(full, rec, shichen):
     }
 
 
+def _append_tianji_to_stock_knowledge(full, rec, shichen):
+    """将天机起课结果追加到股票训练知识库 (stock_training_cases.json)
+    作为持久化学习数据，供 AI 学习模块检索和分析。
+    """
+    try:
+        bi = (full or {}).get('basic_info', {}) or {}
+        pred = (full or {}).get('prediction', {}) or {}
+        fused = (full or {}).get('fused_judgment', {}) or {}
+        san_chuan = (full or {}).get('san_chuan', []) or []
+        analysis = (full or {}).get('analysis', {}) or {}
+
+        # 确定占事类型
+        qiushi_type = 'stock'
+        # 从 holistic_judgment 或 analysis 中提取占事类型
+        holistic = (full or {}).get('holistic_judgment', {}) or {}
+        if isinstance(holistic, dict):
+            axes = holistic.get('axes', {})
+            if isinstance(axes, dict):
+                qiushi_type = axes.get('占事类型', 'stock')
+
+        # 生成案例 ID
+        import uuid
+        case_id = f"CASE-TIANJI-{rec.get('period_index', 0):04d}-{rec.get('cast_date', '')}"
+
+        # 确定课体
+        keti = (full or {}).get('keti', '') or ''
+        if not keti:
+            # 从 keti_duanyu 中获取
+            kd = analysis.get('keti_duanyu', {})
+            if isinstance(kd, dict):
+                keti = kd.get('keti_name', '') or ''
+
+        # 提取趋势预测
+        trend = pred.get('trend', '') or ''
+        jixiong = '--'
+        try:
+            conf = float(fused.get('confidence', pred.get('confidence', 0)) or 0)
+            if conf >= 0.6:
+                jixiong = '吉' if trend in ('看涨', '涨') else ('凶' if trend in ('看跌', '跌') else '平')
+            else:
+                jixiong = '平'
+        except Exception:
+            pass
+
+        # 构建案例数据
+        new_case = {
+            "id": case_id,
+            "stock_code": "TIANJI",
+            "stock_name": f"天机起课-{rec.get('cast_date', '')}",
+            "date": rec.get('cast_date', ''),
+            "title": f"天机起课：{keti}课 · {trend} · 置信度{round(float(fused.get('confidence', 0) or 0) * 100)}%",
+            "raw_text": (
+                f"天机起课：{rec.get('cast_date', '')} {shichen}时，"
+                f"课体{keti}，三传{'→'.join(san_chuan) if san_chuan else '无'}，"
+                f"月将{bi.get('yuejiang', '')}，日干{bi.get('ri_gan', '')}{bi.get('ri_zhi', '')}。"
+                f"预测趋势：{trend}，吉凶：{jixiong}，置信度：{round(float(fused.get('confidence', 0) or 0) * 100)}%。"
+            ),
+            "original_prediction": f"趋势{trend}，{jixiong}，置信度{round(float(fused.get('confidence', 0) or 0) * 100)}%",
+            "actual_result": "",
+            "trend_prediction": trend,
+            "actual_trend": "",
+            "is_correct": None,
+            "sike_info": (full or {}).get('si_ke') or [],
+            "sanchuan": {
+                "first": san_chuan[0] if len(san_chuan) > 0 else "",
+                "second": san_chuan[1] if len(san_chuan) > 1 else "",
+                "third": san_chuan[2] if len(san_chuan) > 2 else ""
+            },
+            "keti": keti,
+            "liuqin_analysis": ((analysis or {}).get('liuqin_analysis', '') if isinstance(analysis, dict) else '') or '',
+            "tianjiang_analysis": ((analysis or {}).get('tianjiang_analysis', '') if isinstance(analysis, dict) else '') or '',
+            "jingi_analysis": ((analysis or {}).get('jingi_analysis', '') if isinstance(analysis, dict) else '') or '',
+            "source": "天机起课系统",
+            "confidence": "high" if float(fused.get('confidence', 0) or 0) >= 0.7 else ('medium' if float(fused.get('confidence', 0) or 0) >= 0.5 else 'low'),
+            "zhanshi_type": qiushi_type,
+            "cast_datetime": f"{rec.get('cast_date', '')} {shichen}时"
+        }
+
+        # 写入 stock_training_cases.json
+        stock_cases_path = Path(__file__).parent / 'data' / 'stock_training_cases.json'
+        existing_cases = []
+        if stock_cases_path.exists():
+            try:
+                existing_cases = json.loads(stock_cases_path.read_text(encoding='utf-8'))
+            except Exception:
+                existing_cases = []
+
+        # 避免重复写入（按日期+时辰+课体去重）
+        date_str = rec.get('cast_date', '')
+        dedup_key = f"{date_str}_{shichen}_{keti}"
+        for case in existing_cases:
+            case_date = case.get('date', '')
+            case_title = case.get('title', '')
+            if case_date == date_str and dedup_key[:10] in case_title:
+                return {'success': True, 'message': '案例已存在，跳过', 'skipped': True, 'case_id': case.get('id', '')}
+
+        existing_cases.append(new_case)
+        stock_cases_path.write_text(json.dumps(existing_cases, ensure_ascii=False, indent=2), encoding='utf-8')
+
+        # 触发知识库刷新，使新案例立即可检索
+        _refresh_training_knowledge()
+
+        return {
+            'success': True,
+            'message': f'已追加到训练知识库',
+            'case_id': case_id,
+            'case_count': len(existing_cases)
+        }
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return {'success': False, 'error': str(e)}
+
+
+def _append_zeri_results_to_knowledge(results, mountain, zetiri_type, qiushi=''):
+    """将择日批量结果追加到训练知识库 (stock_training_cases.json)
+    仅保存前10个最优结果，避免数据膨胀。
+    """
+    try:
+        stock_cases_path = Path(__file__).parent / 'data' / 'stock_training_cases.json'
+        existing_cases = []
+        if stock_cases_path.exists():
+            try:
+                existing_cases = json.loads(stock_cases_path.read_text(encoding='utf-8'))
+            except Exception:
+                existing_cases = []
+
+        added_count = 0
+        for i, rec in enumerate(results[:10]):  # 仅保存前10个
+            date_str = rec.get('date', '')
+            shichen = rec.get('shichen', '')
+            total_score = rec.get('total_score', 0)
+            grade = rec.get('grade', '')
+            keti = rec.get('keti', '') or ''
+            sanchuan_raw = rec.get('sanchuan', {}) or {}
+            
+            # 处理三传：可能是列表或字典
+            if isinstance(sanchuan_raw, dict):
+                sanchuan_list = [sanchuan_raw.get('初传', ''), sanchuan_raw.get('中传', ''), sanchuan_raw.get('末传', '')]
+            elif isinstance(sanchuan_raw, list):
+                sanchuan_list = sanchuan_raw
+            else:
+                sanchuan_list = []
+            
+            sanchuan_str = '→'.join([s for s in sanchuan_list if s]) if sanchuan_list else '无'
+            sanchuan_display = {'first': sanchuan_list[0] if len(sanchuan_list) > 0 else '',
+                               'second': sanchuan_list[1] if len(sanchuan_list) > 1 else '',
+                               'third': sanchuan_list[2] if len(sanchuan_list) > 2 else ''}
+            
+            # 生成案例 ID
+            import time
+            case_id = f"CASE-ZERI-{int(time.time()) % 100000:05d}-{i+1:02d}-{date_str}"
+
+            # 构建案例数据
+            new_case = {
+                "id": case_id,
+                "stock_code": "ZERI",
+                "stock_name": f"择日-{mountain}山",
+                "date": date_str,
+                "title": f"择日：{mountain}山 {date_str} {shichen}时 · {grade} · 评分{total_score}",
+                "raw_text": (
+                    f"择日：{mountain}山 {date_str} {shichen}时，"
+                    f"课体{keti}，三传{sanchuan_str}，"
+                    f"总分{total_score}，等级{grade}，"
+                    f"类型{zetiri_type}，求事{qiushi or '不限'}。"
+                ),
+                "original_prediction": f"{grade}，总分{total_score}",
+                "actual_result": "",
+                "trend_prediction": grade,
+                "actual_trend": "",
+                "is_correct": None,
+                "sike_info": rec.get('sike', []) or [],
+                "sanchuan": sanchuan_display,
+                "keti": keti,
+                "liuqin_analysis": rec.get('liuqin_analysis', '') or '',
+                "tianjiang_analysis": rec.get('tianjiang_analysis', '') or '',
+                "jingi_analysis": '',
+                "source": f"择日系统-{zetiri_type}",
+                "confidence": "high" if total_score >= 90 else ('medium' if total_score >= 70 else 'low'),
+                "zhanshi_type": '择日',
+                "cast_datetime": f"{date_str} {shichen}时",
+                # 择日特有字段
+                "mountain": mountain,
+                "zetiri_type": zetiri_type,
+                "total_score": total_score,
+                "grade": grade,
+                "bonus_score": rec.get('bonus_score', 0),
+                "liuren_score": rec.get('liuren_score', 0),
+                "doushou_score": rec.get('doushou_score', 0),
+            }
+
+            # 避免重复写入（按日期+时辰+山向去重）
+            dedup_key = f"{date_str}_{shichen}_{mountain}"
+            skip = False
+            for case in existing_cases:
+                case_title = case.get('title', '')
+                case_raw = case.get('raw_text', '')
+                if dedup_key in case_title or dedup_key in case_raw:
+                    skip = True
+                    break
+            if skip:
+                continue
+
+            existing_cases.append(new_case)
+            added_count += 1
+
+        if added_count > 0:
+            stock_cases_path.write_text(json.dumps(existing_cases, ensure_ascii=False, indent=2), encoding='utf-8')
+            # 触发知识库刷新
+            _refresh_training_knowledge()
+
+        return {
+            'success': True,
+            'message': f'已追加 {added_count} 条择日案例到训练知识库',
+            'added_count': added_count,
+            'total_cases': len(existing_cases)
+        }
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return {'success': False, 'error': str(e)}
+
+
 @app.route('/api/tianji_cast', methods=['POST'])
 def api_tianji_cast():
     """天机起课录入 POST /api/tianji_cast
@@ -3505,6 +4356,14 @@ def api_tianji_cast():
                 if not replaced:
                     existing.append(rec_pred)
                 preds_path.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding='utf-8')
+                # ── 同时回写到 AI 训练知识库（stock_training_cases.json）──
+                try:
+                    knowledge_result = _append_tianji_to_stock_knowledge(full, rec, shichen)
+                    if knowledge_result.get('success'):
+                        print(f"[知识库] 天机起课回写成功: {knowledge_result.get('case_id')}")
+                except Exception as _ke:
+                    import traceback
+                    traceback.print_exc()
             except Exception as _e:
                 import traceback
                 traceback.print_exc()
@@ -3926,12 +4785,13 @@ def liuren_review_start():
         shichen = data.get('shichen', '')
         rizhu = data.get('rizhu', '')
         source = data.get('source', 'manual')
+        timeout_hours = data.get('timeout_hours')
 
         if not stocks:
             return jsonify({'success': False, 'error': '股票列表不能为空'}), 400
 
         mgr = _get_review_mgr()
-        task_id = mgr.start_review(stocks, shichen=shichen, rizhu=rizhu, source=source)
+        task_id = mgr.start_review(stocks, shichen=shichen, rizhu=rizhu, source=source, timeout_hours=timeout_hours)
 
         status = mgr.get_status(task_id)
         return jsonify({
@@ -4392,10 +5252,18 @@ def _build_zeri_candidate(env, current, shichen, sizhu):
         _tjm = _tj_map.get('天将映射', {})
         _yidu_full = analyze_yidu_full(
             mtn, nian_gan + nian_zhi, yue_gan + yue_zhi, ri_gan + ri_zhi,
-            shi_gan + shi_zhi, ri_gan, ri_zhi, _sc3, _tdp, _tjm, _yj, nian_zhi)
+            shi_gan + shi_zhi, ri_gan, ri_zhi, _sc3, _tdp, _tjm, _yj, nian_zhi,
+            shichen=shichen, ke_ti=_keti or None,
+            year=current.year, month=current.month, day=current.day,
+            ben_ming=bm_zhi or None, ben_ming_gan=bm_gan or None,
+            # 2026-09-06 方案A-L3：择日类型类神吉应（批量候选与单课同口径）
+            zeri_type=zetiri_type or '')
         _authority_score = _yidu_full.get('total_score', _authority_score)
         _authority_grade = _yidu_full.get('grade', _authority_grade)
         _authority_gong = [p['name'] for p in _yidu_full.get('gong_patterns', []) if p.get('matched')]
+        # 【2026-08-31 Bug5 统一口径】斗首凶在日时(内)一票否决：一定不能用，直接淘汰该候选
+        if _yidu_full.get('vetoed'):
+            return None
     except Exception:
         pass
 
@@ -4437,6 +5305,7 @@ def _build_zeri_candidate(env, current, shichen, sizhu):
         ri_gan, ri_zhi, shi_gan, shi_zhi,
         _sc3, [_keti] if _keti else None,
         yuejiang=_yj,
+        ben_ming=bm_zhi or None, ben_ming_gan=bm_gan or None,
     )
     if _ns.get('is_daxiong'):
         return None
@@ -4603,6 +5472,65 @@ def _build_zeri_candidate(env, current, shichen, sizhu):
         'bonus_score': _bonus_score,
     }
 
+    # Ⓡ 禄马贵人条件择日（2026-08-25 软加权）
+    #   lmg_groups：勾选的位置组（年/月/日/时/本命/坐山）
+    #   lmg_qiushi：求事方向 → 求官(贵)/求财(禄)/求动(马)/不限
+    #   bonus = Σ 勾选组归一化 pos% ，其中求事命中类得分再 ×(lmg_freq_mult-1) 侧重
+    #   hit   = 勾选组内某位置归一化 pos% ≥60（前端高亮标绿）
+    #   lmg_auto：智能推荐（免费·内测）→ 全量6组算分，按求事类别从高到低挑最优一课/最优组
+    #   【归一化口径】每个位置原始 scoring 上限=该位置权值（时8/日13/月15/年17/坐山23/本命24，
+    #      均 <60），故按“原始分 ÷ 权值 ×100”归一化到 0-100 可比刻度，使“≥60 标绿”每个位置都可达成。
+    _lmg = {'used': False, 'bonus': 0.0, 'hit': False, 'hit_groups': [], 'qiushi': '', 'pos_scores': {}}
+    try:
+        _lmg_auto = bool(env.get('lmg_auto'))
+        _lmg_groups = [g for g in (env.get('lmg_groups') or []) if g in ('年', '月', '日', '时', '本命', '坐山')]
+        if _lmg_auto:
+            _lmg_groups = ['年', '月', '日', '时', '本命', '坐山']   # 智能推荐：全量算分，供挑最优一课/最优组
+        _lmg_qiushi = env.get('lmg_qiushi') or ''
+        if _lmg_groups:
+            _CAT_PCT = {'贵': 0.40, '禄': 0.35, '马': 0.25}   # 与 score_precision_luma_guiren 权值表一致
+            _qcat = {'求官': '贵', '求财': '禄', '求动': '马'}.get(_lmg_qiushi, '')
+            _qm = float(env.get('lmg_freq_mult', 1.5) or 1.5)      # 求事命中类侧重系数
+            _pd = (_ns.get('precision') or {}).get('position_detail') or []
+            _ps, _cl = {}, {}
+            for _p in _pd:
+                _nm = _p.get('position'); _w = float(_p.get('weight', 0) or 0)
+                if not _w:
+                    continue
+                _ps[_nm] = round(float(_p.get('score', 0) or 0) / _w * 100, 2)
+                _cl[_nm] = {}
+                for _c in (_p.get('classes') or []):
+                    _cw = _w * _CAT_PCT.get(_c.get('type'), 1.0)
+                    _cl[_nm][_c.get('type')] = round(float(_c.get('score', 0) or 0) / _cw * 100, 2) if _cw else 0.0
+            _bonus, _hits, _best_g = 0.0, [], ''
+            if _lmg_auto:
+                # 免费·内测智能推荐：窗口内按求事类别分高→低挑最优一课；不限则按位置最高分。
+                # 倾向分=该最优组类别分（≤100）；位置分仅用于≥60命中判定
+                if _qcat:
+                    _rank = lambda _g: _cl.get(_g, {}).get(_qcat, 0.0)
+                else:
+                    _rank = lambda _g: _ps.get(_g, 0.0)
+                _best_g = max(_lmg_groups, key=_rank)
+                _bonus = round(_rank(_best_g), 2)
+                if _ps.get(_best_g, 0) >= 60:
+                    _hits.append(_best_g)
+            else:
+                for _g in _lmg_groups:
+                    _gs = _ps.get(_g, 0.0)
+                    if _qcat:
+                        _gs += _cl.get(_g, {}).get(_qcat, 0.0) * (_qm - 1.0)   # 求事命中类侧重 ×0.5
+                    _bonus += _gs
+                    if _ps.get(_g, 0) >= 60:
+                        _hits.append(_g)
+            _lmg = {'used': True, 'bonus': round(_bonus, 2), 'hit': bool(_hits),
+                    'hit_groups': _hits, 'qiushi': _lmg_qiushi,
+                    'pos_scores': {k: round(v, 2) for k, v in _ps.items()},
+                    'classes': _cl,
+                    'auto': _lmg_auto,
+                    'best_group': _best_g}
+    except Exception:
+        _lmg = {'used': False, 'bonus': 0.0, 'hit': False, 'hit_groups': [], 'qiushi': '', 'pos_scores': {}}
+
     # ⑨ 补救建议（2026-08-17 憨爷拍板：分层评估后给行动建议，替代"一刀切不合格"；
     #   基于《要诀》权衡方法论：缺失项指出 + 给补救方向，不进评分）
     _remedy = []
@@ -4618,6 +5546,93 @@ def _build_zeri_candidate(env, current, shichen, sizhu):
         _remedy.append('杀师日/犯雷日：地师忌临现场，可避此时辰或由地师自行规避')
     if not _remedy:
         _remedy.append('五要素齐备：斗首/演禽达标、十三吉课命中、禄马贵到山到向且发传——上选之日')
+
+    # ⑩ 空亡三铁律审计（2026-08-25 憨爷拍板：本命落旬空可填补 / 踏空致命 / 乘天空=真空）
+    _void = {'level': '干净', 'pass': True, 'xunkong': [], 'ben_ming_void': False,
+             'tread_zhi': '', 'tread_void': False, 'ride_general': '', 'ride_sky': False,
+             'reasons': []}
+    try:
+        from engine.void_audit import audit_void
+        _tjm_v = locals().get('_tjm') or {}
+        _void = audit_void(ri_gan + ri_zhi, _tdp, _tjm_v, bm_gan + bm_zhi if bm_zhi else '')
+    except Exception:
+        pass
+
+    # ⑪ 十二建星（2026-08-25 用户拍板：月建起建，只进批语叙事不加减分）
+    _jx = {'name': '', 'huang_dao': False, 'level': '', 'desc': '', 'narrative': ''}
+    try:
+        from engine.jianxing import get_jianxing, jianxing_narrative
+        _jx = dict(get_jianxing(yue_zhi, ri_zhi))
+        _gx = '吉' if _grade in ('上上吉', '上吉') else ('凶' if '凶' in _grade else '平')
+        _jx_sc = [_sc3.get('初传', ''), _sc3.get('中传', ''), _sc3.get('末传', '')]
+        _jx_tj = [locals().get('_tjm', {}).get(z, '') for z in _jx_sc]
+        _jx['narrative'] = jianxing_narrative(_jx, _gx, _jx_sc, _jx_tj)
+    except Exception:
+        pass
+
+    # ⑬ 禄马贵人分层评级（2026-08-26 修正：严格按"必须发三传"判定 + 互禄互贵格）
+    #   L3 上上吉：禄马贵人到山到向 + 发三传(日柱) + 十三吉课 + 互禄互贵格
+    #   L2 吉课：  禄马贵人到山到向 + 发三传(日柱)（无十三吉课或互禄互贵）
+    #   L1 普通课：禄马贵人到山到向但不发三传（无日柱禄马贵人在三传）
+    #   L0 平课：  既不到山到向，又不发三传
+    _luma_dx_count = int(_ns.get('pillar_qualified_count', 0) or 0)
+    _luma_fc_count = int(_ns.get('sanchuan_luma_count', 0) or 0)
+    _j13_hits = _jk13.get('hits') or []
+    _j13_count = len(_j13_hits) if isinstance(_j13_hits, list) else 0
+    _has_dx = _luma_dx_count > 0          # 有禄马贵人到山到向
+    _has_fc = _luma_fc_count > 0          # 日柱禄马贵人发三传
+    _has_j13 = _j13_count > 0             # 有十三吉课命中
+
+    # 互禄互贵格检查（2026-08-26 修正：多柱交叉验证）
+    _has_mutual = False
+    _mutual_details = {}
+    _mutual_hulu_count = 0
+    _mutual_hugui_count = 0
+    try:
+        _hulu_result = _luma.check_hulu_hugui(
+            nian_gan, yue_gan, ri_gan, bm_gan, mtn, yue_zhi)
+        _has_mutual = _hulu_result.get('is_mutual_lu_gui', False)
+        _mutual_details = _hulu_result.get('details', {})
+        _mutual_hulu_count = _hulu_result.get('hulu_count', 0)
+        _mutual_hugui_count = _hulu_result.get('hugui_count', 0)
+    except Exception:
+        pass
+
+    if _has_dx and _has_fc and _has_j13 and _has_mutual:
+        _luma_level = 'L3'
+        _luma_level_name = '上上吉（禄马贵人到山到向+发三传+十三吉课+互禄互贵）'
+        _luma_level_score = 100
+    elif _has_dx and _has_fc and _has_j13:
+        _luma_level = 'L3'
+        _luma_level_name = '上上吉（禄马贵人到山到向+发三传+十三吉课）'
+        _luma_level_score = 95
+    elif _has_dx and _has_fc:
+        _luma_level = 'L2'
+        _luma_level_name = '吉课（禄马贵人到山到向+发三传）'
+        _luma_level_score = 75
+    elif _has_dx:
+        _luma_level = 'L1'
+        _luma_level_name = '普通课（禄马贵人到山到向但不发三传）'
+        _luma_level_score = 50
+    else:
+        _luma_level = 'L0'
+        _luma_level_name = '平课（无禄马贵人到山到向、不发三传）'
+        _luma_level_score = 25
+
+    # ⑫ 现代类象（2026-08-25 用户拍板：批量候选也带，按类型推演+历史佐证）
+    _mlx = {'推演': [], '历史佐证': '', 'narrative': '', 'zeri_type': zetiri_type}
+    try:
+        from engine.leixiang_kb import LeixiangKB
+        _mlx_kb = LeixiangKB()
+        _mlx_res = _mlx_kb.push_leixiang(zetiri_type, date=current.strftime('%Y-%m-%d'), shichen=shichen)
+        _mlx = {
+            '推演': _mlx_res.get('推演', []),
+            '历史佐证': _mlx_res.get('历史佐证', ''),
+            'narrative': _mlx_kb.get_narrative(zetiri_type),
+            'zeri_type': zetiri_type,
+        }
+    except Exception:
+        pass
 
     return {
         'date': current.strftime('%Y-%m-%d'),
@@ -4646,6 +5661,21 @@ def _build_zeri_candidate(env, current, shichen, sizhu):
             'ri_qualified': bool(_ns.get('ri_qualified', False)),
             'shi_qualified': bool(_ns.get('shi_qualified', False)),
         },
+        'luma_grade': {
+            'level': _luma_level,
+            'name': _luma_level_name,
+            'score': _luma_level_score,
+            'has_dx': _has_dx,
+            'has_fc': _has_fc,
+            'has_j13': _has_j13,
+            'has_mutual': _has_mutual,
+            'mutual_hulu_count': _mutual_hulu_count,
+            'mutual_hugui_count': _mutual_hugui_count,
+            'mutual_details': _mutual_details,
+            'dx_count': _luma_dx_count,
+            'fc_count': _luma_fc_count,
+            'j13_count': _j13_count,
+        },
         'yidu_score': _yidu.get('综合评分', 0),
         'yidu_eval': _yidu.get('评价', ''),
         'matched_mubiao': _yidu.get('课传美格', []) if mubiao else [],
@@ -4658,6 +5688,12 @@ def _build_zeri_candidate(env, current, shichen, sizhu):
         'constraint_matrix': _matrix,
         'remedy': _remedy,
         'hecan': _hecan,
+        'lmg': _lmg,
+        'void_audit': _void,
+        'jianxing': _jx,
+        'modern_leixiang': _mlx,
+        # 2026-09-06 方案A-L3：择日类型类神吉应（批量与单课同口径透传）
+        'leishen_detail': (locals().get('_yidu_full') or {}).get('leishen_detail', {}) or {},
     }
 
 
@@ -4682,6 +5718,32 @@ def api_zeri_batch():
         jiri_count = int(data.get('jiri_count', 10) or 10)
         min_liuren = int(data.get('min_liuren', 70) or 70)
         mubiao = data.get('mubiao', []) or []
+        # 禄马贵人条件择日（2026-08-25 软加权）：勾选的位置组 + 求事方向 + 智能推荐/超选预览
+        lmg_groups = data.get('lmg_groups', []) or []
+        lmg_qiushi = (data.get('lmg_qiushi') or '').strip()
+        lmg_mobile = (data.get('mobile') or '').strip()
+        lmg_auto = bool(data.get('lmg_auto'))          # 智能推荐模式（免费·内测）
+        lmg_oversee = bool(data.get('lmg_oversee'))    # 超选预览钩子：超出权益时预览但不标绿超权组
+        # 择日模式（2026-08-26 新增）：range=日期范围择日（默认），lmg=禄马贵人择日
+        zeri_mode = (data.get('mode') or 'range').strip()
+        lmg_priority = (data.get('lmg_priority') or '').strip()
+        # 择日策略（2026-08-27 新增）：balanced=综合平衡, doushou_first=斗首优先, liuren_first=六壬优先, custom=自定义权重
+        zeri_strategy = (data.get('zeri_strategy') or 'balanced').strip()
+        # 权重参数（0-100）
+        try:
+            doushou_weight = max(0, min(100, int(data.get('doushou_weight', 50) or 50)))
+        except Exception:
+            doushou_weight = 50
+        try:
+            liuren_weight = max(0, min(100, int(data.get('liuren_weight', 50) or 50)))
+        except Exception:
+            liuren_weight = 50
+        
+        # 根据预设策略调整权重
+        if zeri_strategy == 'doushou_first':
+            doushou_weight, liuren_weight = 70, 30
+        elif zeri_strategy == 'liuren_first':
+            doushou_weight, liuren_weight = 30, 70
         # 主命/本命年命（出行/新居等以本命为主的类型；未提供则不启用年命评分，基线不动）
         ben_ming = data.get('ben_ming', '') or ''
         ben_ming_age = data.get('ben_ming_age', '') or ''
@@ -4701,6 +5763,47 @@ def api_zeri_batch():
             return jsonify({'error': '起始日期不能晚于结束日期'}), 400
         if (_ed - _sd).days > 3650:
             return jsonify({'error': '日期范围过大（最多10年）'}), 400
+
+        # ── 禄马贵人条件：身份解析 + 权益梯度（尊享全选6 / 体验2 / 免费·内测1）──
+        # ① 求事方向对全体放开（求官/求财/求动/不限不另设阶梯）
+        _VALID_LMG = ('年', '月', '日', '时', '本命', '坐山')
+        lmg_groups = [g for g in lmg_groups if g in _VALID_LMG]
+        if lmg_qiushi not in ('求官', '求财', '求动', '不限'):
+            lmg_qiushi = ''
+        try:
+            _lacc = _resolve_access(0, mobile=lmg_mobile)
+            _lplan = _lacc.get('vip_plan', '')
+        except Exception:
+            _lplan = ''
+        _lmg_limit = 6 if _lplan == '尊享档' else (2 if _lplan == '体验档' else 1)
+        if lmg_auto:
+            # ② 智能推荐（免费·内测免选组）：系统全量算分，按求事类别分高→低挑最优一课/最优组，
+            #    最终仅采纳/标绿 1 组权益（免费用户三天窗口内即可）。
+            lmg_groups = list(_VALID_LMG)
+            _grant_meta = {'auto': True, 'granted': 1}
+        elif lmg_oversee and lmg_groups and len(lmg_groups) > _lmg_limit:
+            # ③ 超选预览钩子：按权益档次限配额（免费/内测1次·体验会员3次/日），放行全量+标记 preview
+            _ov_limit = LMG_OVERSEE_DAILY_LIMIT_EXP if _lplan == '体验档' else LMG_OVERSEE_DAILY_LIMIT
+            _ok, _preview_left = _consume_lmg_oversee(lmg_mobile, _ov_limit)
+            if not _ok:
+                return jsonify({
+                    'error': f'今日"超选预览"次数已用完（当前档位每日 {_ov_limit} 次），'
+                             f'开通尊享可不限使用',
+                    'lmg_max': _lmg_limit,
+                    'preview_daily_left': 0,
+                }), 403
+            _grant_meta = {'oversee': True, 'granted': _lmg_limit,
+                           'selected': len(lmg_groups), 'preview_daily_left': _preview_left,
+                           'preview_limit': _ov_limit}
+        elif len(lmg_groups) > _lmg_limit:
+            return jsonify({
+                'error': f'禄马贵人条件超出当前权益：您可勾选 {_lmg_limit} 组'
+                         f'（当前身份{"尊享·全选6组" if _lplan=="尊享档" else "体验·2组" if _lplan=="体验档" else "免费/内测·1组"}，'
+                         f'升级会员可多选）',
+                'lmg_max': _lmg_limit,
+            }), 403
+        else:
+            _grant_meta = {'granted': _lmg_limit}
 
         # ── 惰性导入系统引擎（与起课排盘 /api/qike 同源）──
         _eng = str(ROOT / 'engine')
@@ -4760,6 +5863,10 @@ def api_zeri_batch():
             'gan60': _GAN_60, 'zhi60': _ZHI_60, 'arrange_tiandi_pan': arrange_tiandi_pan,
             'lailong': lailong,
             'lat': _ip_lat, 'lon': _ip_lon,
+            # 禄马贵人条件择日（2026-08-25 软加权；lmg_auto=智能推荐默认全量算分）
+            'lmg_groups': lmg_groups, 'lmg_qiushi': lmg_qiushi,
+            'lmg_freq_mult': 1.5,
+            'lmg_auto': lmg_auto,
         }
 
         results = []
@@ -4780,13 +5887,51 @@ def api_zeri_batch():
             current += timedelta(days=1)
 
 
-        # 排序：月柱六相优先 → 六壬分 → 总分（与原始系统 full_range_analyze 一致）
-        results.sort(key=lambda x: (
-            -_LX_PRI.get(x.get('liuxiang', ''), 0),
-            -x.get('bonus_score', 0),          # 2026-08-17：加权加分（发传/吉课/到向/拱格）优先于六壬分
-            -x.get('liuren_score', 0),
-            -x.get('total_score', 0),
-        ))
+        # 排序：若启用禄马贵人条件 → 倾向加权分(bonus)优先；否则月柱六相优先 → 六壬分 → 总分（原口径）
+        def _lmg_key(x):
+            l = x.get('lmg') or {}
+            return l.get('bonus', 0.0) if l.get('used') else 0.0
+
+        # 计算加权分（斗首×权重 + 六壬×权重）
+        def _weighted_score(x):
+            ds_score = x.get('phase1_score', 0) or x.get('doushou_score', 0) or 0
+            lr_score = x.get('liuren_score', 0) or 0
+            total_w = doushou_weight + liuren_weight
+            if total_w > 0:
+                return (ds_score * doushou_weight + lr_score * liuren_weight) / total_w
+            return x.get('total_score', 0)
+
+        # 禄马贵人择日专用排序键（2026-08-26 更新为分层评级 + 互禄互贵）
+        # 优先级：L3上上吉(互禄互贵+100分加成) > L3上上吉 > L2吉课 > L1普通课 > L0平课
+        # 同层内：分层score × 100 + 到山到向×10 + 发传×5 + 十三吉课数 + 互禄互贵×20
+        def _lmg_priority_key(x):
+            lg = x.get('luma_grade') or {}
+            lg_lv = {'L3': 400, 'L2': 300, 'L1': 200, 'L0': 100}
+            lg_base = lg_lv.get(lg.get('level', 'L0'), 100)
+            lg_dx = lg.get('dx_count', 0)
+            lg_fc = lg.get('fc_count', 0)
+            lg_j13 = lg.get('j13_count', 0)
+            lg_mutual = 20 if lg.get('has_mutual', False) else 0
+            return (lg_base + lg_dx * 10 + lg_fc * 5 + lg_j13 * 3 + lg_mutual)
+
+        if zeri_mode == 'lmg' and lmg_priority == 'lmg_to_shanxiang_13ke':
+            results.sort(key=lambda x: (
+                -_lmg_priority_key(x),              # 禄马贵人分层评级（L3>L2>L1>L0）
+                -_LX_PRI.get(x.get('liuxiang', ''), 0),
+                -x.get('bonus_score', 0),
+                -x.get('liuren_score', 0),
+                -x.get('total_score', 0),
+            ))
+        else:
+            # 使用加权分排序（支持自定义权重策略）
+            results.sort(key=lambda x: (
+                -_lmg_key(x),                       # 禄马贵人条件倾向优先（未启用=0，零回归）
+                -_weighted_score(x),                # 2026-08-27：加权分排序（斗首×权重 + 六壬×权重）
+                -_LX_PRI.get(x.get('liuxiang', ''), 0),
+                -x.get('bonus_score', 0),
+                -x.get('liuren_score', 0),
+                -x.get('total_score', 0),
+            ))
 
         # ── 2026-08-21 范围格局统计：截断前遍历全部候选，统计美格/凶格命中次数 ──
         try:
@@ -4807,6 +5952,32 @@ def api_zeri_batch():
         }
         results = results[:jiri_count]
 
+        # ── 智能推荐（免费·内测）附加元数据：最优一课 + 最优位置组 + 求事类别分 ──
+        _grant_meta = dict(_grant_meta)
+        _grant_meta['groups'] = lmg_groups
+        _grant_meta['qiushi'] = lmg_qiushi
+        if lmg_auto and results:
+            _best = results[0].get('lmg') or {}
+            if _best.get('used'):
+                _grant_meta['recommend'] = {
+                    'group': _best.get('best_group', ''),
+                    'qiushi': lmg_qiushi,
+                    'bonus': _best.get('bonus', 0.0),
+                    'hit': bool(_best.get('hit')),
+                    'date': results[0].get('date', ''),
+                    'shichen': results[0].get('shichen', ''),
+                }
+
+        # ── 回写到 AI 训练知识库 ──
+        try:
+            knowledge_result = _append_zeri_results_to_knowledge(
+                results, mountain, zetiri_type, lmg_qiushi)
+            if knowledge_result.get('success') and knowledge_result.get('added_count', 0) > 0:
+                print(f"[知识库] 择日回写成功: {knowledge_result.get('added_count')} 条案例")
+        except Exception as _ke:
+            import traceback
+            traceback.print_exc()
+
         return jsonify({
             'success': True, 'results': results,
             'stats': _stats,
@@ -4817,6 +5988,8 @@ def api_zeri_batch():
                      'engine': '完整引擎版（sike_sanchuan排盘 + 四柱禄马贵人 + 知识库仪度评分）',
                      'min_liuren': min_liuren,
                      'longitude': float(longitude) if str(longitude).replace('.', '', 1).isdigit() else 120.0},
+            'lmg': _grant_meta if lmg_groups else None,
+            'knowledge_written': knowledge_result.get('added_count', 0) if 'knowledge_result' in dir() else 0,
         })
     except Exception as e:
         import traceback; traceback.print_exc()
@@ -4861,27 +6034,26 @@ def api_zeri_satisfy():
 
         _sd = datetime.strptime(start_str, '%Y-%m-%d').date()
 
-        # ── 付费门槛（憨爷阶梯定价：1年内免费；1-2年15元/2-5年30元/5-10年66元/10-60年360元）──
-        #    按"最多扫天数"档位计费；未解锁超档 → 402 提示付费；解锁后 24h 内放行
-        price, tier = _scan_price(max_days)
-        if price > 0:
-            unlock_ok, left_h = _check_unlock(max_days)
+        # ── 收费决策（v2：内测/会员/3天内免费/每日限免/按次阶梯）──
+        mobile = (data.get('mobile') or '').strip()
+        is_first = data.get('is_first', False)
+        _acc = _resolve_access(max_days, mobile=mobile, is_first=is_first)
+        if not _acc.get('free'):
+            # 已按次解锁（24h 内）则放行
+            unlock_ok, left_h = _check_unlock(max_days, mobile=mobile)
             if not unlock_ok:
-                _tier_desc = {
-                    '2y': '1年以上2年以内', '5y': '2年以上5年以内',
-                    '10y': '5年以上10年以内', '60y': '10年以上',
-                }.get(tier, tier)
                 return jsonify({
-                    'requires_pay': True, 'price': price, 'tier': tier,
-                    'tier_desc': _tier_desc,
+                    'requires_pay': True, 'price': _acc.get('price', 0),
+                    'tier': _acc.get('tier', ''), 'tier_desc': _acc.get('tier_desc', ''),
                     'max_days': max_days, 'free_days': FREE_SCAN_DAYS,
-                    'message': f'该扫描档位（{_tier_desc}）需付费 {price} 元/次（按次解锁，24小时内有效）。'
-                               f'请在本会话中回复「付费解锁」，傻妞会发起微信支付，成功后自动放行，再点一次达标择日即可。',
+                    'is_beta': _acc.get('is_beta', False), 'is_vip': _acc.get('is_vip', False),
+                    'vip_plan': _acc.get('vip_plan', ''), 'vip_left': _acc.get('vip_left', 0),
+                    'qr_amount': _acc.get('qr_amount', _acc.get('price', 0)),
+                    'message': _acc.get('message', ''),
                 }), 402
-            # 已解锁：把剩余有效时间带给前端展示
             _unlock_note = f'（已付费解锁，剩余 {left_h} 小时有效）'
         else:
-            _unlock_note = ''
+            _unlock_note = _acc.get('message', '') or ''
 
         # ── 惰性导入系统引擎（与批量择日同源）──
         _eng = str(ROOT / 'engine')
@@ -5014,33 +6186,366 @@ def api_zeri_satisfy():
 
 @app.route('/api/zeri/unlock', methods=['POST'])
 def api_zeri_unlock():
-    """付费解锁达标择日大扫描 POST /api/zeri/unlock {tier:'2y', amount:15}
-    由 AI 在完成微信支付后调用：金额须与定价档位匹配（防伪造），
-    写入 _zeri_unlock.json（24h 有效，档位覆盖 max_days 则放行；档位不够需补差价）。
+    """付费解锁达标择日大扫描 POST /api/zeri/unlock
+    body: {mobile?, tier?, amount, tx_no?, name?}
+    静态收款码场景：用户扫码付款后，前端把支付流水号/人工确认字段交回 →
+    金额须匹配新定价档位（防伪造）→ 写入 _zeri_unlock.json（24h 有效）。
     返回 {success, tier, amount, expires_at}。"""
     try:
         data = request.get_json(silent=True) or {}
         tier = data.get('tier', '')
         amount = float(data.get('amount', 0) or 0)
+        mobile = (data.get('mobile') or '').strip()
+        tx_no = (data.get('tx_no') or '').strip()
+        name = (data.get('name') or '').strip()
         # 金额必须精确匹配某个收费档位
         valid_tier = None
-        for name, days, price in SCAN_PRICE_TIERS:
-            if price > 0 and abs(price - amount) < 0.01:
-                valid_tier = name
+        for _n, _d, _price, _desc in SCAN_PRICE_TIERS:
+            if _price > 0 and abs(_price - amount) < 0.01:
+                valid_tier = _n
                 break
         if valid_tier is None:
-            return jsonify({'error': '金额与定价档位不匹配（档位：2y=15元/5y=30元/10y=66元/60y=360元）'}), 400
-        ok = _write_unlock(amount, valid_tier)
+            return jsonify({'error': '金额与定价档位不匹配（档位：9.8/36/98/168/360/1680 元）'}), 400
+        ok = _write_unlock(amount, valid_tier, mobile=mobile)
         if not ok:
             return jsonify({'error': '解锁写入失败'}), 500
+        # 记账（如需按用户记录）
+        if mobile:
+            try:
+                book = _load_json(str(ROOT / '_sys_pay_log.json'), []) or []
+                book.append({'mobile': mobile, 'name': name, 'amount': amount,
+                             'tier': valid_tier, 'tx_no': tx_no, 'kind': 'scan',
+                             'ts': datetime.now().isoformat()})
+                _save_json(str(ROOT / '_sys_pay_log.json'), book)
+            except Exception:
+                pass
         try:
-            with open(UNLOCK_FILE, encoding='utf-8') as f:
-                rec = json.load(f)
+            exp = _load_unlocks().get(_unlock_key(mobile), {}).get('expires_at', '')
         except Exception:
-            rec = {}
+            exp = ''
         return jsonify({'success': True, 'tier': valid_tier, 'amount': amount,
-                        'expires_at': rec.get('expires_at', ''),
-                        'message': f'已解锁「{valid_tier}」档（{amount} 元），24小时内达标择日大扫描放行'})
+                        'expires_at': exp,
+                        'message': f'已按次解锁「{_tier_desc_by_amount(amount)}」档（{amount} 元），24小时内达标择日大扫描放行'})
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
+
+# ═════════════════════════════════════════════════════════════════
+# 用户中心 / 会员 / 内测 API
+# ═════════════════════════════════════════════════════════════════
+@app.route('/api/zeri/price_table', methods=['GET'])
+def api_zeri_price_table():
+    """返回扫码按次定价表 + 会员价目 + 免费规则（前端用户中心展示）。"""
+    scan = []
+    for _n, _d, _price, _desc in SCAN_PRICE_TIERS:
+        scan.append({'tier': _n, 'max_days': _d, 'price': _price, 'desc': _desc})
+    return jsonify({
+        'scan_tiers': scan,
+        'free_days': FREE_SCAN_DAYS,
+        'daily_free': {'limit': DAILY_FREE_LIMIT, 'max_days': DAILY_FREE_MAX_DAYS},
+        'member': {
+            'plans': [
+                {'plan': PLAN_VIP_BASIC, 'name': '会员·体验档', 'prices': VIP_PRICE[PLAN_VIP_BASIC],
+                 'quota': VIP48_MONTHLY_QUOTA, 'max_days': VIP48_MAX_DAYS, 'note': f'每月{VIP48_MONTHLY_QUOTA}次 + 限{int(VIP48_MAX_DAYS/30)}个月跨度'},
+                {'plan': PLAN_VIP_PRO, 'name': '会员·尊享档', 'prices': VIP_PRICE[PLAN_VIP_PRO],
+                 'quota': 9999, 'max_days': 99999, 'note': '不限次数 + 不限跨度'},
+            ],
+            'periods': [{'key': k, 'months': v} for k, v in VIP_MONTHS.items()],
+        },
+        'beta': {'enabled': _is_in_beta_window(), 'local': _is_local_ip(_client_ip())},
+    })
+
+
+@app.route('/api/user/verify', methods=['POST'])
+def api_user_verify():
+    """内测验证 POST /api/user/verify {mobile, name, code}
+    校验：手机号+姓名 命中系统指定内测白名单，且验证码正确。
+    白名单配置于 _sys_invite.json：{"mobiles":{"13800000000":"张三"}, "beta_code":"8888"}
+    或 config.BETA_CODE / config.BETA_MOBILES。
+    命中 → 返回内测通过。"""
+    try:
+        data = request.get_json(silent=True) or {}
+        mobile = (data.get('mobile') or '').strip()
+        name = (data.get('name') or '').strip()
+        code = (data.get('code') or '').strip()
+        if not mobile or not name:
+            return jsonify({'error': '缺少手机号或姓名'}), 400
+
+        # 校验码
+        try:
+            from config import BETA_CODE
+        except Exception:
+            BETA_CODE = '8888'
+        expect_code = str(BETA_CODE or '8888')
+        if expect_code and code and code != expect_code:
+            return jsonify({'error': '内测验证码错误'}), 400
+        if expect_code and not code:
+            return jsonify({'error': '请输入内测验证码'}), 400
+
+        # 校验白名单：优先 _sys_invite.json，其次 config.BETA_MOBILES
+        invite = _load_json(str(INVITE_FILE), {}) or {}
+        mobs = invite.get('mobiles', {}) or {}
+        ok = False
+        if str(mobile) in mobs:
+            expect_name = str(mobs[str(mobile)] or '')
+            if not expect_name or expect_name == name or expect_name in name or name in expect_name:
+                ok = True
+        if not ok:
+            try:
+                from config import BETA_MOBILES
+                if mobile in (BETA_MOBILES or {}):
+                    expect_name = str((BETA_MOBILES or {}).get(mobile, '') or '')
+                    if not expect_name or expect_name == name:
+                        ok = True
+            except Exception:
+                pass
+        if not ok:
+            return jsonify({'error': '该手机号不在内测白名单内'}), 403
+
+        # 登记用户
+        try:
+            users = _load_json(str(USER_DATA_FILE), {}) or {}
+            users[str(mobile)] = {'name': name, 'mobile': str(mobile),
+                                  'beta_verified': True, 'verified_at': datetime.now().isoformat()}
+            _save_json(str(USER_DATA_FILE), users)
+        except Exception:
+            pass
+        return jsonify({'success': True, 'beta': True,
+                        'message': f'内测验证通过，欢迎{name}，内测/白名单用户免费'})
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/user/register', methods=['POST'])
+def api_user_register():
+    """登记用户（手机号+姓名）POST /api/user/register {mobile, name}
+    用于非内测用户的身份登记（会员购买、每日限免计数依据）。"""
+    try:
+        data = request.get_json(silent=True) or {}
+        mobile = (data.get('mobile') or '').strip()
+        name = (data.get('name') or '').strip()
+        if not mobile or not (len(mobile) == 11 and mobile.isdigit()):
+            return jsonify({'error': '手机号格式不正确'}), 400
+        users = _load_json(str(USER_DATA_FILE), {}) or {}
+        users[str(mobile)] = {'name': name or users.get(str(mobile), {}).get('name', ''),
+                              'mobile': str(mobile), 'registered_at': datetime.now().isoformat()}
+        _save_json(str(USER_DATA_FILE), users)
+        mem = _membership(mobile)
+        return jsonify({'success': True, 'mobile': str(mobile),
+                        'is_vip': bool(mem and _membership_valid(mem))})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/user/info', methods=['POST'])
+def api_user_info():
+    """查询当前用户身份/会员状态 POST /api/user/info {mobile}
+    返回：内测状态、会员状态(plan/到期/剩余次数)、付费解锁状态。"""
+    try:
+        data = request.get_json(silent=True) or {}
+        mobile = (data.get('mobile') or '').strip()
+        mem = _membership(mobile)
+        beta = _is_beta_whitelisted(mobile)
+        vip_plan = ''
+        vip_left = 0
+        vip_expire = ''
+        if mem and _membership_valid(mem):
+            plan = mem.get('plan')
+            if plan == PLAN_LIFETIME:
+                vip_plan = '终身免费'
+                vip_left = 9999
+            elif plan == PLAN_VIP_PRO:
+                vip_plan = '尊享档'
+                vip_expire = mem.get('expires_at', '')
+                vip_left = 9999
+            else:
+                vip_plan = '体验档'
+                vip_expire = mem.get('expires_at', '')
+                used = int((mem or {}).get('used_this_period', 0) or 0)
+                vip_left = max(0, VIP48_MONTHLY_QUOTA - used)
+        # 状态页：按手机号隔离读取本用户未过期的按次解锁及其到期时间
+        unlock_ok = False
+        left_h = 0
+        unlock_expire = ''
+        try:
+            rec = _load_unlocks().get(_unlock_key(mobile), {})
+            if rec:
+                exp = datetime.fromisoformat(rec.get('expires_at', ''))
+                if exp >= datetime.now():
+                    unlock_ok = True
+                    unlock_expire = rec.get('expires_at', '')
+                    left_h = round((exp - datetime.now()).total_seconds() / 3600, 1)
+        except Exception:
+            pass
+        return jsonify({
+            'mobile': mobile, 'is_beta': beta,
+            'is_vip': bool(vip_plan), 'vip_plan': vip_plan,
+            'vip_left': vip_left, 'vip_expire': vip_expire,
+            'unlocked': unlock_ok, 'unlock_hours': left_h,
+            'unlock_expire': unlock_expire,
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/user/verify_token', methods=['POST', 'GET'])
+def api_user_verify_token():
+    """通过 token 自动识别用户身份 GET /api/user/verify_token?token=xxx
+    用于跨设备自动登录（终身免费用户等）。"""
+    try:
+        token = request.args.get('token', '') if request.method == 'GET' else (request.get_json(silent=True) or {}).get('token', '')
+        token = (token or '').strip()
+        if not token:
+            return jsonify({'error': '缺少 token 参数'}), 400
+        
+        # 查找 token 对应的用户
+        users = _load_json(str(USER_DATA_FILE), {}) or {}
+        found_mobile = None
+        found_user = None
+        for mobile, user in users.items():
+            if user.get('token') == token:
+                found_mobile = mobile
+                found_user = user
+                break
+        
+        if not found_mobile:
+            return jsonify({'error': 'token 无效或已过期'}), 404
+        
+        mobile = found_mobile
+        mem = _membership(mobile)
+        beta = _is_beta_whitelisted(mobile)
+        vip_plan = ''
+        vip_left = 0
+        vip_expire = ''
+        if mem and _membership_valid(mem):
+            plan = mem.get('plan')
+            if plan == PLAN_LIFETIME:
+                vip_plan = '终身免费'
+                vip_left = 9999
+            elif plan == PLAN_VIP_PRO:
+                vip_plan = '尊享档'
+                vip_expire = mem.get('expires_at', '')
+                vip_left = 9999
+            else:
+                vip_plan = '体验档'
+                vip_expire = mem.get('expires_at', '')
+                used = int((mem or {}).get('used_this_period', 0) or 0)
+                vip_left = max(0, VIP48_MONTHLY_QUOTA - used)
+        
+        return jsonify({
+            'success': True,
+            'mobile': mobile,
+            'name': found_user.get('name', ''),
+            'is_beta': beta,
+            'is_vip': bool(vip_plan),
+            'vip_plan': vip_plan,
+            'vip_left': vip_left,
+            'vip_expire': vip_expire,
+            'user_type': found_user.get('user_type', 'normal'),
+            'message': '身份验证成功'
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/user/generate_token', methods=['POST'])
+def api_user_generate_token():
+    """生成用户专属 token（管理员使用）POST /api/user/generate_token {mobile}
+    返回 {success, token, url}。"""
+    try:
+        data = request.get_json(silent=True) or {}
+        mobile = (data.get('mobile') or '').strip()
+        if not mobile or not (len(mobile) == 11 and mobile.isdigit()):
+            return jsonify({'error': '手机号格式不正确'}), 400
+        
+        import hashlib
+        import time
+        timestamp = str(int(time.time()))
+        raw = f"{mobile}_{timestamp}_liuren_token"
+        token = hashlib.md5(raw.encode()).hexdigest()[:24]
+        token = f"{mobile[-4:]}_{token}"
+        
+        users = _load_json(str(USER_DATA_FILE), {}) or {}
+        if mobile not in users:
+            users[mobile] = {'name': '', 'mobile': mobile}
+        users[mobile]['token'] = token
+        users[mobile]['token_created_at'] = datetime.now().isoformat()
+        _save_json(str(USER_DATA_FILE), users)
+        
+        return jsonify({
+            'success': True,
+            'mobile': mobile,
+            'token': token,
+            'url': f"https://liuren.souhuertong.net.cn/?token={token}",
+            'message': 'Token 生成成功'
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/member/plans', methods=['GET'])
+def api_member_plans():
+    """返回会员两档价目（月/季/年）。"""
+    return jsonify({
+        'plans': VIP_PRICE,
+        'periods': VIP_MONTHS,
+        'vip48_quota': VIP48_MONTHLY_QUOTA,
+        'vip48_max_days': VIP48_MAX_DAYS,
+    })
+
+
+@app.route('/api/member/activate', methods=['POST'])
+def api_member_activate():
+    """会员激活/续费（人工核对后调用）POST /api/member/activate {mobile, plan, period, tx_no?}
+    经对账确认到账后，为手机号写入对应周期的会员权益：
+      vip48: 每月/3月/12月  次数按 VIP48_MONTHLY_QUOTA 记周期（月/季/年）
+      vip98: 不限次数+跨度。
+    返回 {success, plan, expires_at}。"""
+    try:
+        data = request.get_json(silent=True) or {}
+        mobile = (data.get('mobile') or '').strip()
+        plan = data.get('plan', '')
+        period = data.get('period', 'm')
+        tx_no = (data.get('tx_no') or '').strip()
+        if not mobile or len(mobile) != 11 or not mobile.isdigit():
+            return jsonify({'error': '手机号格式不正确'}), 400
+        if plan not in (PLAN_VIP_BASIC, PLAN_VIP_PRO):
+            return jsonify({'error': '会员档位错误'}), 400
+        if period not in VIP_MONTHS:
+            return jsonify({'error': '周期错误(仅 m/q/y)'}), 400
+        months = VIP_MONTHS[period]
+        price = VIP_PRICE[plan].get(period, 0)
+
+        # 激活：叠加续期
+        data_ = _load_json(str(MEMBERSHIP_FILE), {}) or {}
+        cur = data_.get(str(mobile)) or {}
+        base = datetime.now()
+        if cur.get('expires_at') and _membership_valid(cur):
+            try:
+                cand = datetime.fromisoformat(cur['expires_at'])
+                if cand > base:
+                    base = cand
+            except Exception:
+                pass
+        new_exp = base + timedelta(days=30 * months)
+        data_[str(mobile)] = {'plan': plan, 'expires_at': new_exp.isoformat(),
+                              'price': price, 'period': period,
+                              'used_this_period': 0,
+                              'activated_at': datetime.now().isoformat()}
+        _save_json(str(MEMBERSHIP_FILE), data_)
+        # 记账
+        try:
+            book = _load_json(str(ROOT / '_sys_pay_log.json'), []) or []
+            book.append({'mobile': mobile, 'kind': 'member', 'plan': plan, 'period': period,
+                         'price': price, 'tx_no': tx_no, 'ts': datetime.now().isoformat()})
+            _save_json(str(ROOT / '_sys_pay_log.json'), book)
+        except Exception:
+            pass
+        return jsonify({'success': True, 'plan': plan, 'price': price,
+                        'expires_at': new_exp.isoformat(),
+                        'message': f'会员「{plan}」激活成功，{months}个月，有效期至 {new_exp.strftime("%Y-%m-%d")}'})
     except Exception as e:
         import traceback; traceback.print_exc()
         return jsonify({'error': str(e)}), 500
@@ -5111,7 +6616,168 @@ def api_export_docx():
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/api/zeri/leixiang_feedback', methods=['POST'])
+def api_zeri_leixiang_feedback():
+    """现代类象用后反馈（2026-08-25 用户拍板：记录应验vs推演出入，反馈校准）
+    POST body: {zeri_type, date, shichen, 推演:[...], 应验:[...], 确认:bool, note}
+    返回：{ok, 出入, 案例数, narrative}"""
+    try:
+        data = request.get_json(silent=True) or {}
+        zeri_type = (data.get('zeri_type') or '').strip()
+        if not zeri_type:
+            return jsonify({'error': '缺少 zeri_type'}), 400
+        from engine.leixiang_kb import LeixiangKB
+        _kb = LeixiangKB()
+        r = _kb.record_feedback(
+            zeri_type,
+            date=(data.get('date') or '').strip(),
+            shichen=(data.get('shichen') or '').strip(),
+            推演=data.get('推演') or [],
+            应验=data.get('应验') or [],
+            note=(data.get('note') or '').strip(),
+            确认=bool(data.get('确认')),
+        )
+        return jsonify({
+            'ok': True,
+            '出入': r.get('出入', []),
+            '案例数': r.get('案例数', 0),
+            'narrative': _kb.get_narrative(zeri_type),
+        })
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
+
 @app.route('/api/export/wenshu', methods=['POST'])
+def _wenshu_avoidance_text(data, detail):
+    """
+    自动计算避忌文字。
+    
+    规则（2026-08-26 更新）：
+    - 安葬类（阴宅）：只检查坐山，显示地支+属相名称，区分冲刑类型
+    - 其他类型：保持原有逻辑
+    
+    返回 str：'不用避忌' 或 '避忌：与坐山相冲的猴属相、相刑的蛇属相...'。
+    detail 缺字段时返回空（不覆盖前端手填）。
+    """
+    try:
+        from engine.avoidance_resolution import judge_avoidance
+        sizhu = detail.get('sizhu') or {}
+        sizhu_zhi = []
+        for k in ('年', '月', '日', '时'):
+            v = sizhu.get(k) or ''
+            if len(v) >= 2:
+                sizhu_zhi.append(v[1])
+        sike = detail.get('sike') or []
+        # sike: [[课名, 上神, 下神, 天将], ...] 四课
+        shang = [s[1] for s in sike if isinstance(s, (list, tuple)) and len(s) > 1]
+        gan_shang = shang[0] if len(shang) > 0 else ''
+        gan_yin = shang[1] if len(shang) > 1 else ''
+        zhi_shang = shang[2] if len(shang) > 2 else ''
+        zhi_yin = shang[3] if len(shang) > 3 else ''
+        sc = detail.get('sanchuan') or {}
+        sanchuan = [sc.get('初传', ''), sc.get('中传', ''), sc.get('末传', '')]
+        ri_zhi = sizhu.get('日') or ''
+        ri_zhi = ri_zhi[1] if len(ri_zhi) >= 2 else ''
+        
+        # 判断是否为安葬类（阴宅）
+        zetiri_type = (data.get('zetiri_type') or '').strip()
+        yinzhai_types = {'立碑', '安葬', '阴宅动土', '迁坟', '催龙补气', '召山买土'}
+        is_yinzhai = zetiri_type in yinzhai_types
+        
+        # 坐山用实际二十四山→地支
+        _MNT_ZHI = {'壬': '子', '子': '子', '癸': '子', '丑': '丑', '艮': '丑',
+                    '寅': '寅', '甲': '寅', '卯': '卯', '乙': '卯', '辰': '辰',
+                    '巽': '辰', '巳': '巳', '丙': '巳', '午': '午', '丁': '午',
+                    '未': '未', '坤': '未', '申': '申', '庚': '申', '酉': '酉',
+                    '辛': '酉', '戌': '戌', '乾': '戌', '亥': '亥'}
+        _mnt = (data.get('mountain') or detail.get('mountain') or '').strip()
+        _xiang = (detail.get('xiang_shou') or '').strip()
+        _mnt_zhi = _MNT_ZHI.get(_mnt, _mnt)
+        
+        # 调用 judge_avoidance（安葬类只用 shan_only=True）
+        r = judge_avoidance(
+            shan=_mnt_zhi,
+            xiang=_xiang,
+            ri_zhi=ri_zhi,
+            sizhu_zhi=sizhu_zhi,
+            tiandi_pan=detail.get('tiandi_pan') or {},
+            gan_shang_shen=gan_shang, zhi_shang_shen=zhi_shang,
+            gan_yin_shen=gan_yin, zhi_yin_shen=zhi_yin,
+            sanchuan=sanchuan,
+            shan_only=is_yinzhai,  # 安葬类只检查坐山
+        )
+        
+        if is_yinzhai:
+            # 安葬类：使用新格式
+            if r['resolved']:
+                biji = '不用避忌'
+            else:
+                # 使用 avoid_list 生成详细避忌文字
+                avoid_list = r.get('avoid_list', [])
+                if avoid_list:
+                    # 按攻击类型分组
+                    chong_list = []  # 冲
+                    xing_list = []   # 刑
+                    hai_list = []    # 害
+                    po_list = []    # 破
+                    
+                    for item in avoid_list:
+                        types_str = item.get('types_str', '')
+                        zhi = item.get('zhi', '')
+                        zodiac = item.get('zodiac', '')
+                        text = f'{zhi}({zodiac})'
+                        
+                        if '冲' in types_str:
+                            chong_list.append(text)
+                        if '刑' in types_str:
+                            xing_list.append(text)
+                        if '害' in types_str:
+                            hai_list.append(text)
+                        if '破' in types_str:
+                            po_list.append(text)
+                    
+                    parts = []
+                    if chong_list:
+                        parts.append('与坐山相冲的' + '、'.join(chong_list) + '属相')
+                    if xing_list:
+                        parts.append('与坐山相刑的' + '、'.join(xing_list) + '属相')
+                    if hai_list:
+                        parts.append('与坐山相害的' + '、'.join(hai_list) + '属相')
+                    if po_list:
+                        parts.append('与坐山相破的' + '、'.join(po_list) + '属相')
+                    
+                    biji = '避忌：' + '；'.join(parts)
+                else:
+                    biji = '避忌：详见课格'
+        else:
+            # 其他类型：保持原有格式（向后兼容）
+            if r['resolved']:
+                biji = '不用避忌'
+            else:
+                avoid = []
+                for x in r['reasons']:
+                    if '必避' in x or '需避' in x or '凶' in x:
+                        z = x.split('（')[0].strip()
+                        if z and z not in avoid:
+                            avoid.append(z)
+                biji = '避忌：' + ('、'.join(avoid) if avoid else '详见课格') + '属相'
+        
+        # 附类象叙事
+        lx_narr = ''
+        try:
+            from engine.leixiang_kb import LeixiangKB
+            _lkb = LeixiangKB()
+            lx_narr = _lkb.get_narrative(zetiri_type)
+        except Exception:
+            pass
+        if lx_narr:
+            return biji + '。' + lx_narr
+        return biji
+    except Exception:
+        return ''
+
+
 def api_export_wenshu():
     """单课择日文书导出（套用「完美模板.docx」） POST /api/export/wenshu
     body: {detail:<api/zeri/analyze 完整返回>, date, shichen, mountain, zetiri_type,
@@ -5126,6 +6792,11 @@ def api_export_wenshu():
         title = f'仪度六壬·{zetiri_type}择日课单' if zetiri_type else '仪度六壬择日课单'
         payload = dict(data)
         payload['title'] = title
+        # 自动避忌判定（前端未手填 biji 时自动生成）
+        if not (data.get('biji') or '').strip():
+            _auto = _wenshu_avoidance_text(data, detail)
+            if _auto:
+                payload['biji'] = _auto
 
         from engine.wenshu_exporter import build_wenshu
         buf = build_wenshu(payload)
@@ -5157,6 +6828,10 @@ def api_export_wenshu_html():
         title = f'仪度六壬·{zetiri_type}择日课单' if zetiri_type else '仪度六壬择日课单'
         payload = dict(data)
         payload['title'] = title
+        if not (data.get('biji') or '').strip():
+            _auto = _wenshu_avoidance_text(data, detail)
+            if _auto:
+                payload['biji'] = _auto
 
         from engine.wenshu_exporter import build_wenshu_html
         html = build_wenshu_html(payload)
@@ -5180,6 +6855,10 @@ def api_export_wenshu_pdf():
         title = f'仪度六壬·{zetiri_type}择日课单' if zetiri_type else '仪度六壬择日课单'
         payload = dict(data)
         payload['title'] = title
+        if not (data.get('biji') or '').strip():
+            _auto = _wenshu_avoidance_text(data, detail)
+            if _auto:
+                payload['biji'] = _auto
 
         from engine.wenshu_exporter import build_wenshu_html, html_to_pdf
         html = build_wenshu_html(payload)

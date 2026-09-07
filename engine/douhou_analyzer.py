@@ -12,7 +12,10 @@
 
 from typing import Dict, List
 from datetime import datetime
-from liuxiang_liuti_system import LiuXiangLiuTiCalculator
+try:
+    from liuxiang_liuti_system import LiuXiangLiuTiCalculator
+except ImportError:
+    from engine.liuxiang_liuti_system import LiuXiangLiuTiCalculator
 
 
 class DouhouKegeAnalyzer:
@@ -183,6 +186,32 @@ class DouhouKegeAnalyzer:
         kege_result['综合评分'] = self._calculate_score(kege_result['课格格局'], star_counts, sizhu, shan, liuxiang_analysis)
         
         kege_result['吉凶断语'] = self._generate_duanyu(kege_result['课格格局'], kege_result['综合评分'])
+        
+        # 【2026-09-07 前端补齐·斗首扣分原因】六相分析断语（judge_kege_jixiong 内含
+        #   "破鬼一位，不宜/武财关鬼格/廉子一位"等加减分明细），原仅取分数、断语被丢弃，
+        #   导致前端无法解释"斗首为何只有 74 分"（如破鬼无制反噬 -20）。
+        #   现在透传为独立字段 + 合并进吉凶断语，供前端叙事展示。
+        _lx_jx, _lx_score, _lx_duanyu = self.liuxiang_calculator.judge_kege_jixiong(liuxiang_analysis)
+        kege_result['六相断语'] = _lx_duanyu
+        kege_result['扣分原因'] = [d for d in _lx_duanyu if any(
+            k in d for k in ('破鬼', '贪官', '不宜', '凶', '需制伏', '重见'))]
+        _seen = set(kege_result['吉凶断语'])
+        kege_result['吉凶断语'] = kege_result['吉凶断语'] + [d for d in _lx_duanyu if d not in _seen]
+
+        # 【2026-09-07 前端补齐·月柱凶曜制化扣分】_calculate_score 内"月柱贪官/破鬼且
+        #   无廉贞制化、武财<2"额外 -10（与六相断语独立），此扣分原无任何断语说明，
+        #   现在显式检测并追加（如 2034-06-15 申时：月柱破鬼未制 → -10，与六相破鬼-10合计-20）。
+        _mz_info = liuxiang_analysis.get('四柱六相', {}).get('月柱', {})
+        _mz_star = _mz_info.get('六相', '') if isinstance(_mz_info, dict) else ''
+        if _mz_star in ('贪官', '破鬼'):
+            _has_lz = star_counts.get('廉贞', 0) > 0
+            _has_wc2 = star_counts.get('武财', 0) >= 2
+            if not _has_lz and not _has_wc2:
+                _mz_reason = f'月柱带{_mz_star}且无廉贞/双武财制化 → 额外-10'
+                if _mz_reason not in kege_result['扣分原因']:
+                    kege_result['扣分原因'].append(_mz_reason)
+                if _mz_reason not in kege_result['吉凶断语']:
+                    kege_result['吉凶断语'].append(_mz_reason)
         
         kege_result['吉凶等级'] = self.get_score_description(kege_result['综合评分'])
         
