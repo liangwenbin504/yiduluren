@@ -347,17 +347,37 @@ def _m2_leishen(leishen: str, sanchuan: List[str]) -> List[dict]:
             'rule_ids': ['YQ_05(类神)'],
         })
     else:
-        # 类神不入传 → 待冲合之日
+        # 类神不入传 → 待冲合之日（【2026-09-08 审计修复 BUG-C】原 trigger 取 ch or he 只留一个，
+        #   另一个被短路丢失；改冲/合各列一个候选，由主应期选举统一取舍）
         ch = _chong_zhi(leishen)
         he = _he_zhi(leishen)
-        out.append({
-            'method': '类神不入传',
-            'timing': '迟',
-            'days': 30,
-            'trigger_zhi': ch or he or leishen,
-            'desc': f'类神{leishen}不入传，待{ch}日冲开或{he}日合住之时方应',
-            'rule_ids': ['YQ_05(类神)'],
-        })
+        if ch:
+            out.append({
+                'method': '类神不入传(冲)',
+                'timing': '中',
+                'days': 12,
+                'trigger_zhi': ch,
+                'desc': f'类神{leishen}不入传，待{ch}日冲开之时方应',
+                'rule_ids': ['YQ_05(类神)'],
+            })
+        if he:
+            out.append({
+                'method': '类神不入传(合)',
+                'timing': '迟',
+                'days': 30,
+                'trigger_zhi': he,
+                'desc': f'类神{leishen}不入传，待{he}日合住之时方应',
+                'rule_ids': ['YQ_05(类神)'],
+            })
+        if not ch and not he:
+            out.append({
+                'method': '类神不入传',
+                'timing': '迟',
+                'days': 30,
+                'trigger_zhi': leishen,
+                'desc': f'类神{leishen}不入传且无冲合触发支，迟应于{leishen}日当令',
+                'rule_ids': ['YQ_05(类神)'],
+            })
     return out
 
 
@@ -654,15 +674,25 @@ def _m6_xunkong(leishen: str, yong_shen: str, sanchuan: List[str],
     for z in targets:
         if z in kw:
             chong = _chong_zhi(z)
-            # YQ_005: 空亡填实（该地支出现之日）或冲空（与空亡相冲的地支出现之日）
+            # YQ_005: 空亡填实 / 冲空（【2026-09-08 审计修复 BUG-D】原 trigger 只给 z，
+            #   desc 里的冲空支 chong 未进 trigger；拆填实/冲空两候选各带 trigger）
             out.append({
                 'method': '旬空填实',
                 'timing': '中',
                 'days': 12,
                 'trigger_zhi': z,
-                'desc': f'用神/类神{z}临旬空，主虚而不实，应期在{z}日填实或{chong}日冲空之时',
+                'desc': f'用神/类神{z}临旬空，主虚而不实，应期在{z}日填实之时',
                 'rule_ids': ['YQ_005(旬空)'],
             })
+            if chong:
+                out.append({
+                    'method': '旬空冲空',
+                    'timing': '中',
+                    'days': 12,
+                    'trigger_zhi': chong,
+                    'desc': f'用神/类神{z}临旬空，应期亦在{chong}日冲空之时',
+                    'rule_ids': ['YQ_005(旬空)'],
+                })
 
     # 刑害化解（三传见刑害 → 待合神化解）
     for z in sc:
@@ -945,6 +975,29 @@ def judge_yingqi(
 
     candidates.sort(key=lambda c: (_priority_of(c), timing_rank.get(c.get('timing', ''), 4)))
 
+    # 【2026-09-08 审计修复 BUG-E】干支应期维度：古案应期常作"甲日/己月"式干支组合，
+    #   原输出仅地支（trigger_zhi），缺天干。以日干为基准、地支十二支循环推进，补
+    #   trigger_gz（如甲日 trigger_zhi=巳 → 运算符定位到甲辰旬后巳所配天干 → 甲午?）。
+    #   简中取义：十干按日干起排，地支由 trigger 之序定，conventional 六甲循环配对。
+    _GAN_ALL = '甲乙丙丁戊己庚辛壬癸'
+    _ZHI_ALL = '子丑寅卯辰巳午未申酉戌亥'
+    if ri_gan in _GAN_ALL:
+        _gi = _GAN_ALL.index(ri_gan)
+        for _c in candidates:
+            _tz = _c.get('trigger_zhi', '')
+            if _tz and _tz in _ZHI_ALL:
+                _zi = _ZHI_ALL.index(_tz)
+                # 支序与干序同奇偶 → 可构成合法干支（甲子/乙丑…）；循环推算：
+                # 差距 = (支idx - 干idx) mod 10 倍推：取使 (gi + k) % 10 与 zi 同奇偶的最小 k
+                for _k in range(10):
+                    _gidx = (_gi + _k) % 10
+                    if (_gidx % 2) == (_zi % 2):
+                        _gan = _GAN_ALL[_gidx]
+                        _c['trigger_gz'] = _gan + _tz
+                        break
+            else:
+                _c['trigger_gz'] = ''
+
     matched_rules = set()
     for c in candidates:
         for rid in c.get('rule_ids', []):
@@ -955,19 +1008,22 @@ def judge_yingqi(
         'timing': '无期',
         'days': 0,
         'trigger_zhi': '',
+        'trigger_gz': '',
         'desc': '课传无显著应期触发条件，需结合占事类别与三传综合判断',
         'rule_ids': [],
     }
 
-    # ── 综合叙述 ──
+    # ── 综合叙述（干支应期版：trigger_gz 优先展示，如"甲午日"）──
     narr_parts = []
     if primary.get('trigger_zhi'):
-        narr_parts.append(f"主应期：{primary['method']}（{primary['timing']}，约{primary['days']}日，触发地支{primary['trigger_zhi']}）")
+        _gz = primary.get('trigger_gz') or primary['trigger_zhi']
+        narr_parts.append(f"主应期：{primary['method']}（{primary['timing']}，约{primary['days']}日，触发{_gz}日/{primary['trigger_zhi']}月）")
     else:
         narr_parts.append(f"主应期：{primary['method']}（{primary['timing']}）")
     if len(candidates) > 1:
         sec = candidates[1]
-        narr_parts.append(f"次选：{sec['method']}（{sec['timing']}，{sec.get('trigger_zhi','-')}）")
+        _sgz = sec.get('trigger_gz') or sec.get('trigger_zhi', '-')
+        narr_parts.append(f"次选：{sec['method']}（{sec['timing']}，{_sgz}）")
     if len(candidates) > 2:
         narr_parts.append(f"共命中{len(candidates)}种应期法")
 
