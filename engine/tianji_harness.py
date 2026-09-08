@@ -213,6 +213,38 @@ def _yingqi_period(cast_date, shichen, chart):
     except Exception as e:
         return {'period_len': PERIOD_LEN, 'stages': [], 'err': str(e)}
 
+# ── 规则快照（2026-09-08 新增）：起课时刻推理环境指纹（human_corrections + trainer 6 状态文件）。
+#   复盘时用同版规则重判，防"后见规则翻案"（261期教训：起课看跌→现行规则复算看涨，
+#   根因=unified_trainer 状态文件随训练轮次演化，非 human_corrections 新增）。──
+def _rules_snapshot():
+    import hashlib
+    mem = ROOT / "_memory"
+    files = [
+        "human_corrections.json",
+        "stock_training_insights.json",
+        "self_evolve_state.json",
+        "pattern_accuracy_stats.json",
+        "liuren_case_kb.json",
+        "evolution_summary.json",
+    ]
+    out = {"files": {}}
+    for f in files:
+        p = mem / f
+        try:
+            if p.exists():
+                raw = p.read_text(encoding="utf-8")
+                st = p.stat()
+                out["files"][f] = {
+                    "sha256": hashlib.sha256(raw.encode("utf-8")).hexdigest()[:16],
+                    "mtime": st.st_mtime_ns,
+                    "bytes": st.st_size,
+                }
+        except Exception:
+            pass
+    _joined = "|".join(f"{k}:{v.get('sha256','')}:{v.get('mtime','')}" for k, v in out["files"].items())
+    out["env_sha256"] = hashlib.sha256(_joined.encode("utf-8")).hexdigest()[:16]
+    return out
+
 def cmd_cast(cast_date, shichen):
     if shichen not in SHICHEN_SET:
         return "✗ 时辰非法：%s（须为 子丑寅卯辰巳午未申酉戌亥 之一）" % shichen
@@ -255,6 +287,7 @@ def cmd_cast(cast_date, shichen):
                    "primary": yp.get("primary") or {},
                    "stages": yp.get("stages") or [],
                    "narrative": yp.get("narrative", "")},   # 2026-09-08 多段应期
+        "rules_snapshot": _rules_snapshot(),               # 2026-09-08 起课时刻规则指纹（复盘用）
         "ts": datetime.now().isoformat(timespec="seconds"),
     }
     store[str(pidx)] = rec
