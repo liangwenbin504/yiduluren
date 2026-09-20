@@ -64,6 +64,69 @@ YUE_JIANG_SEASON = {
 }
 
 
+# ── 农历月 → 季节（古例带 month 时优先用它，比月将准）──
+LUNAR_MONTH_SEASON = {
+    1: "春", 2: "春", 3: "春",
+    4: "夏", 5: "夏", 6: "夏",
+    7: "秋", 8: "秋", 9: "秋",
+    10: "冬", 11: "冬", 12: "冬",
+}
+
+
+def _yingqi_for_ancient(ri_gan: str, ri_zhi: str, sanchuan_dizhi: List[str],
+                        yue_jiang: str = "", month: object = "",
+                        kongwang: Optional[List[str]] = None,
+                        tianjiang: Optional[Dict[str, str]] = None,
+                        category: str = "") -> Dict[str, Any]:
+    """古例路径的应期推算（2026-09-20 接入）。
+
+    🔴 定位：**叙事层**，⛔ **不进评分链** —— `fuse()` 不读 `result["yingqi"]`，
+      仅用于补齐「原文断语有应期、引擎原先完全没有」的详细度缺口（60 案抽样中 31 案有）。
+    失败一律返回 {}，绝不阻塞主流程、不改变 prediction。
+    """
+    if not ri_gan or len(sanchuan_dizhi) < 3:
+        return {}
+    try:
+        from engine.yingqi_engine import judge_yingqi
+    except Exception:
+        return {}
+
+    # 季节：优先农历月；缺失则退回月将（与天机路径 `tianji_harness._yingqi_period` 同映射）
+    season = ""
+    try:
+        season = LUNAR_MONTH_SEASON.get(int(str(month).strip()), "")
+    except Exception:
+        season = ""
+    if not season:
+        season = YUE_JIANG_SEASON.get(yue_jiang, "")
+
+    try:
+        r = judge_yingqi(ri_gan, list(sanchuan_dizhi),
+                         ri_zhi=ri_zhi, ganzhi=(ri_gan + ri_zhi),
+                         kongwang=list(kongwang or []),
+                         tianjiang=dict(tianjiang or {}),
+                         season=season, category=category or "")
+    except Exception:
+        return {}
+
+    pri = r.get("primary") or {}
+    stages = [{
+        "method": c.get("method", ""), "timing": c.get("timing", ""),
+        "days": c.get("days", 0),
+        "trigger_gz": c.get("trigger_gz", ""), "trigger_zhi": c.get("trigger_zhi", ""),
+    } for c in (r.get("candidates") or [])[:6]]
+    return {
+        "primary": {
+            "method": pri.get("method", ""), "timing": pri.get("timing", ""),
+            "days": pri.get("days", 0),
+            "trigger_gz": pri.get("trigger_gz", ""), "trigger_zhi": pri.get("trigger_zhi", ""),
+        },
+        "stages": stages,
+        "narrative": r.get("narrative", ""),
+        "season_used": season,
+    }
+
+
 def build_result_from_ancient(ancient_case: Dict) -> Dict[str, Any]:
     """
     从古例数据构造 fuse() 所需的 result dict。
@@ -254,6 +317,22 @@ def build_result_from_ancient(ancient_case: Dict) -> Dict[str, Any]:
             "_zhanlei": zhanlei,
         },
     }
+
+    # ---- 8. 应期（2026-09-20 接入；🔴 叙事层，⛔ 不进评分链）----
+    # 背景：60 案抽样中 31 案原文断语带应期（"十一年""后五年""巳日/巳月"），
+    #       而古例路径原先完全没有（应期引擎此前只接在天机/股票域）。
+    # 约束：只写 result["yingqi"]，`fuse()` 不读该字段 ⇒ 对 prediction 零影响。
+    _kongwang = []
+    try:
+        from engine.bifa_detector import XUN_KONG_MAP
+        _kongwang = list(XUN_KONG_MAP.get(ri_gan + ri_zhi, []) or [])
+    except Exception:
+        _kongwang = []
+    result["yingqi"] = _yingqi_for_ancient(
+        ri_gan, ri_zhi, sanchuan_dizhi,
+        yue_jiang=yue_jiang, month=ancient_case.get("month", ""),
+        kongwang=_kongwang, tianjiang=tianjiang_map, category=zhanlei,
+    )
 
     # ---- 真实课体/毕法赋/三传课格 抽取(占类化valence；替换 stub 全平) ----
     duanyu_text = ancient_case.get("duanyu", "")
