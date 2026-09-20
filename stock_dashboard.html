@@ -6061,8 +6061,12 @@ function openZeriModal(pai) {
           return '<span title="' + _tp + '" style="color:#c4b5fd;border-bottom:1px dotted #6d5ba8;cursor:help;">' +
             _nm + (g.吉凶 ? '<span style="color:#94a3b8;">（' + String(g.吉凶).replace(/</g, '&lt;') + '）</span>' : '') + '</span>';
         }).join('　｜　');
-        body += '<div style="margin-top:3px;font-size:12px;color:#e0e0e0;line-height:1.6;">课格：' + _kgHtml +
-          '　<span style="font-size:11px;color:#7a7a9a;">（悬停看象曰/宜忌/出处）</span></div>';
+        // 🆕 2026-09-21 实测：本行课格（乱首/斩关/天狱/赘婿＝《通解》课体口诀层）与
+        //    排盘区「课格」（＝64 课经层）**完全不重叠**，属互补而非重复
+        //    （实证 2026-09-02酉时：本行=上门乱首/天狱，排盘=曲直课/全局课/九丑/回环…）。
+        //    ⇒ 标签必须标明出处，避免与上方同名行混淆。
+        body += '<div style="margin-top:3px;font-size:12px;color:#e0e0e0;line-height:1.6;">课格（通解口诀）：' + _kgHtml +
+          '　<span style="font-size:11px;color:#7a7a9a;">（悬停看象曰/时序/出处；与上方课格列表互补）</span></div>';
       }
       body += '</div>';
     }
