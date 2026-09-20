@@ -1190,6 +1190,62 @@ def leishen_from_text(text: str, force_lost: bool = False) -> str:
     return ''
 
 
+# ══════════════════════════════════════════════════════════════════════════════
+# 古例/古籍断语专用类神抽取（2026-09-20 新增）
+#
+# ⛔ 与 leishen_from_text 的区别（勿合并、勿改前者的层序 —— 它是寻物 API 的生产函数）：
+#   1. **明写句式优先级最高**。原文明写「X为/作/系类神」的权威性远高于任何词表，
+#      而 leishen_from_text 里句式排在第 5 层，会被「金墓→酉」这类词表抢先命中
+#      （实证 §亡盗15·194「末申系类神」被"金"抢走，推成酉）。
+#   2. **句式双向**。古籍既有「酉为类神」也有「类神酉临火墓」（支在后）
+#      （实证 §亡盗15·198 因此完全推不出）。
+#   3. ⛔ **默认禁用 LLM 兜底**（allow_llm=False）。LLM 会写 data/leishen_llm_cache.json，
+#      且实测会把古例断语映射成错误的地支并**缓存进生产**（197→巳、198→子，人工是未/酉）。
+#
+# 实测（12 案人工标注的亡盗章）：leishen_from_text 7/12=58.3% → 本函数 9/12=75%。
+# 剩余 3 案属「人工按课传取、引擎按类属取」的口径差异与无文本线索，非规则缺陷。
+# ⇒ ⛔ n=12 且标注口径不统一 ⇒ **本函数只供叙事层（详细度）使用，禁止进评分链。**
+# ══════════════════════════════════════════════════════════════════════════════
+_ANCIENT_LEISHEN_PATTERNS = (
+    # ① 支在前：酉为类神／金环以酉为类神／末申系类神／酉金，类神也
+    re.compile(r'(?:以|是|属|为|系)?([子丑寅卯辰巳午未申酉戌亥])'
+               r'(?:[金木水火土])?\s*[，,]?\s*(?:为|作|是|系)?\s*类神'),
+    # ② 支在后：类神酉临火墓／类神在卯
+    re.compile(r'类神\s*(?:临|在|加|乘|作|见)?\s*([子丑寅卯辰巳午未申酉戌亥])'),
+    # ③ 判断句式：X，类神也
+    re.compile(r'([子丑寅卯辰巳午未申酉戌亥])\s*[，,]?\s*类神也'),
+)
+
+
+def leishen_from_ancient_text(text: str, force_lost: bool = False,
+                              allow_llm: bool = False) -> str:
+    """从古籍断语提取类神地支（确定性，⛔ 默认禁 LLM 兜底）。
+
+    层序：明写句式（最高）→ 现代物件表 → 物性规则 → 器物表 → 六畜表 → LLM(默认关)。
+    allow_llm: 显式置 True 才启用 LLM；⚠️ 启用即可能写 data/leishen_llm_cache.json。
+    """
+    t = str(text or '')
+    for _p in _ANCIENT_LEISHEN_PATTERNS:
+        _m = _p.search(t)
+        if _m:
+            return _m.group(1)
+    for item, zhi in LOST_ITEM_LEISHEN_MODERN.items():
+        if item in t:
+            return zhi
+    _rule_zhi = leishen_rule_fallback(t, force_lost)
+    if _rule_zhi:
+        return _rule_zhi
+    for item, zhi in LOST_ITEM_LEISHEN.items():
+        if item in t:
+            return zhi
+    for item, zhi in LIUCHU_LEISHEN.items():
+        if f'{item}不见' in t or f'失{item}' in t:
+            return zhi
+    if allow_llm and (force_lost or re.search(r'失|丢|掉|寻|找|不见|捡|遗', t)):
+        return leishen_llm_fallback_cached(t)
+    return ''
+
+
 # ── 第3层：LLM 兜底（仅静态表+规则全 miss 时触发）──
 _LLM_CACHE_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                                'data', 'leishen_llm_cache.json')
