@@ -5,6 +5,69 @@
 *_token*
 settings.json
 
+# ══ 2026-09-20 仓库收口（憨爷拍板）════════════════════════════
+# 背景：engine/ 下 371 个 .py 只有 58 个被跟踪（313 个从未入库）；
+#       工作区 15520 个未跟踪 + 2268 个已删除项悬空 ⇒ 基线残缺。
+# 处置：立即目录全忽略（只放行关键台账），一次性调试脚本继续忽略，源码全量入库。
+#
+# ── 运行时数据：_memory 整目录忽略，仅白名单放行 ──
+# ⚠ _memory 下有 16144 个随机名 4 字节垃圾文件（内容 'blat'），严禁入库
+_memory/*
+!_memory/tianji_casts.json
+!_memory/idx_*.txt
+!_memory/tianji_notify_state.json
+# ── 隔离区/部署副本（_swas_deploy 含服务器地址与 .env 示例，不入库）──
+_冗余待删/
+_swas_deploy/
+# ── 备份尾巴：xxx.py.bak_6kege_20260911 这类（旧规则 *.bak 覆盖不到）──
+*.bak_*
+*.backup*
+
+# ── 过程产物目录：训练/OCR/提取/浏览器 profile（可再生产，不入库）──
+_weread*/
+_weread_*.png
+_wb_*.png
+_wb_*.js
+_wb_*.xlsx
+_ocr_tmp/
+/processed_data/
+/extracted_data/
+/training_results/
+/testing_results/
+/verification_results/
+/lora_model/
+/lora_merged/
+/model_cache/
+/sft_data/
+/training_data/
+/rlhf_output/
+/eval_output/
+/enhanced_data/
+/knowledge_graph_data/
+/quant_data/
+/pipeline_runs/
+/output/
+/src_copy/
+/backup_*/
+/224案例GLM4第十轮训练结果_1_90.json.备份
+*.tar.gz
+*.tar
+*.zip
+*.tgz
+
+# ── 敏感（2026-09-20 补，原规则覆盖不到）──
+auth.json
+api_key*.py
+dag.env
+*.env
+*.pem
+
+# ── 工具/代理目录 ──
+.agents/
+.dsh-plugins/
+.workbuddy/*
+!.workbuddy/memory/
+
 # ── Python 缓存 ──
 __pycache__/
 *.pyc
@@ -73,7 +136,7 @@ search_*.py
 setup_*.py
 simplify_*.py
 supplement_*.py
-update_*.py
+/update_*.py
 use_*.py
 step*.py
 solution*.py
