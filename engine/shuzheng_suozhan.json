@@ -1,0 +1,39 @@
+{
+ "meta": {
+  "purpose": "218 案中「失物/寻人」占的所占之事描述（suozhan_desc）覆盖表",
+  "why_only_21": "类神地支只在「失物/寻人」占需要（功名/疾病/家宅等占的类神由占类决定，见 get_category_leishen 的天将表）。全 218 案里真正的失物/寻人占只有 sec=14（六畜走失）与 sec=15（亡盗）两章。已排除：sec14·179（占买进六畜畜养）、sec14·183（占羊之吉凶，非寻羊）；以及宅墓/终身/疾病等章里断语含「盗气」「走失财物」字样但实非失物占的案。",
+  "red_line": "⛔ suozhan_desc 只写「占问何事」，严禁含吉凶答案。带答案=泄漏，不可用于类神自推评估。",
+  "source": "人工逐案从 duanyu 原文提炼（2026-09-20），verified=true",
+  "not_modified": "⛔ 原语料 engine/shuzheng_real_cases.json 未改动；本表为覆盖表，与 shuzheng_label_fix.json 同一模式",
+  "fields": {
+   "suozhan_desc": "所占之事描述（不含答案）",
+   "lost_object": "所失对象（物/人/畜）",
+   "leishen_human": "人工标注的类神地支（仅亡盗章 12 案有；196/201 无）",
+   "leishen_expected": "由原文干支自证的期望类神（如「午为马」「未为羊」「戌为类神(狗)」「酉为鸡」）",
+   "note": "提炼依据（原文片段）"
+  }
+ },
+ "items": [
+  {"case_id": "§六畜走失14·180", "zhanlei": "其他", "sec": "14", "suozhan_desc": "失马，问其下落生死", "lost_object": "马", "leishen_human": "", "leishen_expected": "午", "note": "原文「其马必被虎伤死矣…盖午为马」"},
+  {"case_id": "§六畜走失14·181", "zhanlei": "其他", "sec": "14", "suozhan_desc": "失马", "lost_object": "马", "leishen_human": "", "leishen_expected": "午", "note": "原文「此马不见矣。午为马，加申道路之上…被人骑去矣」"},
+  {"case_id": "§六畜走失14·182", "zhanlei": "其他", "sec": "14", "suozhan_desc": "失马", "lost_object": "马", "leishen_human": "", "leishen_expected": "午", "note": "原文「马在东方寺院围墙内…盖马属午」"},
+  {"case_id": "§六畜走失14·184", "zhanlei": "其他", "sec": "14", "suozhan_desc": "失羊", "lost_object": "羊", "leishen_human": "", "leishen_expected": "未", "note": "原文「其羊定在西南…盖未为羊」"},
+  {"case_id": "§六畜走失14·185", "zhanlei": "其他", "sec": "14", "suozhan_desc": "失羊", "lost_object": "羊", "leishen_human": "", "leishen_expected": "未", "note": "原文「其羊不失…盖初传是类神」（未加卯作龙）"},
+  {"case_id": "§六畜走失14·186", "zhanlei": "其他", "sec": "14", "suozhan_desc": "失白狗", "lost_object": "狗", "leishen_human": "", "leishen_expected": "戌", "note": "原文「白狗寻不见矣。盖戌为类神」"},
+  {"case_id": "§六畜走失14·187", "zhanlei": "其他", "sec": "14", "suozhan_desc": "失鸡", "lost_object": "鸡", "leishen_human": "", "leishen_expected": "酉", "note": "原文「鸡寻不见矣…酉为鸡」"},
+  {"case_id": "§亡盗15·188", "zhanlei": "其他", "sec": "15", "suozhan_desc": "人逃亡，问藏匿何处", "lost_object": "人", "leishen_human": "亥", "leishen_expected": "", "note": "原文「其人逃往买卖人汪家后，空猪圈内藏匿」"},
+  {"case_id": "§亡盗15·189", "zhanlei": "其他", "sec": "15", "suozhan_desc": "失钱谷二物", "lost_object": "钱谷", "leishen_human": "未", "leishen_expected": "", "note": "原文「李四官失钱谷二物」（⚠ 人工标未＝中传干上之未，属课传口径非类属口径）"},
+  {"case_id": "§亡盗15·190", "zhanlei": "其他", "sec": "15", "suozhan_desc": "失婢", "lost_object": "婢", "leishen_human": "辰", "leishen_expected": "", "note": "原文「此婢走不远」"},
+  {"case_id": "§亡盗15·191", "zhanlei": "其他", "sec": "15", "suozhan_desc": "失婢", "lost_object": "婢", "leishen_human": "酉", "leishen_expected": "", "note": "原文「此婢不失…酉辰为婢」"},
+  {"case_id": "§亡盗15·192", "zhanlei": "其他", "sec": "15", "suozhan_desc": "失婢", "lost_object": "婢", "leishen_human": "酉", "leishen_expected": "", "note": "原文「酉为婢，加未」"},
+  {"case_id": "§亡盗15·193", "zhanlei": "其他", "sec": "15", "suozhan_desc": "失金器之物", "lost_object": "金器", "leishen_human": "酉", "leishen_expected": "", "note": "原文「酉金，类神也…果于厕坑之侧寻见」"},
+  {"case_id": "§亡盗15·194", "zhanlei": "其他", "sec": "15", "suozhan_desc": "失物，未言何物", "lost_object": "物", "leishen_human": "申", "leishen_expected": "", "note": "原文「其物在厕屋左右…末申系类神」（全文未明言何物）"},
+  {"case_id": "§亡盗15·195", "zhanlei": "其他", "sec": "15", "suozhan_desc": "失金环", "lost_object": "金环", "leishen_human": "酉", "leishen_expected": "", "note": "原文「金环以酉为类神」"},
+  {"case_id": "§亡盗15·196", "zhanlei": "其他", "sec": "15", "suozhan_desc": "失度牒", "lost_object": "度牒", "leishen_human": "", "leishen_expected": "", "note": "原文「度牒以朱雀为类神」（朱雀非地支，本表不列地支期望）"},
+  {"case_id": "§亡盗15·197", "zhanlei": "其他", "sec": "15", "suozhan_desc": "失物，未言何物", "lost_object": "物", "leishen_human": "未", "leishen_expected": "", "note": "原文「其物必藏在神庙中」（全文未明言何物）"},
+  {"case_id": "§亡盗15·198", "zhanlei": "其他", "sec": "15", "suozhan_desc": "失物，未言何物", "lost_object": "物", "leishen_human": "酉", "leishen_expected": "", "note": "原文「类神酉临火墓」（全文未明言何物）"},
+  {"case_id": "§亡盗15·199", "zhanlei": "其他", "sec": "15", "suozhan_desc": "失物，未言何物", "lost_object": "物", "leishen_human": "酉", "leishen_expected": "", "note": "原文「酉为类神，作勾临午」（全文未明言何物）"},
+  {"case_id": "§亡盗15·200", "zhanlei": "其他", "sec": "15", "suozhan_desc": "失船", "lost_object": "船", "leishen_human": "卯", "leishen_expected": "", "note": "原文「舡往东南方寻之…卯乃舡」"},
+  {"case_id": "§亡盗15·201", "zhanlei": "其他", "sec": "15", "suozhan_desc": "失麦面", "lost_object": "麦面", "leishen_human": "", "leishen_expected": "", "note": "原文「申为麦面」（失主为面店）"}
+ ]
+}
