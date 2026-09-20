@@ -3865,6 +3865,34 @@ def api_zeri_analyze():
             result['yingqi'] = ''
             result['yingqi_struct'] = []
 
+        # ── 方位 / 道里数 / 转折（叙事层；2026-09-21 接入生产）──
+        # 背景：这三个字段 2026-09-20 已在**古例回测**路径建好并硬核对过
+        #       （方位 5/5、道里数 4/4、课格 乱首6/6·斩关1/1·赘婿2/2·天狱2/2），
+        #       但 `build_result_from_ancient` **没有生产调用方** ⇒ 生产前端一直看不到。
+        # 🔴 定位：**纯叙事层**，⛔ **不择日评分链、不改吉凶排序**
+        #       （择日排序走 zeri_score_scale / batch_zeri_optimizer，不读这三个字段）。
+        # 🔒 整体 try/except ⇒ 叙事层**绝不允许炸主链路**。
+        try:
+            from engine.ancient_backtest import (_fangwei_shumu_for_ancient as _fw_fn,
+                                                 _zhuanzhe_for_ancient as _zz_fn)
+            _fx_sc = [sanchuan.get('初传', ''), sanchuan.get('中传', ''), sanchuan.get('末传', '')]
+            _ls_fx = ''
+            try:
+                _ls_fx = str(result.get('leishen') or '') or ''
+            except Exception:
+                _ls_fx = ''
+            _fx = _fw_fn(ri_zhi, _fx_sc, sike, tiandi_pan, _ls_fx)
+            result['fangwei'] = _fx.get('fangwei', {})
+            result['shumu'] = _fx.get('shumu', {})
+            result['zhuanzhe'] = _zz_fn(
+                _fx_sc, _tj_list, kongwang=_kw_cl,
+                ri_gan=ri_gan, ri_zhi=ri_zhi,
+                si_ke=sike, tiandi_pan=tiandi_pan)
+        except Exception as _e_fx:
+            result.setdefault('fangwei', {})
+            result.setdefault('shumu', {})
+            result.setdefault('zhuanzhe', {})
+
         # ── 综合批语（斗首/演禽/六壬 → 文言+白话括注，详情区「综合批语」栏）──
         try:
             # 2026-08-17：优先用择日类型（提车/开业等专属尾注），未选则退回占事（zhanlei）
