@@ -186,6 +186,123 @@ def _resolve_leishen(ancient_case: Dict) -> str:
     return _z if (len(_z) == 1 and _z in _DIZHI) else ""
 
 
+def _fangwei_shumu_for_ancient(ri_zhi: str, sanchuan_dizhi: List[str], si_ke,
+                               tiandi_pan: Dict[str, str], leishen: str = "") -> Dict[str, Any]:
+    """方位 + 道里数（2026-09-20 接入；🔴 叙事层，⛔ 不进评分链）。
+
+    引擎：根目录 `fangwei_engine_v7`（2026-08-18 建，**此前从未接进古例路径** ——
+    与应期同类的"引擎已写好、只是没接线"）。每个函数自带原文出处：
+      · 十二支方位：子北/丑寅东北/卯东/辰巳东南/午南/未申西南/酉西/戌亥西北
+        （§六畜走失14·184"未为羊…故在西南"、§亡盗15·200"卯为类神，加巳，是在地户东南上也"、
+         §亡盗15·199"物在南方炉灶前"、§宅墓02·127"未加卯…往东方寻之必见"）
+      · 类神所加方：吴稼云「类神未见，则以初传为方向类神」（§200 初传寅加辰=东南，果于东南寻见）
+      · 驿马方位：§出行访谒11·153"寅马…行动于东北者"
+      · 道里数：洛书支数 子午9/丑未8/寅申7/卯酉6/辰戌5/巳亥4
+        相加 §017"巳四、子九，并成十三年"｜相乘 §188"亥四丑八，去此三十二里"、§072"午九酉六，六九五十四"
+        拼接 §终身04·105"亥四、酉六，主四十六岁亡"｜重复 §宅墓02·013"亥四数，课中四个亥，四四一十六年"
+    ⛔ 洛书数表已跨书坐实（疏正 219 案实测 + 壬占汇选 21/21=100%），邵彦和**只用支数不用天干数**。
+    """
+    out: Dict[str, Any] = {"fangwei": {}, "shumu": {}}
+    try:
+        import fangwei_engine_v7 as fv
+    except Exception:
+        return out
+    sc = [z for z in (sanchuan_dizhi or [])[:3] if z]
+    try:
+        out["fangwei"]["sanchuan"] = [{"zhi": z, "fang": fv.fangwei_of_zhi(z)} for z in sc]
+        out["fangwei"]["leishen_jia"] = fv.leishen_jia_fang(
+            leishen or "", si_ke or [], tiandi_pan or {}, sc)
+        out["fangwei"]["yima"] = fv.yima_fangwei(ri_zhi)
+    except Exception:
+        pass
+    try:
+        out["shumu"]["zhi_number"] = [{"zhi": z, "n": fv.ZHI_SUZHI.get(z)} for z in sc
+                                      if z in getattr(fv, "ZHI_SUZHI", {})]
+        if len(sc) >= 2:
+            out["shumu"]["sum"] = fv.daoli_zhi_sum(*sc)
+            out["shumu"]["cheng"] = fv.zhi_cheng(sc[0], sc[-1])
+        elif sc:
+            out["shumu"]["sum"] = fv.daoli_zhi_sum(sc[0])
+    except Exception:
+        pass
+    return out
+
+
+def _zhuanzhe_for_ancient(sanchuan_dizhi: List[str],
+                          sanchuan_tianjiang: List[str],
+                          kongwang: Optional[List[str]] = None,
+                          ri_gan: str = "") -> Dict[str, Any]:
+    """转折（事态走向：先吉后凶／先凶后吉／始终…；2026-09-20 新建）。
+
+    🔴 定位：**叙事层**，⛔ **不进评分链** —— 只描述"事态如何变化"，不改吉凶方向。
+
+    判据（确定性）：三传各传所乘天将的吉凶分（`judgment_fusion.TIANJIANG_SCORE`，
+    与评分链**同一张表** ⇒ 口径一致：贵人/青龙/六合/太常/天后/太阴=+1，
+    朱雀=0，勾陈/螣蛇/玄武/天空=−1，白虎=−2）。
+      · 初 > 0 且末 < 0 → 先吉后凶
+      · 初 < 0 且末 > 0 → 先凶后吉
+      · 同号            → 始终吉／始终凶
+      · 中传与初、末**均不同号** → 追加「中传生变」
+      单传（三传不足）或天将缺失 → 返回空。
+
+    🔴 **空亡修正**（2026-09-20 补）：某传地支落入旬空 ⇒ 该传走向**落空无效**。
+      铁证 §宅墓02·035「可望先凶后吉。奈何**寅是空亡**，所以不能引进，**见生不生，反成凶咎**」
+      —— 末传寅（生我，本吉）空亡 ⇒ 先凶后吉**不成立**，反成凶。
+      ⇒ 末传空亡时 mode 追加「（末传空亡，走向落空）」并按「未能转吉/未能转凶」标注。
+    """
+    empty: Dict[str, Any] = {}
+    try:
+        from engine.judgment_fusion import TIANJIANG_SCORE
+    except Exception:
+        return empty
+    sc = list(sanchuan_dizhi or [])[:3]
+    tj = list(sanchuan_tianjiang or [])[:3]
+    if len(sc) < 3 or len(tj) < 3:
+        return empty
+
+    def _s(zhi, jiang):
+        v = TIANJIANG_SCORE.get(jiang, 0)
+        return {"zhi": zhi, "jiang": jiang, "score": v,
+                "xing": "吉" if v > 0 else ("凶" if v < 0 else "平")}
+
+    a, b, c = _s(sc[0], tj[0]), _s(sc[1], tj[1]), _s(sc[2], tj[2])
+    va, vb, vc = a["score"], b["score"], c["score"]
+    if va > 0 and vc < 0:
+        mode = "先吉后凶"
+    elif va < 0 and vc > 0:
+        mode = "先凶后吉"
+    elif va > 0 and vc > 0:
+        mode = "始终吉"
+    elif va < 0 and vc < 0:
+        mode = "始终凶"
+    else:
+        mode = "平平无变"
+    # ---- 空亡修正（§035「寅是空亡…见生不生，反成凶咎」）----
+    kw = set(kongwang or [])
+    kong_flags = [z in kw for z in sc]
+    if kong_flags[2] and mode in ("先凶后吉", "始终吉"):
+        mode = f"{mode}（末传空亡，转吉落空→反成凶咎）"
+    elif kong_flags[2] and mode in ("先吉后凶", "始终凶"):
+        mode = f"{mode}（末传空亡，凶亦落空）"
+    elif kong_flags[0]:
+        mode = f"初传{sc[0]}空亡（起始之力落空）→ {mode}"
+    mid = ""
+    if vb != 0 and ((vb > 0 and va < 0 and vc < 0) or (vb < 0 and va > 0 and vc > 0)):
+        mid = "，中传生变"
+    desc = (f"初传{sc[0]}乘{tj[0]}（{a['xing']}）→ 中传{sc[1]}乘{tj[1]}（{b['xing']}）"
+            f"→ 末传{sc[2]}乘{tj[2]}（{c['xing']}），主{mode}{mid}")
+    if any(kong_flags):
+        desc += f"；空亡：{'、'.join(f'{z}空' for z, f in zip(sc, kong_flags) if f)}"
+    return {
+        "初": a, "中": b, "末": c, "mode": mode,
+        "kong": kong_flags, "desc": desc,
+        "src": ("§前程仕进03·046「此课先失后得，先虚后实」；§宅墓02·035「望先凶后吉」"
+                "（+「寅是空亡…见生不生，反成凶咎」⇒ 空亡修正）；"
+                "§终身04·118「主日后因犯官长，断勒归家」。"
+                "判据=三传天将吉凶走向（TIANJIANG_SCORE，与评分链同表）+ 旬空修正"),
+    }
+
+
 def build_result_from_ancient(ancient_case: Dict) -> Dict[str, Any]:
     """
     从古例数据构造 fuse() 所需的 result dict。
@@ -450,6 +567,21 @@ def build_result_from_ancient(ancient_case: Dict) -> Dict[str, Any]:
     result["leishen"] = leishen_used
     # 叙事层：标注类神来源，便于核对（⛔ 不进评分链）
     result["leishen_source"] = LEISHEN_SOURCE
+
+    # ---- 方位 / 道里数 / 转折（2026-09-20 接入；🔴 叙事层，⛔ 不进评分链）----
+    # 背景：详细度审计（权威映射，218 案）显示原文 **126 案带转折、63 案带方位/数目**，
+    #       而古例路径**全无**结构化字段（覆盖度均 0%）。
+    #       · 方位/数目的引擎 `fangwei_engine_v7` 2026-08-18 就写好了 —— **只是从未接线**
+    #         （与应期同一类"引擎已写好、没接进古例路径"）。
+    #       · 转折无现成字段 ⇒ 新建，由三传天将吉凶走向**确定性推导**
+    #         （用 `judgment_fusion.TIANJIANG_SCORE`，与评分链**同一张表** ⇒ 口径一致）。
+    # 约束：只写 result["fangwei"]/["shumu"]/["zhuanzhe"]，`fuse()` 不读 ⇒ 对 prediction 零影响。
+    _fw = _fangwei_shumu_for_ancient(ri_zhi, sanchuan_dizhi, si_ke, tiandi_pan, leishen_used)
+    result["fangwei"] = _fw.get("fangwei", {})
+    result["shumu"] = _fw.get("shumu", {})
+    result["zhuanzhe"] = _zhuanzhe_for_ancient(
+        sanchuan_dizhi, result.get("sanchuan_tianjiang", []),
+        kongwang=_kongwang, ri_gan=ri_gan)
 
     # ---- 真实神煞/八杀 valence 抽取（确定性，占类化，无泄漏）----
     result["analysis"]["_shen_sha_valence"] = extract_shen_sha_valence(
