@@ -1,8 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-仪度六壬择日系统 - API服务器
+仪度六壬择日系统 - API服务器（**遗留服务 · 非生产路径**）
 完整版本，包含所有API端点
+
+🔴 2026-09-12 憨爷拍板「按你的建议」——澄清 ＋ 墓碑化：
+   ⚠️ 本文件由 `start.bat` 以**端口 8000** 启动，**当前未运行、亦非生产路径**。
+      生产批量择日 ＝ `launch_dashboard.py → stock_dashboard.py`（:5555）；
+      云端 ＝ `start_with_waitress.py → from stock_dashboard import app`。
+   🪦 斗首批量两条路由 `full_analyze`／`full_range_analyze` 已被 stock_dashboard 的
+      `/api/zeri/analyze`（单日）／`/api/zeri/batch`（区间）取代 → **墓碑化（返回 410）**。
+      查证（2026-09-12）：活跃前端 `stock_dashboard.html` **零引用**、端口 8000 **未监听**。
+   ⛔ 新开发勿改本文件；改择日逻辑请去 `stock_dashboard.py` ＋ `engine/`。
 """
 
 import io
@@ -168,6 +177,12 @@ sys.path.insert(0, os.path.join(PROJECT_ROOT, 'engine'))
 app = Flask(__name__)
 CORS(app)
 
+# ═══ 【2026-09-11 憨爷四次拍板「按原著来」】原著三者定位（张九仪《仪度六壬选日要诀》）═══
+#   斗首＝基础 ／ 六壬＝主旨（最重要）／ 演禽＝支节。
+#   → 批量择日的三维硬筛中，**演禽（支节）不再作硬筛选**（仍算分并随结果返回，供展示/参考）。
+#   ZERI_YUANZHU=0 回退旧口径（演禽≥50 硬筛），供 A/B 对照。
+YUANZHU = os.environ.get('ZERI_YUANZHU', '1') == '1'
+
 # ==================== 导入引擎模块 ====================
 try:
     from sizhu_engine import get_sizhu, get_year_ganzhi, get_month_ganzhi, get_day_ganzhi, get_hour_ganzhi
@@ -331,8 +346,15 @@ except ImportError:
 
 @app.route('/')
 def index():
-    """首页"""
-    return send_from_directory('.', 'index_v2.html')
+    """首页：旧 index_v2.html 前端已归档至 _archive/legacy_frontend_v2_20260821（2026-08 审查），
+    主前端为 stock_dashboard.html（由 stock_dashboard.py 提供服务）。"""
+    return '<html><head><meta charset="utf-8"><title>仪度六壬择日</title></head>' \
+        '<body style="font-family:Microsoft YaHei;padding:40px;text-align:center;">' \
+        '<h2>🔮 仪度六壬择日</h2>' \
+        '<p>旧版前端（index_v2）已归档，请使用主前端：</p>' \
+        '<p><a href="/stock_dashboard.html" style="font-size:16px;">进入股票预测 / 虚拟交易系统 →</a></p>' \
+        '<p style="color:#999;font-size:12px;">API 端点仍在本服务器正常提供（/api/*）。</p>' \
+        '</body></html>'
 
 @app.route('/<path:filename>')
 def serve_static(filename):
@@ -424,7 +446,11 @@ def calculate_sizhu():
 
 @app.route('/api/doushou/full_analyze', methods=['POST'])
 def doushou_full_analyze():
-    """斗首完整分析"""
+    """斗首完整分析（🪦 已废弃 → 410）"""
+    # 🪦 2026-09-12 墓碑化：已被 stock_dashboard 的 `/api/zeri/analyze` 取代；此文件非生产。
+    #    查证：活跃前端 stock_dashboard.html 零引用。⛔ 勿改此处，生产逻辑见 stock_dashboard.py。
+    return jsonify({'error': 'gone',
+                    'message': '路由已废弃；生产请用 stock_dashboard.py 的 /api/zeri/analyze'}), 410
     try:
         data = request.json
         
@@ -573,6 +599,9 @@ def doushou_full_range_analyze():
     生产前端走 :5555 stock_dashboard.py 的 /api/zeri/batch（sike_sanchuan 排盘 + 完整引擎管线）。
     本路由保留仅为兼容历史调用，新开发请勿复用。
     """
+    # 🪦 2026-09-12 墓碑化：已被 stock_dashboard 的 `/api/zeri/batch` 取代；此文件非生产。
+    return jsonify({'error': 'gone',
+                    'message': '路由已废弃（2026-08-17）；生产请用 stock_dashboard.py 的 /api/zeri/batch'}), 410
     try:
         data = request.json
         
@@ -764,7 +793,9 @@ def doushou_full_range_analyze():
                         ri_gan, ri_zhi,
                         shi_gan, shi_zhi,
                         sanchuan,
-                        [keti] if keti else None
+                        [keti] if keti else None,
+                        yuejiang=yuejiang,
+                        year=current_date.year, month=current_date.month, day=current_date.day
                     )
                     
                     daliuren_score = new_score_result['final_score']
@@ -815,9 +846,12 @@ def doushou_full_range_analyze():
                     total_score = (doushou_score + daliuren_score + yanqin_score) / 3
                     
                     # 筛选条件
+                    # 【2026-09-11 憨爷拍板「按原著来」】演禽＝支节 → 退出硬筛选（仍算分/返回展示）；
+                    #   基础(斗首≥50) 与 主旨(六壬≥min_daliuren_score) 仍为硬筛。ZERI_YUANZHU=0 回退。
                     doushou_ok = doushou_score >= 50
                     daliuren_ok = daliuren_score >= min_daliuren_score
                     yanqin_ok = yanqin_score >= 50
+                    yanqin_gate = (True if YUANZHU else yanqin_ok)   # 原著口径：演禽不作硬筛
 
                     # 调试：记录所有课体和评分
                     if total_shichen < 5:
@@ -827,7 +861,7 @@ def doushou_full_range_analyze():
                     # if is_daxiong:
                     #     continue
 
-                    if doushou_ok and daliuren_ok and yanqin_ok:
+                    if doushou_ok and daliuren_ok and yanqin_gate:
                         total_candidates += 1
 
                         mubiao_bonus = 0
@@ -945,6 +979,28 @@ def yanqin_four_qin():
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
+def _date_to_paipan_params(year, month, day, hour):
+    """把公历年月日时换算为六壬排盘参数（日干/日支/月将/时辰）"""
+    _sc_map = {23:'子',0:'子',1:'丑',2:'丑',3:'寅',4:'寅',5:'卯',6:'卯',7:'辰',8:'辰',
+               9:'巳',10:'巳',11:'午',12:'午',13:'未',14:'未',15:'申',16:'申',
+               17:'酉',18:'酉',19:'戌',20:'戌',21:'亥',22:'亥'}
+    shichen = _sc_map.get(hour, '午')
+    yuejiang = ''
+    ri_gan, ri_zhi = '', ''
+    if get_sizhu is not None:
+        try:
+            sr = get_sizhu(year, month, day, shichen)
+            ri_gan = (sr.get('日柱', '') or '')[:1]
+            ri_zhi = (sr.get('日柱', '') or '')[1:]
+        except Exception:
+            pass
+    try:
+        from engine.daliuren_luma_guiren import DaLiuRenLuMaGuiRen
+        yuejiang = DaLiuRenLuMaGuiRen().get_yuejiang_by_date(year, month, day)
+    except Exception:
+        yuejiang = ''
+    return ri_gan, ri_zhi, yuejiang, shichen
+
 @app.route('/api/tiandipan', methods=['GET'])
 def calculate_tiandipan():
     """计算天地盘"""
@@ -957,12 +1013,16 @@ def calculate_tiandipan():
         if SiKeSanChuanCalculator2 is None:
             return jsonify({'error': 'sike_sanchuan_engine 未加载'}), 500
         
+        _ri_gan, _ri_zhi, yuejiang, shichen = _date_to_paipan_params(year, month, day, hour)
+        if not (yuejiang and shichen):
+            return jsonify({'error': '无法推导月将/时辰'}), 400
+        
         calculator = SiKeSanChuanCalculator2()
-        result = calculator.calculate(year, month, day, hour)
+        tiandi_pan = calculator.get_tiandi_pan(yuejiang, shichen)
         
         return jsonify({
             'success': True,
-            'data': result,
+            'data': {'tiandi_pan': tiandi_pan, 'yuejiang': yuejiang, 'shi_chen': shichen},
             'timestamp': datetime.now().isoformat()
         })
     except Exception as e:
@@ -982,8 +1042,12 @@ def calculate_daliuren():
         if SiKeSanChuanCalculator2 is None:
             return jsonify({'error': 'sike_sanchuan_engine(V2) 未加载'}), 500
         
+        ri_gan, ri_zhi, yuejiang, shichen = _date_to_paipan_params(year, month, day, hour)
+        if not (ri_gan and ri_zhi and yuejiang and shichen):
+            return jsonify({'error': '排盘参数不完整（月将/日柱推导失败）'}), 400
+        
         engine = SiKeSanChuanCalculator2()
-        result = engine.calculate(year, month, day, hour)
+        result = engine.calculate(ri_gan, ri_zhi, yuejiang, shichen)
         
         return jsonify({
             'success': True,
@@ -1007,8 +1071,19 @@ def calculate_guiren():
         if GuiRenCalculator is None:
             return jsonify({'error': 'gui_ren_engine 未加载'}), 500
         
+        ri_gan, _ri_zhi, yuejiang, shichen = _date_to_paipan_params(year, month, day, hour)
+        if not (ri_gan and yuejiang and shichen):
+            return jsonify({'error': '贵人排盘参数不完整（日干/月将推导失败）'}), 400
+        
+        tian_pan = {}
+        if SiKeSanChuanCalculator2 is not None:
+            try:
+                tian_pan = SiKeSanChuanCalculator2().get_tiandi_pan(yuejiang, shichen)
+            except Exception:
+                tian_pan = {}
+        
         calculator = GuiRenCalculator()
-        result = calculator.calculate(year, month, day, hour)
+        result = calculator.arrange_gui_ren_pan(ri_gan, tian_pan, shichen)
         
         return jsonify({
             'success': True,
@@ -1024,13 +1099,24 @@ def calculate_guiren():
 def comprehensive_score():
     """综合评分"""
     try:
-        data = request.json
+        data = request.json or {}
         
         if ComprehensiveScorer is None:
             return jsonify({'error': 'comprehensive_scorer 未加载'}), 500
         
+        douhou_score = float(data.get('douhou_score', 0))
+        yanqin_score = float(data.get('yanqin_score', 0))
+        daliuren_score = float(data.get('daliuren_score', 0))
+        
         scorer = ComprehensiveScorer()
-        result = scorer.score(data)
+        # 可选：自定义权重（缺省 斗首0.4/演禽0.3/六壬0.3）
+        if any(k in data for k in ('douhou_weight', 'yanqin_weight', 'daliuren_weight')):
+            scorer.set_weights(
+                float(data.get('douhou_weight', 0.4)),
+                float(data.get('yanqin_weight', 0.3)),
+                float(data.get('daliuren_weight', 0.3)),
+            )
+        result = scorer.calculate_comprehensive_score(douhou_score, yanqin_score, daliuren_score)
         
         return jsonify({
             'success': True,
@@ -1258,7 +1344,12 @@ def traditional_duanyu_api():
 
 @app.route('/api/ai/zhanshi_judge', methods=['POST'])
 def zhanshi_judge():
-    """AI占事智能判断"""
+    """AI占事智能判断（支持分层引擎）
+    
+    可选参数：
+    - engine_level: 强制使用特定层级 ('rule', 'template', 'ai', 'original', None)
+    - with_meta: 是否返回元数据（引擎层级、置信度等）
+    """
     try:
         data = request.json
 
@@ -1269,6 +1360,8 @@ def zhanshi_judge():
         keti = data.get('keti', '')  # 课体
         zhanshi = data.get('zhanshi', '')  # 占事类型
         stock_code = data.get('stock_code', '')  # 股票代码（股市占事）
+        engine_level = data.get('engine_level', None)  # 强制引擎层级
+        with_meta = data.get('with_meta', False)  # 返回元数据
 
         print(f"🔮 AI占事判断API调用")
         print(f"📌 四柱: {sizhu}")
@@ -1276,6 +1369,8 @@ def zhanshi_judge():
         print(f"📌 三传: {sanchuan}")
         print(f"📌 课体: {keti}")
         print(f"📌 占事: {zhanshi}")
+        if engine_level:
+            print(f"📌 强制层级: {engine_level}")
         if stock_code:
             print(f"📌 股票代码: {stock_code}")
 
@@ -1283,26 +1378,392 @@ def zhanshi_judge():
         from engine.liuren_ai_judge import LiuRenAIJudge
         judge = LiuRenAIJudge()
 
-        result = judge.quick_judge(
-            sizhu=sizhu,
-            sike=sike,
-            sanchuan=sanchuan,
-            keti=keti,
-            zhanshi=zhanshi,
-            stock_code=stock_code
-        )
+        if with_meta or engine_level:
+            # 返回带元数据的完整结果
+            result_data = judge.quick_judge_with_meta(
+                sizhu=sizhu,
+                sike=sike,
+                sanchuan=sanchuan,
+                keti=keti,
+                zhanshi=zhanshi,
+                stock_code=stock_code,
+                force_level=engine_level
+            )
+            
+            # 获取引擎统计
+            engine_stats = judge.get_engine_stats()
+            
+            return jsonify({
+                'success': True,
+                'result': result_data.get('result', ''),
+                'engine_used': result_data.get('engine_used', ''),
+                'confidence': result_data.get('confidence', 0),
+                'cost_estimate': result_data.get('cost_estimate', ''),
+                'meta': result_data.get('meta', {}),
+                'engine_stats': engine_stats if with_meta else None,
+                'timestamp': datetime.now().isoformat()
+            })
+        else:
+            # 简单模式（向后兼容）
+            result = judge.quick_judge(
+                sizhu=sizhu,
+                sike=sike,
+                sanchuan=sanchuan,
+                keti=keti,
+                zhanshi=zhanshi,
+                stock_code=stock_code
+            )
+            
+            return jsonify({
+                'success': True,
+                'result': result,
+                'timestamp': datetime.now().isoformat()
+            })
+    except Exception as e:
+        print(f"❌ AI占事判断失败: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
 
-        print(f"📌 AI判断结果长度: {len(result) if result else 0}")
+@app.route('/api/ai/engine_stats', methods=['GET'])
+def get_engine_stats():
+    """获取分层引擎使用统计"""
+    try:
+        from engine.liuren_ai_judge import LiuRenAIJudge
+        judge = LiuRenAIJudge()
+        stats = judge.get_engine_stats()
+        
+        return jsonify({
+            'success': True,
+            'stats': stats,
+            'engine_layers': {
+                'rule': {'name': '规则引擎', 'cost': '0元', 'desc': '传统六壬规则判断'},
+                'template': {'name': '模板引擎', 'cost': '~1元/百万token', 'desc': 'glm-4-flash 模板推理'},
+                'ai': {'name': 'AI引擎', 'cost': '~10元/百万token', 'desc': 'glm-5.3-flash 深度推理'},
+                'original': {'name': '原始引擎', 'cost': '~15元/百万token', 'desc': 'glm-5.3-flash 完整推理'}
+            },
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        print(f"❌ 获取引擎统计失败: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
 
+@app.route('/api/ai/compare_engines', methods=['POST'])
+def compare_engines():
+    """对比不同层级引擎的推理结果
+    
+    对比规则引擎、模板引擎、AI引擎在同一案例上的表现差异
+    """
+    try:
+        data = request.json
+        
+        sizhu = data.get('sizhu', '')
+        sike = data.get('sike', '')
+        sanchuan = data.get('sanchuan', '')
+        keti = data.get('keti', '')
+        zhanshi = data.get('zhanshi', '')
+        stock_code = data.get('stock_code', '')
+        
+        print(f"🔬 分层引擎对比测试: 占事={zhanshi}")
+        
+        from engine.liuren_ai_judge import LiuRenAIJudge
+        judge = LiuRenAIJudge()
+        
+        # 分别用不同层级引擎判断
+        results = {}
+        levels = ['rule', 'template', 'ai', 'original']
+        
+        for level in levels:
+            try:
+                result = judge.quick_judge_with_meta(
+                    sizhu=sizhu,
+                    sike=sike,
+                    sanchuan=sanchuan,
+                    keti=keti,
+                    zhanshi=zhanshi,
+                    stock_code=stock_code,
+                    force_level=level
+                )
+                results[level] = {
+                    'success': result.get('success', False),
+                    'result': result.get('result', '')[:500],  # 截断到500字符
+                    'engine_used': result.get('engine_used', ''),
+                    'confidence': result.get('confidence', 0),
+                    'cost_estimate': result.get('cost_estimate', '')
+                }
+            except Exception as e:
+                results[level] = {
+                    'success': False,
+                    'error': str(e)[:200]
+                }
+        
+        # 计算一致性指标
+        valid_results = {k: v for k, v in results.items() 
+                        if v.get('success') and v.get('result')}
+        
+        consistency = {
+            'valid_engines': len(valid_results),
+            'total_engines': len(levels),
+            'agreement_rate': round(len(valid_results) / len(levels) * 100, 1)
+        }
+        
+        return jsonify({
+            'success': True,
+            'results': results,
+            'consistency': consistency,
+            'engine_stats': judge.get_engine_stats(),
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        print(f"❌ 引擎对比失败: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
+
+@app.route('/api/distillation/status', methods=['GET'])
+def get_distillation_status():
+    """获取蒸馏引擎状态"""
+    try:
+        from engine.smart_judge import get_smart_judge
+        smart = get_smart_judge()
+        status = smart.get_distillation_status()
+        
+        return jsonify({
+            'success': True,
+            'status': status,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        print(f"❌ 获取蒸馏状态失败: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
+
+@app.route('/api/distillation/knowledge', methods=['GET'])
+def get_knowledge_base():
+    """获取知识库内容"""
+    try:
+        zhanshi = request.args.get('zhanshi', '')
+        
+        from engine.smart_judge import get_smart_judge
+        smart = get_smart_judge()
+        knowledge = smart.get_knowledge_base(zhanshi or None)
+        
+        return jsonify({
+            'success': True,
+            'knowledge': knowledge,
+            'zhanshi': zhanshi or '全部',
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        print(f"❌ 获取知识库失败: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
+
+@app.route('/api/distillation/run', methods=['POST'])
+def run_distillation():
+    """执行知识蒸馏
+    
+    参数：
+    - zhanshi: 指定占事类型（可选）
+    - case_count: 蒸馏案例数量（默认10）
+    """
+    try:
+        data = request.json or {}
+        
+        zhanshi = data.get('zhanshi', None)
+        case_count = int(data.get('case_count', 10))
+        
+        print(f"🔬 执行知识蒸馏: 占事={zhanshi or '全部'}, 数量={case_count}")
+        
+        from engine.smart_judge import get_smart_judge
+        smart = get_smart_judge()
+        
+        result = smart.trigger_distillation(zhanshi, case_count)
+        
+        if result.get('success'):
+            print(f"   ✅ 蒸馏完成: {result.get('successful', 0)}/{result.get('total', 0)}")
+        else:
+            print(f"   ⚠️ 蒸馏失败: {result.get('error', '未知原因')}")
+        
         return jsonify({
             'success': True,
             'result': result,
             'timestamp': datetime.now().isoformat()
         })
     except Exception as e:
-        print(f"❌ AI占事判断失败: {e}")
+        print(f"❌ 蒸馏执行失败: {e}")
         traceback.print_exc()
         return jsonify({'error': str(e), 'success': False}), 500
+
+@app.route('/api/distillation/distill_case', methods=['POST'])
+def distill_single_case():
+    """蒸馏单个案例
+    
+    参数：
+    - case: 案例数据
+    - zhanshi: 占事类型（可选）
+    """
+    try:
+        data = request.json or {}
+        
+        case = data.get('case', {})
+        zhanshi = data.get('zhanshi', None)
+        
+        if not case:
+            return jsonify({'error': '缺少 case 参数', 'success': False}), 400
+        
+        print(f"🔬 蒸馏单个案例: 占事={zhanshi or case.get('占事', '未知')}")
+        
+        from engine.smart_judge import get_smart_judge
+        smart = get_smart_judge()
+        
+        result = smart.distill_case(case, zhanshi)
+        
+        return jsonify({
+            'success': result.get('success', False),
+            'result': result,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        print(f"❌ 单案例蒸馏失败: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
+
+# ============ 知识融合 API ============
+
+@app.route('/api/fusion/status', methods=['GET'])
+def get_fusion_status():
+    """获取知识融合引擎状态"""
+    try:
+        from engine.distill_fusion import DistillFusion
+        engine = DistillFusion()
+        status = engine.get_fusion_status()
+        
+        return jsonify({
+            'success': True,
+            'status': status,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        print(f"❌ 获取融合状态失败: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
+
+@app.route('/api/fusion/analysis', methods=['GET'])
+def analyze_fusion_opportunities():
+    """分析融合机会"""
+    try:
+        from engine.distill_fusion import DistillFusion
+        engine = DistillFusion()
+        analysis = engine.analyze_fusion_opportunities()
+        
+        return jsonify({
+            'success': True,
+            'analysis': analysis,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        print(f"❌ 融合机会分析失败: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
+
+@app.route('/api/fusion/run', methods=['POST'])
+def run_knowledge_fusion():
+    """执行知识融合
+    
+    参数：
+    - mode: 融合模式 (full/incremental)
+    - zhanshi_list: 增量融合的占事类型列表（可选）
+    """
+    try:
+        data = request.json or {}
+        mode = data.get('mode', 'full')
+        zhanshi_list = data.get('zhanshi_list', [])
+        
+        print(f"🔄 执行知识融合: mode={mode}, zhanshi={zhanshi_list}")
+        
+        from engine.distill_fusion import DistillFusion
+        engine = DistillFusion()
+        
+        if mode == 'incremental' and zhanshi_list:
+            result = engine.perform_incremental_fusion(zhanshi_list)
+        else:
+            result = engine.perform_full_fusion()
+        
+        report = engine.generate_fusion_report()
+        
+        return jsonify({
+            'success': result.get('success', False),
+            'result': result,
+            'report': report,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        print(f"❌ 知识融合失败: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
+
+@app.route('/api/fusion/validate', methods=['POST'])
+def validate_fusion():
+    """执行融合验证
+    
+    参数：
+    - use_fused: 是否使用融合后的模板（默认True）
+    - compare: 是否进行对比验证（默认True）
+    """
+    try:
+        data = request.json or {}
+        use_fused = data.get('use_fused', True)
+        compare = data.get('compare', True)
+        
+        print(f"🧪 执行融合验证: use_fused={use_fused}, compare={compare}")
+        
+        from engine.validate_fusion import FusionValidator
+        validator = FusionValidator()
+        
+        if compare:
+            report = validator.run_comparison_validation()
+        else:
+            result = validator.validate_template_engine(use_fused=use_fused)
+            report = validator._generate_comparison_report({
+                "original_score": 0,
+                "fused_score": result.get("overall_score", 0),
+                "score_change": result.get("overall_score", 0),
+                "score_change_percent": 0,
+                "original_success_rate": 0,
+                "fused_success_rate": result.get("successful_cases", 0) / max(result.get("total_cases", 1), 1) * 100,
+                "success_rate_change": 0,
+                "zhanshi_comparison": []
+            })
+        
+        return jsonify({
+            'success': True,
+            'report': report,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        print(f"❌ 融合验证失败: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
+
+@app.route('/api/fusion/report', methods=['GET'])
+def get_fusion_report():
+    """获取融合报告"""
+    try:
+        from engine.distill_fusion import DistillFusion
+        engine = DistillFusion()
+        report = engine.generate_fusion_report()
+        
+        return jsonify({
+            'success': True,
+            'report': report,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        print(f"❌ 获取融合报告失败: {e}")
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
+
+# ============ 知识融合 API 结束 ============
 
 @app.route('/api/training/query', methods=['GET'])
 def query_training_cases():

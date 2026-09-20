@@ -126,7 +126,23 @@ class YanQinAnalyzer:
         '子': '虚', '丑': '危'
     }
     
-    # 日禽起例（以日支起禽）
+    # ⚠️⚠️ 【已确认错误口径 · 2026-09-11 审核】日禽起例（以日支直查，12 值循环）⚠️⚠️
+    #   本表**与《禽星易见》原文直接冲突**，且**数学上不可能成立**（日禽每 28 日一轮，
+    #   12 值循环无法表示）：
+    #     · 原文（data/_yanqin_ocr/禽星易见.txt 第11页）：「其法如**一元甲子虛日鼠直日**，
+    #       則子時起虛、丑時起危、寅時起室、卯時起壁…」→ 甲子日=虚、乙丑日=危、丙寅日=室，
+    #       即**日禽每日递增一宿**（28 日一周）。
+    #     · 本表给「子→牛、丑→女、寅→虚」→ 甲子日=牛 ✗（原文=虚）。
+    #     · 数值复核：1900-08-19（原文一元的甲子日，QIYUAN_EPOCH）28 轮值算出**虚** ✓ 合原文；
+    #       本表算出**牛** ✗。
+    #   正确口径 = 28 天轮值（`get_calendar_based_ri_qin(year,month,day)`，sxtwl 精算，
+    #   锚 2026-03-05=角，四点锚验全中）。**生产主链已用正确口径**
+    #   （engine/batch_zeri_optimizer → analyze_yanqin_with_calendar），本表仅存于
+    #   analyze_four_qin / analyze_yanqin / build_feature_vectors 等**无日期参数**的旧入口。
+    #   ⇒ 需要日禽时**必须**传公历日期走 28 轮值；本表仅为「无日期可用的兼容兜底」，
+    #      `get_ri_qin` 会打日志告警。
+    #   待办（需憨爷拍板范围）：给 analyze_four_qin 的调用方（api_server /api/yanqin/four_qin、
+    #     build_feature_vectors）接线公历日期，彻底停用本表。
     RI_QIN_MAP = {
         '子': '牛', '丑': '女', '寅': '虚', '卯': '危', '辰': '室',
         '巳': '壁', '午': '奎', '未': '娄', '申': '胃', '酉': '昴',
@@ -404,8 +420,21 @@ class YanQinAnalyzer:
         """获取月禽"""
         return self.YUE_QIN_MAP.get(month_zhi, '角')
     
-    def get_ri_qin(self, day_zhi: str) -> str:
-        """获取日禽"""
+    def get_ri_qin(self, day_zhi: str, year: int = None, month: int = None, day: int = None) -> str:
+        """获取日禽。
+
+        【2026-09-11 审核】优先走**正确口径**：给定公历 y/m/d → 28 日轮值（黄历值日宿，
+        与《禽星易见》「一元甲子虚日鼠直日…每日递增一宿」一致）。
+        未给日期 → 回退 RI_QIN_MAP（日支直查，**与原文冲突的错误口径**，仅为旧入口兼容），
+        并写日志告警，提醒调用方接线日期。
+        """
+        if year and month and day:
+            try:
+                return self.get_calendar_based_ri_qin(int(year), int(month), int(day))
+            except Exception:
+                pass
+        self.log('⚠ 日禽以日支直查（RI_QIN_MAP·旧口径，与《禽星易见》冲突）'
+                 '→ 结果仅供演示；请传公历 y/m/d 走 28 日轮值正解')
         return self.RI_QIN_MAP.get(day_zhi, '牛')
     
     def get_shi_qin(self, shi_zhi: str, ri_qin: str = None) -> str:
@@ -420,6 +449,11 @@ class YanQinAnalyzer:
         return self.SHI_QIN_MAP.get(shi_zhi, '参')
 
     # ---- 七元演禽：时禽通用定法（掌圖） ----
+    def get_ri_qin_by_date(self, year: int, month: int, day: int) -> str:
+        """【正确口径】日禽 = 二十八宿每 28 日一轮（黄历值日宿），sxtwl 精算。
+        原文《禽星易见》：「一元甲子虚日鼠直日，子时起虚、丑时起危…」（每日递增一宿）。
+        需要日禽时**优先用本方法**；RI_QIN_MAP 直查（get_ri_qin）为无日期时的旧兜底且**口径错误**。"""
+        return self.get_calendar_based_ri_qin(year, month, day)
     def compute_shi_qin_universal(self, ri_qin: str, shi_zhi: str) -> str:
         """时禽 = 日禽 顺数至用时（子时起日禽）。已与七元掌圖逐字核对。"""
         return self.get_shi_qin(shi_zhi, ri_qin)
@@ -1279,13 +1313,16 @@ class YanQinAnalyzer:
         else:
             return "上凶"
     
-    def analyze_four_qin(self, year_zhi: str, month_zhi: str, day_zhi: str, hour_zhi: str) -> Dict:
+    def analyze_four_qin(self, year_zhi: str, month_zhi: str, day_zhi: str, hour_zhi: str,
+                         year: int = None, month: int = None, day: int = None) -> Dict:
         """
         分析四禽
         :param year_zhi: 年支
         :param month_zhi: 月支
         :param day_zhi: 日支
         :param hour_zhi: 时支
+        :param year/month/day: 【2026-09-11 新增·建议必传】公历年月日 → 日禽走 28 日轮值正确口径；
+                               不传则回退 RI_QIN_MAP（旧口径·与《禽星易见》冲突，仅供演示）
         :return: 四禽分析结果
         """
         self.logs = []
@@ -1294,7 +1331,7 @@ class YanQinAnalyzer:
         # 起四禽
         nian_qin = self.get_nian_qin(year_zhi)
         yue_qin = self.get_yue_qin(month_zhi)
-        ri_qin = self.get_ri_qin(day_zhi)
+        ri_qin = self.get_ri_qin(day_zhi, year, month, day)
         shi_qin = self.get_shi_qin(hour_zhi, ri_qin)
         
         # 四柱（本函数仅传地支，日柱/时柱天干缺省，七元演禽会降级标待核）

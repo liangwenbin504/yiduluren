@@ -97,7 +97,15 @@ def paipan_v2(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str) -> Dict[str
         return {'ri_gan': ri_gan, 'ri_zhi': ri_zhi, 'yuejiang': yuejiang, 'shichen': shichen,
                 'tiandi_pan': {}, 'sike': [], 'sanchuan': [],
                 'keti': '', 'qifa': '', 'tianjiang_map': {}, 'tianjiang_list': []}
-    from engine.sike_sanchuan_engine_patched import SiKeSanChuanCalculator2
+    # 【BUG-FIX 2026-09-11 双版本分叉】原 import 指向 engine.sike_sanchuan_engine_patched
+    # —— 那是 2026-08-18 的旧快照，【缺】三处已实证修复：
+    #   ① IS_KE_JIGONG 日干本气判克（218 古例实证：寄宫版错 29 案，本气版仅错 2 案）
+    #   ② 伏吟课柔日初传自刑的中传取法（柔日改取干上神）
+    #   ③ 课体命名按候选数量定名（多个贼/克 → 知一课；旧版一律标 重审/元首课）
+    # 实测 8640 课式对比：三传错 72 (0.83%)、课体错 1044 (12.08%)。
+    # 本函数是 api_server 「占事断语」生产链的起课入口（generate→paipan_v2），
+    # 故改用权威引擎 engine.sike_sanchuan_engine（= 三传 99.5%/97.8% 基准那个）。
+    from engine.sike_sanchuan_engine import SiKeSanChuanCalculator2
     from engine.gui_ren_engine import GuiRenCalculator
     calc = SiKeSanChuanCalculator2()
     tdp = calc.get_tiandi_pan(yuejiang, shichen)
@@ -530,12 +538,13 @@ def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
     except Exception:
         guji_narr = ''
     # 【六亲论 2026-08-19】干上神所乘天将与日干生克五断（东方朔卷之二，叙事层）
+    # 【2026-09-16 口径修正·乘≠临】L2567「专取**天盘乘神**决之」⇒ 第三参传乘神（＝干上神，天盘支）。
     liuqin_narr = ''
     try:
         from liuqin_engine import liuqin_judge
         _gan_shang = pan['sike'][0][1] if pan.get('sike') and len(pan['sike']) > 0 and len(pan['sike'][0]) > 1 else ''
         _tj_g = (pan.get('tianjiang_map') or {}).get(_gan_shang, '')
-        _lq = liuqin_judge(ri_gan, _tj_g)
+        _lq = liuqin_judge(ri_gan, _tj_g, _gan_shang)   # 🔴 第三参＝乘神（天盘支）
         if _lq.get('断'):
             liuqin_narr = "六亲[" + _lq['将'] + _lq['关系'] + "]：" + _lq['断'] + "（" + _lq['出处'] + "）"
     except Exception:

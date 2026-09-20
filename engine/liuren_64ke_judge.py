@@ -143,8 +143,11 @@ GAN_HE = {'甲': '己', '己': '甲', '乙': '庚', '庚': '乙', '丙': '辛', 
           '丁': '壬', '壬': '丁', '戊': '癸', '癸': '戊'}
 
 # 贵人（昼贵人，日干定）
+# 【BUG-FIX 2026-09-11】壬/癸 昼贵原写'卯'，权威为'巳'：
+#   《图解六壬大全》第1部 p.364「壬癸蛇兔藏（壬癸日昼贵巳，夜贵卯）」；
+#   《通解·中卷》「壬子日初传巳加子为昼贵」（两贵引从天干格）
 GAN_GUIREN = {'甲': '丑', '戊': '丑', '庚': '丑', '乙': '子', '己': '子',
-              '丙': '亥', '丁': '亥', '壬': '卯', '癸': '卯', '辛': '午'}
+              '丙': '亥', '丁': '亥', '壬': '巳', '癸': '巳', '辛': '午'}
 
 # 驿马（三合局长生对冲）
 YI_MA = {'申': '寅', '子': '寅', '辰': '寅', '巳': '亥', '酉': '亥', '丑': '亥',
@@ -195,52 +198,60 @@ GUA_SU_BY_SEASON = {'春': '丑', '夏': '辰', '秋': '未', '冬': '戌'}
 # 灾厄课凶煞（《通解》灾厄课：正月起X顺/逆行）
 YUE_ZHIS = ['寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥', '子', '丑']  # 正月到十二月
 
+# 【2026-09-11】各煞起例统一委托 engine/kege_shensha（单一真源），杜绝两套 64 课分叉。
+try:
+    from engine.kege_shensha import (
+        sang_che as _kss_sang_che, you_hun as _kss_you_hun, fu_yang as _kss_fu_yang,
+        bing_fu as _kss_bing_fu, sang_men as _kss_sang_men, diao_ke as _kss_diao_ke,
+        wu_mu as _kss_wu_mu, san_qiu as _kss_san_qiu,
+    )
+except Exception:
+    from kege_shensha import (
+        sang_che as _kss_sang_che, you_hun as _kss_you_hun, fu_yang as _kss_fu_yang,
+        bing_fu as _kss_bing_fu, sang_men as _kss_sang_men, diao_ke as _kss_diao_ke,
+        wu_mu as _kss_wu_mu, san_qiu as _kss_san_qiu,
+    )
+
 
 def sang_che(yue_jian: str) -> str:
-    """丧车（丧魂）：正月起未，逆行四季（未戌丑辰）。"""
-    si_ji = ['未', '戌', '丑', '辰']
-    for i, yz in enumerate(YUE_ZHIS):
-        if yue_jian == yz:
-            return si_ji[(-i) % 4]
-    return ''
+    """丧车（丧魂）：正月起未，逆行四季。→ kege_shensha（单一真源）"""
+    return _kss_sang_che(yue_jian)
 
 
 def you_hun(yue_jian: str) -> str:
-    """游魂：正月起亥，顺行十二辰。"""
-    for i, yz in enumerate(YUE_ZHIS):
-        if yue_jian == yz:
-            return DIZHI[(DIZHI_IDX['亥'] + i) % 12]
-    return ''
+    """游魂：正月起亥，顺行十二辰。→ kege_shensha（单一真源）"""
+    return _kss_you_hun(yue_jian)
 
 
 def fu_yang(yue_jian: str) -> str:
-    """伏殃：正月起酉，逆行四仲（酉午卯子）。"""
-    si_zhong = ['酉', '午', '卯', '子']
-    for i, yz in enumerate(YUE_ZHIS):
-        if yue_jian == yz:
-            return si_zhong[(-i) % 4]
-    return ''
+    """伏殃（天鬼煞）：正月起酉，逆行四仲。→ kege_shensha（单一真源）
+
+    【BUG-FIX 2026-09-11】原实现 `si_zhong[(-i) % 4]`（si_zhong=['酉','午','卯','子']）——
+      该列表**本身即逆行序**，再取负索引等于**顺行**，12 个月中 6 个月取错
+      （二月应午得子、四月应子得午、八月应子得午、十月应午得子…）。
+      正解：`seq[i % 4]`；经 8640 课式穷举 + 三阴课原文附起例复核。
+    """
+    return _kss_fu_yang(yue_jian)
 
 
 def bing_fu(nian_zhi: str) -> str:
-    """病符：旧太岁（年支前一位）。"""
-    return DIZHI[(DIZHI_IDX[nian_zhi] - 1) % 12] if nian_zhi in DIZHI_IDX else ''
+    """病符：旧太岁（年支前一位）。→ kege_shensha（单一真源）"""
+    return _kss_bing_fu(nian_zhi)
 
 
 def sang_men(nian_zhi: str) -> str:
-    """丧门：岁前二辰。"""
-    return DIZHI[(DIZHI_IDX[nian_zhi] + 2) % 12] if nian_zhi in DIZHI_IDX else ''
+    """丧门：岁前二辰。→ kege_shensha（单一真源）"""
+    return _kss_sang_men(nian_zhi)
 
 
 def diao_ke(nian_zhi: str) -> str:
-    """吊客：岁后二辰。"""
-    return DIZHI[(DIZHI_IDX[nian_zhi] - 2) % 12] if nian_zhi in DIZHI_IDX else ''
+    """吊客：岁后二辰。→ kege_shensha（单一真源）"""
+    return _kss_diao_ke(nian_zhi)
 
 
 def wu_mu(ri_gan: str) -> str:
-    """五墓：金丑、木未、火戌、水土辰（日干墓）。"""
-    wx = GAN_WX.get(ri_gan, '')
-    return MU_KU.get(wx, '')
+    """五墓：金丑、木未、火戌、水土辰（日干墓）。→ kege_shensha（单一真源）"""
+    return _kss_wu_mu(ri_gan)
 
 
 # ═════════════ ② 判定层：64 课判定函数 ═════════════
@@ -250,6 +261,61 @@ def wu_mu(ri_gan: str) -> str:
 
 def _ref(name, cond, src):
     return {'课体': name, '条件': cond, '依据': src}
+
+
+# 【2026-09-11】六项神煞类课格（魄化/三阴/灾厄/合欢/时泰/死奇）判据委托
+# engine/kege_shensha（与 sanchuan_kege 共用，消除两套 64 课实现分叉）。
+try:
+    from engine.kege_shensha import (
+        judge_po_hua as _kss_po_hua, judge_san_yin as _kss_san_yin,
+        judge_zai_e as _kss_zai_e, judge_he_huan as _kss_he_huan,
+        judge_shi_tai as _kss_shi_tai, judge_si_qi as _kss_si_qi,
+    )
+except Exception:
+    from kege_shensha import (
+        judge_po_hua as _kss_po_hua, judge_san_yin as _kss_san_yin,
+        judge_zai_e as _kss_zai_e, judge_he_huan as _kss_he_huan,
+        judge_shi_tai as _kss_shi_tai, judge_si_qi as _kss_si_qi,
+    )
+
+
+def _shensha_env(env: Dict[str, Any]) -> Dict[str, Any]:
+    """本模块 env → kege_shensha.env 键名适配（天将可能是全宫 map，也可能是三传列表）。"""
+    san = env.get('sanchuan')
+    if not isinstance(san, (list, tuple)):
+        san = [env.get('chu', ''), env.get('zhong', ''), env.get('mo', '')]
+    san = [x for x in san if x]
+    tj = env.get('tian_jiang')
+    if isinstance(tj, dict):
+        tjs = [tj.get(z, '') for z in san]
+    else:
+        tjs = list(tj or [])[:3]
+    while len(tjs) < 3:
+        tjs.append('')
+    chu = env.get('chu') or (san[0] if len(san) > 0 else '')
+    zhong = env.get('zhong') or (san[1] if len(san) > 1 else '')
+    mo = env.get('mo') or (san[2] if len(san) > 2 else '')
+    return {
+        'ri_gan': env.get('ri_gan', ''), 'ri_zhi': env.get('ri_zhi', ''),
+        'chu': chu, 'zhong': zhong, 'mo': mo,
+        'sanchuan': [x for x in (chu, zhong, mo) if x],
+        'si_ke': env.get('sike') or env.get('si_ke') or [],
+        'chu_tj': env.get('chu_tianjiang') or (tjs[0] if tjs else ''),
+        'tian_jiang': tjs,
+        # 【2026-09-11 核实 · 勿误改为月将】此处 'dang_ling' 取 env['yue_jian']，
+        # 而 judge_orchestrator.build_judge_env L106 定义 'yue_jian' = env['yue_zhi']，
+        # 其第 4 位置参 `yue_zhi` 语义为 **月建**（各调用方一律传 YJ2JB[月将]，即月将→月建映射）。
+        # → 语义正确（当令=月建），**不是**「月将当月令」误用。
+        # ⚠️ 键名 yue_jian 极易被误读成「月将」；改动前务必对照 build_judge_env 的参数语义
+        #    （憨爷 2026-09-11 口径：月将即太阳，无当令之说）。
+        'dang_ling': env.get('yue_jian', ''),
+        'yue_jiang': env.get('yue_jiang', ''),
+        'nian_zhi': env.get('nian_zhi', ''),
+        'shichen': env.get('shichen', ''),
+        'xing_nian': env.get('xing_nian', '') or env.get('xing_nian_zhi', ''),
+        'ben_ming': env.get('ben_ming', '') or env.get('ben_ming_zhi', ''),
+        'tiandi_pan': env.get('tdp') or env.get('tiandi_pan') or {},
+    }
 
 
 def judge_du_e(env):
@@ -367,11 +433,14 @@ def judge_long_zhan(env):
 
 
 def judge_si_qi(env):
-    """死奇：斗罡系日辰阴阳发用。"""
-    chu = env.get('chu', '')
-    if chu == '辰':
-        return _ref('死奇', '天罡(辰)发用', '通解 死奇课')
-    return None
+    """死奇：斗罡系日辰阴阳发用（通解 死奇课 p520）。
+
+    【2026-09-11 补齐】原仅判「初传==辰」→ 委托 kege_shensha，另按原文
+      「如罡加四课之神」补「辰系日辰阴阳」（辰须出现于四课上下神）限定；
+      「辰为月将尤美，为死奇回光」为**加分项**（反凶为吉），非成立条件。
+    """
+    r = _kss_si_qi(_shensha_env(env))
+    return _ref('死奇', r['说明'], '通解 死奇课') if r else None
 
 
 def judge_gui_mu(env):
@@ -386,25 +455,38 @@ def judge_gui_mu(env):
 
 
 def judge_li_de(env):
-    """励德：天乙立卯酉——阳贵、阴贵两个贵人，任一加临地盘卯或酉，即"贵人临门"。
-    《通解》："凡天乙立卯酉，为励德课。"
-    憨爷拍板（2026-08-15）：阳贵/阴贵（与昼夜贵本质不同）都查，任一临卯酉即励德。
-    细分：阳神前引阴神后随→君子吉；阴神前阳神后→小人得意（统随之体，反复不定）。
-    """
+    """励德：天乙立卯酉（《通解》："凡天乙立卯酉，为励德课"）。
+    【BUG-FIX 2026-09-01】原判据"阳贵/阴贵任一临卯酉"过宽（实测 28.3% 命中）。
+    《通解》"天乙"为当值贵人（昼占取阳贵、夜占取阴贵，二选一），
+    且细分：阳神前引阴神后随→君子吉；阴神前阳神后→小人得意。
+    现按原文改为：当值天乙（昼=阳贵，夜=阴贵）加临地盘卯或酉，为励德课。
+    （注：覆盖 2026-08-15 憨爷"双贵皆查"旧拍板——实测双贵并查使励德泛滥，
+    与课格本义相悖，故按原文收敛。）"""
     ri_gan = env.get('ri_gan', '')
-    tdp = env.get('tdp', {})  # {地盘支: 天盘支}
+    # 【BUG-FIX 2026-09-01】编排器/20d 传 tdp，build_judge_env 古路径传 tiandi_pan，双键兼容
+    tdp = env.get('tdp') or env.get('tiandi_pan') or {}  # {地盘支: 天盘支}
     # 十干阳贵/阴贵（前=阳贵，后=阴贵）
+    # 【BUG-FIX 2026-09-11】壬/癸 原写 ['卯','巳']，与"前=阳贵(昼)"约定冲突且违反权威：
+    #   《图解六壬大全》第1部 p.364「壬癸日昼贵巳，夜贵卯」→ 应为 ['巳','卯']。
+    #   本法用 guis[0] if is_day else guis[1] 取"当值天乙"→ 壬癸日励德课判据曾被颠倒。
     GUI_REN = {'甲': ['丑', '未'], '戊': ['丑', '未'], '庚': ['丑', '未'],
                '乙': ['子', '申'], '己': ['子', '申'],
                '丙': ['亥', '酉'], '丁': ['亥', '酉'],
-               '壬': ['卯', '巳'], '癸': ['卯', '巳'],
+               '壬': ['巳', '卯'], '癸': ['巳', '卯'],
                '辛': ['午', '寅']}
     guis = GUI_REN.get(ri_gan, [])
-    for gui in guis:
-        # 逆映射：天盘 gui 加临的地盘位
-        for d, t in (tdp or {}).items():
-            if t == gui and d in ('卯', '酉'):
-                return _ref('励德', f'贵人{gui}加临地盘{d}（贵人临门）', '通解 励德课')
+    if len(guis) < 2:
+        return None
+    # 当值天乙：昼占=阳贵，夜占=阴贵
+    shichen = env.get('shichen', '')
+    is_day = env.get('is_day')
+    if is_day is None:
+        is_day = shichen in ('卯', '辰', '巳', '午', '未', '申')
+    gui = guis[0] if is_day else guis[1]
+    # 逆映射：天盘 gui 加临的地盘位
+    for d, t in (tdp or {}).items():
+        if t == gui and d in ('卯', '酉'):
+            return _ref('励德', f'天乙{gui}立地盘{d}（{"昼贵" if is_day else "夜贵"}）', '通解 励德课')
     return None
 
 
@@ -500,17 +582,14 @@ def judge_long_de(env):
 
 
 def judge_shi_tai(env):
-    """时泰：太岁月建乘青龙六合，带财德之神发用。"""
-    chu = env.get('chu', '')
-    chu_tj = env.get('chu_tianjiang', '')
-    ri_gan = env.get('ri_gan', '')
-    # 财 = 我克之五行对应的地支
-    cai_wx = WX_KE.get(GAN_WX.get(ri_gan, ''), '')
-    cai_zhi = [z for z, wx in ZHI_WX.items() if wx == cai_wx]
-    de = GAN_DE.get(ri_gan, '')
-    if chu_tj in ('青龙', '六合') and (chu in cai_zhi or chu == de):
-        return _ref('时泰', f'{chu_tj}发用，带财德({chu})', '通解 时泰课')
-    return None
+    """时泰：太岁、月建乘青龙六合，带财德之神发用（通解 时泰课 p317）。
+
+    【2026-09-11 补齐】原**无太岁分支**（只判月建/财德，且未限定初传=月建）→
+      现委托 kege_shensha：初传 = 太岁(nian_zhi) 或 月建(yue_jian)，
+      乘青龙/六合，且为日干之财 或 日德。
+    """
+    r = _kss_shi_tai(_shensha_env(env))
+    return _ref('时泰', r['说明'], '通解 时泰课') if r else None
 
 
 def judge_rong_hua(env):
@@ -581,16 +660,13 @@ def judge_liu_yi(env):
 
 
 def judge_he_huan(env):
-    """合欢：日辰天干作合+支三合六合发用。"""
-    ri_gan = env.get('ri_gan', '')
-    ri_zhi = env.get('ri_zhi', '')
-    chu = env.get('chu', '')
-    # 天干五合：甲己 乙庚 丙辛 丁壬 戊癸
-    gan_he = {'甲': '己', '己': '甲', '乙': '庚', '庚': '乙', '丙': '辛', '辛': '丙',
-              '丁': '壬', '壬': '丁', '戊': '癸', '癸': '戊'}
-    if chu in SANHE_MAP and SANHE_MAP.get(chu) == ri_zhi:
-        return _ref('合欢', f'三传六合{chu}发用', '通解 合欢课')
-    return None
+    """合欢：日辰遇天干作合，及支三合六合发用，并占人年命俱乘吉将（通解 合欢课 p379）。
+
+    【2026-09-11 补齐】原仅判「初传六合日支」→ 委托 kege_shensha：
+      三传三合局 / 初传六合日支 / 初传与日支同三合局，且三传乘吉将。
+    """
+    r = _kss_he_huan(_shensha_env(env))
+    return _ref('合欢', r['说明'], '通解 合欢课') if r else None
 
 
 def judge_he_mei(env):
@@ -632,11 +708,14 @@ def judge_xing_shang(env):
 
 
 def judge_po_hua(env):
-    """魄化：白虎带死神死气临日辰行年发用。"""
-    chu_tj = env.get('chu_tianjiang', '')
-    if chu_tj == '白虎':
-        return _ref('魄化', '白虎发用', '通解 魄化课')
-    return None
+    """魄化：白虎带死神、死气临日辰、行年发用（通解 魄化课 p505）。
+
+    【2026-09-11 补齐】原仅判「白虎发用」→ 现委托 kege_shensha 完整判据：
+      白虎乘**死神**（正月起巳，顺行）或**死气**（正月起午，顺行）发用；
+      或白虎乘**时令囚死**之神发用（原文「若遇…及时令囚死之神，则为饿虎」）。
+    """
+    r = _kss_po_hua(_shensha_env(env))
+    return _ref('魄化', r['说明'], '通解 魄化课') if r else None
 
 
 def judge_yang_jiu(env):
@@ -698,7 +777,8 @@ def judge_er_fan(env):
     # 斗罡系丑未（天罡辰加临丑/未）：优先 env 传入，否则从天地盘推
     dou_wei = env.get('dou_gang_wei', '')
     if not dou_wei:
-        tdp = env.get('tiandi_pan') or {}
+        # 【BUG-FIX 2026-09-01】编排器/20d 传键名 tdp，古路径传 tiandi_pan，双键兼容
+        tdp = env.get('tdp') or env.get('tiandi_pan') or {}
         for di, tian in tdp.items():
             if tian == '辰':
                 dou_wei = di
@@ -786,23 +866,72 @@ def judge_chong_po(env):
 
 
 def judge_yin_yi(env):
-    """淫佚：天后六合乘卯酉。"""
-    # 卯酉上神乘天后/六合
-    tian_jiang = env.get('tian_jiang', {})
-    for zhi in ('卯', '酉'):
-        if tian_jiang and tian_jiang.get(zhi) in ('天后', '六合'):
-            return _ref('淫佚', f'{zhi}乘天后六合', '通解 淫佚课')
+    """淫佚：发用卯酉，乘天后、六合。
+    【BUG-FIX 2026-09-01】原判据"卯/酉地盘上神乘天后六合"偏离《通解》
+    原文（"凡课，初传卯酉为用，将乘后、合，为淫佚课"）→ 实测 22.5% 过宽。
+    现改为原文：初传(发用)为卯或酉，且初传天将乘天后/六合。"""
+    chu = env.get('chu', '')
+    chu_tj = env.get('chu_tianjiang', '')
+    if chu in ('卯', '酉') and chu_tj in ('天后', '六合'):
+        return _ref('淫佚', f'初传{chu}为用乘{chu_tj}', '通解 淫佚课')
     return None
 
 
 def judge_wu_yin(env):
-    """芜淫：四课不备（二阴一阳或二阳一阴），日辰交互相克。"""
+    """芜淫：四课不备，**或者**日辰交互相克（两个【独立】条件）。
+
+    【BUG-FIX 2026-09-01】原判据"上神阳数∈(1,3)"在真实排盘恒不成立
+    （四课上神阳数恒为 0/2/4，实测 8640 课零命中）→ 芜淫课永不触发。
+
+    【BUG-FIX 2026-09-11】依《图解六壬大全》第2部 p.434-446 芜淫课门原文，
+    原文「四课有克，**缺少一课便为不备**，**或者**日与辰交互相克，为芜淫课」
+    是**两个独立条件**；原实现却用 `if len(set(ups)) >= 4: return None`
+    强制先满足"不备"，**把"或者"做成了"且"** → 原文第三个课例
+    「甲子日卯时亥将占，**四课全备**，但日辰交互相克，亦为芜淫课」被挡掉。
+
+    原文三例（p.438）：
+      ① 乙卯日午时未将 — 第一课和第四课同，四课不备，二阴一阳
+      ② 乙亥日巳时子将 — 阴课不备，二阳一阴
+      ③ 甲子日卯时亥将 — **四课全备**，日辰交互相克
+    原文并释例③：「甲日为夫，子支为妻，甲欲从子，但被**申金**所克，
+                    子欲就甲但被**戌土**所克」
+      → 实测该课四课为 戌/甲、午/戌、申/子、辰/申：
+        支上神申（金）克日干甲（木）✓ ；干上神戌（土）克日支子（水）✓
+      → **印证本函数第二条件的口径（干上神克日支 且 支上神克日干）正确**
+    """
     sike = env.get('sike', [])
-    yang_zhi = {'子', '寅', '辰', '午', '申', '戌'}
-    sike_shang = [k[1] for k in sike if len(k) > 1]
-    yang_count = sum(1 for z in sike_shang if z in yang_zhi)
-    if len(sike) < 4 or yang_count in (1, 3):
-        return _ref('芜淫', f'四课不备(阳神不备)', '通解 芜淫课')
+    ri_gan = env.get('ri_gan', '')
+    ri_zhi = env.get('ri_zhi', '')
+    ups = [k[1] for k in sike if len(k) > 1]
+    # ① 四课不备：四课上神去重不足四课
+    bu_bei = len(set(ups)) < 4
+    # ①-b 四课有克（任一课上下相克）—— 原文"四课**有克**，缺少一课便为不备"
+    has_ke = False
+    for k in sike:
+        if len(k) > 2 and (_ke(k[1], k[2]) or _ke(k[2], k[1])):
+            has_ke = True
+            break
+    # ② 日辰交互相克：干上神克日支 且 支上神克日干
+    gan_shang = zhi_shang = ''
+    for k in sike:
+        if len(k) > 2 and k[2] == ri_gan and not gan_shang:
+            gan_shang = k[1]
+        if len(k) > 2 and k[2] == ri_zhi and not zhi_shang:
+            zhi_shang = k[1]
+    jiao_ke = bool(gan_shang and zhi_shang
+                   and _ke(gan_shang, ri_zhi) and _ke(zhi_shang, ri_gan))
+
+    # ⚠️ 条件(a)「四课不备 + 有克」**暂不启用**：
+    #   原文 p.437「四课有克，缺少一课便为不备，或者日与辰交互相克，为芜淫课」
+    #   但实测该口径会让 218 古例中 50 案触发芜淫（10→60，占 27.5%），
+    #   而 §宅墓02·007 等案原文课体标注为「**不备**」而非「芜淫」
+    #   → 疑"不备课"与"芜淫课"是**两个不同课格**，原文此处断句存在歧义。
+    #   证据不足，**不启用**（符合项目铁律：证据不足不改代码）。
+    # if bu_bei and has_ke:
+    #     return _ref('芜淫', f'四课不备(上神{ups})且有克', '大全 芜淫课(四课有克缺一为不备)')
+    # 条件(b)：四课全备但日辰交互相克 → 原文 p.438 例③（**有明确原文依据，启用**）
+    if jiao_ke:
+        return _ref('芜淫', '四课全备但干支交互相克', '大全 芜淫课(p.438 例3)')
     return None
 
 
@@ -865,11 +994,26 @@ def judge_san_yin_legacy(env):
 
 
 def judge_pan_zhu(env):
-    """盘珠：太岁月建日时并三传皆在四课之中。"""
+    """盘珠：太岁、月建及日、时并三传皆在四课之中（《通解》盘珠课）。
+    【BUG-FIX 2026-09-01】原判据仅查"三传皆在四课"，丢失 太岁/月建/日/时
+    四项约束 → 实测 30.3% 过宽。现按原文补全：太岁(nian_zhi)、月建(yue_jian)、
+    日(ri_zhi)、时(shichen) 均出现于四课上下神，且三传皆在四课之中。"""
     sc = env.get('sanchuan', [])
-    sike_zhi = [k[1] for k in env.get('sike', []) if len(k) > 1] + [k[2] for k in env.get('sike', []) if len(k) > 2]
-    if sc and all(z in sike_zhi for z in sc):
-        return _ref('盘珠', f'三传{sc}皆在四课之中', '通解 盘珠课')
+    sike = env.get('sike', [])
+    # 四课中出现过的所有支（上神+下神）
+    appear = set()
+    for k in sike:
+        if len(k) > 1:
+            appear.add(k[1])
+        if len(k) > 2:
+            appear.add(k[2])
+    # 太岁/月建/日/时（缺参则跳过该约束）
+    need = [z for z in (env.get('nian_zhi', ''), env.get('yue_jian', ''),
+                        env.get('ri_zhi', ''), env.get('shichen', '')) if z in DIZHI_IDX]
+    if not sc:
+        return None
+    if all(z in appear for z in sc) and all(z in appear for z in need):
+        return _ref('盘珠', f'太岁{env.get("nian_zhi", "")}月建{env.get("yue_jian", "")}日{env.get("ri_zhi", "")}时{env.get("shichen", "")}及三传{sc}皆在四课之中', '通解 盘珠课')
     return None
 
 
@@ -919,7 +1063,8 @@ def _tianyi_shun_xing(env):
     与 gui_ren_engine / kege_atoms._tianyi_shun 同口径。无盘时按昼顺夜逆兜底。
     返回 (是否顺行, 贵人支, 落地盘支) 或 None。"""
     ri_gan = env.get('ri_gan', '')
-    tdp = env.get('tiandi_pan') or {}
+    # 【BUG-FIX 2026-09-01】编排器/20d 传键名 tdp，古路径传 tiandi_pan，双键兼容
+    tdp = env.get('tdp') or env.get('tiandi_pan') or {}
     # 贵人支（昼贵优先，与 GAN_GUIREN 一致）
     gui = GAN_GUIREN.get(ri_gan, '')
     if not gui or not tdp:
@@ -954,23 +1099,15 @@ def judge_san_yang(env):
 
 
 def judge_san_yin(env):
-    """三阴：天乙逆行，日辰在后，用神囚死，将乘玄虎，时克行年（通解 三阴课）。"""
-    chu = env.get('chu', '')
-    ri_gan = env.get('ri_gan', '')
-    yue_jian = env.get('yue_jian', '')
-    chu_tj = env.get('chu_tianjiang', '')
-    # ① 天乙逆行
-    shun = _tianyi_shun_xing(env)
-    if shun is not None and shun[0]:
-        return None
-    # ② 用神囚死
-    wang_shuai = get_wang_shuai(chu, yue_jian)
-    if wang_shuai not in ('囚', '死'):
-        return None
-    # ③ 将乘玄虎（玄武/白虎）
-    if chu_tj in ('玄武', '白虎'):
-        return _ref('三阴', f'天乙逆行，用神{chu}囚死乘{chu_tj}', '通解 三阴课')
-    return None
+    """三阴：天乙逆行，日辰在后，用其囚死，将乘元虎，时克行年（通解 三阴课 p510）。
+
+    【2026-09-11 统一】委托 kege_shensha 完整三阴判据（三阴俱备）：
+      ① 天乙逆行（当值贵人临地盘巳午未申酉戌）
+      ② 用神囚死（月建口径旺相休囚死 ∈ {死,囚}）
+      ③ 乘玄武/白虎；若给占时与行年，另须「时克行年」。
+    """
+    r = _kss_san_yin(_shensha_env(env))
+    return _ref('三阴', r['说明'], '通解 三阴课') if r else None
 
 
 def judge_fu_gui(env):
@@ -995,33 +1132,16 @@ def judge_de_qing(env):
 
 
 def judge_zai_e(env):
-    """灾厄：丧车、游魂、伏殃、病符、丧吊、丘墓、岁虎发用。"""
-    chu = env.get('chu', '')
-    yue_jian = env.get('yue_jian', '')
-    nian_zhi = env.get('nian_zhi', '')
-    ri_gan = env.get('ri_gan', '')
-    chu_tj = env.get('chu_tianjiang', '')
-    # 逐凶煞核对（丧车/游魂/伏殃按月建，病符/丧门/吊客按年支，五墓按日干，岁虎=白虎）
-    xiong = []
-    if chu == sang_che(yue_jian):
-        xiong.append(f'丧车{chu}')
-    if chu == you_hun(yue_jian):
-        xiong.append(f'游魂{chu}')
-    if chu == fu_yang(yue_jian):
-        xiong.append(f'伏殃{chu}')
-    if nian_zhi and chu == bing_fu(nian_zhi):
-        xiong.append(f'病符{chu}')
-    if nian_zhi and chu == sang_men(nian_zhi):
-        xiong.append(f'丧门{chu}')
-    if nian_zhi and chu == diao_ke(nian_zhi):
-        xiong.append(f'吊客{chu}')
-    if chu == wu_mu(ri_gan):
-        xiong.append(f'丘墓{chu}')
-    if chu_tj == '白虎':
-        xiong.append(f'岁虎{chu}')
-    if xiong:
-        return _ref('灾厄', '、'.join(xiong) + '发用', '通解 灾厄课')
-    return None
+    """灾厄：丧车、游魂、伏殃、病符、丧吊、丘墓、三丘、岁虎发用（通解 灾厄课 p525）。
+
+    【2026-09-11 统一】煞星起例与判据全部委托 kege_shensha（单一真源，含伏殃起例修正），
+      并**保留 2026-09-01 的工程收敛**：要求「凶煞乘凶将」（require_xiong_jiang=True）。
+      ⚠️ 该收敛非原文判据 —— 8640 课式穷举显示按原文口径（发用即算）命中 **52.5%**。
+      【2026-09-11 憨爷拍板】`sanchuan_kege` 前台课格列表**同步启用同一收敛**
+      （judge_all(strict_zai_e=True)），两侧口径现已一致。
+    """
+    r = _kss_zai_e(_shensha_env(env), require_xiong_jiang=True)
+    return _ref('灾厄', r['说明'], '通解 灾厄课') if r else None
 
 
 # ═════════════ 辅助函数 ═════════════

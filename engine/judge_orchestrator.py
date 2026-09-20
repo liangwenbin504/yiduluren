@@ -31,8 +31,9 @@ def build_judge_env(ri_gan, ri_zhi, nian_zhi, yue_zhi, yuejiang,
                     shichen, zhanlei='其他',
                     ben_ming_zhi='', ben_ming_age='', ben_ming_sex='男',
                     fu_xing_nian_zhi='', qi_xing_nian_zhi='',
-                    y=0, m=0, d=0, sanchuan_tianjiang=None) -> dict:
-    """构造统一课式 env（含预处理：旬空/农历月日节气/季节/行年/昼夜/干支上神）。"""
+                    y=0, m=0, d=0, sanchuan_tianjiang=None, nianming='') -> dict:
+    """构造统一课式 env（含预处理：旬空/农历月日节气/季节/行年/昼夜/干支上神）。
+    nianming: 夫妻年命（'夫年干支,妻年干支'，如 '甲寅,己亥'），供繁昌课判定（缺省空）。"""
     ganzhi = ri_gan + ri_zhi
     sc3l = list(sanchuan) if sanchuan else ['', '', '']
     gs = sike[0][1] if sike and len(sike) >= 1 else ''
@@ -88,6 +89,8 @@ def build_judge_env(ri_gan, ri_zhi, nian_zhi, yue_zhi, yuejiang,
         'ben_ming_zhi': ben_ming_zhi, 'xing_nian': xing_nian,
         'fu_xing_nian_zhi': fu_xing_nian_zhi, 'qi_xing_nian_zhi': qi_xing_nian_zhi,
         'zhanlei': zhanlei, 'shichen': shichen,
+        # 【BUG-FIX 2026-09-01】繁昌课需夫妻年命，原 env 无 nianming → 主链路繁昌永不触发
+        'nianming': nianming,
     }
 
 
@@ -108,6 +111,10 @@ def _judge_64keti(env: dict) -> Any:
         'kong_wang': [x for x in env['kongwang'] if x],
         'lunar_month': env['lunar_month'], 'lunar_day': env['lunar_day'],
         'jieqi': env['jieqi'],
+        # 【BUG-FIX 2026-09-01】天网课需占时 shichen，原适配层未传 → 天网永不触发
+        'shichen': env.get('shichen', ''),
+        # 【BUG-FIX 2026-09-01】繁昌课需夫妻年命 nianming，原适配层未传 → 繁昌永不触发
+        'nianming': env.get('nianming', ''),
     }
     return judge_64_keti(keti_env)
 
@@ -192,7 +199,15 @@ def judge_all(env: dict) -> dict:
     result = {}
     for key, fn in _JUDGERS:
         try:
-            result[key] = fn(env)
+            res = fn(env)
+            result[key] = res
+            # 【BUG-FIX 2026-09-01】64课格判定出的课体，回填 env['keti']，
+            # 否则后续引擎（变格 shi_keti 等依赖 keti 的规则）读到的仍是入参原始值 →
+            # 大量「×本课」类变格规则在真实 judge_all 链路静默永不触发。
+            if key == 'keti_judged' and isinstance(res, list):
+                names = [h.get('课体') for h in res if isinstance(h, dict) and h.get('课体')]
+                if names:
+                    env['keti'] = '、'.join(names)
         except Exception as e:
             fb = dict(_FALLBACK[key]) if isinstance(_FALLBACK[key], dict) else _FALLBACK[key]
             if isinstance(fb, dict):

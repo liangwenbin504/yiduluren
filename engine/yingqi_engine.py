@@ -976,25 +976,24 @@ def judge_yingqi(
     candidates.sort(key=lambda c: (_priority_of(c), timing_rank.get(c.get('timing', ''), 4)))
 
     # 【2026-09-08 审计修复 BUG-E】干支应期维度：古案应期常作"甲日/己月"式干支组合，
-    #   原输出仅地支（trigger_zhi），缺天干。以日干为基准、地支十二支循环推进，补
-    #   trigger_gz（如甲日 trigger_zhi=巳 → 运算符定位到甲辰旬后巳所配天干 → 甲午?）。
-    #   简中取义：十干按日干起排，地支由 trigger 之序定，conventional 六甲循环配对。
+    #   原输出仅地支（trigger_zhi），缺天干。补 trigger_gz。
+    #   【2026-09-08 OX Alpha 对照发现推法错误】旧实现按"干/支奇偶配对"（如乙日+亥→乙亥），
+    #   但应期语义是"从起课日起该支最近当值之日"：乙酉日最近的亥日是 +2 日 → 丁亥（非乙亥，
+    #   乙亥实际 +50 日后才出现，前端 400 日检索会错配到 2026-10-28，与"速"档矛盾）。
+    #   ⛔ 修正：以起课日干支为基准，地支等差推进到 trigger_zhi 最近当值日，天干同步推进。
+    #   例：乙酉日 trigger_zhi=亥 → (11-9)%12=2 → 天干乙+2=丁 → 丁亥 ✓（OX Alpha 手工验证 9/10=丁亥）
     _GAN_ALL = '甲乙丙丁戊己庚辛壬癸'
     _ZHI_ALL = '子丑寅卯辰巳午未申酉戌亥'
-    if ri_gan in _GAN_ALL:
+    if ri_gan in _GAN_ALL and ri_zhi in _ZHI_ALL:
+        _ri_zi = _ZHI_ALL.index(ri_zhi)
         _gi = _GAN_ALL.index(ri_gan)
         for _c in candidates:
             _tz = _c.get('trigger_zhi', '')
             if _tz and _tz in _ZHI_ALL:
-                _zi = _ZHI_ALL.index(_tz)
-                # 支序与干序同奇偶 → 可构成合法干支（甲子/乙丑…）；循环推算：
-                # 差距 = (支idx - 干idx) mod 10 倍推：取使 (gi + k) % 10 与 zi 同奇偶的最小 k
-                for _k in range(10):
-                    _gidx = (_gi + _k) % 10
-                    if (_gidx % 2) == (_zi % 2):
-                        _gan = _GAN_ALL[_gidx]
-                        _c['trigger_gz'] = _gan + _tz
-                        break
+                _tz_zi = _ZHI_ALL.index(_tz)
+                _advance = (_tz_zi - _ri_zi) % 12      # 从起课日到该支最近当值的天数(0=当日)
+                _gidx = (_gi + _advance) % 10          # 天干同步推进（60 甲子每天干支各进一位）
+                _c['trigger_gz'] = _GAN_ALL[_gidx] + _tz
             else:
                 _c['trigger_gz'] = ''
 

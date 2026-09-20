@@ -146,12 +146,29 @@ def _cast_chart(target_date, shichen):
     r = get_liuren_20d_signal(target_date, shichen)
     trend = (r.get("prediction") or {}).get("trend", "震荡")
     conf = (r.get("prediction") or {}).get("confidence", 0)
+    reasons = (r.get("prediction") or {}).get("reasons", [])
+    # 【2026-09-09 修复】毕法赋/课格断语漏采：signal 的 keti_duanyu(kb) 内含
+    #   bifa(匹配法条/股市信号/检测统计) + sanchuan_kege + special_kege，
+    #   原只取 keti/sanchuan/tianjiang → 前端永远看不到毕法赋断语。
+    #   现补透三类确定性断语（评分聚合文案 reasons 亦一并透出）。
+    kb = (r.get("analysis") or {}).get("keti_duanyu") or {}
+    _bf = kb.get("bifa") or {}
+    _bf_hits = _bf.get("匹配法条") or []
+    _kege = kb.get("sanchuan_kege") or {}
+    _kege_list = _kege.get("课格列表") or []
+    _spk = kb.get("special_kege") or {}
     return {
         "trend": trend,
         "conf": conf,
         "keti": r.get("keti", ""),
         "sanchuan": r.get("san_chuan", []),
         "tianjiang": r.get("sanchuan_tianjiang", []),
+        "reasons": reasons,                       # 评分聚合理由（含"毕法赋偏涨(+n, m条法条)"等）
+        "bifa_hits": _bf_hits,                    # 毕法赋命中法条（如"支坟财并旅程稽"）
+        "bifa_signals": _bf.get("股市信号", {}),   # 毕法赋涨跌倾向/强度
+        "bifa_stats": _bf.get("检测统计", {}),     # 涨/跌法条数
+        "sanchuan_kege": _kege_list,              # 三传课格列表
+        "special_kege": _spk.get("课格列表") or [],  # 特殊课格
     }
 
 def _map_updown(trend):
@@ -282,7 +299,14 @@ def cmd_cast(cast_date, shichen):
         "tianji_trend": tj["trend"],
         "tianji_updown": _map_updown(tj["trend"]),
         "tianji_conf": tj["conf"],
-        "tianji_chart": {"keti": tj["keti"], "sanchuan": tj["sanchuan"], "tianjiang": tj["tianjiang"]},
+        "tianji_chart": {"keti": tj["keti"], "sanchuan": tj["sanchuan"], "tianjiang": tj["tianjiang"],
+                         # 2026-09-09 补透：毕法赋/课格断语（修复前仅三字段，后端盘面只见课体三传天将）
+                         "reasons": tj.get("reasons", []),
+                         "bifa_hits": tj.get("bifa_hits", []),
+                         "bifa_signals": tj.get("bifa_signals", {}),
+                         "bifa_stats": tj.get("bifa_stats", {}),
+                         "sanchuan_kege": tj.get("sanchuan_kege", []),
+                         "special_kege": tj.get("special_kege", [])},
         "yingqi": {"period_len": period_len,
                    "primary": yp.get("primary") or {},
                    "stages": yp.get("stages") or [],
@@ -359,13 +383,19 @@ def get_scoreboard():
             unverified += 1
             samples.append({"cast_date": rec.get("cast_date"), "shichen": rec.get("shichen"),
                             "pred": pred, "trend": rec.get("tianji_trend"),
-                            "actual": None, "hit": None, "window": [ps, pe]})
+                            "actual": None, "hit": None, "window": [ps, pe],
+                            "period_len": rec.get("period_len"),
+                            "yingqi": rec.get("yingqi") or {},
+                            "rules_snapshot": rec.get("rules_snapshot") or {}})
             continue
         hit = (pred in ("up", "down")) and (pred == act)
         known.append((rec, act))
         samples.append({"cast_date": rec.get("cast_date"), "shichen": rec.get("shichen"),
                         "pred": pred, "trend": rec.get("tianji_trend"),
-                        "actual": act, "hit": hit, "window": [ps, pe]})
+                        "actual": act, "hit": hit, "window": [ps, pe],
+                        "period_len": rec.get("period_len"),
+                        "yingqi": rec.get("yingqi") or {},
+                        "rules_snapshot": rec.get("rules_snapshot") or {}})
     tj = _acc(known, "tianji_updown")
     return {
         "period_len": PERIOD_LEN,

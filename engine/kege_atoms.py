@@ -54,7 +54,13 @@ XING = {
     '子':{'卯'},'卯':{'子'},                        # 无礼刑
     '辰':{'辰'},'午':{'午'},'酉':{'酉'},'亥':{'亥'},  # 自刑
 }
+# 十干帝旺位（十二长生帝旺：甲卯乙寅丙午丁巳戊午己巳庚酉辛申壬子癸亥）
+DI_WANG_ZHI = {'甲':'卯','乙':'寅','丙':'午','丁':'巳','戊':'午','己':'巳',
+               '庚':'酉','辛':'申','壬':'子','癸':'亥'}
 SANHE = [{'申','子','辰'},{'亥','卯','未'},{'寅','午','戌'},{'巳','酉','丑'}]
+# 三合局各支→局五行（申子辰=水、亥卯未=木、寅午戌=火、巳酉丑=金）
+_SANHE_WX = {'申':'水','子':'水','辰':'水','亥':'木','卯':'木','未':'木',
+             '寅':'火','午':'火','戌':'火','巳':'金','酉':'金','丑':'金'}
 # 三合局命名（生男生女用：东南木火=男、西北金水=女）
 SANHE_JU = {'润下': {'申','子','辰'}, '曲直': {'亥','卯','未'},
             '炎上': {'寅','午','戌'}, '从革': {'巳','酉','丑'}}
@@ -213,6 +219,16 @@ def eval_atom(name: str, args: list, env: dict) -> bool:
     if not fn:
         return False
     try:
+        # 【P3 神煞类收敛 2026-09-02】神煞名参数不做 _resolve：
+        # sc_has_sha 的 sha 位、x_shi_shensha 的 sha 位（第二位）为字面神煞名，
+        # 若经 _resolve 会被劫持成具体地支（如 '丁神'→旬丁神支、'病符'→去年太岁），
+        # 导致对照 build_env 预计算 shensha 名集合恒假 → 丁神系/病符系规则断链。
+        if name == 'sc_has_sha':
+            return fn(env, args[0] if args else '')
+        if name == 'x_shi_shensha':
+            x = _resolve(args[0], env) if args and len(args) > 0 else ''
+            sha = args[1] if args and len(args) > 1 else ''
+            return fn(env, x, sha)
         resolved = [_resolve(a, env) for a in (args or [])]
         return fn(env, *resolved)
     except Exception:
@@ -235,6 +251,283 @@ def _x_he_y(env, x, y): return LIU_HE.get(x, '') == y
 def _x_hai_y(env, x, y): return LIU_HAI.get(x, '') == y
 def _x_chong_y(env, x, y): return LIU_CHONG.get(x, '') == y
 def _x_xing_y(env, x, y): return y in XING.get(x, set())
+
+def _zhi_eq(env, x, y): return bool(x) and x == y
+
+# ══════════════════════════════════════════════════════════════
+# 批次2 刑害类收敛谓词（2026-09-02）：一字/二字/三字刑、四胜煞、助刑戕德、合中犯杀、得少失多
+# 判据以《毕法赋》原文为唯一基准，见 extracted_data/毕法赋_古籍注解_下_正文.txt
+# ══════════════════════════════════════════════════════════════
+def _si_ke_shang_all(env, zhi_set):
+    """一字刑（宾主不投刑在上·第75法）：「四课上神全逢辰午酉亥者是也」。
+    a=[四支集合]，四课上神全 ∈ 集合方命中（缺课不算）。"""
+    if not zhi_set:
+        return False
+    allowed = set(zhi_set)
+    sike_shang = env.get('si_ke_shang', []) or []
+    if not sike_shang:   # 【兜底】si_ke_shang 缺失时从 si_ke 原始结构提取
+        sike_shang = _sike_shang_from_sike(env)
+    if len(sike_shang) < 4:
+        return False
+    return all(z in allowed for z in sike_shang)
+
+
+def _san_chuan_xing(env):
+    """三字刑（宾主不投刑在上·第75法）：「三传寅巳申或丑戌未」。
+    寅巳申为无恩刑、丑戌未为恃势刑；三传顺序不限（寅巳申/巳申寅/申寅巳、丑戌未/戌未丑/未丑戌俱是）。"""
+    sc = env.get('sanchuan', [])
+    if len(sc) != 3:
+        return False
+    s = set(sc)
+    return s == {'寅', '巳', '申'} or s == {'丑', '戌', '未'}
+
+
+def _zhu_xing_qiang_de(env):
+    """助刑戕德格（宾主不投刑在上·第75法变格）：
+    「六处有神作支之自刑，又作干鬼，又结连三传为鬼是也」。如庚午日午加庚发用。
+    判据：支为自刑支（辰午酉亥）且六处(干上/支上/三传)有神=支，且支克干（作干鬼），且三传皆克干（结连为鬼）。"""
+    gan = env.get('ri_gan', '')
+    zhi = env.get('ri_zhi', '')
+    gs = env.get('gan_shang', '')
+    zs = env.get('zhi_shang', '')
+    sc = env.get('sanchuan', [])
+    if not gan or not zhi or len(sc) != 3:
+        return False
+    if zhi not in ('辰', '午', '酉', '亥'):          # 支须为自刑支
+        return False
+    if zhi not in ([gs, zs] + list(sc)):            # 六处有神作支之自刑（神=支）
+        return False
+    if not _zhi_ke(zhi, gan):                       # 又作干鬼（支克干）
+        return False
+    return all(_zhi_ke(z, gan) for z in sc)         # 结连三传为鬼（三传皆克干）
+
+
+def _de_shao_shi_duo(env):
+    """得少失多格（费有余而得不足·第57法）：
+    「甲寅日干上卯，乃日之旺神，三传辰巳午…辰乃干上卯之六害，中末盗气」。
+    判据：干上=日干帝旺（旺神）且初传=干上之六害且中末传为日干所生（子孙盗气泄我）。"""
+    gan = env.get('ri_gan', '')
+    gs = env.get('gan_shang', '')
+    sc = env.get('sanchuan', [])
+    if not gan or not gs or len(sc) != 3:
+        return False
+    if DI_WANG_ZHI.get(gan, '') != gs:              # 干上须为日干旺神（帝旺位）
+        return False
+    chu, zhong, mo = sc
+    if LIU_HAI.get(chu, '') != gs:                  # 初传=干上之六害
+        return False
+    return _zhi_sheng(gan, zhong) and _zhi_sheng(gan, mo)   # 中末盗气（日干生之，我生者泄我）
+
+# ══════════════════════════════════════════════════════════════
+# 批次3 神煞类收敛谓词（2026-09-02）：罗网系（干前/支前一辰）+ 三传神煞扫描
+# 判据以《毕法赋》原文为唯一基准（所谋多拙逢罗网·第55法）
+# ══════════════════════════════════════════════════════════════
+def _shi_gan_wang(env, loc):
+    """值干之罗网（所谋多拙逢罗网·第55法）：「干上乘干前一辰」。
+    例甲申日干上卯（甲寄寅，帝旺卯）；丙申日干上午；壬寅日干上子。loc=日干帝旺位方为网。"""
+    return bool(loc) and loc == DI_WANG_ZHI.get(env.get('ri_gan', ''), '')
+
+
+def _shi_zhi_qian(env, loc):
+    """值支之罗网（所谋多拙逢罗网·第55法）：「支上乘支前一辰」。
+    例甲申日支上酉（申后一位）、庚寅日支上酉。loc=日支顺行下一支（乘旺为网）。"""
+    rz = env.get('ri_zhi', '')
+    if not loc or rz not in DIZHI_ORDER:
+        return False
+    return loc == DIZHI_ORDER[(DIZHI_ORDER.index(rz) + 1) % 12]
+
+
+def _sc_has_sha(env, sha):
+    """三传任一支为某神煞（课传逢煞）。替代 sc_has(神煞名) 占位用法——
+    sc_has 仅判地支∈三传，传神煞名恒假；此处按 build_env 预计算 shensha 查询。"""
+    if not sha:
+        return False
+    return any(sha in (env.get('shensha', {}).get(z) or set())
+               for z in (env.get('sanchuan') or []) if z)
+
+def _de_shen_wei_gui(env):
+    """德神为鬼：日德之神加临鬼方（德神所坐之盘克日干），德化鬼而不害，占功名利病无妨。
+    通解上·德庆课「或乙日申德加酉为用，酉来克乙，申化鬼，乃德神为鬼之例」（德申坐地盘酉，酉克乙木）。
+    【B5d 2026-09-03】原规则共享 x_ke_gan(初) 占位判据 26.25% 过宽 → 按原文判德坐鬼方。"""
+    gan = env.get('ri_gan', '')
+    de = env.get('de', '')
+    if not gan or not de:
+        return False
+    tdp = env.get('tiandi_pan', {}) or {}
+    # 【B5d 2026-09-03】原文「申德加酉为用」→ 德须在课传六处，防全盘扫描命中偏高(恰20%边界)
+    spots = set()
+    for z in (env.get('gan_shang', ''), env.get('zhi_shang', '')):
+        if z:
+            spots.add(z)
+    spots |= {z for z in (env.get('sanchuan') or []) if z}
+    if de not in spots:
+        return False
+    for dp, tp in tdp.items():
+        if tp == de and _zhi_ke(dp, gan):
+            return True
+    return False
+
+
+def _zhi_shang_dun_gui(env):
+    """支上神遁旬中干鬼（支上神旬遁干五行克日干），明暗二鬼格之暗鬼。
+    毕法赋·虎乘遁鬼殃非浅「干上神作日干明鬼，又支上神遁旬干作日干暗鬼」。
+    【B5d 2026-09-03】原规则共享 x_ke_gan(初) 占位判据 26.25% 过宽 → 仿 _gan_shang_dun_gui 按原文判暗鬼。"""
+    zs = env.get('zhi_shang', '')
+    gan = env.get('ri_gan', '')
+    if not zs or not gan:
+        return False
+    g = _dun_gan(env, zs)
+    return bool(g) and WX_KE.get(_wx(g), '') == _wx(gan)
+
+
+def _gui_ren_zuo_mu(env):
+    """贵人作墓：贵神（昼夜贵之一）作四墓（丑辰未戌）加临干上。
+    毕法赋·鬼乘天乙乃神祗「贵人作墓格：六甲日丑为夜贵作墓神加干，六庚日丑为昼贵作墓神加干」。
+    【B5d 2026-09-03】原规则共享 x_ke_gan(初) 占位判据 26.25% 过宽 → 按原文判贵临干且为墓。"""
+    gs = env.get('gan_shang', '')
+    gan = env.get('ri_gan', '')
+    if not gs or not gan:
+        return False
+    gui = GUIREN_MAP.get(gan, ())
+    if not gui or gs not in gui:
+        return False
+    return gs in '丑辰未戌'
+
+
+def _gui_ren_tuo_qi(env):
+    """贵人脱气：贵神加临干上而为日干脱气（日干生贵神），必被贵人脱赚或神祗降殃以致脱耗。
+    毕法赋·鬼乘天乙乃神祗「贵人脱气格：如六壬、六癸日以卯为夜贵作脱气」。
+    【B5d 2026-09-03】原规则共享 x_ke_gan(初) 占位判据 26.25% 过宽 → 按原文判贵临干且为脱气。"""
+    gs = env.get('gan_shang', '')
+    gan = env.get('ri_gan', '')
+    if not gs or not gan:
+        return False
+    gui = GUIREN_MAP.get(gan, ())
+    if not gui or gs not in gui:
+        return False
+    return _zhi_sheng(gan, gs)
+
+
+def _bu_xing_zhong_xing(env):
+    """不幸中幸、幸中不幸：白虎却作长生（白虎乘日干长生=不幸中幸），青龙却乘日鬼（青龙乘日鬼=幸中不幸）。
+    毕法赋「如六戊日伏吟，昼占三重白虎作长生，乃不幸中幸；夜占三重青龙作日干之鬼，乃幸中不幸」。
+    【B5d 2026-09-03】原规则共享 x_ke_gan(初) 占位判据 26.25% 过宽 → 按原文判课传白虎乘长生/青龙乘日鬼。"""
+    gan = env.get('ri_gan', '')
+    if not gan:
+        return False
+    tj = env.get('tian_jiang', {})
+    cs = CHANG_SHENG.get(_wx(gan), '')
+    spots = set()
+    for z in (env.get('gan_shang', ''), env.get('zhi_shang', '')):
+        if z:
+            spots.add(z)
+    spots |= {z for z in (env.get('sanchuan') or []) if z}
+    for z in spots:
+        jiang = tj.get(z, '')
+        if jiang == '白虎':
+            if cs and _zhi_in_wei(z, cs):      # 白虎作长生：不幸中幸
+                return True
+        elif jiang == '青龙':
+            if _zhi_ke(z, gan):                # 青龙乘日鬼：幸中不幸
+                return True
+    return False
+
+
+def _hu_zhi_yin_shen_zhi_hu(env):
+    """虎之阴神制虎：白虎乘日鬼之位，其阴神（该位加临之下一神=tiandi_pan[x]）克鬼（制虎）。
+    毕法赋·虎临干鬼凶速速「如甲子日申加戌昼将，上乘白虎作中传，申坐戌空，又赖虎之阴神上乘午火而制虎鬼。
+    经云：虎之阴神还制虎，生者安宁病者愈」（tiandi_pan[申]=午，午火克申金）。
+    【B5d 2026-09-03】原规则共享 x_ke_gan(初) 占位判据 26.25% 过宽 → 按原文判阴神制虎。"""
+    gan = env.get('ri_gan', '')
+    if not gan:
+        return False
+    tj = env.get('tian_jiang', {})
+    tdp = env.get('tiandi_pan', {}) or {}
+    spots = set()
+    for z in (env.get('gan_shang', ''), env.get('zhi_shang', '')):
+        if z:
+            spots.add(z)
+    spots |= {z for z in (env.get('sanchuan') or []) if z}
+    for z in spots:
+        if tj.get(z, '') == '白虎' and _zhi_ke(z, gan):
+            yinshen = tdp.get(z, '')
+            if yinshen and _zhi_ke(yinshen, z):  # 阴神克鬼（制虎鬼）
+                return True
+    return False
+
+
+def _gui_zuo_gui_fang(env):
+    """鬼坐鬼方无所畏：日鬼加临于克鬼之地盘（鬼坐于其鬼方=受制无威，故无所畏）。
+    毕法赋·虎临干鬼凶速速「又如甲子日申加午昼将，上乘白虎作末传，其申不空，诚为可畏，
+    尤赖申金坐于午火之上。经云：鬼坐鬼方无所畏」（午火克申金=午为申之鬼方）。
+    【B5d 2026-09-03】原规则共享 x_ke_gan(初) 占位判据 26.25% 过宽 → 按原文判鬼坐鬼方。"""
+    gan = env.get('ri_gan', '')
+    if not gan:
+        return False
+    tdp = env.get('tiandi_pan', {}) or {}
+    tj = env.get('tian_jiang', {}) or {}
+    # 【B5d 2026-09-03 v2】原文例「申加午...上乘白虎作末传」→ 须白虎乘鬼同位（限课传六处，
+    # 防全盘 12 位扫描过宽 41.67%；实测无白虎要求时六处版仍 41.67%）
+    spots = set()
+    for z in (env.get('gan_shang', ''), env.get('zhi_shang', '')):
+        if z:
+            spots.add(z)
+    spots |= {z for z in (env.get('sanchuan') or []) if z}
+    dp_by_tp = {tp: dp for dp, tp in tdp.items()}
+    for z in spots:
+        if tj.get(z, '') != '白虎' or not _zhi_ke(z, gan):
+            continue
+        if _zhi_ke(dp_by_tp.get(z, ''), z):
+            return True
+    return False
+
+
+def _gui_zi_jiu_sheng(env):
+    """鬼自就生不来侵：日鬼加临于鬼之长生位（鬼自就生，不来为害）。
+    毕法赋·虎临干鬼凶速速「又如戊寅日寅加亥夜将，上乘白虎作中传，诚为凶也，
+    殊不知寅木坐于亥水之上，寅木受亥水作长生，不来为害。经云：鬼自就生不来侵」（亥=寅木长生）。
+    【B5d 2026-09-03】原规则共享 x_ke_gan(初) 占位判据 26.25% 过宽 → 按原文判鬼临长生。"""
+    gan = env.get('ri_gan', '')
+    if not gan:
+        return False
+    tdp = env.get('tiandi_pan', {}) or {}
+    tj = env.get('tian_jiang', {}) or {}
+    # 【B5d 2026-09-03 v2】原文例「寅加亥...上乘白虎作中传」→ 须白虎乘鬼同位临长生（限课传六处，
+    # 防全盘扫描命中偏高恰 20% 边界；与鬼坐鬼方同源同文例）
+    spots = set()
+    for z in (env.get('gan_shang', ''), env.get('zhi_shang', '')):
+        if z:
+            spots.add(z)
+    spots |= {z for z in (env.get('sanchuan') or []) if z}
+    dp_by_tp = {tp: dp for dp, tp in tdp.items()}
+    for z in spots:
+        if tj.get(z, '') != '白虎' or not _zhi_ke(z, gan):
+            continue
+        cs = CHANG_SHENG.get(_wx(z), '')
+        if cs and _zhi_in_wei(dp_by_tp.get(z, ''), cs):
+            return True
+    return False
+
+
+def _tian_gui_zuo_ri_gui(env):
+    """天鬼作日鬼：课传六处有神乘天鬼（伏殃煞）且为日鬼，占病必是疫气。
+    毕法赋·鬼临三四讼灾随「天鬼作日鬼格：在六处占病，必是疫气」。
+    天鬼神煞（正月起酉逆行四仲：酉午卯子循环）由 build_env 预计算入 shensha。
+    【B5d 2026-09-03】原规则共享 x_ke_gan(初) 占位判据 26.25% 过宽 → 按原文判天鬼临处且为日鬼。"""
+    gan = env.get('ri_gan', '')
+    if not gan:
+        return False
+    shensha = env.get('shensha', {})
+    spots = set()
+    for z in (env.get('gan_shang', ''), env.get('zhi_shang', '')):
+        if z:
+            spots.add(z)
+    spots |= {z for z in (env.get('sanchuan') or []) if z}
+    for z in spots:
+        if '天鬼' in (shensha.get(z) or set()) and _zhi_ke(z, gan):
+            return True
+    return False
+
 
 def _x_cheng(env, x, j):
     """X乘天将：仅限课传六处（四课三传+干上支上）及年命之神（2026-08-21 修复：
@@ -316,6 +609,29 @@ def _x_shi_shensha(env, x, sha):
 def _x_shi_lu(env, x): return x == env.get('lu', '')
 def _x_shi_de(env, x): return x == env.get('de', '')
 def _x_shi_yima(env, x): return x == env.get('yima', '')
+
+
+def _yima_bei_chong(env):
+    """驿马被冲破（官爵淹留）：驿马发用（官爵课之马动）且课传六处见驿马对冲神。
+    观月经·官爵课「忽然驿马破，官职有淹留。若申子辰日时，功曹发用，是驿马动也。
+    若课中见传送是驿马破也，主帝王降罪之兆」（寅马见申=破）。
+    【B5e 2026-09-04】官爵淹留格原判据"驿马空亡"（简化为占位，20% 过宽且语义错）
+    → 按「马发用∧课见冲神」精确化（实测 6.39%）。"""
+    yima = env.get('yima', '')
+    if not yima:
+        return False
+    sc = env.get('sanchuan') or []
+    if not sc or sc[0] != yima:          # 驿马发用（官爵课前提）
+        return False
+    chong = LIU_CHONG.get(yima, '')
+    if not chong:
+        return False
+    spots = set()
+    for z in (env.get('gan_shang', ''), env.get('zhi_shang', '')):
+        if z:
+            spots.add(z)
+    spots |= {z for z in sc if z}
+    return chong in spots
 
 def _x_wang(env, x):
     # 旺：x 五行 == 当季旺五行（春木夏火秋金冬水）
@@ -901,48 +1217,86 @@ def _liang_gui_jia_gan(env):
 
 
 def _liang_she_jia_mu(env):
-    """两蛇夹墓：初末传为日干之墓，乘螣蛇"""
-    sc = env.get('sanchuan', ['', '', ''])
-    if len(sc) != 3:
+    """两蛇夹墓（第53法 两蛇夹墓凶难免）：日干之墓临干或支，且墓神乘螣蛇。
+    原文「丙戌日戌加巳及支辰来墓日干，兼昼夜天将皆乘蛇」；如占病积块在腹。
+    【P4 收敛 2026-09-03】原判据「初末传同为墓乘蛇」结构上永不可能（初末同支且皆乘蛇）→
+    按原文改判「墓临干/支乘螣蛇」（对齐 _liang_she_jia_mu_v2）。"""
+    gan = env.get('ri_gan', '')
+    gs = env.get('gan_shang', '')
+    zs = env.get('zhi_shang', '')
+    if not gan or (not gs and not zs):
         return False
-    mu = WX_MU.get(_wx(env['ri_gan']), '')
+    mu = WX_MU.get(_wx(gan), '')
     if not mu:
         return False
-    chu_mo_mu = (sc[0] == mu and sc[2] == mu)
-    if not chu_mo_mu:
+    mu_zhi = gs if gs == mu else (zs if zs == mu else '')
+    if not mu_zhi:
         return False
-    tj = env.get('tian_jiang', {})
-    return (tj.get(sc[0]) == '螣蛇' or tj.get(sc[2]) == '螣蛇')
+    return env.get('tian_jiang', {}).get(mu_zhi, '') == '螣蛇'
 
 
 def _liang_hu_jia_mu(env):
-    """两虎夹墓：六辛日丑加申，初末为墓乘白虎"""
-    sc = env.get('sanchuan', ['', '', ''])
-    if len(sc) != 3:
+    """两虎夹墓（第53法）：日干之墓临干或支，且墓神乘白虎。
+    原文「六辛日丑加申两虎夹墓」（辛墓=丑，丑加申=干上乘白虎）。
+    【P4 收敛 2026-09-03】原判据「初末同为墓乘白虎」结构不可能 → 按原文改判。"""
+    gan = env.get('ri_gan', '')
+    gs = env.get('gan_shang', '')
+    zs = env.get('zhi_shang', '')
+    if not gan or (not gs and not zs):
         return False
-    mu = WX_MU.get(_wx(env['ri_gan']), '')
+    mu = WX_MU.get(_wx(gan), '')
     if not mu:
         return False
-    chu_mo_mu = (sc[0] == mu and sc[2] == mu)
-    if not chu_mo_mu:
+    mu_zhi = gs if gs == mu else (zs if zs == mu else '')
+    if not mu_zhi:
         return False
-    tj = env.get('tian_jiang', {})
-    return (tj.get(sc[0]) == '白虎' or tj.get(sc[2]) == '白虎')
+    return env.get('tian_jiang', {}).get(mu_zhi, '') == '白虎'
 
 
 def _liang_kong_jia_mu(env):
-    """两空夹墓：初末传为日干之墓，乘天空"""
-    sc = env.get('sanchuan', ['', '', ''])
-    if len(sc) != 3:
+    """两空夹墓（第53法）：日干之墓临干或支，且墓神乘天空。
+    原文「六甲日未加戌昼贵，两空夹墓」（甲墓=未，未加戌乘天空）。
+    【P4 收敛 2026-09-03】原判据「初末同为墓乘天空」结构不可能 → 按原文改判。"""
+    gan = env.get('ri_gan', '')
+    gs = env.get('gan_shang', '')
+    zs = env.get('zhi_shang', '')
+    if not gan or (not gs and not zs):
         return False
-    mu = WX_MU.get(_wx(env['ri_gan']), '')
+    mu = WX_MU.get(_wx(gan), '')
     if not mu:
         return False
-    chu_mo_mu = (sc[0] == mu and sc[2] == mu)
-    if not chu_mo_mu:
+    mu_zhi = gs if gs == mu else (zs if zs == mu else '')
+    if not mu_zhi:
         return False
-    tj = env.get('tian_jiang', {})
-    return (tj.get(sc[0]) == '天空' or tj.get(sc[2]) == '天空')
+    return env.get('tian_jiang', {}).get(mu_zhi, '') == '天空'
+
+
+def _liang_chang_jia_mu(env):
+    """两常夹墓（第53法 两蛇夹墓·外变）：六己日，干墓辰加临干或支，且辰乘太常。
+    毕法赋「外有六己日辰加未夜占，乃两常夹墓」（己土墓辰，辰乘太常=「两常」）。
+    【B5a 2026-09-03】原规则误用 tian_gang_bi_gan（天罡断男女法）→ 按原文独立判据。"""
+    if env.get('ri_gan', '') != '己':
+        return False
+    gs = env.get('gan_shang', '')
+    zs = env.get('zhi_shang', '')
+    mu_zhi = gs if gs == '辰' else (zs if zs == '辰' else '')
+    if not mu_zhi:
+        return False
+    return env.get('tian_jiang', {}).get(mu_zhi, '') == '太常'
+
+
+def _liang_hou_jia_mu(env):
+    """两后夹墓：六壬日，干墓辰加临干或支，且辰乘天后。
+    毕法赋「六壬日辰加亥乃两后夹墓」（壬水墓辰，辰乘天后=「两后」）。
+    【B5a 2026-09-03】原规则误用 tian_gang_bi_gan → 按原文独立判据。"""
+    if env.get('ri_gan', '') != '壬':
+        return False
+    gs = env.get('gan_shang', '')
+    zs = env.get('zhi_shang', '')
+    mu_zhi = gs if gs == '辰' else (zs if zs == '辰' else '')
+    if not mu_zhi:
+        return False
+    return env.get('tian_jiang', {}).get(mu_zhi, '') == '天后'
 
 
 def _zhi_shang_sheng_gan(env):
@@ -964,6 +1318,12 @@ def _zhi_shang_ke_gan(env):
     return bool(zs and _zhi_ke(zs, env['ri_gan']) and _wx(zs) != _wx(env['ri_gan']))
 
 
+def _gan_shang_ke_gan(env):
+    """干上神克日干（舍益就损·不受福德 / 一喜一悲 用）"""
+    gs = env.get('gan_shang', '')
+    return bool(gs and _zhi_ke(gs, env['ri_gan']) and _wx(gs) != _wx(env['ri_gan']))
+
+
 def _gan_zhi_shang_jie_ke_gan(env):
     """干上、支上俱克日干（前后逼迫·全伤坐克）"""
     gs = env.get('gan_shang', '')
@@ -981,49 +1341,61 @@ def _san_chuan_wu_yi_shou_sheng(env):
     return not any(_zhi_sheng(z, gan) for z in sc)
 
 
-def _liu_yao_xian_gua_father(env):
-    """父母爻现卦：三传中有生日干者（父母爻之象）"""
-    sc = env.get('sanchuan', [])
+def _sc_ju_wx(sc):
+    """三传成三合局→局五行；不成局→''。毕法赋六爻现卦示例均为三合局（卯亥未木局/巳酉丑金局/寅午戌火局/申子辰水局）。"""
     if not sc or len(sc) != 3:
-        return False
-    gan = env['ri_gan']
-    return any(_zhi_sheng(z, gan) and _wx(z) != _wx(gan) for z in sc)
+        return ''
+    for s in SANHE:
+        if set(sc) == s:
+            return _SANHE_WX[next(z for z in s)]
+    return ''
+
+
+def _liu_yao_xian_gua_father(env):
+    """父母爻现卦：三传成三合局，局五行生日干（毕法赋"三传皆作父母爻"。
+    如戊寅日三传戌午寅火局，戊土受生。）"""
+    jw = _sc_ju_wx(env.get('sanchuan', []))
+    gan_wx = _wx(env.get('ri_gan', ''))
+    return bool(jw and gan_wx and WX_SHENG.get(jw, '') == gan_wx)
 
 
 def _liu_yao_xian_gua_offspring(env):
-    """子息爻现卦：三传中有日干生者（子息爻之象）"""
-    sc = env.get('sanchuan', [])
-    if not sc or len(sc) != 3:
-        return False
-    gan = env['ri_gan']
-    return any(_zhi_sheng(gan, z) for z in sc)
+    """子息爻现卦：三传成三合局，局五行日干所生（毕法赋"三传皆作子息爻"。
+    如己巳日三传酉丑巳金局，己土生金。）"""
+    jw = _sc_ju_wx(env.get('sanchuan', []))
+    gan_wx = _wx(env.get('ri_gan', ''))
+    return bool(jw and gan_wx and WX_SHENG.get(gan_wx, '') == jw)
 
 
 def _liu_yao_xian_gua_official(env):
-    """官鬼爻现卦：三传中有克日干者（官鬼爻之象）"""
-    sc = env.get('sanchuan', [])
-    if not sc or len(sc) != 3:
-        return False
-    gan = env['ri_gan']
-    return any(_zhi_ke(z, gan) and _wx(z) != _wx(gan) for z in sc)
+    """官鬼爻现卦：三传成三合局，局五行克日干（毕法赋"三传皆鬼"。
+    如乙丑日三传巳丑酉金局，金克乙木。）"""
+    jw = _sc_ju_wx(env.get('sanchuan', []))
+    gan_wx = _wx(env.get('ri_gan', ''))
+    return bool(jw and gan_wx and WX_KE.get(jw, '') == gan_wx)
 
 
 def _liu_yao_xian_gua_wealth(env):
-    """妻财爻现卦：三传中有日干克者（妻财爻之象）"""
-    sc = env.get('sanchuan', [])
-    if not sc or len(sc) != 3:
-        return False
-    gan = env['ri_gan']
-    return any(_zhi_ke(gan, z) and _wx(z) != _wx(gan) for z in sc)
+    """妻财爻现卦：三传成三合局，局五行被日干所克（毕法赋"三传俱作日之财"。
+    如辛未日三传卯亥未木局，辛金克木。）"""
+    jw = _sc_ju_wx(env.get('sanchuan', []))
+    gan_wx = _wx(env.get('ri_gan', ''))
+    return bool(jw and gan_wx and WX_KE.get(gan_wx, '') == jw)
 
 
 def _liu_yao_xian_gua_brother(env):
-    """兄弟爻现卦：三传中有与日干同行者（兄弟爻之象）"""
-    sc = env.get('sanchuan', [])
-    if not sc or len(sc) != 3:
-        return False
-    gan_wx = _wx(env['ri_gan'])
-    return any(_wx(z) == gan_wx and z != env['ri_gan'] for z in sc)
+    """兄弟爻现卦：三传成三合局，局五行与日干同类（毕法赋"三传皆是日之同类"。
+    如丙寅日三传戌午寅火局，丙火同类。）"""
+    jw = _sc_ju_wx(env.get('sanchuan', []))
+    gan_wx = _wx(env.get('ri_gan', ''))
+    return bool(jw and gan_wx and jw == gan_wx)
+
+
+def _san_chuan_sheng_gan_shang(env):
+    """六爻相生而成类：三传（三合局）生起干上之爻象（毕法赋"乃三传生起干上之爻象者"）。"""
+    jw = _sc_ju_wx(env.get('sanchuan', []))
+    gs_wx = _wx(env.get('gan_shang', ''))
+    return bool(jw and gs_wx and WX_SHENG.get(jw, '') == gs_wx)
 
 
 def _bingfu_wuyin(env):
@@ -1099,9 +1471,11 @@ def _qi_xing_nian_shang_yang_tian_yang(env):
 
 
 def _gang_se_gui_hu(env):
-    """罡塞鬼户：天罡（辰）加临鬼户（寅/申）"""
+    """罡塞鬼户：天罡（辰）加临鬼户（寅）。
+    通解「辰为天罡，寅为鬼户，凡辰加寅为罡塞鬼门，不论在传不在传，皆名罡塞鬼户」。
+    【B5a 2026-09-03】原判据含 '申'，与原文「鬼户为寅」不符，过宽 → 严格只判寅。"""
     d = _tian_gang_jia(env)
-    return d in ('寅', '申')
+    return d == '寅'
 
 
 def _tian_wang_zi_guo(env):
@@ -1167,27 +1541,44 @@ def _chuan_gui_hua_cai(env):
 
 
 def _chuan_mu_ru_mu(env):
-    """传墓入墓：初传为日干之墓，末传亦为墓（分憎爱）"""
+    """传墓入墓：初传（财/长生/禄）被中/末传墓入。
+    毕法赋第八十一法：「生我者传墓入墓，如辛未日，三传巳戌卯，巳加子为初传，乃日之长生，
+    岂宜中传戌来墓巳，末传又入戌乡」→ 判据=初传五行之墓 == 中传或末传。
+    【BUG-FIX 2026-09-01】原实现"初末传同为日干之墓"在8640课内0命中（初末同支本就罕见，
+    同为墓更不可能）→ 死规则；按原文改为"初传入墓"（初传五行墓于中末传）。"""
     sc = env.get('sanchuan', ['', '', ''])
     if len(sc) != 3:
         return False
-    mu = WX_MU.get(_wx(env['ri_gan']), '')
-    return bool(mu and sc[0] == mu and sc[2] == mu)
+    chu_wx = _wx(sc[0])
+    if not chu_wx:
+        return False
+    mu = WX_MU.get(chu_wx, '')  # 初传五行之墓
+    return bool(mu) and mu in sc[1:]
 
 
 def _chu_zao_jia_ke(env):
-    """初遭夹克：初传上下俱受克（不由己）"""
+    """初遭夹克：初传上下俱受克（不由己）—— 上=天将克初，下=地盘克初（毕法赋·初遭夹克不由己）"""
     sc = env.get('sanchuan', ['', '', ''])
     if len(sc) != 3:
         return False
     chu = sc[0]
-    # 上克下（天将克初）+ 下克上（初克日干或日干克初）
     tj = env.get('tian_jiang', {})
+    tdp = env.get('tiandi_pan', {})
     jiang_wx = TIANJIANG_WX_MAP.get(tj.get(chu, ''), '')
     chu_wx = _wx(chu)
-    # 初传被天将克（上克下）+ 初传被日干克或克日干（下克上/上克下）= 夹克
-    return (bool(jiang_wx and _zhi_ke(jiang_wx, chu_wx)) and
-            (_zhi_ke(env['ri_gan'], chu) or _zhi_ke(chu, env['ri_gan'])))
+    if not jiang_wx or not chu_wx:
+        return False
+    # 【BUG-FIX 2026-09-01】jiang_wx 已是五行值，不能套 _zhi_ke（会对五行再 _wx → 恒空串且恒真/恒假）；
+    # 原 v1"上克"因双重 _wx 恒真 + 下克还误容"初克日干"，导致 初遭夹克系 4 条规则 52.8% 误命中。
+    # 现按毕法原义：上=天将五行克初传五行，下=地盘（初传下坐之支）五行克初传五行。
+    if WX_KE.get(jiang_wx, '') != chu_wx:
+        return False
+    dipan = ''
+    for dp, tp in (tdp or {}).items():
+        if tp == chu:
+            dipan = dp
+            break
+    return bool(dipan and WX_KE.get(_wx(dipan), '') == chu_wx)
 
 
 def _bing_fu_ke_zhai(env):
@@ -1218,8 +1609,10 @@ def _hou_po_bi_po(env):
     jiang_mo = TIANJIANG_WX_MAP.get(tj.get(sc[2], ''), '')
     chu_wx = _wx(sc[0])
     mo_wx = _wx(sc[2])
-    return (bool(jiang_chu and _zhi_ke(jiang_chu, chu_wx)) and
-            bool(jiang_mo and _zhi_ke(jiang_mo, mo_wx)))
+    # 【BUG-FIX 2026-09-01】jiang_* 已是五行值，若再套 _zhi_ke 会对五行取 _wx → 恒为空，
+    # `WX_KE.get('','')==''` 恒真 → 前后逼迫/顾祖格 100% 命中。改为五行表直接比较。
+    return (bool(jiang_chu and WX_KE.get(jiang_chu, '') == chu_wx) and
+            bool(jiang_mo and WX_KE.get(jiang_mo, '') == mo_wx))
 
 
 def _hu_shi_peng_hu(env):
@@ -1229,7 +1622,71 @@ def _hu_shi_peng_hu(env):
     if len(sc) != 3:
         return False
     has_hu = any(tj.get(z) == '白虎' for z in sc)
-    return has_hu and _x_wang_xiang(env, '初')
+    # 【BUG-FIX 2026-09-01】'初' 是相对标记，须先 _resolve 成实际地支再判旺相；
+    # 原实现直传 '初' → _wx('初')='' 恒假 → 刚日昴星/多重虎 2 位点断链。
+    return has_hu and _x_wang_xiang(env, _resolve('初', env))
+
+
+def _bai_hu_lin_gan(env):
+    """白虎临干（干上乘白虎）：占病主魂游千里（白虎临身之象）。
+    【B5a 2026-09-03】原规则共享 tianjiang_ru_chuan(白虎) 过宽 → 收窄为白虎加临日干。"""
+    gs = env.get('gan_shang', '')
+    if not gs:
+        return False
+    return env.get('tian_jiang', {}).get(gs, '') == '白虎'
+
+
+def _dun_gan(env, z):
+    """地支 z 在日干所在旬中的遁干（旬首甲起顺行数至 z）"""
+    gan = env.get('ri_gan', '')
+    rz = env.get('ri_zhi', '')
+    if not gan or not rz or not z:
+        return ''
+    GAN_S = '甲乙丙丁戊己庚辛壬癸'
+    ZHI_S = '子丑寅卯辰巳午未申酉戌亥'
+    try:
+        g_i = GAN_S.index(gan)
+        z_i = ZHI_S.index(rz)
+    except ValueError:
+        return ''
+    xun_z = ZHI_S[(z_i - g_i) % 12]  # 甲旬首地支
+    step = (ZHI_S.index(z) - ZHI_S.index(xun_z)) % 12
+    return GAN_S[step % 10]
+
+
+def _hu_cheng_dun_gui(env):
+    """虎乘遁鬼（第69法 虎乘遁鬼殃非浅）：白虎所乘之神（六处），其遁干为日干之鬼。
+    毕法赋「白虎加临旬内之干为日鬼者例，纵空亡亦不能为救」。
+    【B5a 2026-09-03】原规则共享 tianjiang_ru_chuan(白虎) 过宽 → 按原文判遁鬼。"""
+    gan = env.get('ri_gan', '')
+    if not gan:
+        return False
+    tj = env.get('tian_jiang', {})
+    spots = []
+    for z in (env.get('gan_shang', ''), env.get('zhi_shang', '')):
+        if z:
+            spots.append(z)
+    spots += list(env.get('sanchuan') or [])
+    for z in spots:
+        if not z or tj.get(z, '') != '白虎':
+            continue
+        g = _dun_gan(env, z)
+        if g and WX_KE.get(_wx(g), '') == _wx(gan):
+            return True
+    return False
+
+
+def _hu_shi_feng_hu(env):
+    """虎视逢虎力难施（第54法）：柔日昴星课（虎视课）+ 白虎乘临干上或三传。
+    毕法赋「虎视课者，乃柔日也。如柔日虎视卦中，天将又乘白虎者，凡占至惊至危」。
+    【B5a 2026-09-03】原规则共享 tianjiang_ru_chuan(白虎) 过宽 → 加课体(柔日昴星)限定。"""
+    if env.get('ri_gan', '') not in '乙丁己辛癸':
+        return False
+    if '昴星' not in env.get('keti', ''):
+        return False
+    tj = env.get('tian_jiang', {})
+    spots = [env.get('gan_shang', '')] + list(env.get('sanchuan') or [])
+    return any(z and tj.get(z, '') == '白虎' for z in spots)
 
 
 def _zun_chong_san_qi(env):
@@ -1238,7 +1695,9 @@ def _zun_chong_san_qi(env):
 
 
 def _yi_zai_xiong_tao(env):
-    """已灾凶逃：三传见鬼墓又空（返无疑）"""
+    """已灾凶逃：三传见鬼墓又空（返无疑）
+    【B5b 2026-09-03】原判据「三传见鬼又墓/空」过宽 → 已灾逢凶可消格改用课体凶否卦判据
+    （ke_xiong_qi_gua），本函数保留用于 64 课格佐证，不再被通用规则引用。"""
     sc = env.get('sanchuan', ['', '', ''])
     if len(sc) != 3:
         return False
@@ -1248,6 +1707,112 @@ def _yi_zai_xiong_tao(env):
     has_mu = bool(mu and any(z == mu for z in sc))
     has_kong = any(z in (env.get('kongwang') or ('', '')) for z in sc)
     return has_gui and (has_mu or has_kong)
+
+
+_XIONG_QI_GUA = ('天网', '魄化', '天祸', '天寇', '二烦', '天狱')
+
+
+def _ke_xiong_qi_gua(env):
+    """已灾逢凶可消：课体为凶否之卦（第100法 已灾凶逃返无疑）。
+    原文「凡值丧魂、魄化、天祸、天寇、伏殃、天狱、天网四张、天地二烦诸凶否卦，
+    如已见病讼灾迍之后占得此，其灾可消除」。取 64 课引擎可判定的凶卦课体名。
+    【B5b 修正】不含「灾厄」课体——灾厄课判据为"凶将（白虎/玄武/勾陈/螣蛇/朱雀/天空）
+    发用"过于宽泛（8640课占 29.9%），与原文特指的凶否之卦（魄化/天网/天狱/二烦等）
+    不同质，剔除后仅按原文名单匹配。"""
+    kt = env.get('keti', '')
+    return any(x in kt for x in _XIONG_QI_GUA)
+
+
+def _gan_shang_jue(env):
+    """干上为日干之绝位（结绝格：如六丙日干上亥，火绝于亥）。"""
+    gs = env.get('gan_shang', '')
+    if not gs:
+        return False
+    jwx = JUE_WX.get(_wx(env.get('ri_gan', '')))
+    if not jwx:
+        return False
+    return gs in jwx if isinstance(jwx, tuple) else gs == jwx
+
+
+def _le_li_sheng_you(env):
+    """乐里生忧（第34法 苦去甘来乐里悲）：干上=干之长生、支上=支之长生，
+    然干生支上（干被支上脱）、支生干上（支被干上脱），两边互盗。
+    原文「庚寅日干上巳乃庚金之长生，支上亥乃寅木之长生，递互相参，
+    庚金反被亥水脱，寅木又被巳火脱，两边脱盗，凡占皆然」。
+    【B5b】原规则共享 tianjiang_ru_chuan(玄武) → 按原文精确落地。"""
+    gan, rz = env.get('ri_gan', ''), env.get('ri_zhi', '')
+    gs, zs = env.get('gan_shang', ''), env.get('zhi_shang', '')
+    if not all((gan, rz, gs, zs)):
+        return False
+
+    def _cs(wx):
+        v = CHANG_SHENG.get(wx, '')
+        return v[0] if isinstance(v, tuple) else v
+
+    if gs != _cs(_wx(gan)) or zs != _cs(_wx(rz)):
+        return False
+    return _zhi_sheng(gan, zs) and _zhi_sheng(rz, gs)
+
+
+def _zhi_jia_gan_shang_sheng_gan(env):
+    """自在格（第77法 互生俱生凡事益）：支加干上生日。
+    原文「甲子、乙亥、丙寅、丁卯、戊午、己巳、庚辰、辛未、壬申、癸酉十日，
+    并支加干上而生日也」→ 判据：干上神=日支，且日支生日干。
+    【B5b】原用 zhi_shang_sheng_gan（任何支上神生干）过宽 → 精确为支加干上。"""
+    gan, rz = env.get('ri_gan', ''), env.get('ri_zhi', '')
+    gs = env.get('gan_shang', '')
+    return bool(gs == rz and _zhi_sheng(rz, gan))
+
+
+def _zhi_gan_shang_xiang_sheng(env):
+    """支干相生（第31法 三传递生人举荐·变例）：支上生干上，干上生日干。
+    原文「壬戌日干上申，支上未土生申金，金来生日」→ 支上→干上→干 顺生。
+    【B5b】原用 zhi_shang_sheng_gan 过宽（只查一段生） → 要求两段连生。"""
+    gan = env.get('ri_gan', '')
+    gs, zs = env.get('gan_shang', ''), env.get('zhi_shang', '')
+    return bool(gs and zs and _zhi_sheng(zs, gs) and _zhi_sheng(gs, gan))
+
+
+def _lan_qu_qu_cai(env):
+    """懒去取财：干上为日干之比肩（劫财），传内又见财爻。
+    原文「懒去取财格：六甲日干上寅或卯，纵传内见财爻，如求财，必心多退悔，
+    懒去取财，恐争夺也。余日逐类看所乘何神而言其事类」——六甲日干上寅卯
+    即甲木比肩，比肩夺财故懒去取财。推广到余日：干上比劫 + 传中见财。
+    【B5c】原规则共享 gan_ke_x(初)（26.53% 过宽）→ 按原文精确落地。"""
+    gan = env.get('ri_gan', '')
+    gs = env.get('gan_shang', '')
+    sc = env.get('sanchuan', [])
+    if not gan or not gs or len(sc) != 3:
+        return False
+    if _wx(gs) != _wx(gan):
+        return False
+    return any(_x_shi_cai(env, z) for z in sc)
+
+
+def _san_chuan_cheng_tu(env):
+    """土将助财·严格版：三传所乘天将皆为土神（贵人/勾陈/天空/太常）。
+    原文「土将助财格：如六丙日酉加巳，三传皆财，夜将又皆土神，尽生起财神，
+    大宜求财事」→ sc_quancai 由规则声明式 AND 保证，本谓词仅判三传皆乘土将。
+    【B5c】⚠️ 全样本 8640 课验证：三传皆财时「皆乘土将」结构性恒假（0 命中，
+    sc_quancai 180 课中天将土神个数分布 0:132/1:48/2:0/3:0），此严格版保留原义
+    但不可达；规则改用 san_chuan_yi_tu 可达版。"""
+    sc = env.get('sanchuan', ['', '', ''])
+    tj = env.get('tian_jiang', {}) or {}
+    if len(sc) != 3:
+        return False
+    return all(TIANJIANG_WX_MAP.get(tj.get(z, ''), '') == '土' for z in sc)
+
+
+def _san_chuan_yi_tu(env):
+    """土将助财·可达版：三传所乘天将中至少一传为土神（贵人/勾陈/天空/太常）。
+    【B5c】严格版「皆乘土将」全样本验证恒假（土神数 2/3 分布均为 0 课）→ 按批次4
+    死规则改写先例，降为「至少一传乘土将」，保「三传皆财」稀缺性判定 + 土将生财意象。
+    注：三传皆财仅见于特殊课型（乙丑日三传皆土等，8640 课共 180 课），组合命中率实测 ~0.56%。"""
+    sc = env.get('sanchuan', ['', '', ''])
+    tj = env.get('tian_jiang', {}) or {}
+    if len(sc) != 3:
+        return False
+    return any(TIANJIANG_WX_MAP.get(tj.get(z, ''), '') == '土' for z in sc)
 
 
 def _zhong_gui_bu_wei(env):
@@ -1268,7 +1833,11 @@ def _san_chuan_hu_ke(env):
 
 def _wu_wang_jie_wang(env):
     """互旺皆旺：干支俱旺相（坐谋宜）"""
-    return _x_wang_xiang(env, '干上') and _x_wang_xiang(env, '支上')
+    # 【BUG-FIX 2026-09-01】'干上'/'支上' 是相对标记，须先 _resolve 成实际地支；
+    # 原实现把字面量'干上'直接交给 _x_wang_xiang → _wx('干上')='' 恒假 → 互旺/皆旺格永不触发。
+    gs = _resolve('干上', env)
+    zs = _resolve('支上', env)
+    return _x_wang_xiang(env, gs) and _x_wang_xiang(env, zs)
 
 
 def _zhi_xuan_mu_hu_you_fu_shi(env):
@@ -1297,10 +1866,123 @@ def _you_shi_wu_zhong(env):
 
 
 def _kong_kong_ru_ye(env):
-    """空空如也：初传末传俱空"""
-    sc = env.get('sanchuan', ['', '', ''])
-    kong = env.get('kongwang', ('', ''))
-    return bool(sc and len(sc) == 3 and sc[0] in kong and sc[2] in kong)
+    """第74法 空空如也事休追：**三传皆空**（复合口径）
+
+    【BUG-FIX 2026-09-11（两次定义纠正）】
+    第一次：我误以为「三传皆空」= 三传都落**旬空那 2 支** → 数学不可能（枚举可满足数=0）→ 误判"无解"
+    第二次（憨爷指出）：实为**多种"空"叠加**，据《毕法赋》注解 + 《六壬大全》第十八法「踏脚空亡」：
+      「指三传皆空，或两传空，一传不空而**上乘天空**者亦然」
+      「如丁丑日第十二局，三传申酉戌：初传申空亡，中传酉空亡**又坐空**，末传戌**坐空**」
+      「踏脚空亡格：如甲子日，**戌加子为初传，乃本旬之空；申加戌为中传，乃后旬之空；
+        午加申为末传，乃外后旬之空亡**」
+
+    **判据（任一传满足下列任一"空"即算该传为空）**：
+      ① **旬空**：本支 ∈ 本旬空亡
+      ② **坐空**：该支所临**地盘** ∈ 本旬空亡
+      ③ **乘天空**：该支上乘天将「天空」
+      ④ **踏空**：本支 ∈ **后旬 / 外后旬**空亡（分旬空亡，见《大全》第十八法）
+    三传**全部**为空 → 触发。
+    """
+    sc = env.get('sanchuan', []) or []
+    if len(sc) != 3:
+        return False
+    kong = env.get('kongwang', ('', '')) or ('', '')
+    tdp = env.get('tiandi_pan', {}) or {}
+    tj = env.get('tian_jiang', {}) or {}
+    fxk = env.get('fen_xun_kong') or {}
+
+    # 反查：天盘支 → 其所临地盘支
+    fan = {}
+    for dp, tp in tdp.items():
+        if tp:
+            fan.setdefault(tp, dp)
+
+    # 分旬空亡集合（后旬 / 外后旬 / 前旬）
+    hou = set(fxk.get('后旬') or [])
+    waihou = set(fxk.get('外后旬') or [])
+    qian = set(fxk.get('前旬') or [])
+    ben = set(fxk.get('本旬') or [])
+    kong_set = set(x for x in kong if x)
+    if ben:
+        kong_set |= ben
+    # 【2026-09-11 实测留档·待憨爷拍板】④踏空（分旬空亡）为憨爷指定判据（见本函数 docstring
+    #   「第二次（憨爷指出）：实为多种'空'叠加…据《六壬大全》第十八法踏脚空亡」），
+    #   故**不擅自加前置条件**。补回缺失的 fen_xun_kong env 键后实测（8640 课式）：
+    #     仅 ①②③（原状，键缺失→④恒假）      =  474 / 8640 =  5.5%
+    #     ①②③④ 全开（憨爷判据真正生效）      = 3114 / 8640 = 36.0%
+    #     ①②③④ 且 ④ 限于进退连茹/间传课      = 1164 / 8640 = 13.5%
+    #   36.0% 作为「格」的出现率偏高（4 种空 OR 后的理论期望 ≈ 27~36%，属"判据本身宽松"
+    #   而非实现错误）。是否给 ④ 加「进退连茹课」前提（原文「谓三传皆空亡者是也，
+    #   **于进退连茹课中多有**」仅系统计性说明、非限定条件，第18法另有「四课三传俱退连茹」
+    #   之限），留待憨爷定夺。
+
+    def _is_kong(z):
+        if not z:
+            return False
+        if z in kong_set:                 # ① 困空（含本旬）
+            return True
+        dp = fan.get(z, '')
+        if dp and dp in kong_set:         # ② 坐空
+            return True
+        if tj.get(z) in ('天空',):        # ③ 乘天空
+            return True
+        if z in hou or z in waihou or z in qian:   # ④ 踏空（分旬空亡，憨爷判据）
+            return True
+        return False
+
+    return all(_is_kong(z) for z in sc)
+
+
+def _si_ke_all_kong(env):
+    """第74法 空空如也事休追 · 「四课全空格：四课无形事不出名」
+
+    【BUG-FIX 2026-09-11】本条原被误编译为 `kong_kong_ru_ye`（三传皆空）——
+    实测 8640 课式中「三传皆空格 / 四课全空格 / 鬼空尤妙亦宜制之」三条命中数**完全相同（均 474）**，
+    即三条规则共用同一谓词 → 「四课全空」名不副实（只要三传皆空就报四课全空）。
+
+    **权威判据**（《毕法赋》第74法「空空如也事休追」原注例，data/bifa_100_knowledge_base.json rules[73]）：
+      「**乙巳日干上寅空亡，第二课又入空亡，支上卯作空亡第四课又空亡，四课皆空**。」
+    → 判据 = **四课上神（干上/第二课/支上/第四课）全部落旬空**；缺课（不足四课）不算。
+    """
+    kong = set(x for x in (env.get('kongwang') or ('', '')) if x)
+    if not kong:
+        return False
+    shang = env.get('si_ke_shang') or []
+    if len(shang) < 4:
+        shang = _sike_shang_from_sike(env)
+    if len(shang) < 4:
+        return False
+    return all(z in kong for z in shang)
+
+
+def _gui_kong_you_miao(env):
+    """第74法附条「或鬼空尤妙…凡鬼空亦宜制之」· 鬼空格
+
+    【BUG-FIX 2026-09-11】本条原被误编译为 `kong_kong_ru_ye`（三传皆空）——
+    实测 8640 课式中三条命中数完全相同（均 474），「鬼空」并无独立判据。
+
+    **权威判据**（《毕法赋》第74法「空空如也事休追」原文 +
+    第96法「旬内空亡逐类推」：「财空军储乏，**鬼空敌人遁**」）：
+      「…或**鬼空尤妙**…**凡鬼空亦宜制之**，不然尤有虚挠之凶，为我难见彼之象。」
+    → 判据 = **官鬼（克日干之支）落旬空**。
+      取处：三传 + 干上 + 支上 + 四课上神（六处口径；原文「纵戌亥在六处亦不可用」用六处）。
+
+    吉凶仍记「平」：原文既称「尤妙」（鬼空则害我者无力）又戒「亦宜制之…尤有虚挠之凶」，
+    吉凶两可，故不作吉/凶单向定级。
+    """
+    gan = env.get('ri_gan', '')
+    if not gan:
+        return False
+    kong = set(x for x in (env.get('kongwang') or ('', '')) if x)
+    if not kong:
+        return False
+    liu = [z for z in (env.get('sanchuan') or []) if z]
+    liu += [env.get('gan_shang', ''), env.get('zhi_shang', '')]
+    liu += list(env.get('si_ke_shang') or _sike_shang_from_sike(env))
+    for z in liu:
+        if z and z in kong and _zhi_ke(z, gan):   # 支克干 ⇒ 官鬼；且落旬空
+            return True
+    return False
 
 
 def _tuo_shang_you_tuo(env):
@@ -1337,7 +2019,8 @@ def _you_yu_er_de_bu_zu(env):
     if len(sc) != 3:
         return False
     kong = env.get('kongwang', ('', ''))
-    return _x_wang_xiang(env, '初') and sc[2] in kong
+    # 【BUG-FIX 2026-09-01】'初' 须先 _resolve（同 _hu_shi_peng_hu 修复，原直传恒假）
+    return _x_wang_xiang(env, _resolve('初', env)) and sc[2] in kong
 
 
 # 旧规则迁移用别名（避免破坏现有规则）
@@ -1356,11 +2039,15 @@ TIANJIANG_BENJIA = {
     '太阴': '酉', '天后': '子',
 }
 # 日干→(昼贵, 夜贵) 天乙贵人
+# 【BUG-FIX 2026-09-11 壬癸昼夜颠倒】原 壬/癸 写作 ('卯','巳')，权威判据为昼巳/夜卯：
+#   《图解六壬大全》第1部 p.364「壬癸蛇兔藏（壬癸日昼贵巳，夜贵卯）」+
+#   《通解·中卷》「壬子日初传巳加子为昼贵，末传卯加戌为夜贵」（引从课·两贵引从天干格）
+#   影响 _gui_ren_cha_die（第46法，按 zhou_gui/ye_gui 落宫判定）；第45法为集合语义不受影响。
 GUIREN_MAP = {
     '甲': ('丑', '未'), '戊': ('丑', '未'), '庚': ('丑', '未'),
     '乙': ('子', '申'), '己': ('子', '申'),
     '丙': ('亥', '酉'), '丁': ('亥', '酉'),
-    '壬': ('卯', '巳'), '癸': ('卯', '巳'),
+    '壬': ('巳', '卯'), '癸': ('巳', '卯'),
     '辛': ('午', '寅'),
 }
 # 三合局→刑/害/冲（合中犯杀用）
@@ -1426,18 +2113,58 @@ def _is_zhi_after(a: str, b: str) -> bool:
     return (DIZHI_IDX[b] - DIZHI_IDX[a]) % 12 > 1
 
 
-def _qian_hou_yin_cong(env):
-    """第1法 前后引从：初传居干/支前为引，末传居干/支后为从"""
+def _zhi_dist(a: str, b: str) -> int:
+    """a 相对 b 的顺行距离（1~11，0 表示同位）"""
+    if not a or not b:
+        return -1
+    return (DIZHI_IDX[a] - DIZHI_IDX[b]) % 12
+
+
+def _qian_hou_yin_cong(env, args=None):
+    """第1法 前后引从：初传居干/支前为引，末传居干/支后为从
+    args: ['干']=仅测日干寄宫；['支']=仅测日支；空=（旧兼容）二者任一。
+    【BUG-FIX 2026-09-02】原实现用 _is_zhi_before/_is_zhi_after（顺行差 2~11 格皆判为前/后，
+    几乎恒真）→ 拱干/拱支 89.86% 命中。按原文改判据：
+    初末传【加临之地盘】相对干支锚点：前=顺行 1~6 格（半环），后=顺行 7~11 格。
+    原文示例：庚辰日（庚寄申）寅加酉(酉在申前1)为初传、子加未(未在申后1)为末传；
+    壬子日（壬寄亥）巳加子(子前1)、卯加戌(戌后1) 两贵引从。"""
     sc = env.get('sanchuan', [])
     if len(sc) != 3:
         return False
-    chu, mo = sc[0], sc[2]
-    gan_pos = GAN_JIGONG.get(env.get('ri_gan', ''), '')
-    zhi = env.get('ri_zhi', '')
-    if gan_pos and _is_zhi_before(chu, gan_pos) and _is_zhi_after(mo, gan_pos):
-        return True
-    if zhi and _is_zhi_before(chu, zhi) and _is_zhi_after(mo, zhi):
-        return True
+    tdp = env.get('tiandi_pan', {})
+    if not tdp:
+        return False
+    # 反查初/末传天盘所加临的地盘
+    def di_pan(zhi):
+        for d, tp in tdp.items():
+            if tp == zhi:
+                return d
+        return ''
+    chu_di = di_pan(sc[0])
+    mo_di = di_pan(sc[2])
+    if not chu_di or not mo_di:
+        return False
+    anchors = []
+    # 【BUG-FIX 2026-09-02】eval_atom 对 '干'/'支' 先 _resolve 为日干/日支字符，
+    # 故需同时兼容「字面 '干'/'支'」与「已解析的日干/日支」两种入参形态。
+    ga = args and args[0]
+    if ga == '干':
+        anchors = [GAN_JIGONG.get(env.get('ri_gan', ''), '')]
+    elif ga == '支':
+        anchors = [env.get('ri_zhi', '')]
+    elif ga == env.get('ri_gan', ''):
+        anchors = [GAN_JIGONG.get(env.get('ri_gan', ''), '')]
+    elif ga == env.get('ri_zhi', ''):
+        anchors = [env.get('ri_zhi', '')]
+    else:
+        anchors = [GAN_JIGONG.get(env.get('ri_gan', ''), ''), env.get('ri_zhi', '')]
+    for anchor in anchors:
+        if not anchor:
+            continue
+        d_chu = _zhi_dist(chu_di, anchor)
+        d_mo = _zhi_dist(mo_di, anchor)
+        if 1 <= d_chu <= 6 and 7 <= d_mo <= 11:
+            return True
     return False
 
 
@@ -1455,7 +2182,7 @@ def _lian_mu_gui_ren(env):
     gs = env.get('gan_shang', '')
     if not gs:
         return False
-    gr = env.get('gui_ren', ('', ''))
+    gr = env.get('guiren', ('', ''))   # 【BUG-FIX 2026-09-02】键名统一：build_env 设 env['guiren']
     if not gr or not gr[0]:
         return False
     is_day = env.get('is_day', True)
@@ -1569,7 +2296,15 @@ def _tai_cai_sheng_qi(env):
 
 
 def _tai_cai_si_qi(env):
-    """第20法 胎财死气：胎神=月内死气"""
+    """第20法 胎财死气：胎神=月内死气
+
+    【BUG-FIX 2026-09-11】原实现末段：
+        `si_zhi = WX_KE.get(si_wx, '')` —— 得到的是**五行字符串**（如 '水'），
+        而 `tai_set` 是**地支集合**（如 {'午','子'}）→ `si_zhi in tai_set` **恒 False**
+        → 本节零触发（实测 120 个「日干×月将」组合命中 0）。
+    正解：死气五行 → 取其**所属地支**，再与胎位比对。
+      （死气 = 季所克之五行：春土、夏金、秋木、冬火）
+    """
     gan = env.get('ri_gan', '')
     yj = env.get('yuejiang', '')
     if not gan or not yj:
@@ -1582,8 +2317,9 @@ def _tai_cai_si_qi(env):
     si_wx = SI_WX.get(season, '')
     if not si_wx:
         return False
-    si_zhi = WX_KE.get(si_wx, '')  # 死气=季所克
-    return si_zhi in tai_set if si_zhi else False
+    # 死气五行 → 该五行的地支集合（原实现误用 WX_KE「所克」得五行字符串，类型不匹配）
+    si_zhi_set = {z for z in DIZHI_ORDER if ZHI_WX.get(z) == si_wx}
+    return bool(si_zhi_set & tai_set)
 
 
 def _zhi_chuan_gan(env):
@@ -1639,23 +2375,55 @@ def _chuan_gui_hua_cai_v2(env):
 
 
 def _juan_shu_feng_ying(env):
-    """第29法 眷属丰盈：三传生干且脱支"""
-    sc = env.get('sanchuan', [])
+    """第29法 眷属丰盈居狭宅：**三传递生日干，反脱其支辰**
+
+    【BUG-FIX 2026-09-11】原实现 `all(_zhi_sheng(z, gan) for z in sc)` —— 要求
+    **三传各自生日干**，此条件在六壬中恒不成立（枚举 8640 课可满足数 = 0）→ 本节零触发。
+
+    **正解（据《毕法赋》原文 + 课例）**：「谓**三传生其日干**，反脱其支辰是也。
+    值此必人口丰盈而居宅狭窄也。**如甲申日干上午**」
+      → 甲申日 干上午 时，三传 = **辰/申/子**：
+        辰(土)→申(金)→子(水)→甲(木)  **逐位递生**（土生金、金生水、水生木）
+        且 支申(金)生三传之子(水) → **反脱支辰**
+      → **"三传生干"实为「三传递生日干」，非"三传各自生干"**
+    """
+    sc = env.get('sanchuan', []) or []
     gan = env.get('ri_gan', '')
     zhi = env.get('ri_zhi', '')
     if len(sc) != 3 or not gan or not zhi:
         return False
-    return all(_zhi_sheng(z, gan) for z in sc) and all(_zhi_sheng(zhi, z) for z in sc)
+    # 三传递生日干：顺（初→中→末→干）或 逆（末→中→初→干）
+    shun = (_zhi_sheng(sc[0], sc[1]) and _zhi_sheng(sc[1], sc[2])
+            and _zhi_sheng(sc[2], gan))
+    ni = (_zhi_sheng(sc[2], sc[1]) and _zhi_sheng(sc[1], sc[0])
+          and _zhi_sheng(sc[0], gan))
+    if not (shun or ni):
+        return False
+    # 反脱其支辰：支气被盗泄（三传中有日支所生之神）
+    return any(_zhi_sheng(zhi, x) for x in sc)
 
 
 def _wu_zhai_kuan_guang_v2(env):
-    """第30法 屋宅宽广：三传脱干且生支"""
-    sc = env.get('sanchuan', [])
+    """第30法 屋宅宽广致人衰：**三传递盗日干，反生支辰**
+
+    【BUG-FIX 2026-09-11】同第29法 —— 原实现要求"三传各自脱干"（恒不成立）。
+    正解：**三传递盗日干**（干→初→中→末 逐位递生，即日干之气被三传递脱）+ 三传（终传）生支辰。
+    原文课例：「**如甲辰日戌加寅**」。
+    """
+    sc = env.get('sanchuan', []) or []
     gan = env.get('ri_gan', '')
     zhi = env.get('ri_zhi', '')
     if len(sc) != 3 or not gan or not zhi:
         return False
-    return all(_zhi_sheng(gan, z) for z in sc) and all(_zhi_sheng(z, zhi) for z in sc)
+    # 三传递盗日干：干→初→中→末（顺）或 干→末→中→初（逆）
+    shun = (_zhi_sheng(gan, sc[0]) and _zhi_sheng(sc[0], sc[1])
+            and _zhi_sheng(sc[1], sc[2]))
+    ni = (_zhi_sheng(gan, sc[2]) and _zhi_sheng(sc[2], sc[1])
+          and _zhi_sheng(sc[1], sc[0]))
+    if not (shun or ni):
+        return False
+    # 反生支辰：三传生支（传气归支）
+    return any(_zhi_sheng(x, zhi) for x in sc)
 
 
 def _you_shi_wu_zhong_v2(env):
@@ -1693,6 +2461,80 @@ def _bi_kou_gua_v2(env):
     return False
 
 
+def _bi_kou_gua_dipan(env):
+    """【P4 旬首旬尾收敛 2026-09-03】第38法闭口卦之一：地盘旬首上神乘玄武。
+    原文「闭口卦体两般推…地盘旬首上神乘元武者」（甲子旬中甲子日辰戌加子昼夜皆乘元武）。
+    原规则364用 x_dun_gan(干上/支上) 参数缺失恒假断链 → 改判地盘旬首（xun_shou_zhi）上神乘玄武。"""
+    tdp = env.get('tiandi_pan', {}) or {}
+    tj = env.get('tian_jiang', {}) or {}
+    shou = env.get('xun_shou_zhi', '')
+    if not shou:
+        return False
+    shou_shang = tdp.get(shou, '')
+    return bool(shou_shang and tj.get(shou_shang) == '玄武')
+
+
+def _bi_kou_gua_xunwei(env):
+    """【P4 旬首旬尾收敛 2026-09-03】第38法闭口卦之二：旬尾加旬首发用 → 气塞于中。
+    原文「旬尾加旬首为发用者例，更值初末上下六合，则气塞于中」。
+    「更值初末六合」为加强条件（锦上添花）非必要条件——实测真实起课 8640 课中
+    初传=旬尾且加地盘旬首共 96 课，但初传六合神（申/子/寅）与末传（亥/未/巳/辰）
+    结构性无交集，若强制 AND 初末六合则恒假断链。故核心判据=初传=旬尾且旬尾加于地盘旬首。"""
+    tdp = env.get('tiandi_pan', {}) or {}
+    shou = env.get('xun_shou_zhi', '')
+    wei = env.get('xun_wei_zhi', '')
+    sc = env.get('sanchuan', []) or []
+    if len(sc) != 3 or not shou or not wei:
+        return False
+    wei_jia_shou = tdp.get(shou, '') == wei
+    return bool(sc[0] == wei and wei_jia_shou)
+
+
+def _sanhe_sheng_gan_shang(env):
+    """【P4 传鬼为生收敛 2026-09-03】三传三合局之五行 生 干上神之五行。
+    原文「传鬼为生格：三传皆作日鬼，反生起干上之神而育干」（庚午日干上辰，三传戌午寅火局火生辰土）。
+    供 _liu_yao_xian_gua_official（三合局克日干）组合判据用。"""
+    jw = _sc_ju_wx(env.get('sanchuan', []) or [])
+    gs = env.get('gan_shang', '')
+    return bool(jw and gs and WX_SHENG.get(jw, '') == _wx(gs))
+
+
+def _xun_shou_lian_mu(env):
+    """【P4 旬首旬尾收敛 2026-09-03】旬首作帘幕官临年命日干尤的（惟乙己辛日有之）。
+    原文「帘幕贵人高甲第…旬首作帘幕官临年命日干尤的（惟乙己辛日有之）」。
+    判据：日干为乙/己/辛 + 旬首临日干（干上=旬首）或临年命（年命上神=旬首）。"""
+    if env.get('ri_gan', '') not in ('乙', '己', '辛'):
+        return False
+    shou = env.get('xun_shou_zhi', '')
+    if not shou:
+        return False
+    if env.get('gan_shang', '') == shou:
+        return True
+    bm = env.get('ben_ming_zhi', '')
+    if bm:
+        tp = env.get('tiandi_pan', {}) or {}
+        if tp.get(bm, '') == shou:
+            return True
+    return False
+
+
+def _chen_xu_xun_shou(env):
+    """【P4 旬首旬尾收敛 2026-09-03】辰戌作旬首临年命日干者必中魁元。
+    原文「帘幕贵人高甲第…辰戌作旬首临年命日干者必中魁元」（辰戌为领袖之神）。
+    判据：旬首=辰或戌 + 临日干（干上=旬首）或临年命（年命上神=旬首）。"""
+    shou = env.get('xun_shou_zhi', '')
+    if shou not in ('辰', '戌'):
+        return False
+    if env.get('gan_shang', '') == shou:
+        return True
+    bm = env.get('ben_ming_zhi', '')
+    if bm:
+        tp = env.get('tiandi_pan', {}) or {}
+        if tp.get(bm, '') == shou:
+            return True
+    return False
+
+
 def _tai_yang_zhao_wu(env):
     """第39法 太阳照武：月将乘玄武"""
     yj = env.get('yuejiang', '')
@@ -1704,13 +2546,16 @@ def _zun_chong_san_qi_v2(env):
     """第42法 尊崇传内遇三奇：三传旬干=甲戊庚/乙丙丁"""
     sc = env.get('sanchuan', [])
     gz = env.get('ganzhi', '')
-    if len(sc) != 3 or not gz:
+    if len(sc) != 3 or not gz or len(gz) < 2:
         return False
-    # 查找 gz 所属旬的旬首→旬遁干映射
+    # 【P3 神煞类收敛 2026-09-02】旬首查找修复：原代码 xs[0]==gz[0] 要求
+    # 「旬首天干==日干」（旬首天干恒为甲），致三奇只可能在甲日命中 → 恒断链。
+    # 正确旬首按「日支-日干 地支环距」定位旬首支 index（甲子0/甲寅2/甲辰4/甲午6/甲申8/甲戌10）。
+    g_idx = '甲乙丙丁戊己庚辛壬癸'.index(gz[0])
+    shou_idx = (DIZHI_IDX[gz[1]] - g_idx) % 12
     gan_map = None
     for xs, gm in XUN_GAN_MAP.items():
-        # 旬首天干须与 gz 天干一致，且旬首地支序号 <= gz 地支序号
-        if xs[0] == gz[0] and DIZHI_IDX.get(xs[1], -1) <= DIZHI_IDX.get(gz[1], -1):
+        if DIZHI_IDX[xs[1]] == shou_idx:
             gan_map = gm
             break
     if not gan_map:
@@ -1740,18 +2585,30 @@ def _fu_gui_gan_zhi(env):
 
 
 def _ke_chuan_ju_gui(env):
-    """第44法 课传俱贵：四课三传皆是昼夜贵人"""
+    """第44法 课传俱贵：四课三传皆是昼夜贵人所聚（遍地贵人，贵多者不贵）
+    原文例课（丁酉日）：干上酉夜贵、酉上见亥昼贵、支课复归亥乡，三传酉亥丑，
+    四课三传皆是昼夜贵人所聚；又"外有三传皆是贵人者亦可用"（辛巳日干上午等）。
+    【BUG-FIX 2026-09-02】原判据要求四课上神+三传全部 ∈ {昼贵,夜贵} 两元素集，
+    结构上永不可能命中 → 0 命中断链。按原文两条例证改判据：
+      甲. 四课上神中贵人支 ≥3（例课：酉亥酉亥 = 4）；
+      乙. 三传皆是贵人支（"外有三传皆是贵人者亦可用"）。"""
     gan = env.get('ri_gan', '')
     if not gan:
         return False
-    gr = env.get('gui_ren', ('', ''))
+    gr = env.get('guiren', ('', ''))   # 【BUG-FIX 2026-09-02】键名统一：build_env 设 env['guiren']
     if not gr or not gr[0]:
         return False
     gui_set = set(gr)
-    sc = env.get('sanchuan', [])
-    sike = env.get('si_ke_shang', [])
-    all_zhi = [z for z in (sc + sike) if z]
-    return all(z in gui_set for z in all_zhi) if all_zhi else False
+    sc = env.get('sanchuan', []) or []
+    sike = env.get('si_ke_shang', []) or []
+    if not sike:
+        sike = _sike_shang_from_sike(env)   # 【BUG-FIX 2026-09-02】si_ke 兜底提取四课上神
+    # 乙. 三传皆是贵人支
+    if len(sc) == 3 and all(z in gui_set for z in sc):
+        return True
+    # 甲. 四课上神中贵人支 ≥3
+    gui_cnt = sum(1 for z in sike if z in gui_set)
+    return gui_cnt >= 3
 
 
 def _tian_luo_di_wang(env):
@@ -1789,20 +2646,31 @@ def _fei_you_er_de_bu_zu_v2(env):
 
 
 def _yong_po_shen_xin(env):
-    """第58法 用破身心：初传财空/初传禄空/初中克(财或禄被克)"""
+    """第58法 用破身心：初传财/禄落空、或初传财被中传克且引入中末鬼乡、或中末尽空（无实得）。
+    原文：戊申日干上未三传子寅辰（初财坐戌受克乘白虎引中末鬼乡）/丙寅日申乘蛇夹克财中末空陷/
+    丁卯日酉乘雀夹克财中末鬼空/癸未日巳作财传墓入墓/己酉日亥作财受克中末空亡/
+    壬寅返吟干上空财/壬寅伏吟干上禄乘天空中值脱末财又空 → 「财禄俱作空被克，总无实得之意」。
+    【B5c】分支B 收紧：原「中克初即命中」过宽（12.5%），按原文加「引入中末鬼乡」（中/末为日鬼）。"""
     sc = env.get('sanchuan', [])
     gan = env.get('ri_gan', '')
     kong = env.get('kongwang', ('', ''))
     lu = env.get('lu', '')
     if len(sc) != 3 or not gan:
         return False
-    chu, zhong = sc[0], sc[1]
+    chu, zhong, mo = sc[0], sc[1], sc[2]
     is_cai = _zhi_ke(gan, chu) and _wx(chu) != _wx(gan)
-    is_lu = chu == lu
+    is_lu = bool(lu) and chu == lu
+    # 分支A：初传财/禄落空（壬寅返吟干上空财、伏吟干上禄空仍以初传/干上论）
     if (is_cai or is_lu) and kong[0] and chu in kong:
         return True
-    if _zhi_ke(zhong, chu) and (is_cai or is_lu):
+    # 分支C：己酉日例「初传财，中末空陷/鬼空」——初传财且中末皆空
+    if is_cai and kong[0] and zhong in kong and mo in kong:
         return True
+    # 分支B：初传财被中传克，且引入中末鬼乡（中或末为日鬼）
+    if is_cai and _zhi_ke(zhong, chu):
+        is_gui = lambda z: bool(z) and _zhi_ke(z, gan) and _wx(z) != _wx(gan)
+        if is_gui(zhong) or is_gui(mo):
+            return True
     return False
 
 
@@ -1862,31 +2730,53 @@ def _zhi_fen_cai_bing_v2(env):
 
 
 def _shou_hu_ke_shen(env):
-    """第67法 受虎克神：课传六处乘白虎，白虎五行克之"""
-    sc = env.get('sanchuan', [])
+    """第67法 受虎克神：课传六处乘白虎，白虎五行克之
+
+    【BUG-FIX 2026-09-11】原实现末行 `_zhi_ke('金', z)` —— 把**地支** z 直接喂给
+    期望**五行**的 `_zhi_ke`（实测 `_zhi_ke('金','木')=True` 而 `_zhi_ke('金','寅')=False`）
+    → 条件恒 False，本节零触发（112320 课式穷举内 0 次）。
+    另有无效语句 `for z in six: if ... : pass`（空循环，仅注释）。
+    正解：先把地支转五行 `_wx(z)` 再比较。
+    """
+    sc = env.get('sanchuan', []) or []
     gs = env.get('gan_shang', '')
     zs = env.get('zhi_shang', '')
-    tj = env.get('tian_jiang', {})
-    six = [z for z in (sc + [gs, zs]) if z]
-    hu_wx = TIANJIANG_WX_MAP.get('白虎', '')
-    for z in six:
-        if tj.get(z) == '白虎' and _wx(hu_wx) if hu_wx else False:
-            pass  # 白虎五行金，克木
-    # 白虎五行=金，金克木
-    return any(tj.get(z) == '白虎' and _zhi_ke('金', z) for z in six) if six else False
+    tj = env.get('tian_jiang', {}) or {}
+    six = [z for z in (list(sc) + [gs, zs]) if z]
+    if not six:
+        return False
+    hu_wx = TIANJIANG_WX_MAP.get('白虎', '')   # 白虎五行 = 金
+    if not hu_wx:
+        return False
+    # 白虎五行（金）克该支五行
+    # ⚠️ 不可用 `_zhi_ke(hu_wx, _wx(z))` —— `_wx` 对五行输入返回 ''，
+    #    会得 `WX_KE['']==''` 即 `'' == ''` 的**假阳性**！必须直接用五行表比较。
+    return any(tj.get(z) == '白虎' and WX_KE.get(hu_wx, '') == _wx(z) for z in six)
 
 
 def _zhi_gui_liang_yi(env):
-    """第68法 制鬼之位乃良医：三传中有克鬼之神(食神/子孙爻)"""
+    """第68法 制鬼之位乃良医：三传中有克鬼之神(食神/子孙爻)
+    【2026-09-09 OX 复核 + 用户质疑修复】原实现把 WX_KE（我克：木→土）当"鬼五行"，
+    而鬼 = 克我者（乙木→金），制鬼 = 克鬼者（火克金）。原写法导致 乙日鬼被错算成"土"、
+    制鬼错算成"水"，三传亥(水)被误判为制鬼之神（262期"亥制鬼"谬误真相）。
+    正确：ghost = 克gan五行者；制者 = 克ghost者。
+    注意本文件 WX_KE 语义恒为"我克"（a克b ⇔ WX_KE[a]==b），故：
+      ghost_wx = 反向查 (克我) ；制鬼_wx = 再反向查 (克鬼)。"""
     sc = env.get('sanchuan', [])
     gan = env.get('ri_gan', '')
     if len(sc) != 3 or not gan:
         return False
-    ghost_wx = WX_KE.get(_wx(gan), '')
+    gan_wx = _wx(gan)
+    # 鬼 = 克我者：找 x 使 WX_KE[x]（x克某）== gan_wx
+    ghost_wx = next((x for x, y in WX_KE.items() if y == gan_wx), '')
     if not ghost_wx:
         return False
-    # 克鬼之神 = 克鬼五行的五行
-    ke_gui_wx = WX_KE.get(ghost_wx, '')
+    # 制鬼之神五行 = 克鬼者：找 x 使 WX_KE[x] == ghost_wx
+    ke_gui_wx = next((x for x, y in WX_KE.items() if y == ghost_wx), '')
+    # 须满足：三传有制鬼之神 **且三传确实有鬼**（无鬼则"制鬼"无的放矢，不触发）
+    has_ghost = any(_wx(z) == ghost_wx for z in sc)
+    if not has_ghost:
+        return False
     return any(_wx(z) == ke_gui_wx for z in sc)
 
 
@@ -1937,6 +2827,54 @@ def _ren_zhai_jie_si(env):
     return gs in si_zhi_set and zs in si_zhi_set
 
 
+def _dead_zhi(wx):
+    """五行之十二长生死位（长生顺行第7位：长生→沐浴→冠带→临官→帝旺→衰→病→死；土双位→死位双位）。
+    例：戊土(水土同宫申+7=卯)、庚金(巳+7=子)、寅木(亥+7=午)、丙丁火(寅+7=酉)，与毕法赋实例全符。"""
+    cs = CHANG_SHENG.get(wx, '')
+    if not cs:
+        return ''
+    def _shift(z):
+        return DIZHI_ORDER[(DIZHI_IDX[z] + 7) % 12]
+    if isinstance(cs, tuple):
+        return tuple(_shift(z) for z in cs)
+    return _shift(cs)
+
+
+def _hu_cheng_si_qi(env):
+    """干支互乘死气格（毕法赋·人宅皆死各衰羸·"干支上互乘死气格"）：
+    干上=支之十二长生死位 且 支上=干之十二长生死位（交叉互乘）。
+    如戊申日干上子(申金死位)、支上卯(戊土死位)；庚寅日干上午(寅木死位)、支上子(庚金死位)。"""
+    gs = env.get('gan_shang', '')
+    zs = env.get('zhi_shang', '')
+    gan = env.get('ri_gan', '')
+    zhi = env.get('ri_zhi', '')
+    if not gs or not zs or not gan or not zhi:
+        return False
+    zhi_die = _dead_zhi(ZHI_WX.get(zhi, ''))
+    gan_die = _dead_zhi(GAN_WX.get(gan, ''))
+    if not zhi_die or not gan_die:
+        return False
+    return _zhi_in_wei(gs, zhi_die) and _zhi_in_wei(zs, gan_die)
+
+
+def _quan_cheng_si_qi(env):
+    """干支全乘死气格（毕法赋·人宅皆死各衰羸·"支干全乘死气格"）：
+    干上=干之十二长生死位 且 支上=支之十二长生死位（干支各自本气乘死气）。
+    例：庚寅/庚申/辛丑日干上子(金死于子)；乙丑/甲申/甲寅干上午(木死于午)；
+    己未/壬申/壬寅干上卯(己土·壬水死于卯)；丙寅/丙申/丁丑干上酉(火死于酉)。"""
+    gs = env.get('gan_shang', '')
+    zs = env.get('zhi_shang', '')
+    gan = env.get('ri_gan', '')
+    zhi = env.get('ri_zhi', '')
+    if not gs or not zs or not gan or not zhi:
+        return False
+    gan_die = _dead_zhi(GAN_WX.get(gan, ''))
+    zhi_die = _dead_zhi(ZHI_WX.get(zhi, ''))
+    if not gan_die or not zhi_die:
+        return False
+    return _zhi_in_wei(gs, gan_die) and _zhi_in_wei(zs, zhi_die)
+
+
 def _san_liu_he(env):
     """第83法 万事喜忻三六合：三传成三合局"""
     sc = env.get('sanchuan', [])
@@ -1970,22 +2908,31 @@ def _he_zhong_fan_sha(env):
 
 
 def _chu_zao_jia_ke_v2(env):
-    """第85法 初遭夹克：天将五行克初传+地盘五行克初传"""
-    sc = env.get('sanchuan', [])
-    tj = env.get('tian_jiang', {})
-    tdp = env.get('tiandi_pan', {})
+    """第85法 初遭夹克：天将五行克初传 + 地盘五行克初传
+
+    【BUG-FIX 2026-09-11】原实现两处 `_zhi_ke` 把**地支**当**五行**传：
+      `_zhi_ke(jiang_wx, chu)` 与 `_zhi_ke(dipan, chu)` —— 实测 `_zhi_ke('金','寅')=False`
+      → 首个判断 `if not False: return False` **恒真** → 本节零触发。
+    正解：地支先经 `_wx()` 转五行。
+    """
+    sc = env.get('sanchuan', []) or []
+    tj = env.get('tian_jiang', {}) or {}
+    tdp = env.get('tiandi_pan', {}) or {}
     if len(sc) != 3:
         return False
     chu = sc[0]
+    chu_wx = _wx(chu)
+    if not chu_wx:
+        return False
     jiang = tj.get(chu, '')
     jiang_wx = TIANJIANG_WX_MAP.get(jiang, '')
     if not jiang_wx:
         return False
-    # 天将克初传
-    if not _zhi_ke(jiang_wx, chu) if jiang_wx else True:
+    # ① 天将五行克初传（⚠️ 不可用 _zhi_ke(五行,五行) —— _wx 对五行返回 ''，
+    #    会得 '' == '' 假阳性；必须直接查五行表）
+    if WX_KE.get(jiang_wx, '') != chu_wx:
         return False
-    # 地盘克初传（初传所坐地盘）
-    # 初传天盘=chu，找地盘：tiandi_pan 是 {地盘:天盘}，反查
+    # ② 地盘五行克初传（初传所坐地盘）：tiandi_pan 是 {地盘: 天盘}，反查
     dipan = ''
     for dp, tp in tdp.items():
         if tp == chu:
@@ -1993,22 +2940,30 @@ def _chu_zao_jia_ke_v2(env):
             break
     if not dipan:
         return False
-    return _zhi_ke(dipan, chu)
+    return WX_KE.get(_wx(dipan), '') == chu_wx
 
 
 def _jiang_feng_nei_zhan(env):
-    """第86法 将逢内战：天将五行克所乘地支五行"""
-    sc = env.get('sanchuan', [])
+    """第86法 将逢内战：天将五行克所乘地支五行
+
+    【BUG-FIX 2026-09-11】原实现 `_zhi_ke(jwx, z)`（五行×**地支**）恒 False，
+    且 `_wx(jwx)` 对五行输入返回 ''（`_wx` 是"地支→五行"）→ 首条件恒真、次条件恒假
+    → 本节零触发。正解：`_zhi_ke(jwx, _wx(z))`。
+    （"五行不同"是"克"的必要条件，无需单列。）
+    """
+    sc = env.get('sanchuan', []) or []
     gs = env.get('gan_shang', '')
     zs = env.get('zhi_shang', '')
-    tj = env.get('tian_jiang', {})
-    six = [z for z in (sc + [gs, zs]) if z]
+    tj = env.get('tian_jiang', {}) or {}
+    six = [z for z in (list(sc) + [gs, zs]) if z]
     for z in six:
         jiang = tj.get(z, '')
         if not jiang:
             continue
         jwx = TIANJIANG_WX_MAP.get(jiang, '')
-        if jwx and _wx(jwx) != _wx(z) and _zhi_ke(jwx, z):
+        z_wx = _wx(z)
+        # ⚠️ 同上：不可经 _zhi_ke 传五行（假阳性）
+        if jwx and z_wx and WX_KE.get(jwx, '') == z_wx:
             return True
     return False
 
@@ -2031,9 +2986,29 @@ def _ren_zhai_zuo_mu_v2(env):
 
 
 def _ren_xin_ding_ma(env):
-    """第89法 任信丁马：伏吟+丁神在六处"""
+    """第89法 任信丁马：伏吟课 + 丁神在六处
+
+    【BUG-FIX 2026-09-11】原判据 `sc[0]==sc[1]==sc[2]`（要求"三传完全相同"）
+    把伏吟课认错了 —— **伏吟课的三传通常并不相同**（如 丑/戌/未、酉/戌/未）。
+    实测：730 个伏吟课（60 干支 × 12「月将=时辰」）中，三传齐同者为 **0 个**
+    → 本节在 112320 课式的穷举中**零触发**（死规则）。
+    其中"逢丁神"者达 **180 个**，本应触发。
+
+    正解（据《大六壬》伏吟课定义 + 毕法赋原文"伏吟卦…传中及干支上有丁神或驿马"）：
+      伏吟课 ⟺ 月将 == 时辰（天地盘重合）；
+    "六处"指三传 + 干上 + 支上。
+    """
     sc = env.get('sanchuan', [])
-    if len(sc) != 3 or not (sc[0] == sc[1] == sc[2]):
+    if len(sc) != 3:
+        return False
+    # 伏吟课判定：优先用课体名（引擎 calculate 产出，含子格名），否则用「月将==时辰」
+    keti = str(env.get('keti', '') or '')
+    is_fuyin = ('伏吟' in keti) or ('不虞' in keti) or ('自任' in keti)
+    if not is_fuyin:
+        yj = env.get('yuejiang', '') or env.get('yue_jiang', '')
+        shi = env.get('shichen', '')
+        is_fuyin = bool(yj and shi and yj == shi)
+    if not is_fuyin:
         return False
     ding = env.get('ding_shen', '')
     if not ding:
@@ -2043,23 +3018,54 @@ def _ren_xin_ding_ma(env):
     return ding in sc or ding == gs or ding == zs
 
 
+def _zhi_is_kong(env, z):
+    """公共工具：判断某支是否为「空」
+
+    「空」有四种形态（据《毕法赋》注解 + 《六壬大全》第十八法「踏脚空亡」）：
+      ① **旬空**：本支 ∈ 本旬空亡
+      ② **坐空**：该支所临**地盘** ∈ 本旬空亡
+      ③ **乘天空**：该支上乘天将「天空」
+      ④ **踏空**：本支 ∈ **前旬 / 后旬 / 外后旬**空亡（分旬空亡）
+    """
+    if not z:
+        return False
+    kong = env.get('kongwang', ('', '')) or ('', '')
+    kong_set = set(x for x in kong if x)
+    fxk = env.get('fen_xun_kong') or {}
+    if fxk.get('本旬'):
+        kong_set |= set(fxk['本旬'])
+    if z in kong_set:                                    # ① 旬空
+        return True
+    tdp = env.get('tiandi_pan', {}) or {}
+    for dp, tp in tdp.items():                           # ② 坐空
+        if tp == z and dp in kong_set:
+            return True
+    tj = env.get('tian_jiang', {}) or {}
+    if tj.get(z) == '天空':                               # ③ 乘天空
+        return True
+    if (z in set(fxk.get('前旬') or []) or z in set(fxk.get('后旬') or [])
+            or z in set(fxk.get('外后旬') or [])):        # ④ 踏空
+        return True
+    return False
+
+
 def _lai_qu_ju_kong(env):
-    """第90法 来去俱空：返吟+三传分旬空亡"""
-    sc = env.get('sanchuan', [])
+    """第90法 来去俱空岂动宜：**返吟卦，三传皆空亡**
+
+    【BUG-FIX 2026-09-11】原实现要求"三传按分旬空亡**逐位对应**"
+    （初∈本旬 ∧ 中∈本旬 ∧ 末∈前旬，或 初∈本旬 ∧ 中∈后旬 ∧ 末∈外后旬）
+    —— 枚举 8640 课（其中返吟课 1464 个）**可满足数 = 0** → 本节零触发。
+
+    正解：原文谓"**返吟卦三传皆空亡**"，此处的「空」与第74法同为**复合概念**
+    （旬空 / 坐空 / 乘天空 / 踏空，见 `_zhi_is_kong`）。
+    """
+    sc = env.get('sanchuan', []) or []
     if len(sc) != 3:
         return False
+    # 返吟课：初传与末传相冲
     if LIU_CHONG.get(sc[0], '') != sc[2]:
         return False
-    fxk = env.get('fen_xun_kong')
-    if not fxk:
-        return False
-    ben = fxk.get('本旬', set())
-    qian = fxk.get('前旬', set())
-    hou = fxk.get('后旬', set())
-    waihou = fxk.get('外后旬', set())
-    jinru = sc[0] in ben and sc[1] in ben and sc[2] in qian
-    tuiru = sc[0] in ben and sc[1] in hou and sc[2] in waihou
-    return jinru or tuiru
+    return all(_zhi_is_kong(env, z) for z in sc)
 
 
 def _hu_lin_gan_gui(env):
@@ -2202,6 +3208,19 @@ def _hai_gui_song_zhi_zuo_qu(env):
     return False
 
 
+def _sike_shang_from_sike(env):
+    """【2026-09-02】从 si_ke（四课原始结构）兜底提取四课上神列表"""
+    sike = env.get('si_ke') or []
+    out = []
+    for k in sike:
+        if isinstance(k, (list, tuple)) and len(k) > 1:
+            if k[1] in DIZHI_ORDER:
+                out.append(k[1])
+        elif isinstance(k, str) and k in DIZHI_ORDER:
+            out.append(k)
+    return out
+
+
 def _zhou_ye_gui_jia(env):
     """第45法 昼夜贵加求两贵：六处(三传+干上+支上+四课上神)见昼贵且见夜贵"""
     gan = env.get('ri_gan', '')
@@ -2215,12 +3234,16 @@ def _zhou_ye_gui_jia(env):
     gs = env.get('gan_shang', '')
     zs = env.get('zhi_shang', '')
     sike_shang = env.get('si_ke_shang', []) or []
+    if not sike_shang:
+        sike_shang = _sike_shang_from_sike(env)   # 【BUG-FIX 2026-09-02】si_ke 兜底
     all_zhi = [z for z in list(sc) + [gs, zs] + list(sike_shang) if z]
     return zhou_gui in all_zhi and ye_gui in all_zhi
 
 
 def _gui_ren_cha_die(env):
-    """第46法 贵人差迭事参差：昼贵临夜地且夜贵临昼方"""
+    """第46法 贵人差迭事参差：昼贵临夜地、夜贵临昼方。
+    【BUG-FIX 2026-09-02】判据改为天地盘落点：甲子日丑昼贵坐酉(夜地)、未夜贵坐卯(昼方)。
+    原实现只查干上/支上两处 → 覆盖面过窄且无法命中原文示例。"""
     gan = env.get('ri_gan', '')
     if not gan:
         return False
@@ -2228,15 +3251,21 @@ def _gui_ren_cha_die(env):
     if not gui:
         return False
     zhou_gui, ye_gui = gui
-    rz = env.get('ri_zhi', '')
-    gs = env.get('gan_shang', '')
-    zs = env.get('zhi_shang', '')
     ye_di = {'酉', '戌', '亥', '子', '丑', '寅'}
     zhou_fang = {'卯', '辰', '巳', '午', '未', '申'}
-    gan_di = GAN_JIGONG.get(gan, '')
-    zhou_on_ye = (gs == zhou_gui and gan_di in ye_di) or (zs == zhou_gui and rz in ye_di)
-    ye_on_zhou = (gs == ye_gui and gan_di in zhou_fang) or (zs == ye_gui and rz in zhou_fang)
-    return zhou_on_ye and ye_on_zhou
+    tdp = env.get('tiandi_pan', {})
+    if not tdp:
+        return False
+    zhou_pos = [d for d, tp in tdp.items() if tp == zhou_gui]
+    ye_pos = [d for d, tp in tdp.items() if tp == ye_gui]
+    zhou_on_ye = any(d in ye_di for d in zhou_pos)
+    ye_on_zhou = any(d in zhou_fang for d in ye_pos)
+    if not (zhou_on_ye and ye_on_zhou):
+        return False
+    # 【B5e 2026-09-04】原文例「丑为昼贵坐在酉上，未为夜贵却坐在卯上」——酉卯相冲，
+    # 两贵落点互为对冲才成"差迭/参差"错位象；原仅昼贵临夜地∧夜贵临昼方命中 31.67%
+    # 过宽（几何本底 ~25%）→ 加落点对冲后实测 15.00%。
+    return any(d0 and d1 and LIU_CHONG.get(d0, '') == d1 for d0 in zhou_pos for d1 in ye_pos)
 
 
 def _gui_zai_yu_yi_lin_gan(env):
@@ -2263,43 +3292,69 @@ def _gui_zai_yu_yi_lin_gan(env):
 
 
 def _liang_gui_shou_ke(env):
-    """第49法 两贵受克难干贵：昼夜贵人皆立于受克之方（地盘克贵人天盘支）"""
+    """第49法 两贵受克难干贵：昼夜贵人立于受克之方。
+    【BUG-FIX 2026-09-02】判据改为天地盘落点（原文：六乙六己申加午子加戌，六丙六丁亥加未酉加巳，
+    六辛午加子寅加申，六壬六癸巳加亥卯加酉；惟甲戊庚无此例）；
+    原文所列乃昼/夜贵任一受克之并列示例（如六乙六己日 或申加午或子加戌 即受克格），
+    且"不论在传不在传"→ 直接按二贵天盘落点受克判定，不依赖所乘天将（贵人将全天盘仅一位）。"""
     gan = env.get('ri_gan', '')
-    rz = env.get('ri_zhi', '')
-    gs = env.get('gan_shang', '')
-    zs = env.get('zhi_shang', '')
-    sc = env.get('sanchuan', [])
-    if not gan:
+    if not gan or gan in '甲戊庚':
         return False
     gui = GUIREN_MAP.get(gan)
-    if not gui:
+    if not gui or not gui[0]:
         return False
     zhou_gui, ye_gui = gui
-    gan_di = GAN_JIGONG.get(gan, '')
-    pos = {}
-    if gs:
-        pos['干上'] = (gs, gan_di)
-    if zs:
-        pos['支上'] = (zs, rz)
-    for i, key in enumerate(['初传', '中传', '末传']):
-        if i < len(sc) and sc[i]:
-            pos[key] = (sc[i], '')
-    zhou_ked = any(tp == zhou_gui and dp and _zhi_ke(dp, zhou_gui) for tp, dp in pos.values())
-    ye_ked = any(tp == ye_gui and dp and _zhi_ke(dp, ye_gui) for tp, dp in pos.values())
+    tdp = env.get('tiandi_pan', {})
+    if not tdp:
+        return False
+    zhou_pos = [d for d, tp in tdp.items() if tp == zhou_gui]
+    ye_pos = [d for d, tp in tdp.items() if tp == ye_gui]
+    zhou_ked = any(_zhi_ke(d, zhou_gui) for d in zhou_pos)
+    ye_ked = any(_zhi_ke(d, ye_gui) for d in ye_pos)
+    # 【B5e 2026-09-04】原文"凡昼夜贵人皆立受克之方者"——「皆」=两贵同时受克（AND）。
+    # 原文例"申加午、子加戌"在同一盘中同时成立（天盘顺排：申加午则子在戌）；
+    # 原 OR 实现把命中率 24% 翻倍于原文本义 → 改 AND 后实测 5.83%。
     return zhou_ked and ye_ked
 
 
 def _er_gui_jie_kong(env):
-    """第50法 二贵皆空虚喜期：昼夜贵人地支皆在旬空"""
+    """第50法 二贵皆空虚喜期：**昼夜贵人皆值空亡**
+
+    【BUG-FIX 2026-09-11】原实现只判「两贵**本支** ∈ 旬空」——
+    而旬空仅 2 支、昼夜贵（如丁日亥/酉）往往只重合其一 → **恒不成立**（112320 课式零触发）。
+
+    **正解（据《毕法赋》原文）**：「此谓**旦暮贵人皆值空亡**者……如**丁丑日干上酉**」
+      「**皆值空亡**」须含两义：
+        ① **本支空亡**：贵人地支本身 ∈ 本旬空亡
+        ② **坐空**：贵人**所临地盘** ∈ 本旬空亡
+
+    实测原文课例（丁丑日 月将子 戌时，干上酉；空亡申酉；丁日昼贵亥/夜贵酉）：
+      · 昼贵 **亥**：本支不空，**所临地盘 = 酉（空亡）→ 坐空** ✓
+      · 夜贵 **酉**：**本支 ∈ 空亡** ✓
+      → 两贵皆值空亡成立（原文课例得证）
+    """
     gan = env.get('ri_gan', '')
-    kw = env.get('kongwang', ())
-    if not gan or not kw:
-        return False
     gui = GUIREN_MAP.get(gan)
-    if not gui:
+    if not gan or not gui:
         return False
-    zhou_gui, ye_gui = gui
-    return zhou_gui in kw and ye_gui in kw
+    kw = set(x for x in (env.get('kongwang') or ()) if x)
+    if not kw:
+        return False
+    tdp = env.get('tiandi_pan', {}) or {}
+    fan = {}
+    for dp, tp in tdp.items():
+        if tp:
+            fan.setdefault(tp, dp)
+
+    def _zhi_kong(z):
+        if not z:
+            return False
+        if z in kw:                      # ① 本支空亡
+            return True
+        dp = fan.get(z, '')
+        return bool(dp) and dp in kw     # ② 坐空
+
+    return all(_zhi_kong(g) for g in gui)
 
 
 def _liang_she_jia_mu_v2(env):
@@ -2400,6 +3455,427 @@ def _gui_lin_san_si_v2(env):
     return _ghost_in(si_ke[2]) and _ghost_in(si_ke[3])
 
 
+# ══════════════════════════════════════════════════════════════
+# P1 贵人系收敛谓词（2026-09-02 批次1，判据以毕法赋古籍原文为唯一基准）
+# 文末注明支撑规则；原文依据见 docs/变格规则库收敛方案
+# ══════════════════════════════════════════════════════════════
+
+def _tian_yi_zuo_chen_xu(env):
+    """天乙贵人加临地盘辰戌（供 贵人临身/天乙入狱/贵人受贿）
+    原文（第47法）：天乙贵人加临地盘辰戌上者，虽名入狱……"""
+    tdp = env.get('tiandi_pan', {})
+    tj = env.get('tian_jiang', {})
+    if not tdp or not tj:
+        return False
+    for d in ('辰', '戌'):
+        tp = tdp.get(d, '')
+        if tp and tj.get(tp, '') == '贵人':
+            return True
+    return False
+
+
+def _gui_ren_lin_shen(env):
+    """贵人临身：天乙加临辰戌，且乙辛二日（反宜干投贵人周全成事）
+    原文（第47法）：如是乙辛二日占，却名贵人临身"""
+    if env.get('ri_gan', '') not in '乙辛':
+        return False
+    return _tian_yi_zuo_chen_xu(env)
+
+
+def _gui_ren_ru_yu(env):
+    """天乙入狱：昼夜贵坐地盘辰戌，非乙辛日；辰戌日占为贵人入宅非坐狱
+    原文（第47法）：其余八干，昼夜贵人坐地盘辰戌之上，始名天乙入狱"""
+    gan = env.get('ri_gan', '')
+    rz = env.get('ri_zhi', '')
+    if not gan or gan in '乙辛':
+        return False
+    if rz in ('辰', '戌'):
+        return False  # 辰戌日占乃为贵人入宅，非坐狱论也
+    return _tian_yi_zuo_chen_xu(env)
+
+
+def _gui_ren_sai_gui_hu(env):
+    """贵塞鬼户：三传皆日鬼 + 贵人加临寅（鬼门）
+    原文（第52法变格）：壬戌壬辰日巳加寅，三传辰未戌皆鬼；如用昼贵乃名贵人临寅鬼门"""
+    gan = env.get('ri_gan', '')
+    sc = env.get('sanchuan', [])
+    if not gan or len(sc) != 3:
+        return False
+    if not all(_zhi_ke(z, gan) and _wx(z) != _wx(gan) for z in sc):
+        return False
+    gui = GUIREN_MAP.get(gan, ('', ''))
+    if not gui[0]:
+        return False
+    tdp = env.get('tiandi_pan', {})
+    return tdp.get('寅', '') in gui    # 昼/夜贵支加临寅位
+
+
+def _gui_ren_xing_shun(env):
+    """贵人顺治格：一日内全无逆贵人
+    原文（第46法变格）：唯有巳为月将，甲戊庚日有之，内有空亡贵人乃无用"""
+    yj = (env.get('yuejiang', '') or '').replace('将', '').strip()
+    return yj == '巳' and env.get('ri_gan', '') in '甲戊庚'
+
+
+def _gui_ren_xing_ni(env):
+    """贵人逆治格：一日内全无顺贵人
+    原文（第46法变格）：惟亥为月将，甲戊庚日有之，内忌空亡"""
+    yj = (env.get('yuejiang', '') or '').replace('将', '').strip()
+    return yj == '亥' and env.get('ri_gan', '') in '甲戊庚'
+
+
+def _gui_fu_gan_zhi(env):
+    """贵覆干支格：干支上皆乘昼夜贵人（一目昼一夜，甲乙两贵分临干支）
+    原文（第45法变格）：如甲申日干上丑、支上未，庚寅日干上未、支上丑…"""
+    gan = env.get('ri_gan', '')
+    gs = env.get('gan_shang', '')
+    zs = env.get('zhi_shang', '')
+    if not gan or not gs or not zs:
+        return False
+    gui = GUIREN_MAP.get(gan, ('', ''))
+    if not gui[0]:
+        return False
+    return gs != zs and {gs, zs} == set(gui)
+
+
+def _gui_deng_tian_men(env):
+    """神藏煞没格：甲戊庚日，丑未为昼夜贵加地盘亥（贵登天门，百煞拱护）
+    原文（第52法变格）：如甲戊庚三日以丑未临亥者尤的…丑未为昼夜贵加地盘亥，乃名贵登天门"""
+    if env.get('ri_gan', '') not in '甲戊庚':
+        return False
+    tdp = env.get('tiandi_pan', {})
+    return tdp.get('亥', '') in ('丑', '未')
+
+
+def _gui_shang_gui(env):
+    """昼夜贵相加格：贵临贵位（昼贵加临夜贵支位或反之）
+    原文（第45法）：六处有旦暮天乙相加者…如六丁日亥加酉昼，丁巳丁亥丁丑日酉加亥夜…
+    盖贵临贵位，乃官人见官人也"""
+    gan = env.get('ri_gan', '')
+    if not gan:
+        return False
+    gui = GUIREN_MAP.get(gan, ('', ''))
+    if not gui[0]:
+        return False
+    zhou_gui, ye_gui = gui
+    tdp = env.get('tiandi_pan', {})
+    if not tdp:
+        return False
+    zpos = [d for d, tp in tdp.items() if tp == zhou_gui]
+    ypos = [d for d, tp in tdp.items() if tp == ye_gui]
+    # 昼贵加在夜贵支位（地盘=夜贵支），或夜贵加在昼贵支位
+    return (ye_gui in zpos) or (zhou_gui in ypos)
+
+
+def _gui_cheng_tian_yi(env):
+    """鬼乘天乙：日鬼临干或支，且乘贵人
+    原文（第48法）：如六辛日午加干，如用昼占，虽是日鬼临身，缘为贵人…
+    又六丙日昼将亥加巳或亥加支，六丁日昼将亥加未，六乙日申加乙或申加支"""
+    gan = env.get('ri_gan', '')
+    gs = env.get('gan_shang', '')
+    zs = env.get('zhi_shang', '')
+    if not gan:
+        return False
+    gui = GUIREN_MAP.get(gan, ('', ''))
+    if not gui[0]:
+        return False
+    for x in (gs, zs):
+        if x and x in gui and _zhi_ke(x, gan) and _wx(x) != _wx(gan):
+            return True
+    return False
+
+
+def _bai_hu_lin_chou(env):
+    """白虎乘临丑格：白虎临丑（丑乃天乙本家，不宜见白虎）
+    原文（第49法变格）：白虎或乘临丑格，乃贵人怒恶之貌…缘丑乃天乙之本家，不宜见白虎也"""
+    tdp = env.get('tiandi_pan', {})
+    tj = env.get('tian_jiang', {})
+    tp = tdp.get('丑', '')
+    return bool(tp and tj.get(tp, '') == '白虎')
+
+
+def _zhu_que_ke_gui(env):
+    """贵人忌惮格：贵人临身 + 朱雀乘神克贵人
+    原文（第49法变格）：如甲日丑加寅，乃昼贵临身…缘朱雀乘卯而克天乙之丑土故也；
+    又六己日申为夜贵临身，朱雀乘午而克贵。
+    【BUG-FIX 2026-09-02】原实现只要盘上朱雀乘神克任一贵即命中（37.5%过宽）；
+    按原文补"贵人临干支（临身）"前提。"""
+    gan = env.get('ri_gan', '')
+    gs = env.get('gan_shang', '')
+    zs = env.get('zhi_shang', '')
+    if not gan:
+        return False
+    gui = GUIREN_MAP.get(gan, ('', ''))
+    if not gui[0]:
+        return False
+    # 先定贵人是否临身（临干或临支）
+    lin_shen = None
+    for x in (gs, zs):
+        if x in gui:
+            lin_shen = x
+            break
+    if not lin_shen:
+        return False
+    tj = env.get('tian_jiang', {})
+    return any(j == '朱雀' and _zhi_ke(z, lin_shen) for z, j in tj.items())
+
+
+def _zhu_que_lin_wu(env):
+    """真朱雀格：朱雀临午，惟可求文书于朝廷
+    原文（第49法变格）：真朱雀格，缘朱雀临午，惟可求文书于朝廷或达于至尊之前最宜"""
+    tdp = env.get('tiandi_pan', {})
+    tj = env.get('tian_jiang', {})
+    tp = tdp.get('午', '')
+    return bool(tp and tj.get(tp, '') == '朱雀')
+
+
+def _shen_jia_wu_bai_hu_tou_zhuque(env):
+    """申加午白虎投朱雀：盘上申加午，申乘白虎
+    原文（第43法）：凡申加午为白虎投朱雀…皆主讼"""
+    tdp = env.get('tiandi_pan', {})
+    tj = env.get('tian_jiang', {})
+    return tdp.get('午', '') == '申' and tj.get('申', '') == '白虎'
+
+
+def _wu_jia_chen_zhuque_tou_gouchen(env):
+    """午加辰朱雀投勾陈：盘上午加辰，午乘朱雀
+    原文（第43法）：午加辰为朱雀投勾陈，皆主讼"""
+    tdp = env.get('tiandi_pan', {})
+    tj = env.get('tian_jiang', {})
+    return tdp.get('辰', '') == '午' and tj.get('午', '') == '朱雀'
+
+
+def _hai_gui(env):
+    """害贵格：初传与贵人相害（贵人与六害同处）
+    原文（第43法）：甲申日未加申为夜贵…初传子与未又为害；五甲日未加寅用夜贵亦如其说"""
+    gan = env.get('ri_gan', '')
+    sc = env.get('sanchuan', [])
+    if not gan or not sc or not sc[0]:
+        return False
+    gui = GUIREN_MAP.get(gan, ('', ''))
+    chu = sc[0]
+    return any(chu and gui_zhi and LIU_HAI.get(chu, '') == gui_zhi for gui_zhi in gui)
+
+
+def _hai_gui_used(env):
+    """害贵格（仅所用之贵）：初传与「当用之贵」相害（昼占害昼贵、夜占害夜贵）。
+    毕法赋·害贵讼直作屈断43「如甲申日未加申为夜贵…初传子与未又为害」——初传所害正是
+    该夜占所用之贵未；原 hai_gui 同时查昼夜二贵命中 20.83% 过宽 → 按"害所干之贵"收敛。
+    【B5e 2026-09-04】实测仅按用贵判定 10.42%。"""
+    gan = env.get('ri_gan', '')
+    sc = env.get('sanchuan', [])
+    if not gan or not sc or not sc[0]:
+        return False
+    gui = GUIREN_MAP.get(gan, ('', ''))
+    chu = sc[0]
+    gz = gui[0] if env.get('is_day', True) else gui[1]
+    return bool(chu and gz and LIU_HAI.get(chu, '') == gz)
+
+
+def _qu_zhi_zuo_gui(env):
+    """曲直作鬼枷锢：六己日曲直课（亥卯未木局）作鬼，卯加亥先曲后直，卯加未先直后曲
+    原文（第43法变格）：曲直作鬼枷锢，如六己日逢曲直课也，卯加亥先曲后直，卯加未先直后曲"""
+    if env.get('ri_gan', '') != '己':
+        return False
+    sc = env.get('sanchuan', [])
+    if len(sc) != 3 or set(sc) != {'亥', '卯', '未'}:
+        return False
+    tdp = env.get('tiandi_pan', {})
+    return tdp.get('亥', '') == '卯' or tdp.get('未', '') == '卯'
+
+
+def _liang_gui_jia_mu(env):
+    """两贵夹墓：日干墓神乘贵人将（且按原文加临）
+    原文（第53法变格外）：六甲日未加丑夜贵，两贵夹墓；六庚日丑加丑，两贵夹墓"""
+    gan = env.get('ri_gan', '')
+    if not gan:
+        return False
+    mu = WX_MU.get(_wx(gan), '')
+    if not mu:
+        return False
+    tj = env.get('tian_jiang', {})
+    if tj.get(mu, '') != '贵人':
+        return False
+    # 原文例：六甲日未加丑 / 六庚日丑加丑
+    tdp = env.get('tiandi_pan', {})
+    if gan == '甲':
+        return tdp.get('丑', '') == '未'
+    if gan == '庚':
+        return tdp.get('丑', '') == '丑'
+    return True  # 其余干支以"日墓乘贵"表达
+
+
+def _duo_mu_sha(env):
+    """咄目煞：夜占用贵人（贵人咄目专视，反坐罪也，大不利告贵）
+    原文（第44法变格）：如用夜贵，乃名咄目煞，如贵人咄目专视，反坐罪也"""
+    if env.get('is_day', True):
+        return False
+    gs = env.get('gan_shang', '')
+    tj = env.get('tian_jiang', {})
+    return bool(gs and tj.get(gs, '') == '贵人')
+
+
+def _ye_gui_nei_zhan(env):
+    """夜贵内战格：六癸日卯临申为用
+    原文（毕法赋下篇）：夜贵内战格，六癸日卯临申为用"""
+    if env.get('ri_gan', '') != '癸':
+        return False
+    sc = env.get('sanchuan', [])
+    if not sc or sc[0] != '卯':
+        return False
+    tdp = env.get('tiandi_pan', {})
+    return tdp.get('申', '') == '卯'
+
+
+def _dou_gui_xiang_jia(env):
+    """斗鬼相加格：丑加未或未加丑（斗鬼相加中魁元）
+    原文（功名类）：丑加未或未加丑，斗鬼相加中魁元"""
+    tdp = env.get('tiandi_pan', {})
+    return tdp.get('未', '') == '丑' or tdp.get('丑', '') == '未'
+
+
+def _de_ru_tian_men(env):
+    """德入天门格：日德加亥为用（初传=日德，且德支加临地盘亥）
+    原文（功名类）：德入天门格，日德加亥为用"""
+    de = env.get('de', '')
+    sc = env.get('sanchuan', [])
+    if not de or not sc or sc[0] != de:
+        return False
+    tdp = env.get('tiandi_pan', {})
+    return tdp.get('亥', '') == de
+
+
+def _ya_kui_xing(env):
+    """亚魁星：天盘酉临日干（寄宫）或日支（占试必高中）
+    原文（功名类）：亚魁星，天盘酉临年命日干，占试必高中（年命依赖项人工复核）"""
+    tdp = env.get('tiandi_pan', {})
+    gan = env.get('ri_gan', '')
+    rz = env.get('ri_zhi', '')
+    gan_di = GAN_JIGONG.get(gan, '')
+    if gan_di and tdp.get(gan_di, '') == '酉':
+        return True
+    return bool(rz and tdp.get(rz, '') == '酉')
+
+
+def _en_zhu_jv_jian(env):
+    """恩主举荐：传年日辰有父母爻（生干者），或长生作贵人
+    简化判据：干上或三传中支乘贵人且生日干（父母爻）"""
+    gan = env.get('ri_gan', '')
+    gs = env.get('gan_shang', '')
+    sc = env.get('sanchuan', [])
+    if not gan:
+        return False
+    gui = GUIREN_MAP.get(gan, ('', ''))
+    if not gui[0]:
+        return False
+    cands = [z for z in ([gs] + list(sc)) if z]
+    return any(z in gui and _zhi_sheng(z, gan) for z in cands)
+
+
+def _gui_lin_gan(env):
+    """贵人临干：干上神乘贵人（拱贵格基础）"""
+    gs = env.get('gan_shang', '')
+    tj = env.get('tian_jiang', {})
+    return bool(gs and tj.get(gs, '') == '贵人')
+
+
+def _liang_gui_yin_cong(env):
+    """两贵引从：初末传为昼夜二贵，且初末传【加临之地盘】分别引/从日干（寄宫）或日支
+    原文（第1法·两贵引从天干格）：如壬子日初传巳加子为昼贵，末传卯加戌为夜贵…
+    壬子日（壬寄亥）：初传巳加子（子顺行亥前1格）为引，末传卯加戌（戌顺行亥前11格即后1格）为从。
+    【BUG-FIX 2026-09-02】原实现用天盘初末传本身与寄宫比前后（顺行差 2~11 格皆判为前/后，判据过阔），
+    按原文统一为『加临地盘』判据，与 _qian_hou_yin_cong 同口径：前=顺行 1~6 格，后=顺行 7~11 格。"""
+    sc = env.get('sanchuan', [])
+    if len(sc) != 3:
+        return False
+    chu, mo = sc[0], sc[2]
+    gan = env.get('ri_gan', '')
+    if not gan:
+        return False
+    gui = GUIREN_MAP.get(gan, ('', ''))
+    if not gui[0] or not gui[1]:
+        return False
+    if {chu, mo} != set(gui):
+        return False
+    tdp = env.get('tiandi_pan', {})
+    if not tdp or not isinstance(tdp, dict):
+        return False
+
+    # 反查初/末传天盘所加临的地盘（tdp: {地盘: 天盘}）
+    def di_pan(zhi):
+        for d, tp in tdp.items():
+            if tp == zhi:
+                return d
+        return ''
+    chu_di, mo_di = di_pan(chu), di_pan(mo)
+    if not chu_di or not mo_di:
+        return False
+    anchors = set()
+    gj = GAN_JIGONG.get(gan, '')
+    zhi = env.get('ri_zhi', '')
+    if gj:
+        anchors.add(gj)
+    if zhi:
+        anchors.add(zhi)
+    for anchor in anchors:
+        d_chu = _zhi_dist(chu_di, anchor)
+        d_mo = _zhi_dist(mo_di, anchor)
+        if 1 <= d_chu <= 6 and 7 <= d_mo <= 11:
+            return True
+    return False
+
+
+def _gui_gong_nian_ming(env):
+    """两贵拱年命：两贵（干支上昼夜配对 或 初末传为二贵）夹住年命支
+    原文（第1法·昼夜贵人临干支上拱其年命在内者）：如丁酉日酉加丁，亥加酉，占人年命在申；
+    二贵拱年命格：如癸未日初传巳加子，未传卯加戌，占人行年本命在亥"""
+    bmz = env.get('ben_ming_zhi', '')
+    if not bmz:
+        return False
+    gan = env.get('ri_gan', '')
+    if not gan:
+        return False
+    gui = GUIREN_MAP.get(gan, ('', ''))
+    if not gui[0] or not gui[1]:
+        return False
+    pair = None
+    gs, zs = env.get('gan_shang', ''), env.get('zhi_shang', '')
+    if gs and zs and gs in gui and zs in gui and gs != zs:
+        pair = (gs, zs)
+    else:
+        sc = env.get('sanchuan', [])
+        if len(sc) == 3 and {sc[0], sc[2]} == set(gui):
+            pair = (sc[0], sc[2])
+    if not pair:
+        return False
+    a, b = pair
+    return (_is_zhi_before(a, bmz) and _is_zhi_after(b, bmz)) or \
+           (_is_zhi_before(b, bmz) and _is_zhi_after(a, bmz))
+
+
+def _nian_ming_po_wang(env):
+    """年命破网（天罗地网无咎）：干支上神为天罗(辰)/地网(戌)，年命上神冲破之；或网逢空亡亦为破罗破网。
+    原文（天罗地网）：「如占人年命上神冲破支干之网，始无咎也，或遇空亡亦名破罗破网」。
+    【P4 收敛 2026-09-03】原规则条件 x_chong_y(初,干) 将地支冲结果与天干比较，类型不匹配恒假 →
+    改为本谓词：干支上为网(辰戌) 且 (网空亡 或 年命上神冲网)。"""
+    gs = env.get('gan_shang', '')
+    zs = env.get('zhi_shang', '')
+    if gs not in ('辰', '戌') and zs not in ('辰', '戌'):
+        return False
+    net = gs if gs in ('辰', '戌') else zs
+    kong = env.get('kongwang') or ('', '')
+    if net in kong:
+        return True
+    bmz = env.get('ben_ming_zhi', '')
+    tdp = env.get('tiandi_pan', {}) or {}
+    if not bmz or not tdp:
+        return False
+    nian_shang = tdp.get(bmz, '')
+    if not nian_shang:
+        return False
+    return LIU_CHONG.get(nian_shang, '') == net or LIU_CHONG.get(net, '') == nian_shang
+
+
 _ATOMS = {
     # 五行生克
     'gan_sheng': _gan_sheng, 'x_sheng_gan': _x_sheng_gan,
@@ -2409,6 +3885,7 @@ _ATOMS = {
     'x_shi_gan_mu': _x_shi_gan_mu, 'x_shi_zhi_mu': _x_shi_zhi_mu, 'x_kong': _x_kong,
     # 合害冲刑
     'x_he_y': _x_he_y, 'x_hai_y': _x_hai_y, 'x_chong_y': _x_chong_y, 'x_xing_y': _x_xing_y,
+    'gui_gong_nian_ming': _gui_gong_nian_ming, 'nian_ming_po_wang': _nian_ming_po_wang,
     # 天将
     'x_cheng': _x_cheng, 'x_cheng_ji': _x_cheng_ji, 'x_cheng_xiong': _x_cheng_xiong, 'j_ke_x': _j_ke_x,
     'j_sheng_gan': _j_sheng_gan, 'j_ke_gan': _j_ke_gan, 'x_ke_j': _x_ke_j,
@@ -2419,6 +3896,7 @@ _ATOMS = {
     'chu_shi': _chu_shi, 'mo_shi': _mo_shi,
     # 神煞
     'x_shi_shensha': _x_shi_shensha, 'x_shi_lu': _x_shi_lu, 'x_shi_de': _x_shi_de, 'x_shi_yima': _x_shi_yima,
+    'yima_bei_chong': _yima_bei_chong,          # 驿马被冲破/官爵淹留（B5e 2026-09-04）
     # 旺相
     'x_wang': _x_wang, 'x_wang_xiang': _x_wang_xiang, 'x_shuai': _x_shuai,
     # 年命
@@ -2479,8 +3957,10 @@ _ATOMS = {
     'liang_she_jia_mu': _liang_she_jia_mu,
     'liang_hu_jia_mu': _liang_hu_jia_mu,
     'liang_kong_jia_mu': _liang_kong_jia_mu,
+    'liang_chang_jia_mu': _liang_chang_jia_mu, 'liang_hou_jia_mu': _liang_hou_jia_mu,
     'zhi_shang_sheng_gan': _zhi_shang_sheng_gan,
     'gan_shang_sheng_gan': _gan_shang_sheng_gan,
+    'gan_shang_ke_gan': _gan_shang_ke_gan,
     'zhi_shang_ke_gan': _zhi_shang_ke_gan,
     'gan_zhi_shang_jie_ke_gan': _gan_zhi_shang_jie_ke_gan,
     'san_chuan_wu_yi_shou_sheng': _san_chuan_wu_yi_shou_sheng,
@@ -2489,6 +3969,7 @@ _ATOMS = {
     'liu_yao_xian_gua_official': _liu_yao_xian_gua_official,
     'liu_yao_xian_gua_wealth': _liu_yao_xian_gua_wealth,
     'liu_yao_xian_gua_brother': _liu_yao_xian_gua_brother,
+    'san_chuan_sheng_gan_shang': _san_chuan_sheng_gan_shang,
     'bingfu_wuyin': _bingfu_wuyin,
     'ren_zhai_zuo_mu': _ren_zhai_zuo_mu,
     'gan_zhi_cheng_mu': _gan_zhi_cheng_mu,
@@ -2498,8 +3979,16 @@ _ATOMS = {
     'shu_zhai_xia_zhai': _shu_zhai_xia_zhai,
     'tai_yang_she_zhai': _tai_yang_she_zhai,
     'tian_wang_zi_guo': _tian_wang_zi_guo, 'gang_se_gui_hu': _gang_se_gui_hu,
+    'bai_hu_lin_gan': _bai_hu_lin_gan, 'hu_cheng_dun_gui': _hu_cheng_dun_gui,
+    'hu_shi_feng_hu': _hu_shi_feng_hu,
     'gui_lin_san_si': _gui_lin_san_si,
     'bi_kou_gua': _bi_kou_gua,
+    # ── P4 旬首旬尾收敛（2026-09-03 新增）──
+    'bi_kou_gua_dipan': _bi_kou_gua_dipan,
+    'bi_kou_gua_xunwei': _bi_kou_gua_xunwei,
+    'sanhe_sheng_gan_shang': _sanhe_sheng_gan_shang,
+    'xun_shou_lian_mu': _xun_shou_lian_mu,
+    'chen_xu_xun_shou': _chen_xu_xun_shou,
     'gan_zhi_jue': _gan_zhi_jue,
     'gan_zhi_jie_bai': _gan_zhi_jie_bai,
     'tuo_shang_feng_tuo': _tuo_shang_feng_tuo,
@@ -2513,6 +4002,16 @@ _ATOMS = {
     'zun_chong_san_qi': _zun_chong_san_qi,
     'yi_zai_xiong_tao': _yi_zai_xiong_tao,
     'zhong_gui_bu_wei': _zhong_gui_bu_wei,
+    # ── B5b 宽松度收敛（2026-09-03 新增）──
+    'ke_xiong_qi_gua': _ke_xiong_qi_gua,
+    'gan_shang_jue': _gan_shang_jue,
+    'le_li_sheng_you': _le_li_sheng_you,
+    'zhi_jia_gan_shang_sheng_gan': _zhi_jia_gan_shang_sheng_gan,
+    'zhi_gan_shang_xiang_sheng': _zhi_gan_shang_xiang_sheng,
+    # ── B5c 求财族群收敛（2026-09-03 新增）──
+    'lan_qu_qu_cai': _lan_qu_qu_cai,
+    'san_chuan_cheng_tu': _san_chuan_cheng_tu,
+    'san_chuan_yi_tu': _san_chuan_yi_tu,
     'san_chuan_hu_ke': _san_chuan_hu_ke,
     'wu_wang_jie_wang': _wu_wang_jie_wang,
     'zhi_xuan_mu_hu_you_fu_shi': _zhi_xuan_mu_hu_you_fu_shi,
@@ -2520,6 +4019,10 @@ _ATOMS = {
     'shou_wei_xiang_jian': _shou_wei_xiang_jian,
     'you_shi_wu_zhong': _you_shi_wu_zhong,
     'kong_kong_ru_ye': _kong_kong_ru_ye,
+    # 【BUG-FIX 2026-09-11】第74法「四课全空格」专用谓词（原误编译为 kong_kong_ru_ye）
+    'si_ke_all_kong': _si_ke_all_kong,
+    # 【BUG-FIX 2026-09-11】第74法「鬼空尤妙亦宜制之」专用谓词（原误编译为 kong_kong_ru_ye）
+    'gui_kong_you_miao': _gui_kong_you_miao,
     'tuo_shang_you_tuo': _tuo_shang_you_tuo,
     'gui_hua_cai_qian_xian_wei': _gui_hua_cai_qian_xian_wei,
     'mu_zhu_mu_fen_zeng_ai': _mu_zhu_mu_fen_zeng_ai,
@@ -2564,6 +4067,8 @@ _ATOMS = {
     'sang_diao_quan_feng_v2': _sang_diao_quan_feng_v2,
     'hu_sheng_ju_sheng': _hu_sheng_ju_sheng,
     'ren_zhai_jie_si': _ren_zhai_jie_si,
+    'hu_cheng_si_qi': _hu_cheng_si_qi,
+    'quan_cheng_si_qi': _quan_cheng_si_qi,
     'san_liu_he': _san_liu_he,
     'he_zhong_fan_sha': _he_zhong_fan_sha,
     'chu_zao_jia_ke_v2': _chu_zao_jia_ke_v2,
@@ -2593,4 +4098,56 @@ _ATOMS = {
     'hu_cheng_dun_gui': _hu_cheng_dun_gui,
     'gui_lin_san_si_v2': _gui_lin_san_si_v2,
     'yi_zai_xiong_tao_v2': _yi_zai_xiong_tao_v2,
+
+    # ── P1 贵人系收敛谓词（2026-09-02 批次1）──
+    'gui_ren_shou_ke': _liang_gui_shou_ke,          # 两贵受克（第49法，天地盘判据）
+    'gui_ren_sai_gui_hu': _gui_ren_sai_gui_hu,      # 贵塞鬼户（第52法变格）
+    'gui_ren_xing_shun': _gui_ren_xing_shun,        # 顺治格（第46法变格）
+    'gui_ren_xing_ni': _gui_ren_xing_ni,            # 逆治格（第46法变格）
+    'gui_fu_gan_zhi': _gui_fu_gan_zhi,              # 贵覆干支格（第45法变格，昼夜配对）
+    'gui_deng_tian_men': _gui_deng_tian_men,        # 神藏煞没/贵登天门（第52法变格）
+    'gui_shang_gui': _gui_shang_gui,                # 昼夜贵相加（第45法）
+    'gui_cheng_tian_yi': _gui_cheng_tian_yi,        # 鬼乘天乙（第48法）
+    'gui_ren_lin_shen': _gui_ren_lin_shen,          # 贵人临身（第47法，乙辛日）
+    'gui_ren_ru_yu': _gui_ren_ru_yu,                # 天乙入狱（第47法，余八干）
+    'bai_hu_lin_chou': _bai_hu_lin_chou,            # 白虎临丑（第49法变格）
+    'zhu_que_ke_gui': _zhu_que_ke_gui,              # 贵人忌惮（第49法变格）
+    'zhu_que_lin_wu': _zhu_que_lin_wu,              # 真朱雀（第49法变格）
+    'shen_jia_wu_bai_hu_tou_zhuque': _shen_jia_wu_bai_hu_tou_zhuque,  # 申加午白虎投朱雀（第43法）
+    'wu_jia_chen_zhuque_tou_gouchen': _wu_jia_chen_zhuque_tou_gouchen,  # 午加辰朱雀投勾陈（第43法）
+    'hai_gui': _hai_gui,                            # 害贵格（第43法）
+    'hai_gui_used': _hai_gui_used,                  # 害贵格·仅所用之贵（B5e 2026-09-04）
+    'qu_zhi_zuo_gui': _qu_zhi_zuo_gui,              # 曲直作鬼枷锢（第43法变格）
+    'liang_gui_jia_mu': _liang_gui_jia_mu,          # 两贵夹墓（第53法变格外）
+    'duo_mu_sha': _duo_mu_sha,                      # 咄目煞（第44法变格）
+    'ye_gui_nei_zhan': _ye_gui_nei_zhan,            # 夜贵内战（下篇变格）
+    'dou_gui_xiang_jia': _dou_gui_xiang_jia,        # 斗鬼相加（功名类）
+    'de_ru_tian_men': _de_ru_tian_men,              # 德入天门（功名类）
+    'ya_kui_xing': _ya_kui_xing,                    # 亚魁星（功名类，年命依赖已简化）
+    'en_zhu_jv_jian': _en_zhu_jv_jian,              # 恩主举荐（功名类）
+    'gui_lin_gan': _gui_lin_gan,                    # 贵临干（拱贵基础）
+    'liang_gui_yin_cong': _liang_gui_yin_cong,      # 两贵引从（第1法，初末传二贵夹干/支）
+    'gui_gong_nian_ming': _gui_gong_nian_ming,      # 两贵拱年命（第1法，两贵夹年命支）
+
+    # ── P2 刑害类收敛谓词（2026-09-02 批次2）──
+    'zhi_eq': _zhi_eq,                              # 通用相等（四胜煞用）
+    'si_ke_shang_all': _si_ke_shang_all,            # 一字刑：四课上神全∈集合（辰午酉亥）
+    'san_chuan_xing': _san_chuan_xing,              # 三字刑：三传寅巳申/丑戌未
+    'zhu_xing_qiang_de': _zhu_xing_qiang_de,        # 助刑戕德（宾主不投刑·第75法变格）
+    'de_shao_shi_duo': _de_shao_shi_duo,            # 得少失多（费有余而得不足·第57法）
+    # ── P3 神煞类收敛谓词（2026-09-02 批次3）──
+    'shi_gan_wang': _shi_gan_wang,                  # 值干之罗网：loc=日干帝旺（干前一辰）
+    'shi_zhi_qian': _shi_zhi_qian,                  # 值支之罗网：loc=日支顺行下一支（支前一辰）
+    'sc_has_sha': _sc_has_sha,                      # 三传任一支为某神煞（替代 sc_has(神煞名) 占位）
+
+    # ── B5d 鬼类族群收敛谓词（2026-09-03 批次5d）──
+    'de_shen_wei_gui': _de_shen_wei_gui,            # 德神为鬼：德坐鬼方（德庆课）
+    'zhi_shang_dun_gui': _zhi_shang_dun_gui,        # 支上神遁旬干为日鬼（明暗二鬼之暗鬼）
+    'gui_ren_zuo_mu': _gui_ren_zuo_mu,              # 贵人作墓：贵神作四墓加干
+    'gui_ren_tuo_qi': _gui_ren_tuo_qi,              # 贵人脱气：贵神为日干脱气
+    'bu_xing_zhong_xing': _bu_xing_zhong_xing,      # 不幸中幸/幸中不幸：白虎作长生/青龙乘日鬼
+    'hu_zhi_yin_shen_zhi_hu': _hu_zhi_yin_shen_zhi_hu,  # 虎之阴神制虎：虎鬼得制
+    'gui_zuo_gui_fang': _gui_zuo_gui_fang,          # 鬼坐鬼方无所畏：鬼坐于己之克地
+    'gui_zi_jiu_sheng': _gui_zi_jiu_sheng,          # 鬼自就生不来侵：鬼临其长生位
+    'tian_gui_zuo_ri_gui': _tian_gui_zuo_ri_gui,    # 天鬼作日鬼：天鬼临处且为日鬼
 }

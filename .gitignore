@@ -1,72 +1,207 @@
-# Backup files
-*.backup*
-*.bak
-*.zip
-*~
+# ── 敏感信息 ──
+.env
+*.key
+*_secret*
+*_token*
+settings.json
 
-# Test files
-test_*.py
-*_test.py
-full_test.py
-quick_test.py
-simple_test.py
-
-# Backup directories
-backup_*/
-src_copy/
-test_deploy/
-test_deploy2/
-
-# Generated files
+# ── Python 缓存 ──
 __pycache__/
 *.pyc
 *.pyo
-*.pyd
+*.egg-info/
+dist/
+build/
 
-# IDE files
+# ── 虚拟环境 ──
+.venv/
+venv/
+env/
+
+# ── IDE ──
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS files
-.DS_Store
-Thumbs.db
+# ── 训练临时文件 ──
+train_checkpoint_*.json
+训练进度_*.json
+*_中间结果_*.json
+training_bg_*.txt
+training_run_log.txt
+training_run_v2_log.txt
+training_error.txt
+training_error_log.txt
+training_output*.txt
+training_v4_*.txt
+*.bak
+*.bak.*
 
-# Deploy files
-deploy.zip
-core_modules.zip
-yiduluren_deploy.zip
-*.deploy*
+# ── 调试/测试脚本(一次性) ──
+_*.py
+test_*.py
+*_test.py
+check_*.py
+debug_*.py
+diagnose_*.py
+verify_*.py
+validate_*.py
+fix_*.py
+analyze_*.py
 
-# Temporary files
-*.tmp
-*.temp
+# ── 探索/提取脚本 ──
+explore_*.py
+extract_*.py
+parse_*.py
+convert_*.py
+merge_*.py
+clean_*.py
+collect_*.py
+filter_*.py
+find_*.py
+generate_*.py
+import_*.py
+load_*.py
+migrate_*.py
+monitor_*.py
+process_*.py
+remap_*.py
+remove_*.py
+retry_*.py
+search_*.py
+setup_*.py
+simplify_*.py
+supplement_*.py
+update_*.py
+use_*.py
+step*.py
+solution*.py
+inv5_*.py
+sol*.py
+ds_*.py
+
+# ── 实验性训练脚本 ──
+train_*.py
+run_*.py
+self_*.py
+enhanced_*.py
+evolution_*.py
+integrate_*.py
+optimize_*.py
+phase*.py
+round*.py
+
+# ── 训练结果备份 ──
+r14_training_results_v*.json
+r14_stock_results_*.json
+r14_dryrun_*.json
+训练结果_*.json
+*训练结果*.json
+第*轮*.json
+*round*_results*.json
+*_results_*.json
+
+# ── OCR/PDF/文档提取 ──
+ocr_*.py
+read_pdf*.py
+*_ocr_*.txt
+*_ocr_*.json
+ocr_*.txt
+
+# ── 日志输出 ──
 *.log
+*.log.*
+*_log.txt
+*_err.txt
+*_out.txt
+*_output.txt
+server_log.txt
+server_err.txt
+sl_log*.txt
+sl_err.txt
+sl_out.txt
+api_debug*.txt
 
-# Documentation (not needed for deployment)
-*部署*.md
-*说明*.md
-*文档*.md
+# ── 临时模板/调试HTML ──
+*_template*.html
+*_response*.html
+*_final*.html
+*_test*.html
+*_fixed*.html
+*_check*.html
+*_detail*.html
+*_result*.html
+diagnostic*.html
+step*.html
+sol*.html
+page_*.html
+template_*.html
 
-# PythonAnywhere specific
-api_server.py.backup_static
+# ── 批量/守护脚本 ──
+_*.bat
+*_silent*.bat
+*_watchdog*.bat
+*_heartbeat*.bat
+check_*.bat
+ensure_*.bat
+setup_*.bat
+stop_*.bat
 
-# JS/HTML backups
-*.backup_*
-network_recovery.js.backup_instance
-index_clean.html
-index.html.backup_*
+# ── 内存/缓存膨胀 ──
+_memory/*.bak
+_memory/*.bak.*
+_memory/guardian_heartbeat.json
+_memory/scheduler_heartbeat.txt
 
-# Source utils (use core_modules instead)
-src/utils/
+# ── ML数据缓存 ──
+ml_data/
+ml_models/
+*.pkl
+*.joblib
 
-# Large data files (keep small JSON files only)
-*.pdf
-720_ke_li*.json
-*matched*.json
-*results*.json
-zongmen/bifa_matched*
-zongmen/local_rules_matched*
-zongmen/data/8640_ke_ge_matched*
-zongmen/data/720_ke_li*
+# ── 报告历史 ──
+stock_reports/
+
+# ── 系统文件 ──
+Thumbs.db
+.DS_Store
+Desktop.ini
+
+# ── Docker/Node ──
+node_modules/
+.trae/
+package-lock.json
+_archive/
+_archive/
+
+# ── 本地语料库（含自购付费课程/出版物，严禁入库·严禁对外分发） ──
+# DATA/ 是本地古籍+课例资料仓库，内含自购付费资源，只作个人研读/OCR/对照使用
+# 付费课程资料目录：整目录封死（赵林声六壬课程，自购，严禁入库/分发）
+DATA/赵林声/
+DATA/**/*.pdf
+DATA/**/*.doc
+DATA/**/*.docx
+DATA/**/*.dot
+DATA/**/*.ppt
+DATA/**/*.pptx
+DATA/**/*.xls
+DATA/**/*.xlsx
+DATA/**/*.mp4
+DATA/**/*.avi
+DATA/**/*.mkv
+DATA/**/*.mov
+DATA/**/*.flv
+DATA/**/*.wmv
+DATA/**/*.mp3
+DATA/**/*.m4a
+DATA/**/*.wav
+DATA/**/*.zip
+DATA/**/*.rar
+DATA/**/*.7z
+# 全项目范围：付费/课程类音视频同样禁止入库
+*.mp4
+*.mkv
+*.avi
+*.flv
+*.wmv

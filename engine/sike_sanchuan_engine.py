@@ -178,21 +178,57 @@ class SiKeSanChuanCalculator:
         self.sike_cache[cache_key] = sike
         return sike
     
-    def is_ke(self, shang: str, xia: str) -> str:
+    def is_ke(self, shang: str, xia: str, ri_gan: str = '') -> str:
         """
         判断是否相克
         返回：'克'（上克下），'贼'（下贼上），''（无克）
+
+        参数 ri_gan：日干。传入后启用"寄宫支回退日干本气"（见下）。
+        不传则行为与历史一致（向后兼容，供审计/显示类调用使用）。
         
         注意：
         - 上神总是地支，用 DIZHI_WU_XING
-        - 下神可能是天干（第一课）或地支（其他课）
-        - 天干用 TIAN_GAN_WU_XING，地支用 DIZHI_WU_XING
+        - 第一课下神为天干（日干），其余课下神为地支
+        - 【2026-09-09 OX Alpha 复核修复】第一课判克须以日干**寄宫支**五行论
+          （"干上神课，下神即日干之寄宫，应以寄宫支五行论生克"——《大六壬大全》通例）。
+          原用干五行（如乙=木）致 乙寄辰(土) 克亥(水) 被判成"水生木无克"，漏判下贼上，
+          使多贼克课误走"单贼→重审"、发用/课体一并错判（262期乙酉日实证：三贼误判二贼）。
         """
         shang_wuxing = self.DIZHI_WU_XING.get(shang, '')
         
         # 判断下神是天干还是地支
+        # 【2026-09-10 正式规则 · 憨爷拍板采纳】第一课下神=日干时，判克用「日干本身五行」
+        #   原用「日干寄宫支五行」（2026-09-09 依对 262 期的理论推导所加），
+        #   2026-09-10 以《断案疏正》218 古例实证推翻：
+        #     寄宫判克 178/207（错 29 案，日干清一色 乙丁戊辛癸）
+        #     本气判克 205/207 = 99.0%（错 2 案）
+        #   三重验证：三传匹配 86.0%→99.0%、PDF 直提 83.7%→96.7%、古例 M3 88.4%→88.9%，零回归。
+        #   262 期两法三传相同（亥/午/丑），仅课体 缀瑕格↔重审课 之差。
+        #   详见 _memory/engine_refine_report.md。
+        #   一键回退：环境变量 IS_KE_JIGONG=1 → 切回寄宫判克。
+        import os as _os
         if xia in self.TIAN_GAN_WU_XING:
-            xia_wuxing = self.TIAN_GAN_WU_XING.get(xia, '')
+            # 下神即日干（第一课）
+            if _os.getenv('IS_KE_JIGONG', '0') == '1':
+                ji_gong = self.TIAN_GAN_JI_GONG.get(xia, '')
+                xia_wuxing = self.DIZHI_WU_XING.get(ji_gong, '')
+            else:
+                xia_wuxing = self.TIAN_GAN_WU_XING.get(xia, '')
+        elif _os.getenv('IS_KE_JIGONG_EXT', '0') == '1' and ri_gan \
+                and self.TIAN_GAN_JI_GONG.get(ri_gan, '') == xia:
+            # 【2026-09-10 判克扩展 —— ⛔ 实测否决，默认关闭，仅供对照】
+            #   设想：下神为「日干寄宫支」时亦回退日干本气。依据是 §宅墓02·007（p.38）
+            #     邵公"今第一课卯加辰，卯，木，辰内乙亦木，不克"。
+            #   结果（A/B + 原文逐案核实）——**净负，已回退**：
+            #     ✅ 修好 §宅墓02·007（四课无克 → 遥克弹射 → 辰/卯/寅）
+            #     ❌ 弄坏 §杂占17·216（癸丑日酉将戌时）：原书"兄壬子玄/兄辛亥常/官庚戌虎"
+            #        = 子/亥/戌，扩展后变 酉/子/子
+            #     ❌ 弄坏 12 案课体：§交易谋为10·148、§亡盗15·188 等原书**明标"课体课格：涉害"**，
+            #        扩展后均变"重审课"；且 §亡盗15·188 正是"干来加支"规则的实证案，
+            #        扩展后该规则不再生效 → **与"干来加支"修复冲突**
+            #   结论：邵公那句是**第一课**判克的解释，不可推广为"任何课的下神为寄宫支即回退本气"。
+            #   回退开关：IS_KE_JIGONG_EXT=1 可启用（仅供对照实验）。
+            xia_wuxing = self.TIAN_GAN_WU_XING.get(ri_gan, '')
         else:
             xia_wuxing = self.DIZHI_WU_XING.get(xia, '')
         
@@ -371,7 +407,7 @@ class SiKeSanChuanCalculator:
         else:
             ke_results = []
             for i, (name, shang, xia, _) in enumerate(sike):
-                ke_type = self.is_ke(shang, xia)
+                ke_type = self.is_ke(shang, xia, ri_gan)
                 if ke_type:
                     ke_results.append((i + 1, ke_type, shang, xia))
 
@@ -448,9 +484,9 @@ class SiKeSanChuanCalculator:
                                     '起法': '贼克法（下贼上）'
                                 }
                             elif len(bi_yong_results) > 1:
-                                result = self._she_hai_fa([(k, s, x) for k, s, x in bi_yong_results], tiandi_pan, ri_gan)
+                                result = self._she_hai_fa([(k, s, x) for k, s, x in bi_yong_results], tiandi_pan, ri_gan, ri_zhi)
                             else:
-                                result = self._she_hai_fa([(k, s, x) for k, _, s, x in xia_zei_shang], tiandi_pan, ri_gan)
+                                result = self._she_hai_fa([(k, s, x) for k, _, s, x in xia_zei_shang], tiandi_pan, ri_gan, ri_zhi)
                     else:
                         # 无下贼上，处理上克下
                         if len(shang_ke_xia) == 1:
@@ -487,9 +523,9 @@ class SiKeSanChuanCalculator:
                                     '起法': '贼克法（上克下，比用）'
                                 }
                             elif len(bi_yong_results) > 1:
-                                result = self._she_hai_fa([(k, s, x) for k, s, x in bi_yong_results], tiandi_pan, ri_gan)
+                                result = self._she_hai_fa([(k, s, x) for k, s, x in bi_yong_results], tiandi_pan, ri_gan, ri_zhi)
                             else:
-                                result = self._she_hai_fa([(k, s, x) for k, _, s, x in shang_ke_xia], tiandi_pan, ri_gan)
+                                result = self._she_hai_fa([(k, s, x) for k, _, s, x in shang_ke_xia], tiandi_pan, ri_gan, ri_zhi)
 
             else:
                 # 无克贼时：遥克 → 别责(四课不全) → 八专(干支同位) → 昴星(四课全无克贼)
@@ -529,7 +565,7 @@ class SiKeSanChuanCalculator:
                                         if i + 1 == ke_num:
                                             bi_yong_with_xia.append((ke_num, shang, x))
                                             break
-                                result = self._she_hai_fa(bi_yong_with_xia, tiandi_pan, ri_gan)
+                                result = self._she_hai_fa(bi_yong_with_xia, tiandi_pan, ri_gan, ri_zhi)
                                 self.sanchuan_cache[cache_key] = result
                                 return result
                             else:
@@ -557,7 +593,7 @@ class SiKeSanChuanCalculator:
                                         if i + 1 == ke_num:
                                             bi_yong_with_xia.append((ke_num, shang, x))
                                             break
-                                result = self._she_hai_fa(bi_yong_with_xia, tiandi_pan, ri_gan)
+                                result = self._she_hai_fa(bi_yong_with_xia, tiandi_pan, ri_gan, ri_zhi)
                                 self.sanchuan_cache[cache_key] = result
                                 return result
                             else:
@@ -592,7 +628,8 @@ class SiKeSanChuanCalculator:
         self.sanchuan_cache[cache_key] = result
         return result
     
-    def _she_hai_fa(self, bi_yong_results: List, tiandi_pan: Dict, ri_gan: str) -> Dict:
+    def _she_hai_fa(self, bi_yong_results: List, tiandi_pan: Dict, ri_gan: str,
+                    ri_zhi: str = '') -> Dict:
         """
         涉害法（完整规则）
         
@@ -626,24 +663,79 @@ class SiKeSanChuanCalculator:
                 '涉害深度': 0, 'error': '无比用候选，无法起课'
             }
         
+        # 1.5 【2026-09-10 移植·邵公古法】"干来加支即发用"
+        #     涉害候选中，若第 3 课（支上）之上神 = 日干寄宫 且 下神 = 日支，
+        #     直接取该课发用，不再计算涉害深度。
+        #     原文依据：《断案》§交易谋为10·148 / §亡盗15·188「此课干来加支，即发用」
+        #       （癸卯日课3 丑加卯：丑=癸寄、卯=支）；
+        #       §六畜走失14·185「未加卯作龙为用」（己卯日课3 未加卯：未=己寄、卯=支）。
+        if ri_zhi:
+            for _ke_num, _shang, _xia in bi_yong_results:
+                if (_ke_num == 3
+                        and _shang == self.TIAN_GAN_JI_GONG.get(ri_gan, '')
+                        and _xia == ri_zhi):
+                    _c = _shang
+                    _z = tiandi_pan.get(_c, '')
+                    _m = tiandi_pan.get(_z, '')
+                    return {
+                        '初传': _c, '中传': _z, '末传': _m,
+                        '课体': '涉害课', '起法': '涉害法·干来加支',
+                        '涉害深度': 0,
+                    }
+
         # 1. 计算每个候选的涉害深度
         hai_depths = []
         for ke_num, shang, xia in bi_yong_results:
             depth = self._calculate_she_hai_depth(shang, xia, tiandi_pan)
             hai_depths.append((ke_num, shang, xia, depth))
-        
-        # 2. 取涉害最深者
+
+        # 1.9 【2026-09-11 立·同日憨爷拍板定口径】涉害取用两说：
+        #   · 本门原著《仪度六壬选日要诀》：「涉害深浅相等则取孟」→ 深浅优先（**现默认**）。
+        #   · 《注解大六壬指南》：「涉害取法，只以孟仲季为准，不以涉害深浅为义」→ 孟仲季优先。
+        #   两说在本项目语料上仅差 1 案（断案 216 vs 217/218）→ 憨爷拍板依本门原著（深浅优先）。
+        #   共同点：下神为天干者先转寄宫（Fix B）；孟(寅申巳亥)>仲(子午卯酉)>季(辰戌丑未)仅在深浅相等时裁决。
+        #   治好了：《断案》§六畜走失14·186 甲辰（原=戌·午·寅）、赵林声 XJP-13（庚寄申）、新加坡回放 14/14。
+        #     回退：环境变量 SHE_HAI_DEPTH_FIRST=1 切回「深浅优先」（仅对照实验用）。
+        _meng = ['寅', '申', '巳', '亥']
+        _zhong = ['子', '午', '卯', '酉']
+
+        def _xia_pos(x):
+            j = self.TIAN_GAN_JI_GONG.get(x, x)
+            return 2 if j in _meng else (1 if j in _zhong else 0)
+
+        _depth_first = __import__('os').getenv('SHE_HAI_DEPTH_FIRST', '0') == '1'
+        if not _depth_first:
+            _best_pos = max(_xia_pos(h[2]) for h in hai_depths)
+            hai_depths = [h for h in hai_depths if _xia_pos(h[2]) == _best_pos]
+        else:
+            _best_pos = None
+
+        # 2. 层内取涉害最深者
         max_depth = max(h[3] for h in hai_depths)
         deepest = [h for h in hai_depths if h[3] == max_depth]
-        
+
         # 3. 判断格局
-        if len(deepest) == 1:
-            # 只有一个最深者
+        if _best_pos == 0:
+            # 俱在季位 → 缀瑕格（刚日干上神／柔日支上神）
+            _deepest_all = deepest
+            if ri_gan in ['甲', '丙', '戊', '庚', '壬']:
+                _c = [c for c in _deepest_all if c[0] in [1, 2]] or _deepest_all
+            else:
+                _c = [c for c in _deepest_all if c[0] in [3, 4]] or _deepest_all
+            chu_chuan = _c[0][1]
+            ke_ti = '缀瑕格'
+        elif len(deepest) == 1:
+            # 层内唯一最深者
             chu_chuan = deepest[0][1]
-            # 害深 > 3 为见机格，否则为涉害课
-            ke_ti = '见机格' if max_depth > 3 else '涉害课'
+            if _best_pos == 2:
+                ke_ti = '见机格'
+            elif _best_pos == 1:
+                ke_ti = '察微格'
+            else:
+                # 未启用孟仲季优先（回退模式）：沿用旧判据
+                ke_ti = '见机格' if max_depth > 3 else '涉害课'
         else:
-            # 涉害深度相同，按孟仲季规则取
+            # 层内涉害深度仍相同，按孟仲季规则取
             # 寅申巳亥为孟，子午卯酉为仲，辰戌丑未为季
             meng = ['寅', '申', '巳', '亥']
             zhong = ['子', '午', '卯', '酉']
@@ -657,10 +749,10 @@ class SiKeSanChuanCalculator:
             for ke_num, shang, xia, depth in deepest:
                 # Fix B (Task#7)：孟仲季须按上神所加临之地盘判定；
                 # 下神为天干(第一课/日干)时须转寄宫再比对（古籍：子加丙→子临巳(孟)）。
-                xia_pos = self.TIAN_GAN_JI_GONG.get(xia, xia)
-                if xia_pos in meng:
+                xia_pos_z = self.TIAN_GAN_JI_GONG.get(xia, xia)
+                if xia_pos_z in meng:
                     meng_candidates.append((ke_num, shang, xia, depth))
-                elif xia_pos in zhong:
+                elif xia_pos_z in zhong:
                     zhong_candidates.append((ke_num, shang, xia, depth))
                 else:
                     ji_candidates.append((ke_num, shang, xia, depth))
@@ -888,16 +980,24 @@ class SiKeSanChuanCalculator:
     
     def _bie_ze_fa(self, ri_gan: str, ri_zhi: str, tiandi_pan: Dict, sike: List[Tuple] = None) -> Dict:
         """
-        别责法（不备课规则）—【Task #4 修订】据《六壬大全》别责门(p~128-129)正例。
+        别责法（不备课规则）—【Task #4 修订 / 2026-09-11 柔日口径修正】据《六壬大全》别责门。
 
-        古籍正例（五源印证 + 本地原典PDF）：
+        古籍正例（本地原典 OCR + 赵林声手排 + 《断案》实测 四源印证）：
           - 阳日（刚日）：初传 = 天干五合之神的上神
                 （日干合化之干，取该干寄宫地支的天盘上神）
-          - 阴日（柔日）：初传 = 日支三合局「生支」的上神
-                （申子辰→申 / 寅午戌→寅 / 巳酉丑→巳 / 亥卯未→亥）
+          - 阴日（柔日）：初传 = 日支三合局「顺行下一位」的【地支本身】（不取上神）
+                （申→子→辰 / 寅→午→戌 / 巳→酉→丑 / 亥→卯→未，恒 +4 位）
           - 中末传：皆取日干上神（日干寄宫的天盘）
 
-        旧引擎"课位置法"（阳不备取支上/阴不备取干上）与古籍不符，已作废。
+        🔴 2026-09-11 修正：原实现取「四孟长生位的上神」（申子辰→申上神…），
+           与古籍不符。铁证：
+             ①《图解六壬大全》第1部 p131 别责课例二原文——
+               「辛酉日子时亥将占…辛乃柔日，取三合前支为用，支三合乃巳酉丑，
+                丑在酉前，即取丑为初传，中末俱用干上酉」（OCR 行 1595-1597）
+             ②同书 p130 白话——「丑日越寅卯辰取巳为初传…未日越申酉戌取亥为初传」（行 1474-1476）
+             ③《大全》卷一入手法歌诀「柔日支前三合取」（extracted_data/六壬大全_全文.json）
+             ④赵林声《新加坡案例》手排：丁酉日→丑、辛未日→亥（与本式全合）
+           旧引擎"课位置法"（阳不备取支上/阴不备取干上）亦与古籍不符，早已作废。
         注意：干合partner寄宫须用本项目标准 TIAN_GAN_JI_GONG（己→未，非丑）。
         """
         # 天干五合 → partner 寄宫（甲己化土、乙庚金、丙辛水、丁壬木、戊癸火）
@@ -913,12 +1013,13 @@ class SiKeSanChuanCalculator:
             '壬': self.TIAN_GAN_JI_GONG['丁'],  # 壬合丁 → 未
             '癸': self.TIAN_GAN_JI_GONG['戊'],  # 癸合戊 → 巳
         }
-        # 地支三合局 → 生支（初传取生支，与四课第几支无关）
-        SAN_HE_SHENG = {
-            '申': '申', '子': '申', '辰': '申',   # 申子辰水局，生=申
-            '寅': '寅', '午': '寅', '戌': '寅',   # 寅午戌火局，生=寅
-            '巳': '巳', '酉': '巳', '丑': '巳',   # 巳酉丑金局，生=巳
-            '亥': '亥', '卯': '亥', '未': '亥',   # 亥卯未木局，生=亥
+        # 地支三合局「顺行下一位」= 支前三合：生→旺→墓→生，恒 +4 位
+        # 《图解六壬大全》第1部 p131「支三合乃巳酉丑，丑在酉前，即取丑为初传」
+        SAN_HE_QIAN = {
+            '申': '子', '子': '辰', '辰': '申',   # 申子辰 → 申→子→辰
+            '寅': '午', '午': '戌', '戌': '寅',   # 寅午戌 → 寅→午→戌
+            '巳': '酉', '酉': '丑', '丑': '巳',   # 巳酉丑 → 巳→酉→丑
+            '亥': '卯', '卯': '未', '未': '亥',   # 亥卯未 → 亥→卯→未
         }
         gan_ji = self.TIAN_GAN_JI_GONG[ri_gan]
         gan_shang = tiandi_pan[gan_ji]   # 日干上神（中末传）
@@ -926,15 +1027,16 @@ class SiKeSanChuanCalculator:
         if yang_ri:
             chu_chuan = tiandi_pan[GAN_HE_JI_GONG[ri_gan]]
         else:
-            chu_chuan = tiandi_pan[SAN_HE_SHENG[ri_zhi]]
+            # 柔日：取日支三合局顺行下一位的【地支本身】（不取天盘上神）
+            chu_chuan = SAN_HE_QIAN[ri_zhi]
         return {
             '初传': chu_chuan,
             '中传': gan_shang,
             '末传': gan_shang,
             '课体': '别责课',
             '起法': '别责法',
-            '阴阳日': '阳日（刚日·干合上神）' if yang_ri else '阴日（柔日·支三合生支）',
-            '起课规则': '干合/支三合（古籍正例）'
+            '阴阳日': '阳日（刚日·干合上神）' if yang_ri else '阴日（柔日·支前三合）',
+            '起课规则': '干合上神/支前三合'
         }
     
     def _ba_zhuan_fa(self, ri_gan: str, ri_zhi: str, tiandi_pan: Dict, yang_ri: bool) -> Dict:
@@ -1006,7 +1108,7 @@ class SiKeSanChuanCalculator:
         # 1. 检查第一课是否有贼克
         ke_results = []
         for i, (name, shang, xia, _) in enumerate(sike):
-            ke_type = self.is_ke(shang, xia)
+            ke_type = self.is_ke(shang, xia, ri_gan)
             if ke_type:
                 ke_results.append((i + 1, ke_type, shang, xia))
         
@@ -1152,10 +1254,22 @@ class SiKeSanChuanCalculator:
         zi_xing = ['辰', '午', '酉', '亥']  # 自刑
         
         # 5. 中传取法
+        # 【2026-09-10 修复】初传自刑时，中传须取「另一课」之上神，分刚柔日：
+        #   刚日初传取干上神 → 自刑则改取支上神；
+        #   柔日初传取支上神 → 自刑则改取干上神。
+        #   原实现「不分阴阳日」一律取支上神 → 柔日时支上神 = 初传本身，
+        #   致中传与初传重复、末传退化为取冲。
+        #   实证：§官讼16·212（辛酉日 丑将丑时，柔日伏吟无克）
+        #     原文三传 酉/戌/未（初传酉=支上神且自刑 → 中传取干上神戌 → 末传戌刑未）；
+        #     原实现给 酉/酉/卯。
         if chu_chuan in zi_xing:
-            # 初传自刑：中传取支上神（不分阴阳日）
-            zhi_shang = tiandi_pan.get(ri_zhi, ri_zhi)
-            zhong_chuan = zhi_shang
+            if yang_ri:
+                # 刚日：初传=干上神，自刑 → 中传取支上神
+                zhong_chuan = tiandi_pan.get(ri_zhi, ri_zhi)
+            else:
+                # 柔日：初传=支上神，自刑 → 中传取干上神
+                zhong_chuan = tiandi_pan.get(
+                    self.TIAN_GAN_JI_GONG.get(ri_gan, ri_gan), ri_gan)
         else:
             # 初传不自刑：中传取初传所刑
             zhong_chuan = xing_map.get(chu_chuan, chu_chuan)
@@ -1201,7 +1315,7 @@ class SiKeSanChuanCalculator:
         # 1. 检查贼克
         ke_results = []
         for i, (name, shang, xia, _) in enumerate(sike):
-            ke_type = self.is_ke(shang, xia)
+            ke_type = self.is_ke(shang, xia, ri_gan)
             if ke_type:
                 ke_results.append((i + 1, ke_type, shang, xia))
         
@@ -1312,9 +1426,37 @@ class SiKeSanChuanCalculator2(SiKeSanChuanCalculator):
         # 检查四课克贼
         ke_results = []
         for i, (name, shang, xia, _) in enumerate(sike):
-            ke_type = self.is_ke(shang, xia)
+            ke_type = self.is_ke(shang, xia, ri_gan)
             if ke_type:
                 ke_results.append((i + 1, ke_type, shang, xia))
+
+        # 【2026-09-10 修复】《断案》"不可重复取用"：四课中若有两课上下神全同（重复课），
+        #   该课不得作为发用（邵先生："干支阴阳已先据其位……不可重复取用"）。
+        #   实证 §宅墓02·007（乙巳日 戌将亥时）：第一课 卯/乙(寄辰) 与第四课 卯/辰 全同，
+        #   第四课 卯木克辰土 被判"上克下"，原实现直接取其为发用 → 元首课 卯/寅/丑；
+        #   原文评："术人多以第四课发用为元首，传用已差……当以日遥克为用，卦名弹射"
+        #   → 正解为不备课遥克弹射，三传 辰/卯/寅。
+        #   ⚠️ 必须在下方"遥克计算"之前执行 —— 遥克判定带 `if not ke_results` 前置条件，
+        #      若放在其后，排除后 ke_results 变空也不会补算遥克，会误入别责法。
+        #
+        #   ⛔ 2026-09-10 查《大全》后**判定此解法方向错误，默认停用**
+        #      （环境变量 DUP_LESSON_FILTER=1 可启用，仅供对照）：
+        #
+        #      《疏正》§宅墓02·007 原文关键句："今第一课卯加辰，卯，木，**辰内乙亦木，不克**"
+        #        —— 原书认为"卯加辰"**根本不构成克**（辰是乙的寄宫，辰内是乙木，与卯木同类）。
+        #        故本案四课**本无克贼**，自然走遥克弹射 → 辰/卯/寅，**无需"排除重复课"**。
+        #
+        #      真正的根因在**判克规则**：当日干寄宫支作为某课下神时（第四课常见，
+        #        因"支阴"下神即支上神之天盘位），判克应回退到**日干本气**而非该支五行。
+        #        → 待实现：is_ke 需感知"下神 == 日干寄宫支 ⇒ 用日干本气"。
+        #      "排除重复课"是错误解法，实测净负：B1 99.5% → 97.6%，
+        #        且把 262 期三传由 亥/午/丑（原判）改成 午/丑/申（结构相同即触发，误伤）。
+        import os as _os
+        dup_nums = set()
+        if _os.getenv('DUP_LESSON_FILTER', '0') == '1':
+            dup_nums = self._duplicate_lesson_nums(sike, ri_gan, ri_zhi)
+            if dup_nums and ke_results:
+                ke_results = [k for k in ke_results if k[0] not in dup_nums]
 
         # 检查别责（四课中有两课相同）；Fix A：八专日已互斥排除
         is_bie_ze = self._is_bie_ze(sike, ri_gan, ri_zhi)
@@ -1342,9 +1484,41 @@ class SiKeSanChuanCalculator2(SiKeSanChuanCalculator):
             'is_fan_yin': is_fan_yin,
             'is_ba_zhuan': is_ba_zhuan,
             'is_bie_ze': is_bie_ze,
+            'dup_lesson_nums': dup_nums,
             'ke_results': ke_results,
             'yao_ke_results': yao_ke_results,
         }
+
+    def _duplicate_lesson_nums(self, sike: List[Tuple], ri_gan: str,
+                               ri_zhi: str = '') -> set:
+        """不备课·「干阳与支阴重复」→ 该两课不可重复取用。
+
+        【判据来源】《大六壬断案疏正》§宅墓02·007 评疏（p.38，刘科乐注）：
+          "支阴与干阳相同，干阳为先……**支阴被干阳占据，不能重复取用**，
+           因此，应遵循遥克法发用……**这种特殊的取用法则，只发生在少数不备课中**。
+           余如辛酉日辛上亥、乙酉日乙上亥、戊寅日干上申亦准此例。
+           此占，乙为柔日，先尽支阴，干阳不备。"
+
+        【精确范围】只判 **第一课（干阳）与第四课（支阴）** 上下神是否全同 ——
+        不涉及第二课/第三课（那是"支课重复"，不属此例）。
+
+        ⚠️ 2026-09-10 教训：曾错误泛化为"任意两课全同即排除"，
+        致 §宅墓02·037（庚戌日，第二课=第三课）被改错（原书三传 子/寅/辰
+        被改成 寅/辰/午），B1 从 99.0% 掉到 96.6%。收窄到本判据后恢复正常。
+        """
+        if not sike or len(sike) < 4:
+            return set()
+        # 八专日（干支同位）四课本只两课、天然两两重复，属独立宗门，不适用
+        if ri_zhi and self._is_ba_zhuan(ri_gan, ri_zhi):
+            return set()
+
+        def _norm(xia):
+            # 第一课下神为日干，须换算寄宫支（如乙→辰）方能与第四课比对
+            return self.TIAN_GAN_JI_GONG.get(xia, xia) if xia in self.TIAN_GAN_WU_XING else xia
+
+        l1 = (sike[0][1], _norm(sike[0][2]))      # 第一课 上神/下神（干阳）
+        l4 = (sike[3][1], _norm(sike[3][2]))      # 第四课 上神/下神（支阴）
+        return {1, 4} if l1 == l4 else set()
 
     def _decide_method(self, info: Dict) -> str:
         """
@@ -1374,6 +1548,18 @@ class SiKeSanChuanCalculator2(SiKeSanChuanCalculator):
         # 2. 有克贼 → 贼克法（别责课有克贼时仍用贼克法）
         if ke_results:
             return '贼克法'
+
+        # 2.5 【2026-09-10 移植·原文实证】八专日无克 → 径用八专法，不参与遥克
+        #     原文依据：《六壬大全》八专门「有上下克取克发用，无上下克不取遥克径用八专法」。
+        #     缺陷实证：原判定序把八专放在遥克之后（见下方 is_ba_zhuan 分支），
+        #     八专日一旦被判出"遥克"即被遥克法抢先收走 ——
+        #     §财产08·133（己未日亥将酉时）四课酉亥酉亥，干克上（蒿矢）被遥克分支误收，
+        #     致独足课 酉/酉/酉 被排成遥克 亥/丑/卯（《断案疏正》评疏明列独足课四例之一）。
+        #     A/B（218 古例，PY3.12+PYTHONHASHSEED=0）：
+        #       JSON 基准 82.6% → 99.0%；PDF 直提基准 80.4% → 96.7%；
+        #       且原主引擎算对的 171 案无一回归。
+        if info['is_ba_zhuan']:
+            return '八专法'
 
         # 3. 无克贼，有遥克 → 遥克法
         if yao_ke_results:
@@ -1442,12 +1628,21 @@ class SiKeSanChuanCalculator2(SiKeSanChuanCalculator):
         zei = [(k, s, x) for k, t, s, x in ke_results if t == '贼']
         ke = [(k, s, x) for k, t, s, x in ke_results if t == '克']
 
+        # 【2026-09-10 修复·课体命名】九宗门课体须按「候选数量」定名：
+        #   单个下贼上 → 重审课；单个上克下 → 元首课；
+        #   **两个及以上**同类克贼 → **知一课（比用课）**（须比用，取与日干阴阳比者）。
+        #   原实现只按"贼/克"二分，不论候选数量一律标"重审课/元首课" →
+        #   218 古例中主课体与原文一致率仅 17.5%（而三传匹配 99.5%，因取用结果相同）。
+        #   实证：§宅墓02·010（庚寅日寅将酉时）两贼（未/寅、子/未）→ 原文标"知一"，
+        #   原实现标"重审课"。
+        #   ⚠️ 本改动**只改课体名，不参与取用**（取用仍走比用/涉害），故三传不变、零风险。
+        #   ⚠️ 若后续比用后仍多候选而走涉害法，课体由涉害法覆盖（见机/察微/缀瑕/涉害课）。
         if zei:
             candidates = zei
-            ke_ti = '重审课'
+            ke_ti = '重审课' if len(zei) == 1 else '知一课'
         else:
             candidates = ke
-            ke_ti = '元首课'
+            ke_ti = '元首课' if len(ke) == 1 else '知一课'
 
         # 比用
         bi_yong = []
@@ -1469,7 +1664,7 @@ class SiKeSanChuanCalculator2(SiKeSanChuanCalculator):
             }
 
         # 多候选 → 涉害法
-        return self._she_hai_fa(use_candidates, tiandi_pan, ri_gan)
+        return self._she_hai_fa(use_candidates, tiandi_pan, ri_gan, ri_zhi)
 
     def _execute_yao_ke(self, yao_ke_results: List, ri_gan: str, ri_zhi: str,
                         tiandi_pan: Dict, yang_ri: bool, sike: List) -> Dict:
@@ -1515,7 +1710,7 @@ class SiKeSanChuanCalculator2(SiKeSanChuanCalculator):
             chu_chuan = use_candidates[0][1]
         else:
             # 多候选 → 涉害法
-            result = self._she_hai_fa(use_candidates, tiandi_pan, ri_gan)
+            result = self._she_hai_fa(use_candidates, tiandi_pan, ri_gan, ri_zhi)
             if result.get('error'):
                 chu_chuan = use_candidates[0][1]
                 zhong_chuan = tiandi_pan[chu_chuan]
@@ -1571,7 +1766,7 @@ class SiKeSanChuanCalculator2(SiKeSanChuanCalculator):
 
 
 # 修复 _she_hai_fa 中的空候选bug（修补父类方法）
-def _patched_she_hai_fa(self, bi_yong_results, tiandi_pan, ri_gan):
+def _patched_she_hai_fa(self, bi_yong_results, tiandi_pan, ri_gan, ri_zhi=''):
     """
     涉害法（修复版）- 修复空候选崩溃bug
 
@@ -1589,20 +1784,68 @@ def _patched_she_hai_fa(self, bi_yong_results, tiandi_pan, ri_gan):
             'error': '无比用候选，无法起课'
         }
 
+    # 1.5 【2026-09-10 移植·邵公古法】"干来加支即发用"（与类内 _she_hai_fa 同规则）
+    #     第 3 课（支上）上神 = 日干寄宫 且 下神 = 日支 → 径取该课发用。
+    #     原文依据：《断案》§交易谋为10·148 / §亡盗15·188 / §六畜走失14·185。
+    if ri_zhi:
+        for _ke_num, _shang, _xia in bi_yong_results:
+            if (_ke_num == 3
+                    and _shang == self.TIAN_GAN_JI_GONG.get(ri_gan, '')
+                    and _xia == ri_zhi):
+                _c = _shang
+                _z = tiandi_pan.get(_c, '')
+                _m = tiandi_pan.get(_z, '')
+                return {
+                    '初传': _c, '中传': _z, '末传': _m,
+                    '课体': '涉害课', '起法': '涉害法·干来加支',
+                    '涉害深度': 0,
+                }
+
     # 1. 计算每个候选的涉害深度
     hai_depths = []
     for ke_num, shang, xia in bi_yong_results:
         depth = self._calculate_she_hai_depth(shang, xia, tiandi_pan)
         hai_depths.append((ke_num, shang, xia, depth))
 
-    # 2. 取涉害最深者
+    # 1.9 【2026-09-11 立·同日憨爷拍板定口径】同类内 _she_hai_fa：
+    #   默认＝深浅优先（本门原著《仪度六壬选日要诀》「深浅相等则取孟」）；
+    #   孟仲季(孟>仲>季)仅在深浅相等时裁决，下神天干先转寄宫（Fix B 同步）。
+    #   回退：环境变量 SHE_HAI_MENG_ZHONG_JI_FIRST=1 切《指南》孟仲季优先口径（对照实验用）。
+    _meng = ['寅', '申', '巳', '亥']
+    _zhong = ['子', '午', '卯', '酉']
+
+    def _xia_pos(x):
+        j = self.TIAN_GAN_JI_GONG.get(x, x)
+        return 2 if j in _meng else (1 if j in _zhong else 0)
+
+    _mzj_first = __import__('os').getenv('SHE_HAI_MENG_ZHONG_JI_FIRST', '0') == '1'
+    if _mzj_first:
+        _best_pos = max(_xia_pos(h[2]) for h in hai_depths)
+        hai_depths = [h for h in hai_depths if _xia_pos(h[2]) == _best_pos]
+    else:
+        _best_pos = None
+
+    # 2. 层内取涉害最深者
     max_depth = max(h[3] for h in hai_depths)
     deepest = [h for h in hai_depths if h[3] == max_depth]
 
     # 3. 判断格局
-    if len(deepest) == 1:
+    if _best_pos == 0:
+        # 俱在季位 → 缀瑕格（刚日干上神／柔日支上神）
+        if ri_gan in ['甲', '丙', '戊', '庚', '壬']:
+            _c = [c for c in deepest if c[0] in [1, 2]] or deepest
+        else:
+            _c = [c for c in deepest if c[0] in [3, 4]] or deepest
+        chu_chuan = _c[0][1]
+        ke_ti = '缀瑕格'
+    elif len(deepest) == 1:
         chu_chuan = deepest[0][1]
-        ke_ti = '见机格' if max_depth > 3 else '涉害课'
+        if _best_pos == 2:
+            ke_ti = '见机格'
+        elif _best_pos == 1:
+            ke_ti = '察微格'
+        else:
+            ke_ti = '见机格' if max_depth > 3 else '涉害课'
     else:
         meng = ['寅', '申', '巳', '亥']
         zhong = ['子', '午', '卯', '酉']
@@ -1613,9 +1856,11 @@ def _patched_she_hai_fa(self, bi_yong_results, tiandi_pan, ri_gan):
         ji_candidates = []
 
         for ke_num, shang, xia, depth in deepest:
-            if xia in meng:
+            # Fix B 同步：下神为天干时先转寄宫（模块级补丁此前漏掉，导致 XJP-13 误判）
+            xz = self.TIAN_GAN_JI_GONG.get(xia, xia)
+            if xz in meng:
                 meng_candidates.append((ke_num, shang, xia, depth))
-            elif xia in zhong:
+            elif xz in zhong:
                 zhong_candidates.append((ke_num, shang, xia, depth))
             else:
                 ji_candidates.append((ke_num, shang, xia, depth))

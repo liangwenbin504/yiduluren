@@ -581,12 +581,38 @@ def _rich_sanchuan_kege(result, ri_gan, ri_zhi, tiandi_pan, yuejiang='', season=
     yuejiang/season 透传，使 rich 检测器四时变体判定与原股票内联调用一致。
     calibrated=False（股票 raw 域）时不强制跌（与原内联行为一致）；calibrated=True
     （古例占卜域）时对伏吟/返吟强制跌，保 Gate 降权不失效。
+
+    【BUG-FIX 2026-09-11】原仅按位置传 6 参 → tian_jiang / yue_jian / si_ke 全取默认空值，
+    致 _detect_64ke_missing 中依赖「三传天将 / 四课 / 月令」的课格（合欢·繁华·魄化·三阴·
+    孤辰·死奇·时泰·灾厄·回环·解离·和美·交车格·天祸·繁昌）在生产路径上**静默失效**。
+    单案实测：生产口径丢 4/10 命中（回环 / 合欢 / 魄化 / 三阴）。
+    现补齐：三传天将 result['sanchuan_tianjiang']、四课 result['si_ke']、月将，
+    并按【憨爷 2026-09-11 口径】由月将反推**月建**作为「当令」——
+    月建 = 1 - 月将 (mod 12)，六壬固定配对（亥将↔寅月、卯将↔戌月…），
+    因为「当令」指月建，月将即太阳、无当令之说。
     """
     san_chuan = result.get('san_chuan', []) or []
     keti_raw = result.get('keti', '')
     kongwang = _get_kongwang(result)
+    tian_jiang = result.get('sanchuan_tianjiang') or result.get('sanchuan_jiang') or []
+    si_ke = result.get('si_ke', []) or []
+    # 月将 → 月建（当令）：复用 bifa_detector 的单一真源换算（亥将↔寅月、卯将↔戌月…）
+    from engine.bifa_detector import get_yue_jian_from_yuejiang as _yj2jian
+    dang_ling = _yj2jian(yuejiang)
+    # 【2026-09-11 六项判据补齐】神煞类课格所需上下文：
+    #   年支(太岁) → 时泰「太岁发用」、灾厄「病符/丧门/吊客」
+    #   占时      → 三阴「时克行年」、当值天乙昼夜分派
+    #   行年/本命 → 三阴「时克行年」、合欢「年命乘吉将」
+    #   天地盘    → 三阴「天乙逆行」
+    # 缺任一 → 相应判据内部自然跳过（不误触发）。
+    _nian_zhi = result.get('nian_zhi', '') or ''
+    _shichen = result.get('shichen', '') or ''
+    _xing_nian = result.get('xing_nian_zhi', '') or result.get('xing_nian', '') or ''
+    _ben_ming = result.get('ben_ming_zhi', '') or result.get('ben_ming', '') or ''
     sk_det, _, _ = _get_rich_kege()
-    r = sk_det.detect(san_chuan, ri_gan, ri_zhi, keti_raw, kongwang, season)
+    r = sk_det.detect(san_chuan, ri_gan, ri_zhi, keti_raw, kongwang, season,
+                      tian_jiang, yuejiang, si_ke, '', '', dang_ling,
+                      _nian_zhi, _shichen, _xing_nian, _ben_ming, tiandi_pan or {})
     names = list(r.get('课格列表', []))
     # 伏吟/返吟 由天地盘判定补充（与 derive_sanchuan_kege 同源，保 Gate 降权不失效）
     if tiandi_pan:

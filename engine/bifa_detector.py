@@ -179,11 +179,20 @@ YIMA = {
 }
 
 # 日干→(昼贵, 夜贵) 天乙贵人
+# 【BUG-FIX 2026-09-11 壬癸昼夜颠倒】原 壬/癸 写作 ('卯','巳')，与权威判据相反。
+#   原文①《图解六壬大全·第1部》p.364「入手法」：「甲戊庚牛羊（甲戊庚日昼贵用丑，夜贵用未）…
+#     **壬癸蛇兔藏（壬癸日昼贵巳，夜贵卯）**，六辛逢马虎（辛日昼贵用午，夜贵用寅）」
+#     （歌诀次序=昼在前的例证：同句「六辛逢马虎」明确标「昼贵用午」，午在寅前）
+#   原文②《六壬通解·中卷》毕法赋「两贵引从天干格」：「如**壬子日初传巳加子为昼贵，
+#     末传卯加戌为夜贵**」→ 壬日昼贵=巳、夜贵=卯（上卷 L4555/L7926 同载）
+#   原文③《通解·上卷》「甲子日昼贵丑坐酉，夜贵未坐卯」→ 确认"歌诀前位=昼贵"之例
+#   影响：第3法（帘幕贵人 lian_mu=yao_gui if is_day else zhou_gui）、第46法（贵人差迭）
+#     依 (昼,夜) 位次取值 → 壬癸日全反。第44/45/49/50法为集合语义，不受影响。
 GUIREN_MAP = {
     '甲': ('丑', '未'), '戊': ('丑', '未'), '庚': ('丑', '未'),
     '乙': ('子', '申'), '己': ('子', '申'),
     '丙': ('亥', '酉'), '丁': ('亥', '酉'),
-    '壬': ('卯', '巳'), '癸': ('卯', '巳'),
+    '壬': ('巳', '卯'), '癸': ('巳', '卯'),
     '辛': ('午', '寅'),
 }
 
@@ -469,6 +478,25 @@ def _zhi_ke_zhi(z1: str, z2: str) -> bool:
     return _wuxing_ke(ZHI_WUXING.get(z1) or GAN_WUXING.get(z1), ZHI_WUXING.get(z2) or GAN_WUXING.get(z2))
 
 
+# ============ 月将 / 月建 换算（2026-09-11 新增，全项目单一真源） ============
+# 【憨爷拍板】「当令」指**月建**；月将即**太阳**，只有「太阳过宫」义，无当令不当令之说。
+# 六壬固定配对：正月建寅将亥、二月建卯将戌 … 十二月建丑将子（月建 = 1 - 月将 mod 12）。
+# 例：寅月亥将，日干甲乙木（寅属木）即当令。
+YUEJIANG_ORDER = ['亥', '戌', '酉', '申', '未', '午', '巳', '辰', '卯', '寅', '丑', '子']
+YUEJIAN_BY_YUEJIANG = {yj: DIZHI_ORDER[(2 + i) % 12] for i, yj in enumerate(YUEJIANG_ORDER)}
+
+
+def get_yue_jian_from_yuejiang(yuejiang: str) -> str:
+    """月将(太阳过宫) → 月建(当令)。
+
+    六壬固定配对：亥将↔寅月、戌将↔卯月、…、子将↔丑月。
+    ⚠️ 不要再用月将地支直接当「月令」（sanchuan_kege 旧注释 `月将(月令proxy)` 即此误，
+    月将五行与月建五行 12/12 个月全不同）。
+    """
+    yj = (yuejiang or '').replace('将', '').strip()
+    return YUEJIAN_BY_YUEJIANG.get(yj, '')
+
+
 # ============ 季节相关 ============
 def _get_yue_ling_season(yuejiang: str) -> str:
     """从月将获取月令季节"""
@@ -647,17 +675,50 @@ class BiFaDetector:
         trend = _get_sanchuan_trend(sanchuan_dizhi)
         
         # 数据化简单法规则匹配（第16/82/12 法及后续简单法已迁 data/bifa_rules.json，2026-08-16 ①批次）
+        # 【三期迁移 2026-08-21】扩展 env 字段以支持 64 条硬编码规则迁移至声明式 DNF
         try:
+            # 旬首/旬尾/丁神/分旬空亡/昼夜贵人/月将/四课上神/本命
+            _xun_shou = get_xun_shou(ganzhi) if ganzhi else ''
+            _xun_wei = get_xun_wei(ganzhi) if ganzhi else ''
+            _ding_shen = get_ding_shen(ganzhi) if ganzhi else ''
+            _fen_xun_kong = get_fen_xun_kong(ganzhi) if ganzhi else None
+            _gui_ren_map = GUIREN_MAP.get(ri_gan, ('', ''))
+            _yj = yuejiang.replace('将', '').strip() if yuejiang else ''
+            _sike_shang = _extract_sike_shang(si_ke_info)
+            _de = ''  # 日德（如需可扩展）
             _data_env = {
                 'ri_gan': ri_gan, 'ri_zhi': ri_zhi,
                 'gan_shang': gan_shang_shen, 'zhi_shang': zhi_shang_shen,
                 'sanchuan': sanchuan_dizhi, 'kongwang': tuple(kongwang),
                 'lu': LU_SHEN.get(ri_gan, ''),
+                'de': _de,
                 'yima': YIMA.get(ri_zhi, ''),
                 'season': season,
                 'tian_jiang': tian_jiang or {},
                 'tiandi_pan': tiandi_pan or {},
                 'tai_sui': tai_sui or '',
+                # ── 三期扩展字段（2026-08-21）──
+                'yuejiang': _yj,            # 月将地支（去'将'字）
+                'is_day': is_day,            # 昼夜
+                'ben_ming': ben_ming_zhi or '',
+                'trend': trend,             # 三传走势
+                'si_ke_shang': _sike_shang, # 四课上神列表
+                'xun_shou_zhi': _xun_shou[1] if _xun_shou and len(_xun_shou) > 1 else '',
+                'xun_wei_zhi': _xun_wei[1] if _xun_wei and len(_xun_wei) > 1 else '',
+                'ding_shen': _ding_shen,
+                'fen_xun_kong': _fen_xun_kong,  # {'本旬':set, '前旬':set, '后旬':set, '外后旬':set}
+                'gui_ren': _gui_ren_map,     # (昼贵, 夜贵)
+                'ganzhi': ganzhi,
+                'si_ke': si_ke_info,  # 四期扩展：支持第70法鬼临三四
+                # ── 【2026-09-11 补充】第89法（任信丁马）需判"伏吟课"，
+                #    原 env 未传 keti/shichen → 谓词 _ren_xin_ding_ma 无从判断伏吟
+                #    （配合谓词判据修正：伏吟 ⟺ 月将==时辰，或课体名含伏吟/不虞/自任）
+                'keti': keti or '',
+                'shichen': shichen or '',
+                'ben_ming_zhi': ben_ming_zhi or '',   # 兼容谓词里的两种键名
+                # ── 【2026-09-11 补充】键名兼容：谓词读 `guiren`，原 env 只提供 `gui_ren`
+                #    → 第3法（帘幕贵人）/第44法（课传俱贵）恒 False（实测直接调谓词可触发）
+                'guiren': _gui_ren_map,
             }
             self._match_data_rules(_data_env)
         except Exception:
@@ -670,11 +731,9 @@ class BiFaDetector:
         self._check_rule_32(sanchuan_dizhi, ri_gan)
         
         # 3. 进茹空亡 (第17法)
-        self._check_rule_17(trend, sanchuan_dizhi, kongwang, ganzhi)
-        
+        # self._check_rule_17(...)  # 已迁 data/bifa_rules.json（三期）
         # 4. 踏脚空亡 (第18法)
-        self._check_rule_18(trend, sanchuan_dizhi, kongwang, ganzhi)
-        
+        # self._check_rule_18(...)  # 已迁 data/bifa_rules.json（三期）
         # 5. 传财太旺 (第14法)
         self._check_rule_14(sanchuan_dizhi, ri_gan)
         
@@ -682,29 +741,23 @@ class BiFaDetector:
         # self._check_rule_27(sanchuan_dizhi, ri_gan, gan_shang_shen)  # 已迁 data/bifa_rules.json
         
         # 7. 传鬼化财 (第28法)
-        self._check_rule_28(sanchuan_dizhi, ri_gan, gan_shang_shen)
-        
+        # self._check_rule_28(...)  # 已迁 data/bifa_rules.json（三期）
         # 8. 眷属丰盈/屋宅宽广 (第29/30法)
-        self._check_rule_29_30(sanchuan_dizhi, ri_gan, ri_zhi)
-        
+        # self._check_rule_29_30(...)  # 已迁 data/bifa_rules.json（三期）
         # 9. 有始无终/难变易 (第33法)
-        self._check_rule_33(sanchuan_dizhi, ri_gan)
-        
-        # 10. 传墓入墓 (第81法)
-        self._check_rule_81(sanchuan_dizhi, ri_gan)
+        # self._check_rule_33(...)  # 已迁 data/bifa_rules.json（三期）
+        # 10. 传墓入墓 (第81法) —— 已迁 data/bifa_rules.json（x_shi_gan_mu 中/末传）
+        # self._check_rule_81(sanchuan_dizhi, ri_gan)
         
         # 11. 不行传者 (第82法) —— 已迁 data/bifa_rules.json
         # self._check_rule_82(sanchuan_dizhi, kongwang)
         
         # 12. 三六合 (第83/84法)
-        self._check_rule_83_84(sanchuan_dizhi, ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen)
-        
+        # self._check_rule_83_84(...)  # 已迁 data/bifa_rules.json（三期）
         # 13. 胎财生气/死气 (第19/20法)
-        self._check_rule_19_20(ri_gan, yuejiang)
-        
+        # self._check_rule_19_20(...)  # 已迁 data/bifa_rules.json（三期）
         # 14. 金日逢丁/水日逢丁 (第25/26法)
-        self._check_rule_25_26(ri_gan, ganzhi, sanchuan_dizhi, gan_shang_shen, zhi_shang_shen, ben_ming_zhi)
-        
+        # self._check_rule_25_26(...)  # 已迁 data/bifa_rules.json（三期）
         # 15. 干支皆败 (第36法) —— 已迁 data/bifa_rules.json（沐浴位）
         # self._check_rule_36(ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen)
         
@@ -718,19 +771,17 @@ class BiFaDetector:
         # self._check_rule_16(gan_shang_shen, kongwang)
         
         # 19. 互生俱生 (第77法)
-        self._check_rule_77(ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen)
-        
+        # self._check_rule_77(...)  # 已迁 data/bifa_rules.json（三期）
         # 20. 任信丁马/来去俱空 (第89/90法)
-        self._check_rule_89_90(trend, sanchuan_dizhi, kongwang, ganzhi, gan_shang_shen, zhi_shang_shen)
-        
+        # self._check_rule_89_90(...)  # 已迁 data/bifa_rules.json（三期）
         # 21. 干支乘墓 (第88法)
         # self._check_rule_88(ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen)  # 已迁 data/bifa_rules.json
         
         # === Batch1: 第1-80法补充 ===
         # 22. 前后引从 (第1法)
-        self._check_rule_1(sanchuan_dizhi, ri_gan, ri_zhi)
+        # self._check_rule_1(...)  # 已迁 data/bifa_rules.json（三期）
         # 23. 首尾相见 (第2法)
-        self._check_rule_2(ri_gan, ri_zhi, ganzhi, gan_shang_shen, zhi_shang_shen)
+        # self._check_rule_2(...)  # 已迁 data/bifa_rules.json（三期）
         # 24. 六阳数足 (第5法)
         self._check_rule_5(sanchuan_dizhi, ri_gan, ri_zhi, si_ke_info)
         # 25. 六阴相继 (第6法)
@@ -744,26 +795,25 @@ class BiFaDetector:
         # 29. 狐假虎威 (第12法) —— 已迁 data/bifa_rules.json
         # self._check_rule_12(ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen)
         # 30. 鬼贼当时 (第13法)
-        self._check_rule_13(sanchuan_dizhi, ri_gan, season)
+        # self._check_rule_13(...)  # 已迁 data/bifa_rules.json（三期）
         # 31. 脱上逢脱 (第15法)
-        self._check_rule_15(ri_gan, gan_shang_shen, tian_jiang)
+        # self._check_rule_15(...)  # 已迁 data/bifa_rules.json（三期）
         # 32. 交车相合 (第21法)
         # self._check_rule_21(ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen)  # 已迁 data/bifa_rules.json
         # 33. 上下皆合 (第22法)
         # self._check_rule_22(ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen)  # 已迁 data/bifa_rules.json
         # 34. 逢罗网 (第55法)
-        self._check_rule_55(ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen)
-        # 35. 空空如也 (第74法)
-        self._check_rule_74(sanchuan_dizhi, kongwang, ganzhi)
-        # 36. 宾主不投刑 (第75法)
-        self._check_rule_75(ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen, sanchuan_dizhi)
-        # 37. 彼此猜忌害 (第76法)
-        self._check_rule_76(ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen, sanchuan_dizhi)
+        # self._check_rule_55(...)  # 已迁 data/bifa_rules.json（三期）
+        # 35. 空空如也 (第74法) —— 已迁 data/bifa_rules.json（x_kong 三传皆空）
+        # self._check_rule_74(sanchuan_dizhi, kongwang, ganzhi)
+        # 36. 宾主不投刑 (第75法) —— 已迁 data/bifa_rules.json（x_xing_y 干上刑支上）
+        # self._check_rule_75(ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen, sanchuan_dizhi)
+        # 37. 彼此猜忌害 (第76法) —— 已迁 data/bifa_rules.json（x_hai_y 干上害支上）
+        # self._check_rule_76(ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen, sanchuan_dizhi)
         # 38. 互旺皆旺 (第78法)
         # self._check_rule_78(ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen, season)  # 已迁 data/bifa_rules.json
         # 39. 人宅皆死 (第80法)
-        self._check_rule_80(ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen, yuejiang)
-        
+        # self._check_rule_80(...)  # 已迁 data/bifa_rules.json（三期）
         # === Batch2: 第51-73法 ===
         # 51. 魁度天门关隔定
         # self._check_rule_51(sanchuan_dizhi, ri_gan, tiandi_pan)  # 已迁 data/bifa_rules.json
@@ -772,20 +822,16 @@ class BiFaDetector:
         # self._check_rule_52(sanchuan_dizhi, ri_gan, tiandi_pan)  # 已迁 data/bifa_rules.json
         
         # 53. 两蛇夹墓凶难免
-        self._check_rule_53(ri_gan, gan_shang_shen, zhi_shang_shen, tian_jiang)
-        
+        # self._check_rule_53(...)  # 已迁 data/bifa_rules.json（四期）
         # 57. 费有余而得不足
-        self._check_rule_57(sanchuan_dizhi, ri_gan, kongwang)
-        
+        # self._check_rule_57(...)  # 已迁 data/bifa_rules.json（三期）
         # 58. 用破身心无所归
-        self._check_rule_58(sanchuan_dizhi, ri_gan, kongwang)
-        
+        # self._check_rule_58(...)  # 已迁 data/bifa_rules.json（三期）
         # 59. 华盖覆日人昏晦
         # self._check_rule_59(ri_gan, gan_shang_shen)  # 已迁 data/bifa_rules.json
         
         # 60. 太阳射宅屋光辉
-        self._check_rule_60(ri_zhi, zhi_shang_shen, yuejiang)
-        
+        # self._check_rule_60(...)  # 已迁 data/bifa_rules.json（三期）
         # 63. 彼此全伤防两损
         # self._check_rule_63(ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen)  # 已迁 data/bifa_rules.json
         
@@ -793,108 +839,103 @@ class BiFaDetector:
         # self._check_rule_64(ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen)  # 已迁 data/bifa_rules.json
         
         # 65. 干墓并关人宅废
-        self._check_rule_65(sanchuan_dizhi, ri_gan, ri_zhi, season, gan_shang_shen, zhi_shang_shen)
-        
+        # self._check_rule_65(...)  # 已迁 data/bifa_rules.json（三期）
         # 66. 支坟财并旅程稽
-        self._check_rule_66(sanchuan_dizhi, ri_gan, ri_zhi)
-        
+        # self._check_rule_66(...)  # 已迁 data/bifa_rules.json（三期）
         # 73. 前后逼迫难进退
         # self._check_rule_73(sanchuan_dizhi, ri_gan)  # 已迁 data/bifa_rules.json
 
         # === Batch3: 虎龙病讼凶灾系列 ===
         # 54. 虎视逢虎力难施
-        self._check_rule_54(ri_gan, sanchuan_dizhi, tian_jiang, keti)
+        # self._check_rule_54(...)  # 已迁 data/bifa_rules.json（四期）
         # 56. 天网自裹己招非
-        self._check_rule_56(ri_gan, gan_shang_shen, ben_ming_zhi)
+        # self._check_rule_56(...)  # 已迁 data/bifa_rules.json（三期）
         # 61. 干乘墓虎无占病
-        self._check_rule_61(ri_gan, gan_shang_shen, tian_jiang, ben_ming_zhi, is_day)
+        # self._check_rule_61(...)  # 已迁 data/bifa_rules.json（四期）
         # 62. 支乘墓虎有伏尸
-        self._check_rule_62(ri_gan, ri_zhi, zhi_shang_shen, tian_jiang)
+        # self._check_rule_62(...)  # 已迁 data/bifa_rules.json（三期）
         # 67. 受虎克神为病症
-        self._check_rule_67(ri_gan, sanchuan_dizhi, gan_shang_shen, zhi_shang_shen, tian_jiang)
+        # self._check_rule_67(...)  # 已迁 data/bifa_rules.json（三期）
         # 68. 制鬼之位乃良医
-        self._check_rule_68(sanchuan_dizhi, ri_gan, gan_shang_shen)
+        # self._check_rule_68(...)  # 已迁 data/bifa_rules.json（三期）
         # 69. 虎乘遁鬼殃非浅
-        self._check_rule_69(ri_gan, ganzhi, sanchuan_dizhi, gan_shang_shen, zhi_shang_shen, tian_jiang)
+        # self._check_rule_69(...)  # 已迁 data/bifa_rules.json（四期）
         # 70. 鬼临三四讼灾随
-        self._check_rule_70(ri_gan, si_ke_info)
+        # self._check_rule_70(...)  # 已迁 data/bifa_rules.json（四期）
         # 71. 病符克宅全家患
         # self._check_rule_71(ri_zhi, zhi_shang_shen, tai_sui)  # 已迁 data/bifa_rules.json
         # 72. 丧吊全逢挂缟衣
-        self._check_rule_72(gan_shang_shen, zhi_shang_shen, tai_sui)
+        # self._check_rule_72(...)  # 已迁 data/bifa_rules.json（三期）
         # 91. 虎临干鬼凶速速
-        self._check_rule_91(ri_gan, sanchuan_dizhi, gan_shang_shen, zhi_shang_shen, tian_jiang)
+        # self._check_rule_91(...)  # 已迁 data/bifa_rules.json（三期）
         # 92. 龙加生气吉迟迟
-        self._check_rule_92(ri_gan, yuejiang, sanchuan_dizhi, gan_shang_shen, zhi_shang_shen, tian_jiang)
-
+        # self._check_rule_92(...)  # 已迁 data/bifa_rules.json（三期）
         # === Batch3: 第9-100法补充 ===
         # 9. 避难逃生须弃旧
-        self._check_rule_9(sanchuan_dizhi, ri_gan, gan_shang_shen)
+        # self._check_rule_9(...)  # 已迁 data/bifa_rules.json（三期）
         # 10. 朽木难雕别作为
-        self._check_rule_10(sanchuan_dizhi, ganzhi, kongwang, si_ke_info, tiandi_pan)
+        # self._check_rule_10(...)  # 已迁 data/bifa_rules.json（三期）
         # 23. 彼求我事支传干
-        self._check_rule_23(sanchuan_dizhi, ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen, si_ke_info)
+        # self._check_rule_23(...)  # 已迁 data/bifa_rules.json（三期）
         # 24. 我求彼事干传支
         # self._check_rule_24(sanchuan_dizhi, ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen)  # 已迁 data/bifa_rules.json
         # 34. 苦去甘来乐里悲
-        self._check_rule_34(sanchuan_dizhi, ri_gan)
+        # self._check_rule_34(...)  # 已迁 data/bifa_rules.json（四期）
         # 37. 末助初兮三等论
-        self._check_rule_37(sanchuan_dizhi, ri_gan)
+        # self._check_rule_37(...)  # 已迁 data/bifa_rules.json（三期）
         # 38. 闭口卦体两般推
-        self._check_rule_38(sanchuan_dizhi, ganzhi, tian_jiang, tiandi_pan)
+        # self._check_rule_38(...)  # 已迁 data/bifa_rules.json（三期）
         # 93. 妄用三传灾福异
-        self._check_rule_93(sanchuan_dizhi, ri_gan)
+        # self._check_rule_93(...)  # 已迁 data/bifa_rules.json（三期）
         # 94. 喜惧空亡乃妙机
-        self._check_rule_94(sanchuan_dizhi, ri_gan, kongwang)
+        # self._check_rule_94(...)  # 已迁 data/bifa_rules.json（三期）
         # 95. 六爻现卦防其克
-        self._check_rule_95(sanchuan_dizhi, ri_gan)
+        # self._check_rule_95(...)  # 已迁 data/bifa_rules.json（四期）
         # 96. 旬内空亡逐类推
-        self._check_rule_96(sanchuan_dizhi, ri_gan, ganzhi, kongwang)
+        # self._check_rule_96(...)  # 已迁 data/bifa_rules.json（三期）
         # 97. 所筮不入仍凭类
-        self._check_rule_97(sanchuan_dizhi, ri_gan)
+        # self._check_rule_97(...)  # 已迁 data/bifa_rules.json（三期）
         # 98. 非占现类勿言之 —— 已停用（2026-08-15 憨爷拍板：这句断课方法论提醒以后一律不用）
         # self._check_rule_98()
         # 99. 常问不应逢吉象
-        self._check_rule_99(ri_gan, season)
+        # self._check_rule_99(...)  # 已迁 data/bifa_rules.json（三期）
         # 100. 已灾凶逃返无疑
-        self._check_rule_100(sanchuan_dizhi, ri_gan)
-
+        # self._check_rule_100(...)  # 已迁 data/bifa_rules.json（三期）
         # === Batch4: 贵人天将系列 ===
         # 3. 帘幕贵人高甲第（昼占夜贵、夜占昼贵为帘幕）
-        self._check_rule_3(ri_gan, gan_shang_shen, is_day)
+        # self._check_rule_3(...)  # 已迁 data/bifa_rules.json（三期）
         # 4. 催官使者赴官期（日鬼乘白虎加干）
         # self._check_rule_4(ri_gan, gan_shang_shen, tian_jiang)  # 已迁 data/bifa_rules.json
         # 39. 太阳照武宜擒贼（月将临玄武上）
-        self._check_rule_39(yuejiang, tian_jiang)
+        # self._check_rule_39(...)  # 已迁 data/bifa_rules.json（三期）
         # 40. 后合占婚岂用媒
         # self._check_rule_40(gan_shang_shen, zhi_shang_shen, tian_jiang)  # 已迁 data/bifa_rules.json
         # 41. 富贵干支逢禄马
         # self._check_rule_41(ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen)  # 已迁 data/bifa_rules.json
         # 42. 尊崇传内遇三奇
-        self._check_rule_42(sanchuan_dizhi, ganzhi)
+        # self._check_rule_42(...)  # 已迁 data/bifa_rules.json（三期）
         # 43. 害贵讼直作曲断
-        self._check_rule_43(ri_gan, sanchuan_dizhi, gan_shang_shen, zhi_shang_shen, tian_jiang)
+        # self._check_rule_43(...)  # 已迁 data/bifa_rules.json（四期）
         # 44. 课传俱贵转无依
-        self._check_rule_44(ri_gan, sanchuan_dizhi, gan_shang_shen, zhi_shang_shen, si_ke_info)
+        # self._check_rule_44(...)  # 已迁 data/bifa_rules.json（三期）
         # 45. 昼夜贵加求两贵
-        self._check_rule_45(ri_gan, sanchuan_dizhi, gan_shang_shen, zhi_shang_shen, si_ke_info)
+        # self._check_rule_45(...)  # 已迁 data/bifa_rules.json（四期）
         # 46. 贵人差迭事参差
-        self._check_rule_46(ri_gan, ri_zhi, sanchuan_dizhi, gan_shang_shen, zhi_shang_shen)
+        # self._check_rule_46(...)  # 已迁 data/bifa_rules.json（四期）
         # 47. 贵虽在狱宜临干
-        self._check_rule_47(ri_gan, sanchuan_dizhi, gan_shang_shen, zhi_shang_shen, tian_jiang, ri_zhi, tiandi_pan)
+        # self._check_rule_47(...)  # 已迁 data/bifa_rules.json（四期）
         # 48. 鬼乘天乙乃神祗
         # self._check_rule_48(ri_gan, gan_shang_shen, tian_jiang)  # 已迁 data/bifa_rules.json
         # 49. 两贵受克难干贵
-        self._check_rule_49(ri_gan, ri_zhi, sanchuan_dizhi, gan_shang_shen, zhi_shang_shen)
+        # self._check_rule_49(...)  # 已迁 data/bifa_rules.json（四期）
         # 50. 二贵皆空虚喜期
-        self._check_rule_50(ri_gan, sanchuan_dizhi, gan_shang_shen, zhi_shang_shen, kongwang)
+        # self._check_rule_50(...)  # 已迁 data/bifa_rules.json（四期）
         # 85. 初遭夹克不由己
-        self._check_rule_85(sanchuan_dizhi, tian_jiang, tiandi_pan)
+        # self._check_rule_85(...)  # 已迁 data/bifa_rules.json（三期）
         # 86. 将逢内战所谋危
-        self._check_rule_86(sanchuan_dizhi, gan_shang_shen, zhi_shang_shen, tian_jiang)
+        # self._check_rule_86(...)  # 已迁 data/bifa_rules.json（三期）
         # 87. 人宅坐墓甘招晦
-        self._check_rule_87(ri_gan, ri_zhi, gan_shang_shen, zhi_shang_shen, tiandi_pan)
-        
+        # self._check_rule_87(...)  # 已迁 data/bifa_rules.json（三期）
         # 【BUG-FIX 2026-08-18】删除原"独立收尾"5 条重复调用：
         # 第20/26/30/84/90 法逻辑已由组合方法 _check_rule_19_20 / _check_rule_25_26 /
         # _check_rule_29_30 / _check_rule_83_84 / _check_rule_89_90 完整覆盖；

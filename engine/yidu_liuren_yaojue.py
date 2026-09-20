@@ -138,6 +138,14 @@ SIX_TI: Set[str] = {'沐浴','衰','病','死','墓','绝'}
 # 单一数据源：引用 engine/daliuren_luma_guiren.py 的 DaLiuRenLuMaGuiRen 类属性（2026-08-17 理顺统一，
 # 原本地两份 dict 与 luma 重复，改一处忘另一处会错位；现只读引用，内容逐项比对 24 山 0 差异）
 from engine.daliuren_luma_guiren import DaLiuRenLuMaGuiRen as _LRM
+# 【2026-09-12 憨爷拍板「C·根治」】总分重标定刻度（**单一真源**）
+#   旧 min(100, luma_base+bonus) 把 95.8% 候选削成同一个 100 → 分数/档位双双失去分辨力。
+#   详见 engine/zeri_score_scale.py；env ZERI_SCORE_RESCALE=0 逐位回退。
+from engine.zeri_score_scale import (
+    ZERI_SCORE_RESCALE as _ZERI_SCORE_RESCALE,
+    rescale as _rescale_score,
+    grade_of as _grade_of,
+)
 
 SHAN_JIA_MAP: Dict[str, str] = _LRM.SHAN_JIA_MAP
 XIANG_SHOU: Dict[str, str] = _LRM.XIANG_SHOU_MAP
@@ -1233,6 +1241,7 @@ def analyze_yidu_full(shan: str,
                        ke_ti: str = None,
                        year: int = None, month: int = None, day: int = None,
                        ben_ming: str = None, ben_ming_gan: str = None,
+                       ben_ming2: str = None, ben_ming2_gan: str = None,
                        zeri_type: str = '', kong: list = None) -> dict:
     """
     完整的仪度六壬择日分析（2026-08-31 统一评分口径）
@@ -1257,6 +1266,8 @@ def analyze_yidu_full(shan: str,
         ke_ti: 课体名称（供禄马贵人骨架课体扣分；缺省不扣课体分）
         ben_ming: 祭主（福主）本命地支（如'子'；2026-09-05 接入本命贵人/作禄作马加分）
         ben_ming_gan: 祭主（福主）本命天干（如'甲'；判定命禄用，可缺省）
+        ben_ming2: 第二命主本命地支（2026-09-11 接入；婚嫁＝女命，与 ben_ming 各计一次）
+        ben_ming2_gan: 第二命主本命天干（判定命禄用，可缺省）
 
     返回: 完整分析报告
     """
@@ -1508,23 +1519,38 @@ def analyze_yidu_full(shan: str,
     # 祭主（福主）本命应福加分（2026-09-05 接入；用户拍板：本命贵人+8/柱，作禄/作马+5/项）
     #   · 本命贵人：本命支落在某柱天干之天乙贵人地支集合 → 该柱为命主贵人到位（发贵应主）
     #   · 本命作禄：命干之禄支出现在四柱地支 → 坐命禄（发财应主）；本命作马：命支之驿马支在四柱 → 坐命马
+    # 【2026-09-11 扩展】支持双命主：婚嫁＝男命(ben_ming)＋女命(ben_ming2)，各独立计一次，互不覆盖。
+    _bm_targets = []
     if ben_ming:
+        _bm_targets.append((ben_ming, ben_ming_gan, '本命'))
+    if ben_ming2 and ben_ming2 != ben_ming:
+        _bm_targets.append((ben_ming2, ben_ming2_gan, '女命'))
+    ben_ming_detail = []
+    for _bmz, _bmgan, _bname in _bm_targets:
         try:
             _bmg = _LRM().check_ben_ming_guiren(
-                ben_ming, year_pillar[0], month_pillar[0], day_pillar[0], hour_pillar[0])
+                _bmz, year_pillar[0], month_pillar[0], day_pillar[0], hour_pillar[0])
+            _bml = _LRM().check_ben_ming_ma_lu(
+                _bmz, _bmgan,
+                year_pillar[1], month_pillar[1], day_pillar[1], hour_pillar[1])
+            _row = {'name': _bname, 'ben_ming': _bmz, 'guiren_count': _bmg.get('count', 0),
+                    'guiren_pillars': [h['pillar'] for h in _bmg.get('hits', [])],
+                    'lu_count': _bml.get('lu_count', 0), 'ma_count': _bml.get('ma_count', 0),
+                    'ma_zhi': _bml.get('ma_zhi', ''), 'lu_zhi': _bml.get('lu_zhi', ''),
+                    'bonus': 0}
             if _bmg.get('count'):
                 _bm_a = _bmg['count'] * 8
                 bonus += _bm_a
-                matched_patterns.append(f'+{_bm_a} 本命贵人({_bmg["count"]}柱)')
-            _bml = _LRM().check_ben_ming_ma_lu(
-                ben_ming, ben_ming_gan,
-                year_pillar[1], month_pillar[1], day_pillar[1], hour_pillar[1])
+                _row['bonus'] += _bm_a
+                matched_patterns.append(f'+{_bm_a} {_bname}贵人({_bmg["count"]}柱)')
             _bm_lm = _bml.get('lu_count', 0) + _bml.get('ma_count', 0)
             if _bm_lm:
                 _bm_b = _bm_lm * 5
                 bonus += _bm_b
+                _row['bonus'] += _bm_b
                 matched_patterns.append(
-                    f'+{_bm_b} 本命作禄作马({_bml.get("lu_count", 0)}禄/{_bml.get("ma_count", 0)}马)')
+                    f'+{_bm_b} {_bname}作禄作马({_bml.get("lu_count", 0)}禄/{_bml.get("ma_count", 0)}马)')
+            ben_ming_detail.append(_row)
         except Exception:
             pass
     # 演禽窃要加分（《要诀》秘传；2026-09-05 接入，用户拍板：到山+10/生+8/比和+5/高禽+3，结合泊宫）
@@ -1612,8 +1638,15 @@ def analyze_yidu_full(shan: str,
 
     # 3) 综合分 = 禄马贵人权威骨架 + 加分项
     total_score = round(luma_base + bonus, 1)
+    # 【2026-09-12 憨爷拍板「C·根治」】分值重标定：把**未削平原始分** R 保序展开到 [20,100] ——
+    #   R ≥ 180（跨 卯/子/午 三山 × 2026–2028 实测上限 183）⇒ 100 分（**满分级**）；R = 20 ⇒ 20 分。
+    #   保序 ⇒ 排序语义不变；旧口径 95.8% 候选 R≥100 全被削成 100（旧值仅 8~16 档）、档位 98.3% 恒「上上吉」。
+    #   `raw_total` 保留未削平值，供生产 `stock_dashboard._ttl` 叠加命主加成后**一次性**重标定（防二次糊顶）。
+    #   env ZERI_SCORE_RESCALE=0 → 逐位回退（此时 rescale() 等价旧 min(100, …)）。
+    raw_total = total_score
+    total_score = _rescale_score(raw_total)
     # 【2026-09-06 铁律硬闸·禄马贵人发三传】六壬未达标(<2)的课，加分项再高也不得满分/上上吉：
-    #   综合分封顶 89（配合 daliuren_luma_guiren 六壬分降档，双闸防"base灌满+bonus顶回100"）
+    #   在**当前刻度**上封顶 89（旧口径＝封原始分；新口径＝封重标定后的分，语义一致：掉出上上吉）
     try:
         _fc_ls = (luma_detail or {}).get('sanchuan_luma_count', 0)
         if _fc_ls < 2 and total_score > 89:
@@ -1646,19 +1679,9 @@ def analyze_yidu_full(shan: str,
         total_score = min(total_score, 39)
         grade = '不宜'
     else:
-        total_score = max(20, min(100, total_score))
-        if total_score >= 90:
-            grade = '上上吉'
-        elif total_score >= 80:
-            grade = '上吉'
-        elif total_score >= 70:
-            grade = '中吉'
-        elif total_score >= 60:
-            grade = '吉'
-        elif total_score >= 40:
-            grade = '平'
-        else:
-            grade = '凶'
+        total_score = max(20, min(100, round(float(total_score), 1)))
+        # 档位阈值真源＝`engine/zeri_score_scale.GRADE_BANDS`（90/80/70/60/40，与旧口径逐位一致）
+        grade = _grade_of(total_score)
     
     return {
         'shan': shan,
@@ -1698,6 +1721,11 @@ def analyze_yidu_full(shan: str,
         'luma_base': round(luma_base, 1),
         'luma_detail': luma_detail,
         'bonus': round(bonus, 1),
+        # 【2026-09-12】未削平原始分 R = luma_base + bonus（诊断 + 生产 `_ttl` 二次合成用）
+        'raw_total': round(raw_total, 1),
+        # 命主应福明细（2026-09-11 双命主扩展；[{'name','ben_ming','guiren_count','guiren_pillars',
+        #   'ma_count','lu_count','ma_zhi','lu_zhi','bonus'}]，婚嫁＝本命(男)+女命两条）
+        'ben_ming_detail': ben_ming_detail,
         # 择日类型类神吉应（2026-09-06 方案A-L3：{end,narr,leishen,zhi_list,tianjiang_table}）
         'leishen_detail': leishen_detail,
         # 斗首贡献加分（六想增量 + 三元三武 + 凶在外吉在内）——供前端"斗首/到向/六壬"拆解

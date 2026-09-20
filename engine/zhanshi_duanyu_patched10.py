@@ -526,12 +526,13 @@ def generate(ri_gan: str, ri_zhi: str, yuejiang: str, shichen: str,
     except Exception:
         guji_narr = ''
     # 【六亲论 2026-08-19】干上神所乘天将与日干生克五断（东方朔卷之二，叙事层）
+    # 【2026-09-16 口径修正·乘≠临】L2567「专取**天盘乘神**决之」⇒ 第三参传乘神（＝干上神，天盘支）。
     liuqin_narr = ''
     try:
         from liuqin_engine import liuqin_judge
         _gan_shang = pan['sike'][0][1] if pan.get('sike') and len(pan['sike']) > 0 and len(pan['sike'][0]) > 1 else ''
         _tj_g = (pan.get('tianjiang_map') or {}).get(_gan_shang, '')
-        _lq = liuqin_judge(ri_gan, _tj_g)
+        _lq = liuqin_judge(ri_gan, _tj_g, _gan_shang)   # 🔴 第三参＝乘神（天盘支）
         if _lq.get('断'):
             liuqin_narr = "六亲[" + _lq['将'] + _lq['关系'] + "]：" + _lq['断'] + "（" + _lq['出处'] + "）"
     except Exception:

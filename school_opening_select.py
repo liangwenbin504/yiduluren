@@ -167,6 +167,8 @@ while current <= end:
             day_pillar=rg+rz, hour_pillar=sg+sz,
             ri_gan=rg, ri_zhi=rz, sanchuan=sc_out, tiandi_pan=tp_simple,
             yue_jiang=yj, nian_zhi=nz,
+            shichen=shichen, ke_ti=(sc_v2 or {}).get('课体') or None,
+            year=y, month=m, day=d,
         )
 
         # 扣分

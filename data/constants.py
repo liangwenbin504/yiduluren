@@ -9,8 +9,8 @@ import os
 # 添加项目根目录到路径
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-# 从斗首择日规则导入所有常量
-from core_modules.data.斗首择日规则 import *
+# 从斗首择日规则导入所有常量（活数据，单一真相源；core_modules 已废弃，不再回退旧副本）
+from data.斗首择日规则 import *
 
 # 为了向后兼容，保留原有导出格式
 __all__ = [

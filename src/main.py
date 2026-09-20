@@ -8,14 +8,14 @@ from tkinter import ttk, scrolledtext, messagebox, simpledialog
 import sys
 import os
 
-# 添加项目路径
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# 将项目根目录加入路径
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from engine.douhou_engine import DouShouCalculator
 from engine.daliuren_engine import DaLiuRenEngine
-from engine.smart_selector import SmartDateSelector
-from engine.comprehensive_selector import ComprehensiveSelector
-from ui.tianpan_widget import TianPanWithTianJiangWidget
+from core_modules.engine.smart_selector import SmartDateSelector
+from core_modules.engine.comprehensive_selector import ComprehensiveSelector
+from src.ui.tianpan_widget import TianPanWithTianJiangWidget
 
 
 class YiDuLiuRenApp:
@@ -665,6 +665,8 @@ class YiDuLiuRenApp:
             ri_zhi = self.daliuren_ri_zhi.get()
             
             # 排盘
+            # ⚠️ 2026-08-17 停用警示：旧引擎 full_pai_pan 用农历月简化月将+旧三传（反吟/涉害等与权威 V2 有差异）。
+            # 本 GUI 输入模型仅支持农历月（无公历日期），精确中气月将不可行——仅演示用；精确排盘请用仪表盘(liuren.souhuertong.net.cn)。
             result = self.daliuren_engine.full_pai_pan(lunar_month, shichen, ri_gan, ri_zhi)
             
             # 显示结果
@@ -877,6 +879,7 @@ class YiDuLiuRenApp:
                     shichen = self.daliuren_shichen.get()
                     ri_gan = self.daliuren_ri_gan.get()
                     ri_zhi = self.daliuren_ri_zhi.get()
+                    # ⚠️ 旧引擎简化月将（GUI 演示用，见 calculate_daliuren 警示）
                     daliuren_result = self.daliuren_engine.full_pai_pan(lunar_month, shichen, ri_gan, ri_zhi)
                 except:
                     pass

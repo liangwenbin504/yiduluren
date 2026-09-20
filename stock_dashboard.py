@@ -425,6 +425,17 @@ CAT_NAMES = {'manual': '天机起课'}
 app = Flask(__name__, static_folder=None)
 CORS(app)
 
+# ═══ 【2026-09-11 憨爷拍板「按原著来」】原著三者定位（张九仪《仪度六壬选日要诀》）═══
+#   斗首＝基础 ／ 六壬＝主旨（最重要）／ 演禽＝支节。
+#   原文铁证：斗首「**第三章标题**：仪度六壬日课以炉传斗首日课为基础」；
+#            六壬「**第二章**：必用六壬内禄马贵人到山到向，以为之主（注解『这是最重要的』）」；
+#            演禽「**全书无专章**、词频仅 8」。词频 六壬277｜斗首111｜演禽8。
+#   → 生产批量择日内核 `_build_zeri_candidate` 中，**演禽（支节）不再作硬筛**
+#     （仍照常算分并随结果返回，供展示与用户自定 `min_yanqin` 条件使用）。
+#   ⚠️ `/api/zeri/satisfy`（达标择日）的 `min_yanqin` 是**用户显式条件**，不受本开关影响。
+#   ZERI_YUANZHU=0 回退旧口径（演禽<50 硬筛），供 A/B 对照。
+YUANZHU = os.environ.get('ZERI_YUANZHU', '1') == '1'
+
 # ═══════════════════════════════════════════════
 # 预加载 akshare + 预热 V8 引擎（在主线程单线程阶段）
 # akshare 导入时会加载 py_mini_racer (V8 DLL)，
@@ -892,18 +903,68 @@ def _get_xunkong(rizhu_gan, rizhu_zhi):
 
 
 def _compute_tiandi_pan(yue_jiang, shi_chen):
-    """调用排盘引擎计算天地盘，返回{地盘: {天盘, 天将}}（P1：停用 DaLiuRenEngine，改用 V2 起课引擎）"""
+    """调用排盘引擎计算天地盘，返回{地盘: {天盘, 天将}}（P1：停用 DaLiuRenEngine，改用 V2 起课引擎）
+
+    形状守卫（2026-09-12）：本函数的返回值形状被前端硬依赖
+    （stock_dashboard.html L4770 `d.tiandi_pan[di]||{}` 取 `.天盘`、L5962 亦然），
+    故**返回形状恒为嵌套** `{地盘: {'天盘': 支, '天将': ''}}`，不得改为扁平。
+    但上游 `get_tiandi_pan` 在个别分支可能已给出嵌套 dict，此时直接原样保留，
+    避免二次包装成 `{'天盘': {'天盘': ...}}` 造成下游取值拿到 dict 而非 str。
+    """
     try:
         from engine.sike_sanchuan_engine import SiKeSanChuanCalculator2
         engine = SiKeSanChuanCalculator2()
         tian_di = engine.get_tiandi_pan(yue_jiang, shi_chen)  # 月将加时，{地盘: 天盘}
 
         tiandi_pan = {}
+        if not isinstance(tian_di, dict):
+            return {}
         for di, tian in tian_di.items():
-            tiandi_pan[di] = {'天盘': tian, '天将': ''}
+            # 守卫：已经是嵌套 dict（含 天盘/天将）则原样保留；否则按扁平支包装
+            if isinstance(tian, dict):
+                tiandi_pan[di] = tian
+            else:
+                tiandi_pan[di] = {'天盘': tian, '天将': ''}
         return tiandi_pan
     except Exception as e:
         return {}
+
+
+# ═════════════════════════════════════════════════════════════════
+# 行年虚岁按「用事年」换算（2026-09-12 憨爷拍板：「行年虚岁按『用事年』」）
+# ═════════════════════════════════════════════════════════════════
+# 语义：用户输入的 ben_ming_age 视为「基准年（默认＝当前年）」的虚岁；
+#       用事年的虚岁 = 输入虚岁 + (用事年 − 基准年)。
+# 依据：《通解》下 L7768「凡终身之占…三传为大运，**逐年视行年**。此为总法。」
+#       ⇒ 行年随年逐年递进，同一命主在不同年份行年支不同；择日晚于当前年时必须按用事年取岁。
+# 影响：行年 → `_nianming['xing_nian_shang_shen']` → `_ma_on_ming`（命主马到命/行年）→ 择日评分；
+#       故**同一年内的日期 delta=0 不变**（五闸口/既有探针不受影响），仅跨年区间生效。
+# 开关：ZERI_XINGNIAN_EVENT_YEAR=0 回退旧口径（直接使用输入虚岁）。
+ZERI_XINGNIAN_EVENT_YEAR = str(os.environ.get('ZERI_XINGNIAN_EVENT_YEAR', '1')).strip() not in ('0', 'false', 'False', '')
+
+
+def _xusui_for_event_year(age, event_year, ref_year=None):
+    """把「虚岁」换算到用事年。非法/≤0 → 0（不强行造行年）。
+    ref_year：输入虚岁的基准年；缺省＝当前年（即输入值＝查询当时的虚岁）。"""
+    try:
+        a = int(str(age).strip())
+    except Exception:
+        return 0
+    if a < 1:
+        return 0
+    if not ZERI_XINGNIAN_EVENT_YEAR:
+        return a
+    try:
+        ry = int(str(ref_year).strip()) if ref_year not in (None, '') else date.today().year
+    except Exception:
+        ry = date.today().year
+    try:
+        ey = int(event_year)
+    except Exception:
+        return a
+    v = a + (ey - ry)
+    return v if v >= 1 else 0
+
 
 def _build_reasoning_chain_from_analysis(full_data):
     """从5d预测的 analysis 和 prediction 字段构建17步推理链"""
@@ -1651,7 +1712,1091 @@ def _pat_txt(p):
     return str(p)
 
 
-def _build_zonghe_piyu(result, zetiri_type='立碑'):
+def _gloss_show(text):
+    """古文断语 → 现代白话（**仅用于显示**）。
+    2026-09-12 憨爷：「在古代叫奸淫不足，在现代叫未婚同居，不要再说奸淫不足那么难听了」。
+    真源 `engine/liuren_gloss.py`（纯展示层词表）。
+    🔴 铁律：**判定必须吃原文** —— `tianjiang_gongwei._XIONG` 把「淫」「羞」当凶关键词，
+       若用今译喂 `side_of_duanyu()` 会**丢凶标**（天后·卯「临门，奸淫不足」本为凶）。
+       ⇒ 一律「**判定用原文，显示用今译**」。"""
+    try:
+        from engine.liuren_gloss import gloss as _g
+        return _g(text)
+    except Exception:
+        return str(text or '')
+
+
+def _build_yingren_ji_xiong(result, ben_ming_zhi='', xing_nian_zhi='', ben_ming_age='', ben_ming_sex=''):
+    """吉应/凶应分列：把「吉在何人何事 / 凶在何人何事」逐条落到【人】与【事】。
+
+    2026-09-12 v3（憨爷拍板「A 组照做；B 组按本命支＋行年支入列」）：
+      · A1 天将吉凶标签只作兜底 —— 吉凶改由「天将 × 所临宫位」定（《颐旨经》，《通解》上 L2569）。
+        真源 engine.tianjiang_gongwei（＝《通解》第三章十二天将赋逐宫断语的机械读解）。
+      · A2 阴阳定男女尊卑（「传阴为婢传阳奴」）｜A3 旺衰定老少（「乘败为老」）
+        ｜A4 干支位定尊卑（干＝尊／支＝卑）｜A5 三传始中终（事起/事中/事成）｜A6 应期挂粒度。
+      · B7 本命支／行年支 各取「上神」入列（疏正词频 行年 333、本命 148，为应人首选维度）。
+
+    2026-09-12 v4（憨爷「按上面八节全做」，纯展示层）—— 分层口径：
+      · 每条增 layer ∈ {zhengti,benming,xingnian}｜scope（长期大局/终身/当年/方来过去/久远）
+        ｜rank ∈ {纲,具象}｜wangshuai ∈ {有气,无气}。
+      · 原文依据：《通解》下「凡终身之占…三传为大运，逐年视行年。此为总法。」（L7768）；
+        上「太岁在初传，为当年事；在末，为久远事；在中兮，方来过去。」（L3416）；
+        上「所谓七处…先看七处，次看类神…然后就类神吉凶结合课式而断。」（L1387）。
+      · 铁律：整体层（课体/三传/三家）＝定调 rank='纲'；本命＝终身、行年＝仅当年，rank='具象'。
+      · ⛔ 局部不翻整体：局部凶只限其时间域（不写「反主凶」）。
+    铁律：只收能落到人/事的条目；数据全部取引擎既有产出，不新造判据。
+    返回 {'ji': [{who,what,note,src,side,zhi,ren,yingqi,layer,scope,rank,wangshuai}], 'xiong': [...], 'ref': [...], 'note': str}
+    """
+    ji, xiong, ref = [], [], []
+    try:
+        from engine import tianjiang_gongwei as _ggw
+    except Exception:
+        _ggw = None
+
+    # ── v4 分层常量（原文出处见 docstring）──
+    _SCOPE_CHUAN = {'初传': '当年', '中传': '方来过去', '末传': '久远'}
+
+    def _sc(wangshuai):
+        # v4 §8.3④：有气＝实/近/大；无气＝虚/迟/小（原文「衰旺空刑须细辨」「有气亦远无气难」）
+        if not wangshuai:
+            return ''
+        return '有气' if wangshuai in ('旺', '相') else '无气'
+
+    def _add(bucket, who, what, src, note='', side='', zhi='', ren='', yingqi='',
+             layer='zhengti', scope='长期大局', rank='纲', wangshuai=''):
+        # what = 何事（落点）；note = 附带断语（乘神断语等）；ren/yingqi = 应人法/应期粒度
+        # v4：layer/scope/rank 定层次与时间域；wangshuai 定虚实
+        w = str(what or '').strip()
+        n = str(note or '').strip()
+        if not (w or n):
+            return
+        _scv = _sc(wangshuai)
+        if _scv == '无气' and n and '无气' not in n:
+            n = n + '（无气：虚/迟/小）'        # §8.3④ 原文「无气者缀虚迟小」，不得单独定吉凶
+        bucket.append({'who': str(who or '').strip(), 'what': w, 'note': n, 'src': str(src or ''),
+                       'side': str(side or ''), 'zhi': str(zhi or ''), 'ren': str(ren or ''),
+                       'yingqi': str(yingqi or ''), 'layer': layer, 'scope': scope,
+                       'rank': rank, 'wangshuai': _scv})
+
+    # ── 预置：月建（旺衰口径）／应期粒度表／阴阳·尊卑·阶段词表 ──
+    _yue_jian = _yue_jian_of(result)      # 月建＝四柱月柱（按节）；2026-09-13 口径统一
+    _wangxiang = None
+    try:
+        from engine.kege_shensha import wang_xiang as _wangxiang_fn
+        _wangxiang = _wangxiang_fn
+    except Exception:
+        _wangxiang = None
+
+    def _ws_of(zhi):
+        if _wangxiang is None or not zhi or not _yue_jian:
+            return ''
+        try:
+            return str(_wangxiang(zhi, _yue_jian) or '')
+        except Exception:
+            return ''
+
+    _yingqi_map = {}
+    for _e in (result.get('yingqi_struct') or []):
+        _g = str(_e.get('粒度') or '')
+        _t = str(_e.get('文本') or '')
+        if not _g:
+            continue
+        for _z in '子丑寅卯辰巳午未申酉戌亥':
+            if _z in _t:
+                _yingqi_map.setdefault(_z, _g)
+    _YANG = '子寅辰午申戌'
+    _YIN = '丑卯巳未酉亥'
+    _STAGE = {'初传': '事之起', '中传': '事之中', '末传': '事之成'}
+    _POS_REN = {'干上': '本人/尊长（干为尊）', '支上': '宅/卑幼（支为卑）'}
+
+    def _ren_tag(pos, zhi, wangshuai):
+        tags = []
+        if pos in _POS_REN:
+            tags.append(_POS_REN[pos])
+        if zhi and zhi in _YANG:
+            tags.append('阳支→男/尊长/奴')
+        elif zhi and zhi in _YIN:
+            tags.append('阴支→女/卑幼/婢')
+        if wangshuai:
+            tags.append('%s→%s' % (wangshuai, '少壮' if wangshuai in ('旺', '相') else '衰/老'))
+        return '；'.join(tags)
+
+    # ① 四课三传类象（A1 定吉凶；A2/A3/A4/A5/A6 补应人应事维度；v4 标层级与时间域）
+    for x in (result.get('leixiang') or []):
+        lx = x.get('类象') or {}
+        _lx_jin = x.get('类象今') or {}
+        _zhi = str(x.get('地支') or '')
+        _jiang = str(x.get('天将') or '')
+        _pos = str(x.get('位置') or '')
+        _dj = str(x.get('乘神断语') or '').strip()
+        # 显示用今译（_dj 原文仍喂 side_with_fallback 判吉凶）
+        _dj_s = str(x.get('乘神断语今') or '').strip() or _gloss_show(_dj)
+        who = '、'.join([p for p in str(((_lx_jin.get('人物') if _lx_jin else lx.get('人物')) or '')).split('、')[:2] if p])
+        what = str(x.get('所主今') or '').strip() or _gloss_show(x.get('所主') or '')
+        if not (what or _dj):
+            continue
+        _side = ''
+        if _ggw is not None:
+            _side = _ggw.side_with_fallback(_jiang, _zhi, _dj)
+        if not _side:
+            _side = '吉' if '吉' in str(x.get('吉凶') or '') else ('凶' if '凶' in str(x.get('吉凶') or '') else '')
+        _ws = _ws_of(_zhi)
+        if _pos in _STAGE:
+            what = '［%s］%s' % (_STAGE[_pos], what)
+        _ren = _ren_tag(_pos, _zhi, _ws)
+        _src = '%s%s' % (_pos, _jiang)
+        _b = ji if _side == '吉' else (xiong if _side == '凶' else ref)
+        # v4：三传＝大运（初＝当年／中＝方来过去／末＝久远），属整体层 → rank=纲
+        _add(_b, who, what, _src, _dj_s, _side, _zhi, _ren, _yingqi_map.get(_zhi, ''),
+             layer='zhengti', scope=_SCOPE_CHUAN.get(_pos, '长期大局'), rank='纲', wangshuai=_ws)
+
+    # ①b B7：本命支／行年支 之「上神」（疏正应人首选：行年句式 82 条、本命 24 条）
+    #     v4：本命＝终身（layer=benming）｜行年＝仅当年（layer=xingnian），均 rank=具象
+    _tjp = result.get('tiandi_pan') or {}
+    _tjm = result.get('tianjiang_map') or {}
+    _lx_zhis = set(str(x.get('地支') or '') for x in (result.get('leixiang') or []))
+    _bm_ji, _bm_xg, _bm_rf = [], [], []
+    for _lab, _mz in (('本命', str(ben_ming_zhi or '').strip()), ('行年', str(xing_nian_zhi or '').strip())):
+        if not _mz:
+            continue
+        _up = str(_tjp.get(_mz) or '')
+        _j2 = str(_tjm.get(_up) or '') if _up else ''
+        if not (_up and _j2):
+            continue
+        _side2 = ''
+        _dj2 = ''
+        if _ggw is not None:
+            _dj2 = _ggw.duanyu_of(_j2, _up)
+            _side2 = _ggw.side_with_fallback(_j2, _up, _dj2)
+        _in_chuan = '（%s入课传）' % _lab if _mz in _lx_zhis else ''
+        _tgt = _bm_ji if _side2 == '吉' else (_bm_xg if _side2 == '凶' else _bm_rf)
+        _add(_tgt, '%s%s之人' % (_lab, _mz),
+             '%s上神%s乘%s%s' % (_lab, _up, _j2, _in_chuan),
+             '%s上神' % _lab, _gloss_show(_dj2), _side2, _up, _lab, _yingqi_map.get(_up, ''),
+             layer=('benming' if _lab == '本命' else 'xingnian'),
+             scope=('终身' if _lab == '本命' else '当年(仅)'),
+             rank='具象', wangshuai=_ws_of(_up))
+    ji[:0] = _bm_ji
+    xiong[:0] = _bm_xg
+    ref[:0] = _bm_rf
+
+    # ② 六亲结构（《东方朔射覆秘诀》卷之二贵神主客六亲论）
+    _lq = result.get('liuqin_struct') or {}
+    _rel = str(_lq.get('关系') or '')
+    _duan = str(_lq.get('断') or '').strip()
+    if _duan:
+        _who_map = {'生日': '上人（长辈／恩主）', '克日': '官府／词讼之人',
+                    '日克': '妻妾／财利所系之人', '比和': '兄弟朋友', '日生': '子孙／下辈（耗脱）'}
+        if _rel in ('克日', '日生'):
+            _b = xiong
+        elif _rel in ('生日', '日克', '比和'):
+            _b = ji
+        else:
+            _b = ref
+        _add(_b, _who_map.get(_rel, '六亲'), _duan, '六亲[%s%s]' % (_lq.get('将', ''), _rel))
+
+    # ③ 斗首四柱星曜（吉＝元辰/武财；凶＝贪官/破鬼；应人＝六亲化气）
+    _DOU_LQ = {'元辰': '兄弟朋友（同气帮扶）', '武财': '妻财（我生为财）',
+               '廉子': '子孙（我克）', '贪官': '官鬼是非（克我）',
+               '破鬼': '破耗鬼祟（我生为鬼）'}
+    for _col, _st in ((result.get('doushou_full') or {}).get('sizhu_stars') or {}).items():
+        _xing = str(_st.get('星曜', ''))
+        if _xing in ('元辰', '武财'):
+            _add(ji, _DOU_LQ[_xing], '%s%s（化气%s）为用' % (_col, _xing, _st.get('化气', '')), '斗首四柱星曜')
+        elif _xing in ('贪官', '破鬼'):
+            _add(xiong, _DOU_LQ[_xing], '%s%s（化气%s）为忌' % (_col, _xing, _st.get('化气', '')), '斗首四柱星曜')
+
+    # ④ 禄马贵发传／到山到向（要诀「两因字是大窍」：X 命人发福，应于 X 年）
+    _ddx = result.get('daoshan_daoxiang') or {}
+    _hm = result.get('huoma_huolu') or {}
+    _lu_z = (_ddx.get('lu') or {}).get('lu_zhi', '')
+    _ma_z = (_ddx.get('ma') or {}).get('ma_zhi', '')
+    _gui_z = [g for g in ((_ddx.get('guiren') or {}).get('guiren_zhi') or []) if g]
+    if _hm.get('huo_lu') and _lu_z:
+        _add(ji, '%s命人' % _lu_z, '禄神%s发传（天机灵动），发福应于%s年' % (_lu_z, _lu_z), '禄马发传')
+    if _hm.get('huo_ma') and _ma_z:
+        _add(ji, '%s命人' % _ma_z, '马神%s发传，发福应于%s年' % (_ma_z, _ma_z), '禄马发传')
+    if _gui_z and (_ddx.get('guiren') or {}).get('is_daoshan_daoxiang'):
+        _add(ji, '贵人（助力者）', '天乙贵人%s到山到向，得贵人扶助' % '、'.join(_gui_z), '禄马贵人')
+
+    # ⑤ 类神吉应（何时何人＝类神所乘天将的「主X」表）；其断语亦属宫位断语 → 须附旺衰（§8.3④）
+    _ld = result.get('leishen_detail') or {}
+    _ld_narr = str(_ld.get('narr') or '').strip()
+    if _ld_narr:
+        _ls_zhi = str(_ld.get('leishen') or '')
+        _tt = _ld.get('tianjiang_table') or {}
+        _ls_jj = ''
+        for _x in (result.get('leixiang') or []):
+            if str(_x.get('地支') or '') == _ls_zhi and _x.get('天将'):
+                _ls_jj = str(_x.get('天将'))
+                break
+        _who_ls = ''
+        if _ls_jj and _tt.get(_ls_jj):
+            _pair = _tt[_ls_jj]
+            _who_ls = str(_pair[1] if isinstance(_pair, (list, tuple)) and len(_pair) > 1 else _pair)
+        _end = str(_ld.get('end') or '')
+        _b = ji if _end == '吉' else (xiong if _end == '凶' else ref)
+        _dj_ls = ''
+        _side_ls = ''
+        if _ggw is not None and _ls_jj:
+            _dj_ls = _gloss_show(_ggw.duanyu_of(_ls_jj, _ls_zhi))
+            _side_ls = _ggw.side_of(_ls_jj, _ls_zhi)
+        if _side_ls and _end and _side_ls != _end:
+            _dj_ls = ''      # 宫位判据与类神 end 相反 → 不叠加，避免本行自相矛盾（更正已在 ① 类象行呈现）
+        _add(_b, _who_ls, _ld_narr, '类神吉应[%s%s]' % (_ls_zhi, _ld.get('zeri_type', '')),
+             _dj_ls, _end, _ls_zhi, '', _yingqi_map.get(_ls_zhi, ''), wangshuai=_ws_of(_ls_zhi))
+
+    # ⑥ 古籍合参（吉格→吉应；警告→凶应；其余→参考）
+    _hc = result.get('hecan') or {}
+    for _w in (_hc.get('警告') or []):
+        _add(xiong, '', str(_w), '古籍合参警示')
+    for _h in ((_hc.get('zeri_rules') or {}).get('hits') or []):
+        _c = str(_h.get('结论') or '')
+        _txt = str(_h.get('叙事') or _h.get('标签') or '').strip()
+        if _c in ('吉', '大吉'):
+            _add(ji, '', _txt, '合参吉格[%s]' % _h.get('id', ''))
+        elif _c in ('凶', '大凶', '忌', '不宜'):
+            _add(xiong, '', _txt, '合参忌讳[%s]' % _h.get('id', ''))
+        else:
+            _add(ref, '', _txt, '合参[%s]' % _h.get('id', ''))
+
+    # ⑦ 旬空审计 / 秘诀警示（落「何事」）
+    _va = result.get('void_audit') or {}
+    for _r in (_va.get('reasons') or []):
+        _add(xiong, '', str(_r), '旬空审计')
+    if (not _va.get('pass', True)) and not (_va.get('reasons') or []):
+        _add(xiong, '', '旬空审计未过（%s）' % str(_va.get('level') or ''), '旬空审计')
+    _mj = ((result.get('luma_detail') or {}).get('mijue_details') or {})
+    for _w in (_mj.get('warnings') or []):
+        _add(xiong, '', str(_w), '秘诀警示')
+
+    # ⑧ 毕法赋适用法句（不判吉凶 → 参考列，防「吉凶两列」被非吉凶内容冲淡）
+    for _b in ((result.get('bifa_filtered') or {}).get('kept') or []):
+        _add(ref, '', '毕法赋「%s」适用本占类' % _b, '毕法赋')
+
+    ji, xiong, ref = ji[:10], xiong[:10], ref[:8]
+    _note = ''
+    if ji and xiong:
+        _note = ('本课吉凶并见 —— 吉应落在上列之人／事，凶应亦落在上列之人／事；'
+                 '宜按「吉者用之、凶者避之」自行权衡（吉应首项：%s；凶应首项：%s）。'
+                 % ((ji[0]['what'] or ji[0]['note'])[:22], (xiong[0]['what'] or xiong[0]['note'])[:22]))
+    elif ji:
+        _note = '本课诸源以吉为主 —— 吉应落在上列之人／事。'
+    elif xiong:
+        _note = '本课诸源见凶 —— 凶应落在上列之人／事，宜慎用或另择。'
+    return {'ji': ji, 'xiong': xiong, 'ref': ref, 'note': _note}
+
+
+def _build_layered_verdict(verdict, yingren):
+    """v4（憨爷「按上面八节全做」）：把裁决按【层级】重排，显式标注时间域。
+
+    原文口径（全附出处）：
+      · 《通解》下 L7768「凡终身之占，以日干为身…以支为家室…三传为大运，逐年视行年。此为总法。」
+      · 《通解》上 L3416「太岁在初传，为当年事；在末，为久远事；在中兮，方来过去。」
+      · 《通解》上 L1387「所谓七处…先看七处，次看类神…然后就类神吉凶结合课式而断。」
+      · 《通解》中 L3766「三传凶，行年吉，能解之。三传行尽凶则凶不可解也。」
+
+    §8.3 硬约束：
+      ① overall 只依整体层（课体/三传/三家总断）且【先算】；本命/行年随后，只作限定，不得改写 overall。
+      ② 行年凶 ⇒ summary 必含「唯当年…」，且【禁】出现「整体凶／大局凶／破局」字样。
+      ③ 局部与整体冲突时措辞只走「能解之／稍缓／化凶为吉」或「当年稍滞」，【禁】「反主凶」。
+      ④ 宫位断语必附旺衰（已在 _build_yingren_ji_xiong 缀「无气：虚/迟/小」）。
+    纯展示层，零评分影响。
+    """
+    verdict = verdict or {}
+    yingren = yingren or {}
+
+    # ── ① 整体层（先算；只依 verdict：三家总断来自课体/三传/流派独立分）──
+    _LV2SIDE = {'ok': '吉', 'lean_ok': '吉', 'warn': '吉', 'conflict': '半', 'mid': '平', 'bad': '凶'}
+    _rows = verdict.get('rows') or []
+    _ov = _LV2SIDE.get(str(verdict.get('tail_level') or 'mid'), '平')
+    if _rows:
+        _ov_basis = '课体·三传（%s）' % '，'.join(
+            '%s%s' % (str(r.get('name') or ''), str(r.get('side') or '')) for r in _rows)
+    else:
+        _ov_basis = '课体·三传'
+
+    def _layer_of(layer):
+        """局部层汇总：取该层条目 side 多数决；并列取首条。返回 (side, basis, n)。"""
+        _items = []
+        for _k in ('ji', 'xiong', 'ref'):
+            for _x in (yingren.get(_k) or []):
+                if str(_x.get('layer') or '') == layer:
+                    _items.append(_x)
+        if not _items:
+            return '', '', 0
+        _cnt = {'吉': 0, '凶': 0}
+        for _x in _items:
+            if _x.get('side') in _cnt:
+                _cnt[_x['side']] += 1
+        if _cnt['吉'] > _cnt['凶']:
+            _sd = '吉'
+        elif _cnt['凶'] > _cnt['吉']:
+            _sd = '凶'
+        else:
+            _sd = str(_items[0].get('side') or '')
+        return _sd, str(_items[0].get('what') or ''), len(_items)
+
+    _bm_sd, _bm_basis, _bm_n = _layer_of('benming')
+    _xn_sd, _xn_basis, _xn_n = _layer_of('xingnian')
+
+    _CN = {'吉': '吉', '凶': '凶', '半': '吉凶参半', '平': '平', '': ''}
+    _segs = ['整体%s' % _CN.get(_ov, '平')]
+    if _bm_sd:
+        _segs.append('本命%s（终身）' % _CN.get(_bm_sd, ''))
+    if _xn_sd:
+        _segs.append('%s行年%s（仅当年）' % ('唯' if (_ov == '吉' and _xn_sd == '凶') else '', _CN.get(_xn_sd, '')))
+    _summary = '、'.join(_segs) + '。'
+    if _ov == '吉' and _xn_sd == '凶':
+        _summary += '　—— 长期吉，唯当年稍滞宜慎，不碍大局。'          # §8.3② 禁「整体凶」字样
+    elif _ov == '吉' and _bm_sd == '凶':
+        _summary += '　—— 长期吉，唯终身基调有碍，宜徐徐图之。'
+    elif _ov == '凶' and (_bm_sd == '吉' or _xn_sd == '吉'):
+        _who = []
+        if _bm_sd == '吉':
+            _who.append('本命')
+        if _xn_sd == '吉':
+            _who.append('行年')
+        _summary += ('　—— 整体有阻，幸得%s见吉（《通解》中「三传凶，行年吉，能解之」），可望转圜。'
+                     % '、'.join(_who))
+    elif _ov == '凶' and _bm_sd == '凶' and _xn_sd == '凶':
+        _summary += '　—— 整体与局部俱凶，「三传行尽凶则凶不可解」，宜另择。'
+
+    return {
+        'overall': {'side': _ov, 'scope': '长期大局', 'basis': _ov_basis,
+                    'note': '先定；只依课体/三传（七处之先）'},
+        'benming': {'side': _bm_sd, 'scope': '终身', 'basis': _bm_basis, 'n': _bm_n,
+                    'note': '本命上神 → 终身基调'},
+        'xingnian': {'side': _xn_sd, 'scope': '当年(仅)', 'basis': _xn_basis, 'n': _xn_n,
+                     'note': '行年上神 → 仅当年'},
+        'summary': _summary,
+        'rule': ('分层判据：整体＝课体/三传（定吉凶，先算）；本命＝终身；行年＝仅当年。'
+                 '《通解》下「三传为大运，逐年视行年」（终身占总法）；上「太岁在初传为当年事，'
+                 '在末为久远事，在中兮方来过去」；中「三传凶，行年吉，能解之」。'
+                 '⛔ 局部不翻整体：局部凶只限其时间域，不改变整体定性。'),
+    }
+
+
+def _build_narrative_spine(result, zetiri_type='', nianming_ctx=None, piyu_detail=None):
+    """叙事主线（2026-09-12 憨爷拍板「方案 A」）：以【三传】为时间轴，把散落的叙事引擎串成一气。
+
+    骨架 ＝ 原书判序（《通解》上 L1387「日 → 辰 → 初传 → 中传 → 末传 → 本命 → 行年」）：
+      · 起（事之因）＝ 占类所求 ＋ 日干上神 ＋ 日支上神 ＋ 发用（初传）
+      · 承（事之变）＝ 中传（所主 · 乘将断语 · 宫位吉凶 · 旺衰）
+      · 合（事之成）＝ 末传 ＋ 课体三档
+      · 应（何时·何人）＝ 应期层次（《通解》上 L3416：初＝当年／中＝方来过去／末＝久远）
+                        ＋ 本命/行年上神（《通解》下 L7768「三传为大运，逐年视行年」）
+                        ＋ 救神化解（engine.jiuzhu_engine，有意则报「可解」）
+
+    🔴 铁律：只【重组】既有产出，**不新造判据**；纯展示层，**零评分影响**（不进评分链）。
+      吉凶 `side` 一律取自 engine.tianjiang_gongwei（天将×宫位，《颐旨经》）＋ 既有 verdict/verdict_layered。
+    返回 {'lead', 'sections': [{'key','title','sub','side','lines':[{'text','src','side','zhi'}]}], 'rule'}
+    """
+    ctx = nianming_ctx or {}
+    detail = piyu_detail or {}
+    try:
+        from engine import tianjiang_gongwei as _ggw
+    except Exception:
+        _ggw = None
+    try:
+        from engine.kege_shensha import wang_xiang as _wx
+    except Exception:
+        _wx = None
+    _yue_jian = _yue_jian_of(result)      # 月建＝四柱月柱（按节）；2026-09-13 口径统一
+
+    _tjp = result.get('tiandi_pan') or {}
+    _tjm = result.get('tianjiang_map') or {}
+    _sc = result.get('sanchuan') or {}
+    _sike = result.get('sike') or []
+    _sizhu = result.get('sizhu') or {}
+    _keti = str(_sc.get('课体') or '')
+
+    def _ws(z):
+        if _wx is None or not z or not _yue_jian:
+            return ''
+        try:
+            return str(_wx(z, _yue_jian) or '')
+        except Exception:
+            return ''
+
+    def _side_of(z, j, dj=''):
+        s = ''
+        if _ggw is not None and j:
+            try:
+                s = str(_ggw.side_with_fallback(j, z, dj) or '')
+            except Exception:
+                s = ''
+        return s if s in ('吉', '凶') else ''
+
+    def _tone_of(j, z):
+        """⚠ 警戒档（2026-09-14）：与 `side` **正交**的附加标注，纯展示、不进评分链。
+        真源 engine.tianjiang_gongwei.TIANJIANG_GONGWEI_TONE（逐将注解《注解大六壬指南》L85/L91/L109/L112/
+        L127/L239/L283/L286，仅收已取证 9 条）。未取证 → ('', '', '')，绝不影响吉凶判定。"""
+        _fn = getattr(_ggw, 'tone_note_of', None) if _ggw is not None else None
+        if _fn is None or not j or not z:
+            return ('', '', '')
+        try:
+            _r = _fn(j, z)
+            return _r if (isinstance(_r, tuple) and len(_r) == 3) else ('', '', '')
+        except Exception:
+            return ('', '', '')
+
+    _lx_by_pos = {}
+    for _x in (result.get('leixiang') or []):
+        _p = str(_x.get('位置') or '')
+        if _p and _p not in _lx_by_pos:
+            _lx_by_pos[_p] = _x
+
+    def _agg(sides):
+        """节内吉凶汇总：全吉→吉／全凶→凶／杂→半／无→空。只汇总、不新判。"""
+        _ss = set(s for s in sides if s)
+        if not _ss:
+            return ''
+        if _ss == {'吉'}:
+            return '吉'
+        if _ss == {'凶'}:
+            return '凶'
+        return '半'
+
+    def _brief(s, n=3):
+        """收敛（2026-09-12 憨爷「进一步收敛主线段行数」）：类象【所主】只留前 n 个顿号项，
+        余以「…」示意 —— 完整列表仍在下方依据区，主线段只作摘要。"""
+        s = str(s or '').strip()
+        if not s:
+            return ''
+        parts = [p.strip() for p in s.replace('，', '、').replace(',', '、').split('、') if p.strip()]
+        if len(parts) <= n:
+            return s
+        return '、'.join(parts[:n]) + '…'
+
+    def _lx_line(pos, stage='', label='', brief=False):
+        """由 leixiang 条目生成一行叙事（何事 + 乘将断语 + 旺衰）。无条目 → None。
+        label 非空时以「〈label〉上神〈支〉」表述（供 干上/支上 → 日干/日支 人性化改写）。
+        brief=True（主线段默认）→ 所主截前 3 项、**省旺衰后缀**（旺衰属依据区细节，主线段不重复）。"""
+        x = _lx_by_pos.get(pos)
+        if not x:
+            return None
+        z = str(x.get('地支') or '')
+        j = str(x.get('天将') or '')
+        sw = str(x.get('所主') or '').strip()
+        dj = str(x.get('乘神断语') or '').strip()
+        # 显示用今译（原文 sw/dj 仍喂 _side_of 判吉凶 —— 铁律「判定用原文、显示用今译」）
+        sw_s = str(x.get('所主今') or '').strip() or _gloss_show(sw)
+        dj_s = str(x.get('乘神断语今') or '').strip() or _gloss_show(dj)
+        ws = _ws(z)
+        txt = ('%s上神%s' % (label, z)) if label else ('%s%s' % (pos, z))
+        if j:
+            txt += '乘%s' % j
+        if stage:
+            txt += '［%s］' % stage
+        body = _brief(sw_s or dj_s, 3) if brief else (sw_s or dj_s)
+        if body:
+            txt += '：%s' % body
+        if sw_s and dj_s and dj_s != sw_s:
+            txt += '（%s）' % dj_s
+        if (not brief) and ws and ws not in ('旺', '相'):
+            txt += '（%s：虚/迟/小）' % ws
+        _tn = _tone_of(j, z)
+        return {'text': txt + '。', 'src': '%s%s' % ((label or pos), j), 'side': _side_of(z, j, dj), 'zhi': z,
+                'tone': _tn[0], 'tone_note': _tn[1], 'tone_src': _tn[2]}
+
+    def _sike_line(idx, lab):
+        """由四课第 idx 课（0=干阳、2=支阳）兜底生成日干/日支上神叙事。"""
+        if len(_sike) <= idx:
+            return None
+        row = _sike[idx]
+        up = str(row[1] if len(row) > 1 else '')
+        if not up:
+            return None
+        j = str(row[3] if len(row) > 3 else '') or str(_tjm.get(up) or '')
+        dj = str(_ggw.duanyu_of(j, up) or '') if (_ggw is not None and j) else ''
+        t = '%s%s上见%s' % (lab, str(row[2] if len(row) > 2 else ''), up)
+        if j:
+            t += '乘%s' % j
+        if dj:
+            t += '——%s' % _gloss_show(dj)
+        _tn = _tone_of(j, up)
+        return {'text': t + '。', 'src': '%s上神' % lab, 'side': _side_of(up, j, dj), 'zhi': up,
+                'tone': _tn[0], 'tone_note': _tn[1], 'tone_src': _tn[2]}
+
+    def _rc_line():
+        """日辰上神【合并一行】（日干 ＋ 日支）——2026-09-12 收敛：原「干上」「支上」两行并作一行。
+        上神/天将/断语优先取 `leixiang` 条目（含所主），缺则回退四课第 idx 课。"""
+        pieces, sides, tones = [], [], []
+        for lab, lx_pos, idx in (('日干', '干上', 0), ('日支', '支上', 2)):
+            row = _sike[idx] if len(_sike) > idx else None
+            dn = str(row[2] if (row and len(row) > 2) else '')
+            x = _lx_by_pos.get(lx_pos)
+            up = j = sw = dj = sw_s = dj_s = ''
+            if x:
+                up = str(x.get('地支') or '')
+                j = str(x.get('天将') or '')
+                sw = str(x.get('所主') or '').strip()
+                dj = str(x.get('乘神断语') or '').strip()
+                sw_s = str(x.get('所主今') or '').strip() or _gloss_show(sw)
+                dj_s = str(x.get('乘神断语今') or '').strip() or _gloss_show(dj)
+            elif row:
+                up = str(row[1] if len(row) > 1 else '')
+                j = str(row[3] if len(row) > 3 else '') or str(_tjm.get(up) or '')
+                dj = str(_ggw.duanyu_of(j, up) or '') if (_ggw is not None and j) else ''
+                dj_s = _gloss_show(dj)
+            if not up:
+                continue
+            t = '%s%s上见%s' % (lab, dn, up)
+            if j:
+                t += '乘%s' % j
+            _b = _brief(sw_s, 2) if sw_s else ''
+            if _b:
+                t += '：%s' % _b
+            if dj_s and dj_s != (sw_s or ''):
+                t += '（%s）' % dj_s
+            pieces.append(t)
+            sides.append(_side_of(up, j, dj))
+            tones.append(_tone_of(j, up))
+        if not pieces:
+            return None
+        _tn = next((_x for _x in tones if _x and _x[0]), ('', '', ''))
+        return {'text': '日辰上神：%s。' % '；'.join(pieces),
+                'src': '日辰上神', 'side': _agg(sides), 'zhi': '',
+                'tone': _tn[0], 'tone_note': _tn[1], 'tone_src': _tn[2]}
+
+    sections = []
+
+    # ── 起（事之因）：占类所求 → 日辰上神（人/宅）→ 发用 ──
+    _qi = []
+    _sect_name = str(zetiri_type or (result.get('leishen_detail') or {}).get('zeri_type') or '').strip()
+    _head = '占'
+    if _sect_name:
+        _head += '「%s」' % _sect_name
+    _ri = str(_sizhu.get('日') or '')
+    _shi = str(_sizhu.get('时') or '')
+    if _ri:
+        _head += '，以%s日' % _ri
+    if _shi:
+        _head += '%s时' % _shi[-1:]
+    if _keti:
+        _head += '立课，得%s' % _keti
+    _qi.append({'text': _head + '。', 'src': '四柱·课体', 'side': '', 'zhi': ''})
+    _rc = _rc_line()
+    if _rc:
+        _qi.append(_rc)
+    else:
+        _gs = _sike_line(0, '日干')
+        if _gs:
+            _qi.append(_gs)
+    _fa = _lx_line('初传', '事之起', brief=True)
+    if _fa:
+        _qi.append(_fa)
+    sections.append({'key': 'qi', 'title': '起', 'sub': '事之因 · 日辰与发用', 'lines': _qi})
+
+    # ── 承（事之变）：中传 ──
+    _cheng = []
+    _zh = _lx_line('中传', '事之中', brief=True)
+    if _zh:
+        _cheng.append(_zh)
+    else:
+        _cheng.append({'text': '中传无所主可叙，事之中平。', 'src': '中传', 'side': '', 'zhi': ''})
+    sections.append({'key': 'cheng', 'title': '承', 'sub': '事之变 · 中传', 'lines': _cheng})
+
+    # ── 合（事之成）：末传 ＋ 课体三档【合并一行】──
+    _he = []
+    _mo = _lx_line('末传', '事之成', brief=True)
+    _tier_lab = ''
+    if _keti:
+        try:
+            from engine.daliuren_64ke_rules import keti_tier as _kt, keti_tier_label as _ktl
+            _tier_lab = str(_ktl(_keti) or '')
+            if not _tier_lab:
+                _tier_lab = {2: '十三吉课', 1: '平课', 0: '凶课'}.get(_kt(_keti), '')
+        except Exception:
+            _tier_lab = ''
+    _kt_txt = ('课体%s%s' % (_keti, ('（%s）' % _tier_lab) if _tier_lab else '')) if _keti else ''
+    if _mo and _kt_txt:
+        _mo = dict(_mo)
+        _mo['text'] = _mo['text'].rstrip('。') + '；' + _kt_txt + '。'
+        _mo['src'] = '%s＋课体' % str(_mo.get('src') or '末传')
+        _he.append(_mo)
+    elif _mo:
+        _he.append(_mo)
+    elif _kt_txt:
+        _he.append({'text': _kt_txt + '。', 'src': '课体', 'side': '', 'zhi': ''})
+    if not _he:
+        _he.append({'text': '末传与课体无所主可叙，事之成平。', 'src': '末传', 'side': '', 'zhi': ''})
+    sections.append({'key': 'he', 'title': '合', 'sub': '事之成 · 末传与课体', 'lines': _he})
+
+    # ── 应（何时·何人）：应期结论 → 本命/行年上神【合并一行】→ 救神化解 ──
+    _ying = []
+    _yq_all = [str(e.get('文本') or '').strip() for e in (result.get('yingqi_struct') or [])]
+    _yq_all = [t for t in _yq_all if t]
+    # 🔴 收敛：只取【给出结论的那一条】（含「应于/应在」），中段算式截掉 —— 六法算式明细留在下方「应期」区
+    _yq_concl = ''
+    for _t in _yq_all[:6]:
+        if ('应于' in _t) or ('应在' in _t):
+            if ('：' in _t) and ('→' in _t):
+                _yq_concl = '%s → %s' % (_t.split('：')[0], _t.split('→')[-1].strip())
+            else:
+                _yq_concl = _t
+            break
+    _yq_txt = '应期：初传主当年、中传主方来过去、末传主久远（《通解》上 L3416）'
+    if _yq_concl:
+        _yq_txt += '；' + _yq_concl
+    if len(_yq_all) >= 2:
+        _yq_txt += '（六法合参见下「应期」）'
+    _ying.append({'text': _yq_txt + '。', 'src': '应期', 'side': '', 'zhi': ''})
+    # 🔴 收敛：本命＋行年上神【合并一行】（同属「命上神」；终身/仅当年标注保留 —— 时间尺度铁律）
+    _mn_pieces, _mn_sides, _mn_tones = [], [], []
+    for _lab, _mz in (('本命', str(ctx.get('ben_ming_zhi') or '')), ('行年', str(ctx.get('xing_nian_zhi') or ''))):
+        if not _mz:
+            continue
+        _up = str(_tjp.get(_mz) or '')
+        if not _up:
+            continue
+        _j2 = str(_tjm.get(_up) or '')
+        _dj2 = str(_ggw.duanyu_of(_j2, _up) or '') if (_ggw is not None and _j2) else ''
+        _t2 = '%s%s上见%s' % (_lab, _mz, _up)
+        if _j2:
+            _t2 += '乘%s' % _j2
+        if _dj2:
+            _t2 += '——%s' % _gloss_show(_dj2)
+        _t2 += '（%s）' % ('终身' if _lab == '本命' else '仅当年')
+        _mn_pieces.append(_t2)
+        _mn_sides.append(_side_of(_up, _j2, _dj2))
+        _mn_tones.append(_tone_of(_j2, _up))
+    if _mn_pieces:
+        _mt = next((_x for _x in _mn_tones if _x and _x[0]), ('', '', ''))
+        _ying.append({'text': '；'.join(_mn_pieces) + '。', 'src': '本命·行年上神',
+                      'side': _agg(_mn_sides), 'zhi': '',
+                      'tone': _mt[0], 'tone_note': _mt[1], 'tone_src': _mt[2]})
+    _jz = detail.get('jiuzhu') or {}
+    if isinstance(_jz, dict) and _jz.get('items'):
+        _eff = bool(_jz.get('effective'))
+        # 🔴 去重（依憨爷「合并重复模块 / UI 简洁」既有偏好）：主线段只给【首跳摘要】，
+        #    全链与类象留在下方「总断 · 救神具象化」——同一页内不再逐字重复同一条链。
+        _p0 = _jz.get('primary') or {}
+        _z0 = str(_p0.get('zhi') or '')
+        _n0 = str(_p0.get('name') or '')
+        _j0 = str(_p0.get('jiang') or '')
+        _js = str(_jz.get('jieshen') or '')
+        _tk = '救神：%s（%s）%s' % (_z0, _n0, ('乘%s' % _j0) if _j0 else '')
+        if not _eff:
+            _tk += '　⚠ 诸救神皆落空亡，力薄，宜从速另图'
+        _tk += '。解神%s；全链与类象见下「总断 · 救神具象化」。' % (_js or '—')
+        _ying.append({'text': _tk, 'src': '救神', 'side': '吉' if _eff else '', 'zhi': _z0})
+    elif isinstance(_jz, dict) and _jz.get('note'):
+        _ying.append({'text': str(_jz.get('note')), 'src': '救神', 'side': '', 'zhi': ''})
+    sections.append({'key': 'ying', 'title': '应', 'sub': '何时 · 何人', 'lines': _ying})
+
+    # ── lead：一句话总述（三传 ＋ 既有分层/异断文本拼装，不新判吉凶）──
+    def _zhan(pos):
+        x = _lx_by_pos.get(pos)
+        if not x:
+            return ''
+        _j = str(x.get('天将') or '')
+        return '%s%s' % (str(x.get('地支') or ''), ('乘%s' % _j) if _j else '')
+
+    _vl = detail.get('verdict_layered') or {}
+    _ov = str(((_vl.get('overall') or {}).get('side')) or '')
+    _tail = str((detail.get('verdict') or {}).get('tail') or '')
+    _lead = ('%s之占：' % _sect_name) if _sect_name else ''
+    _lead += '事起于%s，中经%s，成于%s' % (_zhan('初传') or '—', _zhan('中传') or '—', _zhan('末传') or '—')
+    if _ov:
+        _lead += '；%s' % ('整体定吉' if _ov == '吉' else ('整体见凶' if _ov == '凶' else '整体中平'))
+    _lead += '。'
+    if _tail:
+        _lead += _tail
+
+    # 各节吉凶汇总（供前端着色；三传无 side 时留空）——统一走 _agg
+    for _s in sections:
+        _s['side'] = _agg([l.get('side') for l in _s['lines']])
+
+    return {
+        'lead': _lead,
+        'sections': sections,
+        'rule': ('原书判序《通解》上 L1387「日→辰→初传→中传→末传→本命→行年」；'
+                 '应期层次 L3416；本命/行年 L7768「三传为大运，逐年视行年」。'
+                 '⚠ 警戒档（tone）＝《注解大六壬指南》逐将注解（L85/L91/L109/L112/L127/L239/L283/L286），'
+                 '与 side 正交的附加标注，只挂在落点行、不改吉凶两列。'
+                 '🔴 只重组既有产出，不进评分链。'),
+    }
+
+
+def _yue_jian_of(result):
+    """月建真源（2026-09-13 憨爷拍板）：以**四柱月柱**为准（按「节」）。
+
+    ⛔ 旧口径 `get_yue_jian_from_yuejiang(月将)` 是「月将↔月建」固定配对，
+    在「节后、中气前」的半个月窗口会与四柱月柱差一位（例：已建寅、雨水前仍是子将）。
+    ✅ 现口径：先取 `result['sizhu']['月']`（四柱月柱，按节）；仅当四柱缺失才回落旧换算。
+    月将另行按**中气**推（`DaLiuRenLuMaGuiRen.get_yuejiang_by_date`），二者各自独立、互不反推。
+    """
+    try:
+        _sz = (result or {}).get('sizhu') or {}
+        _mp = str(_sz.get('月') or _sz.get('月柱') or '').strip()
+        if len(_mp) >= 2:
+            return _mp[-1]
+        if len(_mp) == 1:
+            return _mp
+    except Exception:
+        pass
+    try:
+        from engine.bifa_detector import get_yue_jian_from_yuejiang as _gyj
+        return str(_gyj((result or {}).get('yuejiang') or '') or '')
+    except Exception:
+        return ''
+
+
+def _build_gongwei_chain(result, zetiri_type='', nianming_ctx=None):
+    """宫位链（2026-09-12 憨爷拍板「给叙事层加一节宫位链」）：把
+    【天将所乘之支 → 所加地盘宫 → 宫之本家天将 → 月令旺衰 → 六亲】串成一条可读的因果链，
+    补足叙事主线「只按判序平铺、不串宫位」的缺口。
+
+    原文依据（逐条可查）：
+      · 天将本家/本位 ——《注解大六壬指南》L85「贵人居丑曰升堂，乃本位属己丑故也」
+        ／L125「寅为青龙之本位」／L185「卯则六合本位」／L240「壬子乃天后本家」。
+      · 天将加地盘宫取象 —— 同书 L89「贵人加于地盘卯酉之上…亦主贵人临门」
+        ／L92「卯酉为门户，故贵人加于地盘二分之上，亦主主顾来临」。
+      · 月令旺相休囚死 —— 同书 L511「欢欣在旺相之中，悲哀在死囚之处」／L512「旺相发用皆喜，休囚发用皆主忧」
+        ／L720「死生即得令不得令义」；真源 engine.kege_shensha.wang_xiang(zhi, **月建**)（憨爷 09-11 拍板：当令＝月建）。
+      · 六亲（妻财/官鬼…）——《指南》L710「占婚姻视天后妻财与日辰比和」／L760「传见妻财利益多」。
+    🔴 铁律：纯展示层 —— **不产出 side、不参与吉凶判定、不进评分链**（吉凶仍一律由 tianjiang_gongwei 出）。
+    """
+    _JIG = {'甲': '寅', '乙': '辰', '丙': '巳', '丁': '未', '戊': '巳',
+            '己': '未', '庚': '申', '辛': '戌', '壬': '亥', '癸': '丑'}
+    out = {'rows': [], 'rule': '', 'src': ''}
+    try:
+        from engine.liuren_leixiang_knowledge import SHI_ER_SHEN_JIANG as _SESJ
+        from engine.kege_shensha import wang_xiang as _wx
+    except Exception as _e0:
+        out['error'] = 'import: %s' % _e0
+        return out
+    # ⚠ 警戒档（2026-09-14）：与 side **正交**的附加标注，纯展示、不进评分链
+    try:
+        from engine.tianjiang_gongwei import tone_note_of as _tone_fn
+    except Exception:
+        _tone_fn = None
+    _tjp = result.get('tiandi_pan') or {}       # {地盘: 天盘}
+    _tjm = result.get('tianjiang_map') or {}    # {天盘: 天将}
+    _sc = result.get('sanchuan') or {}
+    _sizhu = result.get('sizhu') or {}
+    _ri = str(_sizhu.get('日') or '')
+    _ri_gan, _ri_zhi = _ri[:1], _ri[-1:]
+    _yue_jian = _yue_jian_of(result)      # 月建＝四柱月柱（按节）；2026-09-13 口径统一
+    _benjia = {}
+    for _j, _v in _SESJ.items():
+        _bz = str((_v or {}).get('地支') or '')
+        if _bz and _bz not in _benjia:
+            _benjia[_bz] = _j
+    _gong_of = {}
+    for _di, _tian in _tjp.items():
+        if _tian and str(_tian) not in _gong_of:
+            _gong_of[str(_tian)] = str(_di)
+    _lqc = None
+    try:
+        from engine.liuqin_engine import LiuQinCalculator
+        _lqc = LiuQinCalculator()
+    except Exception:
+        _lqc = None
+
+    _LQ_FULL = {'财': '妻财', '鬼': '官鬼', '子': '子孙', '父': '父母', '兄': '兄弟'}
+
+    def _lq(z):
+        if _lqc is None or not z:
+            return ''
+        try:
+            _r = str(_lqc.get_liuqin(_ri_gan, z) or '')
+        except Exception:
+            return ''
+        return _LQ_FULL.get(_r, _r)
+
+    _by_z = {}
+    for _pos, _z in (('日干上神', _tjp.get(_JIG.get(_ri_gan, ''), '')),
+                     ('日支上神', _tjp.get(_ri_zhi, '')),
+                     ('初传', str(_sc.get('初传') or '')),
+                     ('中传', str(_sc.get('中传') or '')),
+                     ('末传', str(_sc.get('末传') or ''))):
+        _z = str(_z or '')
+        if not _z:
+            continue
+        _by_z.setdefault(_z, [])
+        if _pos not in _by_z[_z]:
+            _by_z[_z].append(_pos)
+    _picked = [('·'.join(_v), _k) for _k, _v in _by_z.items()]
+    for _pos, _z in _picked:
+        _j = str(_tjm.get(_z) or '')
+        if not _j:
+            continue
+        _lq_s = _lq(_z)
+        _gong = _gong_of.get(_z, '')
+        _bj = _benjia.get(_gong, '')
+        _ws_z = _wx(_z, _yue_jian) if _yue_jian else ''
+        _ws_g = _wx(_gong, _yue_jian) if (_yue_jian and _gong) else ''
+        # ⚠ 警戒档（与 side 正交、纯附加；憨爷 2026-09-14「按你建议操作」）
+        _tone, _tone_note, _tone_src = ('', '', '')
+        if _tone_fn is not None:
+            try:
+                _tone, _tone_note, _tone_src = _tone_fn(_j, _z)
+            except Exception:
+                _tone, _tone_note, _tone_src = ('', '', '')
+        # 🔴 2026-09-16 憨爷拍板修「同一信息禁两处呈现」：`_seg` **不再带 pos 前缀**。
+        #   前端 `gongweiChainCard` 已用紫色徽标渲染 `pos`（且 pos 可能是合并态「日干上神·初传」），
+        #   原先按「位置＋空格＋支乘将」拼法，会让同一 pos 在**徽标**与**行文本**中各出现一次。
+        #   ⚠️ 曾有注释称「保留 pos 前缀以兼容只取 text 的消费方」——2026-09-16 全仓排查
+        #     （html / py / probe / 闸口 / 导出链路）确认**该消费方不存在**，故删除冗余前缀。
+        #   信息完整性：pos 走结构化字段，支＋将仍留在 text，**不丢信息**。
+        #   ⛔ 改后 `gongwei_chain.text` 变 ⇒ 零影响基线须**重建**（憨爷 2026-09-16 已批）。
+        # 🔴🔴 2026-09-16 憨爷二次拍板：措辞**统一成「将乘支」**（原为「支乘将」）。
+        #   依 L2567 原文主语 —— 「贵人属土，若**乘**亥子则属水矣」＝**将乘支**；
+        #   与 `jiangShengkeCard`（白虎乘亥）、L8619（玄武所乘之神临戊地）**一致**。
+        #   ⚠️ 这一改使「乘」在全前端**只有一个方向**（将乘支），不再有倒装变体。
+        _seg = '%s乘%s' % (_j, _z)
+        if _lq_s:
+            _seg += '〔%s〕' % _lq_s
+        if _gong:
+            _seg += ' → 加地盘%s' % _gong
+            if _bj:
+                _seg += '（%s之本家为%s' % (_gong, _bj)
+                if _ws_g:
+                    _seg += '，%s于%s月为「%s」' % (_gong, _yue_jian, _ws_g)
+                _seg += '）'
+        if _ws_z:
+            _seg += '；%s于%s月为「%s」' % (_z, _yue_jian, _ws_z)
+        # ⚠ 警戒档只经结构化字段（tone / tone_note / tone_src）＋前端徽标呈现。
+        #   ⛔ 不内联进 text —— 否则前端徽标与行内标注重复显示同一信息；
+        #   与主线 narrative_spine 的呈现方式统一（2026-09-15 收敛）。
+        out['rows'].append({
+            'pos': _pos, 'zhi': _z, 'jiang': _j, 'liuqin': _lq_s,
+            'gong': _gong, 'gong_benjia': _bj,
+            'ws_zhi': _ws_z, 'ws_gong': _ws_g, 'text': _seg,
+            'tone': _tone, 'tone_note': _tone_note, 'tone_src': _tone_src,
+        })
+    out['rule'] = ('天将本家（《注解大六壬指南》L85/L125/L185/L240）＋加地盘宫取象（L89/L92）'
+                   '＋月令旺相休囚死（L511/L512/L720；真源 kege_shensha.wang_xiang(支, 月建)）'
+                   '＋六亲（《指南》L710/L760）'
+                   '＋⚠警戒档（《指南》逐将注解 L85/L91/L109/L112/L127/L239/L283/L286；tone 与 side 正交，不改吉凶）。'
+                   '🔴 纯展示层：不产出吉凶、不进评分链。')
+    _yue_pillar = str(_sizhu.get('月') or '')
+    out['src'] = ('月建=%s（＝四柱月柱 %s 之支，按「节」定 · 铁律「当令＝月建」）'
+                  '｜月将=%s（按中气推，真源 get_yuejiang_by_date；二者各自独立，互不反推）'
+                  % (_yue_jian or '未知', _yue_pillar or '?', result.get('yuejiang') or '?'))
+    return out
+
+
+def _build_zhanlei_tone(result, zhanlei='其他'):
+    """占类级宜忌（整将）—— 2026-09-15 憨爷「开干」。
+
+    为什么需要：六壬断法 ＝ 天将 × 所乘之支 × 所临之宫 × **占类** 四要素**联合**；
+    格级 tone（天将×宫）只有两维 ⇒ 本段补「占类」维，承载原文里
+    「整将级、**带占类限定**」的宜忌（如 天空「占词讼最爱…若求财物又深忌之」
+    上 L1760 ＝**同一将两极**）；实证见 docs/reports/_tone占类分化实证与B组判定.md。
+
+    ⛔ 纯展示层：只读 result 既有产出（tianjiang_map / sike / 三传）＋ 占类参数，
+      不新造判据、**不进评分链**、不改吉凶（与 side、格级 tone 正交）。
+    真源：engine.tianjiang_gongwei.TIANJIANG_ZHANLEI_TONE（占类取值＝bifa_zhanlei_map.ZHANLEI_ALL）。
+    """
+    _zl = str(zhanlei or '其他') or '其他'
+    out = {'zhanlei': _zl, 'items': []}
+    try:
+        from engine.tianjiang_gongwei import zhanlei_tones_for as _ztf
+    except Exception as _e_imp:
+        out['error'] = str(_e_imp)
+        return out
+
+    _tjm = result.get('tianjiang_map') or {}   # {天盘支: 天将}
+    _js = []
+    # ① 四课上神所乘天将（优先 sike[].天将；缺则按上神查 tianjiang_map）
+    for _row in (result.get('sike') or []):
+        _j, _up = '', ''
+        if isinstance(_row, dict):
+            _j = str(_row.get('天将') or '')
+            _up = str(_row.get('上神') or '')
+        elif isinstance(_row, (list, tuple)):
+            _j = str(_row[3]) if len(_row) > 3 else ''
+            _up = str(_row[1]) if len(_row) > 1 else ''
+        if not _j and _up:
+            _j = str(_tjm.get(_up) or '')
+        if _j:
+            _js.append(_j)
+    # ② 三传所乘天将
+    #    🔴 `sanchuan` 实际是 **dict**（含 '三传' / '三传天将' / '初传' / '中传' / '末传' / '课体' …）。
+    #       ⚠️ 2026-09-16 生产探针发现：**直接迭代 dict 只会拿到键名**（'三传'/'初传'…），
+    #       `tianjiang_map.get('初传')` 恒为 None ⇒ **三传天将一个都收不到**（＝S1 落地时的 bug）。
+    #       修：dict 走 `['三传']`（支列表，与本函数四课部分**同口径**查 tianjiang_map）；
+    #       list/tuple 仍兼容直接迭代。⛔ 不用 '三传天将'（那是另一路已算好的值，易分叉）。
+    _sc_raw = result.get('sanchuan')
+    _cs = []
+    if isinstance(_sc_raw, dict):
+        _cs = list(_sc_raw.get('三传') or [])
+        if not _cs:                       # 兜底：某些路径可能只给 初/中/末传 三键
+            _cs = [_sc_raw.get(k) for k in ('初传', '中传', '末传')]
+            _cs = [x for x in _cs if x]
+    elif isinstance(_sc_raw, (list, tuple)):
+        _cs = list(_sc_raw)
+    for _c in _cs:
+        _z = str(_c or '')
+        if _z:
+            _j = str(_tjm.get(_z) or '')
+            if _j:
+                _js.append(_j)
+
+    out['items'] = _ztf(_zl, _js)
+    out['src'] = ('《通解》第三章十二天将论（分卷行号）：天空 L1756–1790｜白虎 L1810–1845｜'
+                  '螣蛇 L2636–2660｜青龙 L1735｜玄武 L1886–1905｜太阴 L1918–1935｜贵人 L2588–2592')
+    out['rule'] = ('占类级宜忌（整将）：六壬断法＝天将×所乘之支×所临之宫×占类 四要素联合，'
+                   '格级只两维，本段补占类维。宜用＝本占有利｜忌用＝本占不利｜宜慎＝有前提。'
+                   '与 side、格级 tone 正交；纯展示层，不进评分链。')
+    return out
+
+
+def _build_wangshuai(result, gongwei_chain=None):
+    """旺衰应事（整将 × 旺相休囚死）—— 2026-09-16 憨爷「下一步」。
+
+    为什么需要：原文**每将都有一节「旺／相／休／囚／死」五档应事**
+    （「X旺，主…；相，主…；死，主…」），属**取象/应事**（主什么事），
+    与 side（吉凶）、tone（用法告诫）、占类宜忌 **四者正交**。
+
+    ⛔ 纯展示层：旺衰真源＝宫位链已算出的 `ws_zhi`（`kege_shensha.wang_xiang(支, 月建)`）
+      ⇒ **零新增计算**；不新造判据、**不进评分链**、不改吉凶。
+    真源表 `engine.tianjiang_gongwei.TIANJIANG_WANGSHUAI`（太常原文缺「囚」、六合/勾陈无五档，
+    均照实不收 —— ⛔ 不臆造补齐）。
+    ⓘ `result` 暂不使用，保留为同族签名（与 `_build_zhanlei_tone(result, …)` 一致），
+      ⛔ **不得**在此自行重算旺衰（否则与宫位链双源、可能不一致）。
+    """
+    out = {'items': []}
+    try:
+        from engine.tianjiang_gongwei import wangshuai_note_of as _wno
+    except Exception as _e_imp:
+        out['error'] = str(_e_imp)
+        return out
+
+    _rows = (gongwei_chain or {}).get('rows') or []
+    _seen = set()
+    for _r in _rows:
+        if not isinstance(_r, dict):      # 防御：宫位链行理论恒为 dict，坏行跳过不崩
+            continue
+        _j = str(_r.get('jiang') or '')
+        _z = str(_r.get('zhi') or '')
+        _w = str(_r.get('ws_zhi') or '')
+        if not (_j and _w):
+            continue
+        if (_j, _w) in _seen:
+            continue
+        _note, _src = _wno(_j, _w)
+        if not _note:
+            continue
+        _seen.add((_j, _w))
+        out['items'].append({'jiang': _j, 'zhi': _z, 'wangshuai': _w,
+                             'note': _note, 'src': _src})
+    out['src'] = ('《通解》上卷十二天将论「旺相休囚死」五档应事（贵人 L2600｜螣蛇 L2650｜朱雀 L1683｜'
+                  '青龙 L1735｜天空 L1783｜白虎 L1828｜太常 L1863｜玄武 L1898｜太阴 L1924｜天后 L1955；'
+                  '六合 L1713・勾陈 L1731 为「旺相／死囚」两分法）')
+    # ⓘ 诚实边界：让「为什么某行没列」自解释（⛔ 不臆造补齐原文缺口）
+    out['coverage_note'] = ('ⓘ 原文未及之档照实不列：太常缺「囚」档；六合/勾陈无五档'
+                            '（仅「旺相／死囚」两分法），其「休」档亦不列。')
+    out['rule'] = ('旺衰应事（整将×旺衰）：旺衰＝所乘之支在月建下的旺相休囚死（真源 '
+                   'kege_shensha.wang_xiang，与宫位链同源）。属取象应事，与 side、tone、占类宜忌 四者正交；'
+                   '纯展示层，不进评分链。')
+    return out
+
+
+def _ri_gan_of(result):
+    """日干（兼容 `sizhu` 的 '日'／'日柱' 两种键名；再兜底 `result['ri_gan']`）。"""
+    _sz = (result or {}).get('sizhu') or {}
+    _rp = str(_sz.get('日') or _sz.get('日柱') or '').strip()
+    if _rp:
+        return _rp[0]
+    return str((result or {}).get('ri_gan') or '').strip()[:1]
+
+
+def _build_jiang_shengke(result):
+    """天将生克层（将 × **乘神** × 日干）—— 《通解》上卷 L2566／L2567／L2568（2026-09-16）。
+
+    🔴🔴 **乘 ≠ 临**（口径定案，见 `liuqin_engine.py` 模块 docstring）：
+      · **乘**（乘神）＝天将所骑的【**天盘**】之支（`tianjiang_map` 的键）⇒ **L2567「专取天盘乘神决之」**
+      · **临**（所加盘之神）＝乘神所落脚的【**地盘**】之宫（`tiandi_pan` 反查）⇒ L2568 第二级，**仅展示**
+      铁证 L8619「玄武**所乘之神**临戊地…从**地盘**之戌／从**天盘**之卯」。
+      ⚠️ 五行**取乘神**，⛔ 不取将之本五行（那样既非乘亦非临 ⇒ 判读全错）。
+
+    为什么需要：**L2568「生日为吉，虽凶将亦为吉；克日为凶，虽吉将亦为凶」是全局规则**
+    （章首即言「凡壬课吉凶系于天将」），而既有系统只把该规则用到「**干上神**」一处
+    （`liuqin_engine.liuqin_judge` → `liuqin_struct` → 应人列）。本层按 L2568 扩到**课中全部将**。
+
+    ⛔ 边界（守「单源铁律」「不可推广」「展示卫生」三道）：
+      · **纯展示层**，不进评分链、**不覆盖** side（逐宫断语）与 `liuqin_struct`（应人列）。
+      · **跳过「干上」** —— 该条已在应人列「六亲结构」呈现，守「同一信息禁两处呈现」。
+      · **「比和」不判吉凶** —— L2575「比和吉」出自**贵人章（单将）**，非全局 ⇒ side 留空（宁缺勿滥）。
+      · 断语真源＝《东方朔射覆秘诀》卷之二（单一真源，⛔ 不另造表）。
+      · 断语与规则 side **分属两套体系**（六亲论看「得财／受损」，L2568 看「谁生谁克」），
+        取向可能不同 ⇒ 前端**分别呈现并注明**，⛔ 不相互覆盖、不合并成一句。
+    """
+    out = {'items': []}
+    try:
+        from engine.tianjiang_shengke import (shengke_of, gan_wx_of, suo_jia_of, cheng_wx_of,
+                                              xiji_of, XIJI_SRC)
+        from engine.kege_shensha import wang_xiang as _wang_xiang
+    except Exception as _e_imp:
+        out['error'] = str(_e_imp)
+        return out
+
+    _gan = _ri_gan_of(result)
+    out['gan'] = _gan
+    out['gan_wx'] = gan_wx_of(_gan)
+    if not _gan:
+        out['error'] = '日干缺失，无法判生克'
+        return out
+
+    _tp = result.get('tiandi_pan') or {}      # 契约 {地盘: 天盘}
+    _yj = _yue_jian_of(result)               # 月建（＝四柱月柱之支），供 L2568 末句旺衰用
+    _skip_pos = ('干上', '日干上神')      # 已在应人列「六亲结构」呈现 → 不重复
+    _seen = set()
+    _n_ji = _n_xiong = 0
+    for _x in (result.get('leixiang') or []):
+        if not isinstance(_x, dict):      # 防御：坏行跳过不崩
+            continue
+        _j = str(_x.get('天将') or '')
+        _z = str(_x.get('地支') or '')
+        _pos = str(_x.get('位置') or '')
+        if not _j or _pos in _skip_pos:
+            continue
+        if (_j, _z) in _seen:
+            continue
+        _d = shengke_of(_gan, _j, _z)      # 🔴 _z ＝ **乘神**（天盘支）
+        if not _d:
+            continue
+        _seen.add((_j, _z))
+        _d['pos'] = _pos
+        _d['zhi'] = _z
+        _d['suo_jia'] = suo_jia_of(_tp, _z)     # 「临」＝所加地盘宫（仅展示，不判 side）
+        _d['suo_jia_wx'] = cheng_wx_of(_d['suo_jia'])
+        # 🔴 L2568 末句「更察乘神所加盘之神，生克、旺相休囚，喜则宜旺相，忌则宜休囚也」——
+        #   旺衰取**所加盘之神**（＝「临」）的**月令**旺衰（与宫位链同函数同参 ⇒ 必然自洽）；
+        #   形态＝**正交强度标注**：只加判语，⛔ 不动 side、⛔ 不进评分链（无分离度，见 engine 注释）。
+        _d['ws_gong'] = _wang_xiang(_d['suo_jia'], _yj) if (_d['suo_jia'] and _yj) else ''
+        _d['xiji'] = xiji_of(_d.get('side') or '', _d['ws_gong'])
+        if _d.get('side') == '吉':
+            _n_ji += 1
+        elif _d.get('side') == '凶':
+            _n_xiong += 1
+        out['items'].append(_d)
+
+    out['n_ji'] = _n_ji
+    out['n_xiong'] = _n_xiong
+    out['src'] = ('《通解》上卷十二将释义「天将五行性质规定／天将生克规则」（L2566／L2567／L2568）；'
+                  + XIJI_SRC + '；断语真源《东方朔射覆秘诀》卷之二「贵神主客六亲论」')
+    out['rule'] = ('天将生克（将 × 乘神 × 日干）：L2567「专取天盘乘神决之」（如贵人属土，若乘亥子则属水矣，'
+                   '生克皆以水论）；L2568「生日为吉，虽凶将亦为吉；克日为凶，虽吉将亦为凶；吉将喜生扶、忌克制，'
+                   '凶将反此」；末句「喜则宜旺相，忌则宜休囚」——旺衰取所加盘之神（「临」）之月令旺衰，'
+                   '作强度标注。与逐宫断语 side 正交、不进评分链（量化实证无分离度）；'
+                   '「比和」无全局原文依据 ⇒ 不判吉凶、亦不标喜忌。')
+    out['coverage_note'] = ('ⓘ 术语（依 L2567／L8619 原文）：乘＝天将所骑之天盘支 —— 本卡与宫位链'
+                            '一律作「将乘支」（如「白虎乘亥」，同 L2567「贵人…若乘亥子」；'
+                            '宫位链已于 2026-09-16 由「支乘将」同步统一）。'
+                            '临＝乘神所落之地盘宫（宫位链作「加地盘X」，见 L2568「乘神所加盘之神」）—— 只列不判。'
+                            '干上神一条已在「吉应／凶应」列（六亲结构）呈现，此处不重复；同将同支只列一次。')
+    out['system_note'] = ('⚠ 两条体系并列：「规则判定」据 L2567／L2568 看谁生谁克；「六亲断语」据东方朔卷之二'
+                          '看得财／受损 —— 二者取向可能不同，⛔ 互不覆盖。')
+    return out
+
+
+def _build_zonghe_piyu(result, zetiri_type='立碑', nianming_ctx=None):
     """斗首/演禽/六壬 → {wen: 文言主批语, bai: 白话详批, detail: 流派明细}
     深度版（2026-08-20）：每家分"等级句 + 古籍断语 + 格局/星曜 + 应期/合参"——引擎产出吃透，不空泛。"""
     wen = []
@@ -1692,7 +2837,8 @@ def _build_zonghe_piyu(result, zetiri_type='立碑'):
         if stars:
             b_parts.append('四柱星曜：' + '、'.join(f'{k}{v.get("星曜", "")}' for k, v in list(stars.items())[:4]))
         bai.append('斗首：' + '。'.join(b_parts))
-        detail['doushou'] = {'wen': ds_wen, 'duanyu': ds_dys, 'patterns': ds_pats, 'stars': stars, 'grade': ds_grade}
+        detail['doushou'] = {'wen': ds_wen, 'duanyu': ds_dys, 'patterns': ds_pats, 'stars': stars,
+                               'grade': ds_grade, 'score': ds.get('score')}
 
     # ② 演禽
     yq = result.get('yanqin_full') or {}
@@ -1716,7 +2862,8 @@ def _build_zonghe_piyu(result, zetiri_type='立碑'):
         if yq_xj:
             b_parts.append('宿曜吉凶：' + '、'.join(f'{k}{v}' for k, v in list(yq_xj.items())[:4] if v))
         bai.append('演禽：' + '。'.join(b_parts))
-        detail['yanqin'] = {'wen': yq_wen, 'duanyu': yq_dys, 'patterns': yq_pats, 'po_gong': _po_gong_txt(yq_po), 'grade': yq_grade}
+        detail['yanqin'] = {'wen': yq_wen, 'duanyu': yq_dys, 'patterns': yq_pats,
+                            'po_gong': _po_gong_txt(yq_po), 'grade': yq_grade, 'score': yq.get('score')}
 
     # ③ 六壬（课体判定依据 + 毕法断法原文 + 十三吉课 + 占类断语 + 应期）
     sc = result.get('sanchuan') or {}
@@ -1772,7 +2919,11 @@ def _build_zonghe_piyu(result, zetiri_type='立碑'):
         if yq_str:
             b_parts.append('應期：' + yq_str.replace('\n', '；')[:160])
         bai.append('。'.join(b_parts))
-        detail['liuren'] = {'wen': lr_wen, 'keti': keti, 'keti_judged': kj, 'bifa_duanfa': bj[:2],
+        # 2026-09-12 补 grade：前端「总断·裁决」卡需要各派独立等级。
+        #   ⚠️ 六壬等级必须取「六壬独立分」(luma_detail.final_score) 推导的 _lr_grade，
+        #   不得用总评 grade（总评含斗首一票否决/加分项，会污染 —— 见上方 BUG-4 修复说明）。
+        detail['liuren'] = {'wen': lr_wen, 'grade': _lr_grade, 'score': _lr_score, 'keti': keti,
+                            'keti_judged': kj, 'bifa_duanfa': bj[:2],
                             'jike_13': jk, 'yingqi': yq_str}
 
     # ④ 总断（评分 + 等级 + 类型落点）
@@ -1782,31 +2933,77 @@ def _build_zonghe_piyu(result, zetiri_type='立碑'):
     grade = result.get('grade') or ''
     wen.append('综合评分{0}分（{1}）'.format(score, grade or '未评'))
 
-    # ⑤ 三派冲突点透（2026-08-20：斗首/演禽/六壬吉凶不一致时显式点出"吉中藏忌/凶中有救"）
+    # ⑤ 三派冲突点透 → 「单源裁决」（2026-09-12 改造）
+    #   🔴 单源铁律：判据只此一份（_pai_side），产出 detail['verdict']；
+    #   前端 verdictCard 只渲染、不再自行判定（原前端 plZeriSide 已删）。
+    #   【新增「半」档】演禽 grade 常为「吉凶参半」，旧判据 any('吉' in g) 会误判为吉；
+    #   今先判「吉凶并见」→ '半'，避免「吉凶参半」混入吉档造成「三派皆吉」假象。
     def _pai_side(g):
         g = str(g or '')
+        if '参半' in g or ('吉' in g and '凶' in g):
+            return '半'
         if any(k in g for k in ('大吉', '上吉', '吉', '得令', '入垣', '拱照')):
             return '吉'
         if any(k in g for k in ('大凶', '凶', '失令', '失位')):
             return '凶'
         return '中'
-    _sides = []
-    for _s, _nm in ((detail.get('doushou'), '斗首'), (detail.get('yanqin'), '演禽'), (detail.get('liuren'), '六壬')):
-        if _s:
-            _sides.append((_nm, _pai_side(str(_s.get('grade', _s.get('wen', ''))))))
+    _SECT_ROLE = {'六壬': '主旨', '斗首': '基础', '演禽': '支节'}
+    _vrows = []
+    for _s, _nm in ((detail.get('liuren'), '六壬'), (detail.get('doushou'), '斗首'), (detail.get('yanqin'), '演禽')):
+        if not _s:
+            continue
+        _g = str(_s.get('grade', '') or '') or str(_s.get('wen', '') or '')
+        _vrows.append({'name': _nm, 'role': _SECT_ROLE.get(_nm, ''),
+                       'score': _s.get('score'), 'grade': _s.get('grade', '') or '',
+                       'side': _pai_side(_g)})
+    _sides = [(r['name'], r['side']) for r in _vrows]
     _ji = [n for n, s in _sides if s == '吉']
+    _ban = [n for n, s in _sides if s == '半']
     _xiong = [n for n, s in _sides if s == '凶']
+    _mid = [n for n, s in _sides if s == '中']
     _hc_warns = (result.get('hecan') or {}).get('警告') or []
-    _chong = []
+    _tail, _tlevel = '', 'mid'
     if _ji and _xiong:
-        _chong.append('「%s得吉」而「%s见凶」——吉中藏忌，宜慎择动期、避开凶应之方' % ('、'.join(_ji), '、'.join(_xiong)))
+        _tail = '「%s得吉」而「%s见凶」——吉中藏忌，宜慎择动期、避开凶应之方' % ('、'.join(_ji), '、'.join(_xiong))
+        _tlevel = 'conflict'
+    elif _ji and _ban and not _xiong:
+        _tail = ('%s得吉，%s吉凶参半 —— 吉中带疑，宜取其吉应之人事用事，避其凶应之人事'
+                 % ('、'.join(_ji), '、'.join(_ban)))
+        _tlevel = 'warn'
     elif _hc_warns and _ji:
-        _chong.append('三派皆吉而古籍合参示警（%s）——吉中藏忌，宜慎择动期' % str(_hc_warns[0])[:56])
+        _tail = '三派皆吉而古籍合参示警（%s）——吉中藏忌，宜慎择动期' % str(_hc_warns[0])[:56]
+        _tlevel = 'warn'
     elif _hc_warns and not _sides:
-        _chong.append('古籍合参示警：%s' % str(_hc_warns[0])[:56])
-    if _chong:
-        wen.append(_chong[0])
-        bai.append('⚠ 三派异断：' + _chong[0])
+        _tail = '古籍合参示警：%s' % str(_hc_warns[0])[:56]
+        _tlevel = 'warn'
+    elif len(_ji) == 3:
+        _tail = '三派同向皆吉 —— 可用'
+        _tlevel = 'ok'
+    elif len(_xiong) == 3:
+        _tail = '三派同向皆凶 —— 另择吉期'
+        _tlevel = 'bad'
+    elif _ji:
+        _tail = ('以六壬（主旨）为准，%s得吉%s —— 偏吉可用（次看基础与旁证）'
+                 % ('、'.join(_ji), ('，%s为中平' % '、'.join(_mid)) if _mid else ''))
+        _tlevel = 'lean_ok'
+    elif not _sides:
+        _tail, _tlevel = '', 'mid'
+    else:
+        _tail = ('三派无显吉%s%s —— 宜慎用'
+                 % ((('（%s中平）' % '、'.join(_mid)) if _mid else ''),
+                    ('，%s吉凶参半' % '、'.join(_ban)) if _ban else ''))
+        _tlevel = 'mid'
+    detail['verdict'] = {
+        'rows': _vrows, 'ji': _ji, 'ban': _ban, 'mid': _mid, 'xiong': _xiong,
+        'tail': _tail, 'tail_level': _tlevel, 'warns': [str(x) for x in _hc_warns],
+        'lr_grade': _lr_grade, 'lr_score': _lr_score,
+        'rule': ('判据（唯一真源 _build_zonghe_piyu._pai_side）：吉凶并见→半；'
+                 '大吉/上吉/吉/得令/入垣/拱照→吉；大凶/凶/失令/失位→凶；余为中。'),
+    }
+    # 只有「带警示」的裁决才写入批语（保持既有语义：三派同向皆吉无警示时不缀语）
+    if _tlevel in ('conflict', 'warn') and _tail:
+        wen.append(_tail)
+        bai.append('⚠ 三派异断：' + _tail)
 
     # ⑥ 应事应人（2026-08-20 叙事层接批语：应何事=类象所主/乘神断语；应何人=六亲+类象人物）
     lx = result.get('leixiang') or []
@@ -1814,11 +3011,11 @@ def _build_zonghe_piyu(result, zetiri_type='立碑'):
     shi_txt = []
     ren_txt = []
     for x in lx[:2]:
-        sw = str(x.get('所主') or '')
-        dj = str(x.get('乘神断语') or '')
+        sw = str(x.get('所主今') or '').strip() or _gloss_show(x.get('所主') or '')
+        dj = str(x.get('乘神断语今') or '').strip() or _gloss_show(x.get('乘神断语') or '')
         if sw:
             shi_txt.append(f"{x.get('位置', '')}{x.get('天将', '')}主{sw}" + (f'（{dj}）' if dj else ''))
-        rw = str((x.get('类象') or {}).get('人物') or '')
+        rw = str(((x.get('类象今') or {}).get('人物') if (x.get('类象今') or {}) else (x.get('类象') or {}).get('人物')) or '')
         if rw:
             ren_txt.append(f"{x.get('天将', '')}应{rw[:40]}")
     if lq.get('断'):
@@ -1833,6 +3030,90 @@ def _build_zonghe_piyu(result, zetiri_type='立碑'):
         _ren_wen = '人应' + _rel_map.get(str(lq.get('关系', '')), '六亲')
         wen.append(_ren_wen)
         bai.append('應人：' + '；'.join(ren_txt[:3]))
+
+    # ⑥b 吉在何人何事 / 凶在何人何事（2026-09-12）
+    #   前端「总断·裁决」卡据此分两栏列出，供用户自行权衡；数据全部为引擎既有产出。
+    try:
+        detail['yingren'] = _build_yingren_ji_xiong(result, **(nianming_ctx or {}))
+    except Exception as _e_yr:
+        detail['yingren'] = {'ji': [], 'xiong': [], 'ref': [], 'note': '', 'error': str(_e_yr)}
+
+    # ⑥c v4 分层裁决（整体/本命/行年）—— 纯展示层，零评分影响
+    try:
+        detail['verdict_layered'] = _build_layered_verdict(detail.get('verdict') or {},
+                                                          detail.get('yingren') or {})
+    except Exception as _e_vl:
+        detail['verdict_layered'] = {'error': str(_e_vl)}
+
+    # ⑥d 救神具象化（2026-09-12 憨爷指令「救神要具象化」）—— 纯展示层，零评分影响
+    #    链：取救神（解神＝月建之冲／子孙／日德／吉将／生气／天医，须落【七处】且不空亡）
+    #        → 乘何将定人事（鬼乘天乙乃神祇／天后→长辈／太常·白虎→祭祀／天空→佛位）
+    #        → 再看【阴神】（＝该支之天盘上神）定处所（午为离明·明堂→家堂神；未主祭祀；寅申为寺观）
+    #        → 出化解之法。原文：通解_下 L13210（解神/生气/天医）、通解_中 L6157/6158（鬼乘天乙乃神祇）、
+    #          通解_上 L6169/6203（午为离明·明堂）、通解_上 L3868（阴神看外明堂）、通解_上 L2498（神后类象）。
+    #        ⛔ 与 tianjiang_gongwei / leixiang_chain 同铁律：本层只叙事，绝不进评分链。
+    try:
+        from engine.jiuzhu_engine import build_jiuzhu as _build_jiuzhu
+        _jz_ctx = nianming_ctx or {}
+        detail['jiuzhu'] = _build_jiuzhu(
+            result,
+            ben_ming_zhi=str(_jz_ctx.get('ben_ming_zhi') or ''),
+            xing_nian_zhi=str(_jz_ctx.get('xing_nian_zhi') or ''),
+        )
+    except Exception as _e_jz:
+        detail['jiuzhu'] = {'error': str(_e_jz)}
+
+    # ⑥e 叙事主线（2026-09-12 憨爷拍板「方案 A」：以【三传】为时间轴，把散落的叙事引擎串成一气）
+    #    骨架＝原书判序（《通解》上 L1387「日→辰→初传→中传→末传→本命→行年」）。
+    #    ⛔ 纯展示层：只重组既有产出（leixiang/sike/三传/yingqi_struct/本命行年/救神），不新造判据、不进评分链。
+    try:
+        detail['narrative_spine'] = _build_narrative_spine(
+            result, zetiri_type=zetiri_type, nianming_ctx=nianming_ctx, piyu_detail=detail)
+    except Exception as _e_ns:
+        detail['narrative_spine'] = {'error': str(_e_ns)}
+
+    # ⑥f 宫位链（2026-09-12 憨爷拍板「给叙事层加一节宫位链」）：
+    #    天将所乘之支 → 加地盘宫 → 宫之本家天将 → 月令旺衰 → 六亲。
+    #    原文：《注解大六壬指南》L85「贵人居丑曰升堂，乃本位属己丑故也」／L89「贵人加于地盘卯酉之上，亦主贵人临门」；
+    #    旺衰《注解》L511/L512/L720（当令＝月建，真源 kege_shensha.wang_xiang）。
+    #    ⛔ 纯展示层：不产出吉凶、不进评分链。
+    try:
+        detail['gongwei_chain'] = _build_gongwei_chain(
+            result, zetiri_type=zetiri_type, nianming_ctx=nianming_ctx)
+    except Exception as _e_gw:
+        detail['gongwei_chain'] = {'error': str(_e_gw)}
+
+    # ⑥g 占类级宜忌（整将）—— 2026-09-15 憨爷「开干」。
+    #    补「占类」维：六壬断法＝天将×所乘之支×所临之宫×占类 四要素联合，
+    #    格级 tone 只有两维 ⇒ 原文整将级、带占类限定的宜忌（天空「占词讼最爱…若求财物又深忌之」）
+    #    在此承载。真源 engine.tianjiang_gongwei.TIANJIANG_ZHANLEI_TONE。
+    #    ⛔ 纯展示层：只读既有产出＋占类参数，与 side、格级 tone 正交，不进评分链。
+    try:
+        detail['zhanlei_tone'] = _build_zhanlei_tone(
+            result, zhanlei=(result.get('zhanlei') or zetiri_type or '其他'))
+    except Exception as _e_zt:
+        detail['zhanlei_tone'] = {'error': str(_e_zt)}
+
+    # ⑥h 旺衰应事（整将 × 旺相休囚死）—— 2026-09-16 憨爷「下一步」。
+    #    原文每将有一节「旺／相／休／囚／死」五档应事（取象：主什么事），与 side（吉凶）、
+    #    tone（用法告诫）、zhanlei_tone（占类宜忌）四者正交。
+    #    旺衰真源复用 ⑥f 宫位链已算出的 ws_zhi ⇒ 零新增计算。
+    #    真源 engine.tianjiang_gongwei.TIANJIANG_WANGSHUAI（太常缺「囚」、六合/勾陈走两分法，照实不收）。
+    #    ⛔ 纯展示层：不新造判据、不进评分链、不改吉凶。
+    try:
+        detail['wangshuai'] = _build_wangshuai(
+            result, gongwei_chain=detail.get('gongwei_chain'))
+    except Exception as _e_ws:
+        detail['wangshuai'] = {'error': str(_e_ws)}
+
+    # ⑥i 天将生克（将 × 日干）—— 2026-09-16。L2568「生日为吉，虽凶将亦为吉；克日为凶，虽吉将亦为凶」
+    #    为**全局规则**（「凡壬课吉凶系于天将」），既有只用于「干上神」一处（liuqin_struct → 应人列），
+    #    本层扩到课中全部将。⛔ 纯展示层：不进评分链、不覆盖 side 与 liuqin_struct；
+    #    「干上」一条跳过（应人列已有）⇒ 守「同一信息禁两处呈现」。
+    try:
+        detail['jiang_shengke'] = _build_jiang_shengke(result)
+    except Exception as _e_js:
+        detail['jiang_shengke'] = {'error': str(_e_js)}
 
     # ⑦ 要诀精华（2026-08-20 张九仪《仪度六壬择日要诀》：斗首六亲化气应人 + 禁忌应事）
     _ri_zhi7 = str((result.get('sizhu') or {}).get('日', ''))[-1:] or ''
@@ -2023,6 +3304,11 @@ def api_zeri_analyze():
         parts = date_str.split('-')
         y, m, d = int(parts[0]), int(parts[1]), int(parts[2])
 
+        # 行年虚岁按「用事年」换算（2026-09-12 憨爷拍板）：输入虚岁＝基准年（默认当前年）的岁数
+        _age_ev = _xusui_for_event_year(_bm_age, y, request.values.get('ben_ming_age_ref_year'))
+        if _age_ev and str(_age_ev) != str(_bm_age).strip():
+            _bm_age = str(_age_ev)
+
         from engine.sizhu_engine import get_sizhu
         sizhu = get_sizhu(y, m, d, shichen)
         nian_gan, nian_zhi = sizhu['年柱'][0], sizhu['年柱'][1]
@@ -2127,19 +3413,57 @@ def api_zeri_analyze():
         except Exception:
             pass
 
-        # ── 现代类象推演入库（2026-08-25 用户拍板：按择日类型推演+存历史库+反馈校准）──
+        # ── 类象链推演（P3，2026-09-11：纯叙事层，不进评分链）──
+        # 课象 →①类神锚定→②阴神链展开→③现代象映射→④收敛输出；边界=环境所断、跨占类不可泛化
+        result['chain_leixiang'] = {}
+        _cl_xiang_list = []
+        try:
+            from engine.leixiang_chain import pursue_chain as _pursue_cl
+            from engine.calibration import xunkong_of as _xkof
+            from engine.liuren_keti_bifa import _xing_nian_zhi as _xnz_cl
+            _xn_cl = ''
+            try:
+                _age_cl = int(str(_bm_age).strip()) if str(_bm_age).strip().isdigit() else 0
+                if ben_ming_zhi and _age_cl >= 1:
+                    _xn_cl = _xnz_cl(ben_ming_zhi, _age_cl,
+                                     _bm_sex if _bm_sex in ('男', '女') else '男') or ''
+            except Exception:
+                _xn_cl = ''
+            _kw_cl = []
+            try:
+                _, _kwt = _xkof(ri_gan + ri_zhi)
+                _kw_cl = [x for x in (_kwt or ()) if x]
+            except Exception:
+                _kw_cl = []
+            _sc_cl = [sanchuan.get('初传', ''), sanchuan.get('中传', ''), sanchuan.get('末传', '')]
+            result['chain_leixiang'] = _pursue_cl({
+                'ri_gan': ri_gan, 'ri_zhi': ri_zhi, 'ri_ganzhi': ri_gan + ri_zhi,
+                'chu': _sc_cl[0], 'zhong': _sc_cl[1], 'mo': _sc_cl[2], 'sanchuan': _sc_cl,
+                'si_ke': sike, 'tiandi_pan': tiandi_pan, 'tian_jiang': _tjm,
+                'shichen': shichen, 'xing_nian': _xn_cl, 'ben_ming': ben_ming_zhi,
+                'nian_zhi': nian_zhi, 'kongwang': _kw_cl,
+                'hint_zhi': (request.values.get('hint_zhi', '') or '').strip(),
+            }, category=(request.values.get('zetiri_type', '') or zhanlei))
+            # 推演候选（≤5）→ 供置信度闭环入库
+            for _t in (result['chain_leixiang'].get('推演匹配') or [])[:5]:
+                _cl_xiang_list.append(f"{_t.get('事物', '')}（{_t.get('命中率', '')}）")
+        except Exception as _e_cl:
+            result['chain_leixiang'] = {'error': str(_e_cl)}
+
+        # ── 现代类象推演入库（2026-08-25 拍板；2026-09-11 P3：改由类象链结果驱动）──
         # 字段名 modern_leixiang（避开已有 result['leixiang']=初传类象）
         result['modern_leixiang'] = {'推演': [], '历史佐证': '', 'narrative': '', 'zeri_type': ''}
         try:
             from engine.leixiang_kb import LeixiangKB
             _kb = LeixiangKB()
             _zt = request.values.get('zetiri_type', '') or ''
-            _lx = _kb.push_leixiang(_zt, date=date_str, shichen=shichen)
+            _lx = _kb.push_leixiang(_zt, _cl_xiang_list or None, date=date_str, shichen=shichen)
             result['modern_leixiang'] = {
                 '推演': _lx.get('推演', []),
                 '历史佐证': _lx.get('历史佐证', ''),
                 'narrative': _kb.get_narrative(_zt),
                 'zeri_type': _zt,
+                '来源': '类象链' if _cl_xiang_list else '初始推演',
             }
         except Exception:
             pass
@@ -2179,6 +3503,9 @@ def api_zeri_analyze():
             pass
 
         # 2026-08-20 六亲接入（应何人断：干上神乘天将与日干生克五断，东方朔卷之二）
+        # 【2026-09-16 口径修正·乘≠临】《通解》上卷 L2567「专取**天盘乘神**决之」——
+        #   生克五行取「天将所骑之**天盘**支」＝干上神（_gan_s_lq），⛔ 不取将之本五行。
+        #   旧实现漏传乘神（用 TJ_WX 将本五行）⇒ 关系/吉凶全错位（量化 77.8%／62.8%）。
         result['liuqin_duanyu'] = ''
         result['liuqin_struct'] = {}
         try:
@@ -2193,10 +3520,12 @@ def api_zeri_analyze():
                 _gan_tj_lq = _tjm_lq.get(_gan_s_lq, '')
             except Exception:
                 _gan_tj_lq = ''
-            _lq_an = liuqin_judge(ri_gan, _gan_tj_lq)
+            _lq_an = liuqin_judge(ri_gan, _gan_tj_lq, _gan_s_lq)   # 🔴 第三参＝乘神（天盘支）
             result['liuqin_struct'] = _lq_an
             if _lq_an.get('断'):
-                result['liuqin_duanyu'] = "六亲[" + _lq_an['将'] + _lq_an['关系'] + "]：" + _lq_an['断']
+                # 显示口径：将 + 乘神（天盘支）+ 关系（如「太阴乘亥·生日」）——L2567 五行随乘神
+                _lq_tag = _lq_an['将'] + (('乘' + _lq_an['乘神']) if _lq_an.get('乘神') else '') + _lq_an['关系']
+                result['liuqin_duanyu'] = "六亲[" + _lq_tag + "]：" + _lq_an['断']
         except Exception:
             pass
 
@@ -2540,7 +3869,17 @@ def api_zeri_analyze():
         try:
             # 2026-08-17：优先用择日类型（提车/开业等专属尾注），未选则退回占事（zhanlei）
             _piyu_type = (request.values.get('zetiri_type', '') or '').strip() or zhanlei
-            result['zonghe_piyu'] = _build_zonghe_piyu(result, _piyu_type)
+            _nm_ctx = {}
+            try:
+                _nm_ctx = {'ben_ming_zhi': ben_ming_zhi, 'ben_ming_age': _bm_age, 'ben_ming_sex': _bm_sex}
+                from engine.liuren_keti_bifa import _xing_nian_zhi as _xnz_zp
+                _age_zp = int(str(_bm_age).strip()) if str(_bm_age).strip().isdigit() else 0
+                if ben_ming_zhi and _age_zp >= 1:
+                    _nm_ctx['xing_nian_zhi'] = _xnz_zp(
+                        ben_ming_zhi, _age_zp, _bm_sex if _bm_sex in ('男', '女') else '男') or ''
+            except Exception:
+                pass
+            result['zonghe_piyu'] = _build_zonghe_piyu(result, _piyu_type, _nm_ctx)
             # 2026-08-19 合参示警联动：凶规则命中加短标记，详情由批语内"冲突点透"展开（不重复全文）
             _hc_warns = (result.get('hecan') or {}).get('警告', [])
             if _hc_warns:
@@ -4112,6 +5451,9 @@ def _build_tianji_prediction_record(full, rec, shichen):
         # 排盘可视化字段：四课 / 三传（前端 showDetail 的 grid 区块直接读这两个键）
         'sike': (full or {}).get('si_ke') or [],
         'sanchuan': (full or {}).get('san_chuan') or [],
+        # 2026-09-09 毕法赋/课格断语透出（前端 liurenPaipanHtml 读 sc['毕法赋命中'] 与课格列表）
+        '毕法赋命中': [x for x in (((_kd or {}).get('bifa') or {}).get('匹配法条') or []) if x],
+        '课格列表': [k for k in (((_kd or {}).get('sanchuan_kege') or {}).get('课格列表') or []) if k],
         # ── 接入古例特征工程参考（指令⑰）：把引擎完整推理产物桥接到预测记录，
         #    供详情弹窗渲染「推理过程(17步) / 课理分析 / 综合判断」。
         #    天机起课的诚实评估仍以 tianji_casts.json + cmd_stats 为准，此处仅展示桥接。
@@ -4458,6 +5800,79 @@ def api_tianji_stats():
             'period_end': due['period_end'],
         } if due else None
         return jsonify({'success': True, 'scoreboard': sb})
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/tianji_yingqi')
+def api_tianji_yingqi():
+    """天机应期日历提醒 GET /api/tianji_yingqi
+    读天机 store 最新一条待验证记录 → 换算 yingqi.stages 干支应期 → 公历日期（今日起 N 日）。
+    返回 {success, cast_date, trend, stages:[{method,timing,days,trigger_gz,trigger_zhi,date_str}]}
+    """
+    try:
+        import sys as _s
+        _p = str(Path(__file__).parent)
+        if _p not in _s.path:
+            _s.path.insert(0, _p)
+        from engine.tianji_harness import _read_store
+        from engine.sizhu_engine import get_day_ganzhi
+        from datetime import datetime as _dt, timedelta as _td
+
+        store = _read_store()
+        # 取最新一条记录（period_start 最大）
+        records = [v for v in store.values() if isinstance(v, dict) and v.get('yingqi')]
+        if not records:
+            records = [v for v in store.values() if isinstance(v, dict)]
+        if not records:
+            return jsonify({'success': False, 'error': '无天机起课记录'}), 404
+        latest = max(records, key=lambda r: r.get('period_start', ''))
+
+        yq = latest.get('yingqi') or {}
+        stages = yq.get('stages') or []
+        if not stages:
+            return jsonify({'success': True, 'cast_date': latest.get('cast_date'),
+                            'trend': latest.get('tianji_trend'), 'stages': []})
+        today = _dt.now().date()
+        gz_targets = []
+        for st in stages:
+            gz = st.get('trigger_gz') or ''
+            if gz and gz not in [t[0] for t in gz_targets]:
+                gz_targets.append((gz, st))
+        # 换算：未来 400 日内每个干支首次出现
+        out_stages = []
+        for gz, st in gz_targets:
+            date_str = None
+            for i in range(400):
+                d = today + _td(days=i)
+                g, z = get_day_ganzhi(d.year, d.month, d.day)
+                if g + z == gz:
+                    date_str = d.isoformat()
+                    break
+            out_stages.append({
+                'method': st.get('method', ''),
+                'timing': st.get('timing', ''),
+                'days': st.get('days', 0),
+                'trigger_gz': st.get('trigger_gz', ''),
+                'trigger_zhi': st.get('trigger_zhi', ''),
+                'date_str': date_str,
+            })
+        return jsonify({
+            'success': True,
+            'cast_date': latest.get('cast_date'),
+            'shichen': latest.get('shichen'),
+            'trend': latest.get('tianji_trend'),
+            'updown': latest.get('tianji_updown'),
+            'period': [latest.get('period_start'), latest.get('period_end')],
+            'period_len': latest.get('period_len'),
+            'narrative': yq.get('narrative', ''),
+            'stages': out_stages,
+            # 【2026-09-09 接入展示】毕法赋命中法条 + 凶象语义提示（源 tianji_chart.bifa_hits，
+            #   由 _cast_chart 采集；前端应期面板展示，供用户看到课理层面的吉凶警示）
+            'bifa_hits': (latest.get('tianji_chart') or {}).get('bifa_hits', []),
+            'bifa_signals': (latest.get('tianji_chart') or {}).get('bifa_signals', {}),
+        })
     except Exception as e:
         import traceback; traceback.print_exc()
         return jsonify({'success': False, 'error': str(e)}), 500
@@ -5262,7 +6677,8 @@ def _build_zeri_candidate(env, current, shichen, sizhu):
     管线：斗首快筛 → sike_sanchuan 排盘 → 四柱禄马贵人 → 演禽 → 知识库仪度 → 禄马贵明细 → 主命年命。
     env: {mtn, _dha, _sike, _luma, _yqa, _nms, _xnz, kekeduanyu, min_liuren,
           mubiao, zetiri_type, bm_gan, bm_zhi, bm_age, bm_sex, gan60, zhi60, arrange_tiandi_pan}
-    快筛不过（斗首<50 / 大凶 / 六壬<min_liuren / 演禽<50）返回 None。"""
+    快筛不过（斗首<50 / 大凶 / 六壬<min_liuren）返回 None。
+    【2026-09-11「按原著来」】演禽（支节）**已退出硬筛**（仍算分）；ZERI_YUANZHU=0 回退旧口径（含 演禽<50）。"""
     from engine.yidu_liuren_yaojue import analyze_yidu_full
     from engine.gui_ren_engine import GuiRenCalculator
 
@@ -5393,7 +6809,11 @@ def _build_zeri_candidate(env, current, shichen, sizhu):
         _yq_pogong = _yq.get('泊宫', {}) or {}
     except Exception:
         pass
-    if _yq_score < 50:
+    # 【2026-09-11 憨爷拍板「按原著来」】演禽＝支节 → **不再作硬筛**（仍算分/返回展示）。
+    #   原著：全书无演禽专章（词频 8），第十一章「演禽窃要…要择徒而授」；
+    #   「演禽＝支节」故退出候选淘汰线。斗首（基础≥50）与六壬（主旨≥min_liuren）仍为硬筛。
+    #   ZERI_YUANZHU=0 回退旧口径（演禽<50 淘汰）。
+    if _yq_score < 50 and not YUANZHU:
         return None
 
     # ⑤ 知识库：仪度评分（山向禄马贵 + 发出三传 + 目标匹配）
@@ -5438,7 +6858,12 @@ def _build_zeri_candidate(env, current, shichen, sizhu):
             _nianming['used'] = True
             _nianming['ben_ming'] = bm_gan + bm_zhi
             _nianming['ben_ming_zhi'] = bm_zhi
-            _bm_qualified = _luma.check_pillar_all_qualified(
+            # 【BUG-FIX 2026-09-11 口径分叉】原用 check_pillar_all_qualified（**宽口径，含三合次吉**）
+            #   → 枚举 207360 组通过率 89.6%（直临仅 41.6%）→ 本命 +8 分近乎恒得、无区分度；
+            #   且与下方同段展示的 lu/ma/guiren.to_shan/to_xiang（严格直达）自相矛盾。
+            #   按 2026-09-07 憨爷拍板「到山到向 = 加临后正好落山家/向首（不含三合次吉）」
+            #   统一改用严格直达口径（与 calculate_new_score / analyze_yidu_full / 顶格三处一致）。
+            _bm_qualified = _luma.check_pillar_direct_qualified(
                 bm_gan, bm_zhi, _tdp, shichen, _shan_jia, _xiang_s
             )
             _nianming['luma_qualified'] = bool(_bm_qualified)
@@ -5453,8 +6878,11 @@ def _build_zeri_candidate(env, current, shichen, sizhu):
             if _nms:
                 _nianming['ben_ming_shang_shen'] = _nms(bm_zhi, _tdp) or ''
             _xn = ''
-            if _xnz and bm_age and bm_age >= 1:
-                _xn = _xnz(bm_zhi, bm_age, bm_sex) or ''
+            # 行年虚岁按「用事年」换算（2026-09-12 憨爷拍板）—— 批量区间跨年时**逐日按当年取岁**
+            _bm_age_ev = _xusui_for_event_year(bm_age, getattr(current, 'year', None),
+                                               env.get('bm_age_ref_year'))
+            if _xnz and _bm_age_ev and _bm_age_ev >= 1:
+                _xn = _xnz(bm_zhi, _bm_age_ev, bm_sex) or ''
             _nianming['xing_nian'] = _xn
             _nianming['xing_nian_shang_shen'] = (_nms(_xn, _tdp) or '') if (_xn and _nms) else ''
             _ch0 = (_sc3.get('初传', '') or '')
@@ -5478,8 +6906,28 @@ def _build_zeri_candidate(env, current, shichen, sizhu):
     # （来龙参数在 env 中保留，但【不参与择日评分】——憨爷纠正：来龙属峦头风水，
     #  只与判断穴位、来去水吉凶有关，与择日选课、六壬龙德课均无关；穴位/来去水功能后续补充）
 
-    _ttl = min(100, round(_authority_score + _nianming['adj'], 1))
-    _grade = _authority_grade
+    # 【2026-09-12 憨爷拍板「C·根治」】总分重标定（与引擎同源 `engine/zeri_score_scale.py`）：
+    #   命主加成 adj 必须在**未削平原始分 raw_total** 上叠加后再**一次性**重标定；
+    #   否则「先重标定 → 再 min(100, +adj)」（adj 最大 18）会把高分课重新糊回 100，前功尽弃。
+    #   raw_total 由 analyze_yidu_full 返回（未削平 R = luma_base + bonus）。
+    #   env ZERI_SCORE_RESCALE=0 → 逐位回退旧口径 min(100, …)。
+    try:
+        from engine.zeri_score_scale import rescale as _zs_rescale, ZERI_SCORE_RESCALE as _ZSR
+    except Exception:
+        _zs_rescale, _ZSR = (lambda x: min(100.0, max(20.0, float(x or 0)))), False
+    _yidu_full_ttl = locals().get('_yidu_full') or {}
+    if _ZSR and _yidu_full_ttl.get('raw_total') is not None:
+        _ttl = _zs_rescale(float(_yidu_full_ttl['raw_total']) + float(_nianming.get('adj') or 0))
+        # 档位须随**最终分**（含命主加成）重取，否则会出现「95 分却标中吉」的错配
+        # （引擎侧 grade 只含未加成分；加成最大 18 → 跨档可达 1~2 级）。
+        try:
+            from engine.zeri_score_scale import grade_of as _zs_grade
+            _grade = _zs_grade(_ttl)
+        except Exception:
+            _grade = _authority_grade
+    else:
+        _ttl = min(100, round(_authority_score + _nianming['adj'], 1))
+        _grade = _authority_grade
 
     # 杀师日判定（2026-08-17 憨爷：批量候选标注，前端标红提醒/可禁用）
     try:
@@ -5769,7 +7217,8 @@ def api_zeri_batch():
       斗首     → douhou_analyzer.analyze_kege
       演禽     → yanqin_analyzer.analyze_yanqin_with_calendar
       知识库   → KeKeDuanyu.analyze_yidu_score（仪度评分：山向禄马贵+发出三传+目标匹配）
-    筛选：斗首≥50（快筛）→ 非大凶 && 六壬≥min_liuren → 演禽≥50
+    筛选：斗首≥50（快筛）→ 非大凶 && 六壬≥min_liuren
+          【2026-09-11「按原著来」】演禽（支节）已退出硬筛（仍算分；ZERI_YUANZHU=0 回退含演禽<50）
     排序：月柱六相优先（武财>元辰>廉贞>贪官>破鬼）→ 六壬分 → 总分"""
     try:
         data = request.get_json(silent=True) or {}
@@ -5810,6 +7259,8 @@ def api_zeri_batch():
         ben_ming = data.get('ben_ming', '') or ''
         ben_ming_age = data.get('ben_ming_age', '') or ''
         ben_ming_sex = data.get('ben_ming_sex', '') or '男'
+        # 行年虚岁基准年（可选；缺省＝当前年。用于「行年虚岁按用事年」换算，2026-09-12 憨爷拍板）
+        ben_ming_age_ref_year = data.get('ben_ming_age_ref_year', '') or ''
         # 来龙（二十四山；仅记录预留——憨爷纠正：来龙属峦头风水，只判穴位/来去水吉凶，不参与择日评分）
         lailong = data.get('lailong', '') or ''
         # 真太阳时经度（东经，默认120=北京时间区；仅用于真太阳时辰→北京时间换算展示，评分不动）
@@ -5925,6 +7376,7 @@ def api_zeri_batch():
             'gan60': _GAN_60, 'zhi60': _ZHI_60, 'arrange_tiandi_pan': arrange_tiandi_pan,
             'lailong': lailong,
             'lat': _ip_lat, 'lon': _ip_lon,
+            'bm_age_ref_year': ben_ming_age_ref_year,
             # 禄马贵人条件择日（2026-08-25 软加权；lmg_auto=智能推荐默认全量算分）
             'lmg_groups': lmg_groups, 'lmg_qiushi': lmg_qiushi,
             'lmg_freq_mult': 1.5,
@@ -5976,9 +7428,19 @@ def api_zeri_batch():
             lg_mutual = 20 if lg.get('has_mutual', False) else 0
             return (lg_base + lg_dx * 10 + lg_fc * 5 + lg_j13 * 3 + lg_mutual)
 
+        # 🔴 2026-09-12 根本解（憨爷「按你的建议」）：把「择日类型类神吉应」纳入排序梯次——
+        #   实证：批量 total_score 99.5% 恒=100、旧键不含类神 → TOP20 中类神=凶占 11/20（凶应夺魁）。
+        #   插在 禄马贵人首键 之后、斗首六壬加权分 之前（模拟验证：TOP20 类神=吉 20/20）。
+        #   详见 engine/zeri_batch_sort.py；env ZERI_TYPE_TIER=0 逐位回退旧口径。
+        try:
+            from engine.zeri_batch_sort import type_tier_key as _type_tier_key
+        except Exception:
+            _type_tier_key = lambda _x: 0
+
         if zeri_mode == 'lmg' and lmg_priority == 'lmg_to_shanxiang_13ke':
             results.sort(key=lambda x: (
                 -_lmg_priority_key(x),              # 禄马贵人分层评级（L3>L2>L1>L0）
+                _type_tier_key(x),                  # ⬅️ 类神吉应梯次（吉>平>凶）
                 -_LX_PRI.get(x.get('liuxiang', ''), 0),
                 -x.get('bonus_score', 0),
                 -x.get('liuren_score', 0),
@@ -5988,6 +7450,7 @@ def api_zeri_batch():
             # 使用加权分排序（支持自定义权重策略）
             results.sort(key=lambda x: (
                 -_lmg_key(x),                       # 禄马贵人条件倾向优先（未启用=0，零回归）
+                _type_tier_key(x),                  # ⬅️ 类神吉应梯次（吉>平>凶；ZERI_TYPE_TIER=0 回退）
                 -_weighted_score(x),                # 2026-08-27：加权分排序（斗首×权重 + 六壬×权重）
                 -_LX_PRI.get(x.get('liuxiang', ''), 0),
                 -x.get('bonus_score', 0),
@@ -6079,6 +7542,8 @@ def api_zeri_satisfy():
         ben_ming = data.get('ben_ming', '') or ''
         ben_ming_age = data.get('ben_ming_age', '') or ''
         ben_ming_sex = data.get('ben_ming_sex', '') or '男'
+        # 行年虚岁基准年（可选；缺省＝当前年。用于「行年虚岁按用事年」换算，2026-09-12 憨爷拍板）
+        ben_ming_age_ref_year = data.get('ben_ming_age_ref_year', '') or ''
         lailong = data.get('lailong', '') or ''
         # 真太阳时经度（东经，默认120=北京时间区；仅用于真太阳时辰→北京时间换算展示，评分不动）
         longitude = data.get('longitude', '') or ''
@@ -6171,6 +7636,7 @@ def api_zeri_satisfy():
             'gan60': _GAN_60, 'zhi60': _ZHI_60, 'arrange_tiandi_pan': arrange_tiandi_pan,
             'lailong': lailong,
             'lat': _ip_lat, 'lon': _ip_lon,
+            'bm_age_ref_year': ben_ming_age_ref_year,
         }
 
         # 降档链：用户档位 → 98/95/90/85/80（封顶不高于用户档位；去重）
@@ -6556,6 +8022,38 @@ def api_member_plans():
         'vip48_quota': VIP48_MONTHLY_QUOTA,
         'vip48_max_days': VIP48_MAX_DAYS,
     })
+
+
+@app.route('/api/engine/flags', methods=['GET'])
+def api_engine_flags():
+    """只读：当前引擎开关档位（供前端顶栏徽标提示）。
+
+    2026-09-18 憨爷「顺手在仪表盘上挂个提示」—— 目的是让「当前用的是哪一档」可见，
+    避免同一个课在不同倍率下给出不同结论时产生困惑。
+    ⛔ 只读环境变量/模块常量：**不触发起课、不写任何库、零副作用**。
+    """
+    _out = {}
+    try:
+        from engine.judgment_fusion import ZERI_SHENSHA_MULT as _m
+        _m = float(_m)
+        _out['ZERI_SHENSHA_MULT'] = _m
+        _out['shensha_tier'] = ('避凶档' if _m >= 1.0 else ('吉案档' if _m > 0 else '神煞关闭'))
+    except Exception as _e:                     # 防御：读不到也不影响页面
+        _out['ZERI_SHENSHA_MULT'] = None
+        _out['shensha_tier'] = '未知'
+        _out['error'] = str(_e)[:80]
+    _out['LABEL_FIX'] = bool(os.environ.get('LABEL_FIX'))
+    try:
+        import engine.batch_zeri_optimizer as _bz
+        _out['ZERI_YUANZHU'] = bool(getattr(_bz, 'YUANZHU', True))
+    except Exception:
+        pass
+    try:
+        from engine.zeri_batch_sort import ZERI_TYPE_TIER as _t
+        _out['ZERI_TYPE_TIER'] = bool(_t)
+    except Exception:
+        pass
+    return jsonify(_out)
 
 
 @app.route('/api/member/activate', methods=['POST'])

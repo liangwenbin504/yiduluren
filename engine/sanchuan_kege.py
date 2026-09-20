@@ -30,6 +30,16 @@
 
 from typing import Dict, List, Tuple, Optional, Set
 
+# 【2026-09-11】神煞类课格（魄化/三阴/灾厄/合欢/时泰/死奇）判据单一真源。
+# 与 engine/liuren_64ke_judge.py 共用，避免两套 64 课实现再次分叉。
+try:
+    from engine.kege_shensha import judge_all as _shensha_judge_all
+except Exception:  # 允许以脚本方式直跑（sys.path 已在包外）
+    try:
+        from kege_shensha import judge_all as _shensha_judge_all
+    except Exception:
+        _shensha_judge_all = None
+
 # ============================================================================
 # 地支基础数据
 # ============================================================================
@@ -411,7 +421,13 @@ class SanChuanKegeDetector:
                yue_jian: str = '',
                si_ke: Optional[List] = None,
                jieqi: str = '',
-               nianming: str = '') -> Dict:
+               nianming: str = '',
+               dang_ling: str = '',
+               nian_zhi: str = '',
+               shichen: str = '',
+               xing_nian: str = '',
+               ben_ming: str = '',
+               tiandi_pan: Optional[Dict] = None) -> Dict:
         """主检测入口
 
         Args:
@@ -421,8 +437,16 @@ class SanChuanKegeDetector:
             keti_raw: 已有课体名称（如'元首课'），用于补充信息
             kongwang: 空亡地支列表，如 ['寅', '卯']
             season: 季节（春/夏/秋/冬），用于稼穑/玄胎四时变体判断
+            dang_ling: 当令地支（=月建）。供旺相休囚死 / 季（孤辰）/ 游魂煞起例 / 月建发用（时泰）。
+                       ⚠️【2026-09-11 憨爷拍板】「当令」指**月建**；月将（yue_jian）只是**太阳**，
+                       无当令不当令之说，不参与任何旺衰判断。
             jieqi: 节气（四立/分至前一日等），如'立春'/'春分前一日'，供天祸/天寇检测（缺省跳过）
             nianming: 夫妻年命，格式'夫年干支,妻年干支'，如'甲寅,己亥'，供繁昌检测（缺省跳过）
+            nian_zhi: 年支（太岁）。供时泰「太岁发用」、灾厄「病符/丧门/吊客」起例。
+            shichen: 占时（时辰地支）。供三阴「时克行年」、当值天乙昼夜分派。
+            xing_nian: 行年地支。供三阴「时克行年」、合欢「年命乘吉将」。
+            ben_ming: 本命地支。供合欢「年命乘吉将」。
+            tiandi_pan: 天地盘映射 {地盘支: 天盘支}。供三阴「天乙逆行」判定。
 
         Returns:
             课格识别结果字典
@@ -478,11 +502,23 @@ class SanChuanKegeDetector:
             self._detect_kongwang_variant(sanchuan_list, kongwang)
 
         # 8.5 六十四课经缺失课格检测（起课显示用，不赋吉凶）
-        # 数据：三传 + 日干支 + 三传天将 + 月将(月令proxy) + 四课 + 节气(可选) + 年命(可选)
+        # 数据：三传 + 日干支 + 三传天将 + 当令(月建) + 月将(太阳) + 四课 + 节气(可选) + 年命(可选)
+        # 【BUG-FIX 2026-09-11 · 同型断链第 2 处】原仅透传前 10 参，新增的
+        #   nian_zhi / shichen / xing_nian / ben_ming / tiandi_pan **一个都没往下传** →
+        #   `_detect_64ke_missing` 内 `_ss_env` 的这 5 键恒为默认空值，后果（静默、无报错）：
+        #     · tiandi_pan={} → 三阴「一阴：天乙逆行」`_guiren_gong` 恒返回 '' → 三阴课**生产链 100% 失效**；
+        #     · nian_zhi=''   → 时泰「太岁发用」、灾厄「病符/丧门/吊客」失效；
+        #     · shichen/xing_nian='' → 三阴「时克行年」退化为不校验；
+        #     · ben_ming=''   → 合欢「年命俱乘吉将」无年命可查。
+        #   与 `liuren_keti_bifa._rich_sanchuan_kege` 原「只传 6/11 参」为**同一类错误**，
+        #   发生在 detect → _detect_64ke_missing 这一跳。
         self._detect_64ke_missing(sanchuan_list, ri_gan, ri_zhi,
                                   tian_jiang or [], yue_jian or '', si_ke or [],
                                   jieqi or '', nianming or '',
-                                  kongwang or [])
+                                  kongwang or [], dang_ling or '',
+                                  nian_zhi or '', shichen or '',
+                                  xing_nian or '', ben_ming or '',
+                                  tiandi_pan or {})
 
         # 9. 三传分类检测
         sanchuan_classification = self._classify_sanchuan(sanchuan_list)
@@ -876,9 +912,13 @@ class SanChuanKegeDetector:
         })
 
         if yang_count == 0 and not has_major_kege:
-            self.detected_kege.append('三阴')
-            self.kege_details['三阴'] = {
-                '名称': '三阴课',
+            # 【BUG-FIX 2026-09-11 · 命名冲突】原名 '三阴' 与课经「三阴课」(p510) 重名，
+            # 使课经三阴课被"三传皆阴"属性标签淹没（本标签在 562 案命中 56.6%，
+            # 而课经真三阴课仅 1 案）。按同族命名（三传皆仲/三传皆季）改为「三传皆阴」，
+            # 并同步更新 calibration.KEGE_POLARITY 键，保股票域估值不变。
+            self.detected_kege.append('三传皆阴')
+            self.kege_details['三传皆阴'] = {
+                '名称': '三传皆阴',
                 '类型': '三传属性（参考）',
                 '三传': '·'.join(sanchuan_list),
                 '吉凶': '凶',
@@ -1079,7 +1119,24 @@ class SanChuanKegeDetector:
             self.kege_details[name] = detail
 
     def _wang_xiang(self, zhi: str, yue_ling_wx: str) -> str:
-        """月令旺相休囚死：返回 '旺'/'相'/'休'/'囚'/'死'"""
+        """月令旺相休囚死：返回 '旺'/'相'/'休'/'囚'/'死'
+
+        经典判据（「当令者旺，令生者相，生令者休，克令者囚，令克者死」）：
+          旺 = 与月令同五行
+          相 = 月令生之
+          休 = 生月令者
+          囚 = 克月令者   ← 克令者囚
+          死 = 月令所克者 ← 令克者死
+
+        【BUG-FIX 2026-09-11】原实现把 囚/死 判据写反（月令所克者给「囚」、
+        克月令者给「死」）。实证：60 组（12 支 × 5 月令五行）中 24 组与经典不符，
+        且完全对称——{('囚','死'):12, ('死','囚'):12}。
+        同项目两个独立实现均为正确口径，可作对证：
+          · liuren_64ke_judge.get_wang_shuai  「WX_KE.get(wx)==wx_jian → 囚」
+          · mijue_engine.WX_SEASON_WANG       春：土死、金囚
+        净效应：本函数仅被 魄化(L1315)/三阴(L1324) 消费，且均写作
+        `in ('死','囚')` → 修复前净效应为零；修复后语义正确，防未来单值消费踩坑。
+        """
         wx = DIZHI_WU_XING.get(zhi, '')
         if not wx:
             return ''
@@ -1089,10 +1146,10 @@ class SanChuanKegeDetector:
             return '相'
         if WU_XING_SHENG.get(wx) == yue_ling_wx:
             return '休'
-        if WU_XING_KE.get(yue_ling_wx) == wx:
-            return '囚'
         if WU_XING_KE.get(wx) == yue_ling_wx:
-            return '死'
+            return '囚'       # 克月令者 → 囚（克令者囚）
+        if WU_XING_KE.get(yue_ling_wx) == wx:
+            return '死'       # 月令所克者 → 死（令克者死）
         return ''
 
     def _liu_he(self, a: str, b: str) -> bool:
@@ -1122,12 +1179,18 @@ class SanChuanKegeDetector:
                              yue_jian: str, si_ke: List,
                              jieqi: str = '',
                              nianming: str = '',
-                             kongwang: Optional[List[str]] = None) -> None:
+                             kongwang: Optional[List[str]] = None,
+                             dang_ling: str = '',
+                             nian_zhi: str = '',
+                             shichen: str = '',
+                             xing_nian: str = '',
+                             ben_ming: str = '',
+                             tiandi_pan: Optional[Dict] = None) -> None:
         """六十四课经缺失课格（P1 清单，约19个）结构检测。
 
         依据《大六壬通解》叶飘然 上卷 p5136-5151 课目总歌 + 课经正文。
         ⚠️ 显示用，不赋吉凶 valence（方论：64主课格多为参考趋势）。
-        数据来源：三传 + 日干支 + 三传天将 + 月将(月令proxy) + 四课。
+        数据来源：三传 + 日干支 + 三传天将 + 当令(月建) + 月将(太阳) + 四课。
         jieqi: 节气输入（四立/分至前一日），用于天祸/天寇（缺省跳过）。
         nianming: 夫妻年命输入（'夫年干支,妻年干支'），用于繁昌（缺省跳过）。
         注：迤福（八远兼五福，吉凶参驳）定义参驳、无单一定义，暂不实现。
@@ -1136,7 +1199,11 @@ class SanChuanKegeDetector:
             return
         chu, zhong, mo = sanchuan_list[0], sanchuan_list[1], sanchuan_list[2]
         gj = TIAN_GAN_JI_GONG.get(ri_gan, '')
-        yue_ling_wx = DIZHI_WU_XING.get(yue_jian, '') if yue_jian else ''
+        # 【BUG-FIX 2026-09-11 · 憨爷拍板】「当令」指**月建**，月将即**太阳**，无当令之说。
+        # 原以 yue_jian（月将）当"月令proxy"：月将五行与月建五行 12/12 个月全不同
+        # （如寅月木 → 亥将水），旺相休囚死 / 季节 / 游魂煞起例 全判错。
+        # 现改用月建；yue_jian 仅保留给「辰为月将尤美，为死奇回光」这类真月将判据。
+        dang_ling_wx = DIZHI_WU_XING.get(dang_ling, '') if dang_ling else ''
         tj = tian_jiang if len(tian_jiang) >= 3 else ['', '', '']
         chu_tj, zhong_tj, mo_tj = tj[0], tj[1], tj[2]
 
@@ -1301,67 +1368,103 @@ class SanChuanKegeDetector:
                 if _gan_he and self._liu_he(_f_zhi, _m_zhi):
                     self._add_kege('繁昌', _ref('繁昌', '夫妻年命德合（夫%s妻%s干合支合）' % (_parts[0], _parts[1]), '通解 p8048/8054'))
 
-        # —— 需 三传天将 / 月将(月令) ——
-        if not yue_ling_wx:
-            return  # 其余需月令旺相，无月将则跳过
+        # —— 神煞类课格：统一委托 kege_shensha（单一真源）——
+        # 【2026-09-11 六项判据补齐】魄化 / 三阴 / 灾厄 / 合欢 / 时泰 / 死奇
+        # 均按课经原文**完整判据**实现于 engine/kege_shensha.py，
+        # 各煞起例（死神正月起巳、死气正月起午、丧车正月起未逆行四季、
+        # 游魂正月起亥、伏殃正月起酉逆行四仲、病符旧太岁、丧门岁前二辰、
+        # 吊客岁后二辰、五墓金丑木未火戌水土辰、三丘库墓冲位）同源。
+        # 【2026-09-11 憨爷拍板】灾厄启用「须乘凶将」工程收敛（strict_zai_e=True）：
+        #   按原文「凶煞发用即算」口径，8640 穷举命中 52.5% → 前台灾厄泛滥；
+        #   收敛后须初传乘六凶将（螣蛇/朱雀/勾陈/天空/白虎/玄武）方成立（岁虎=白虎发用天然满足）。
+        _ss_env = {
+            'ri_gan': ri_gan, 'ri_zhi': ri_zhi,
+            'chu': chu, 'zhong': zhong, 'mo': mo,
+            'sanchuan': [chu, zhong, mo],
+            'si_ke': si_ke or [],
+            'chu_tj': chu_tj, 'tian_jiang': tj,
+            'dang_ling': dang_ling, 'yue_jiang': yue_jian,
+            'nian_zhi': nian_zhi, 'shichen': shichen,
+            'xing_nian': xing_nian, 'ben_ming': ben_ming,
+            'tiandi_pan': tiandi_pan or {},
+        }
+        _ss = _shensha_judge_all(_ss_env, strict_zai_e=True) if _shensha_judge_all else {}
 
-        # 11. 合欢（p5136：吉将三六合用兼——三传三六合 + 吉将）
-        liu_he_or_he = (self._liu_he(chu, zhong) or self._liu_he(zhong, mo) or
-                        (frozenset([chu, zhong, mo]) in SAN_HE_GROUPS))
-        if liu_he_or_he and (set(tj) & JI_JIANG):
-            self._add_kege('合欢', _ref('合欢', '三传三六合且乘吉将', '通解 p5136'))
+        # 11. 合欢（p379：日辰遇天干作合，及支三合六合发用，并占人年命俱乘吉将）
+        if '合欢' in _ss:
+            self._add_kege('合欢', _ref('合欢', _ss['合欢']['说明'], '通解 p379'))
 
-        # 12. 魄化（p5144：死囚带白虎）
-        if chu_tj == '白虎' and self._wang_xiang(chu, yue_ling_wx) in ('死', '囚'):
-            self._add_kege('魄化', _ref('魄化', '死囚带白虎', '通解 p5144'))
-
-        # 13. 繁华/荣华（p3762/5136：贵旺禄马发）
+        # 13. 繁华/荣华（p3762/5136：贵旺禄马发）—— 判据不含月令，同属误挡
         if (set(tj) & {'贵人'}) and GAN_LU.get(ri_gan) in (chu, zhong, mo) and \
                 YI_MA.get(ri_zhi) in (chu, zhong, mo):
             self._add_kege('繁华', _ref('繁华', '贵人乘旺、禄马发于三传', '通解 p3762/5136'))
 
-        # 14. 三阴（p5145：贵逆日辰后 + 死囚玄虎）
-        if chu_tj == '白虎' and self._wang_xiang(chu, yue_ling_wx) in ('死', '囚') and \
-                ('玄武' in tj):
-            self._add_kege('三阴', _ref('三阴', '死囚带玄虎（贵逆）', '通解 p5145'))
+        # 16. 死奇（p520：凡斗罡系日辰阴阳发用，为死奇课。斗罡者辰也。）
+        # 【BUG-FIX 2026-09-11】原写 `yue_jian == '辰' and chu == '辰'` —— 把原文的
+        #   **加分项**「辰为月将尤美，为死奇回光，除祸为福」当成了**成立必要条件**，
+        #   而把主判据（斗罡系日辰阴阳发用）丢掉；且旧版被下方早退挡住 → 双重失效。
+        # 【2026-09-11 补齐】另按原文「如罡加四课之神」补「辰系日辰阴阳」限定。
+        if '死奇' in _ss:
+            self._add_kege('死奇', _ref('死奇', _ss['死奇']['说明'], '通解 p520'))
 
-        # 15. 孤辰（p4017/5136：季→孤辰；三传见孤辰）
-        season = self._season_from_yuejian(yue_jian)
+        # 12. 魄化（p505：白虎带死神、死气临日辰、行年发用；或遇时令囚死之神，则为饿虎）
+        if '魄化' in _ss:
+            self._add_kege('魄化', _ref('魄化', _ss['魄化']['说明'], '通解 p505'))
+
+        # 14. 三阴（p510：天乙逆行，日辰在后，用其囚死，将乘元虎，时克行年）
+        if '三阴' in _ss:
+            self._add_kege('三阴', _ref('三阴', _ss['三阴']['说明'], '通解 p510'))
+
+        # 18. 灾厄（p525：丧车、游魂、伏殃、病符、丧吊、丘墓、岁虎发用）
+        #   【2026-09-11 收敛】须乘凶将（见上方 strict_zai_e=True 说明）
+        if '灾厄' in _ss:
+            self._add_kege('灾厄', _ref('灾厄', _ss['灾厄']['说明'], '通解 p525'))
+
+        # 19. 时泰（p317：凡课用起太岁、月建，乘青龙、六合，又带财德之神）
+        if '时泰' in _ss:
+            self._add_kege('时泰', _ref('时泰', _ss['时泰']['说明'], '通解 p317'))
+
+        # —— 以下需 当令（月建）——
+        if not dang_ling_wx:
+            return  # 孤辰需月建定季，缺月建则跳过
+
+        # 15. 孤辰（p4017/5136：季→孤辰。孤辰起例：春巳、夏申、秋亥、冬寅）
+        # 【BUG-FIX 2026-09-11】原由 `_season_from_yuejian(yue_jian)` 用**月将**定季 ——
+        #   寅月（春）月将为亥 → 误判为冬 → 取冬孤辰「寅」（应为春孤辰「巳」）。
+        #   季由**月建**定。
+        season = self._season_from_dangling(dang_ling)
         gc = SEASON_GU_CHEN.get(season, '')
         if gc and gc in (chu, zhong, mo):
             self._add_kege('孤辰', _ref('孤辰', '季前孤辰入传', '通解 p4017/5136'))
 
-        # 16. 死奇（p5146：月躔天罡(辰)用）
-        if yue_jian == '辰' and chu == '辰':
-            self._add_kege('死奇', _ref('死奇', '月建在辰(天罡)且天罡发用', '通解 p5146'))
-
         # 17. 二烦 —— 完整判定已迁移至 liuren_64ke_judge.judge_er_fan（四仲月将+四正日+日月宿加四仲+斗罡系丑未），
         # 此处残缺近似版（仅"月将加四仲"1/4条件）已停用，避免残缺二烦混入课格列表（2026-08-15 憨爷指正）。
 
-        # 18. 灾厄（p5146：游魂用——月将后一辰为游魂）
-        you_hun = DIZHI[(DIZHI.index(yue_jian) - 1) % 12] if yue_jian in DIZHI else ''
-        if chu == you_hun:
-            self._add_kege('灾厄', _ref('灾厄', '游魂发用（月将后一辰）', '通解 p5146'))
+        # 18. 灾厄 / 19. 时泰 —— 【2026-09-11 已前移至上方 kege_shensha 统一判据区】
+        # （原文共列 7 煞：丧车/游魂/伏殃/病符/丧吊/丘墓/岁虎，此前仅实现「游魂」1 煞）
 
-        # 19. 时泰（p7314：月建(月将proxy)发用 + 青龙/六合 + 财德）
-        ke_wx = WU_XING_KE.get(rg_wx, '')  # 我克之五行
-        cai_zhi = [z for z in DIZHI if DIZHI_WU_XING.get(z) == ke_wx]  # 财支
-        ri_de = GAN_DE.get(ri_gan, '')
-        if chu == yue_jian and chu_tj in ('青龙', '六合') and \
-                (chu in cai_zhi or chu == ri_de):
-            self._add_kege('时泰', _ref('时泰', '月建发用乘青龙六合带财德', '通解 p7314'))
+    def _season_from_dangling(self, dang_ling: str) -> str:
+        """当令(月建)→ 季：寅卯辰春 / 巳午未夏 / 申酉戌秋 / 亥子丑冬。
 
-    def _season_from_yuejian(self, yue_jian: str) -> str:
-        """月将(月令proxy)→ 季"""
-        if yue_jian in ('寅', '卯', '辰'):
+        【语义订正 2026-09-11 · 憨爷拍板】季由**月建**定；
+        月将即太阳、只管过宫，无当令之说（寅月亥将属春，非冬）。
+        """
+        if dang_ling in ('寅', '卯', '辰'):
             return '春'
-        if yue_jian in ('巳', '午', '未'):
+        if dang_ling in ('巳', '午', '未'):
             return '夏'
-        if yue_jian in ('申', '酉', '戌'):
+        if dang_ling in ('申', '酉', '戌'):
             return '秋'
-        if yue_jian in ('亥', '子', '丑'):
+        if dang_ling in ('亥', '子', '丑'):
             return '冬'
         return ''
+
+    def _season_from_yuejian(self, yue_jian: str) -> str:
+        """⚠️ 已弃用（2026-09-11）：入参语义应为**月建**（当令），而非月将。
+        月将与月建 12 个月全不同（寅月木 → 亥将水），原实现据此定季会整体错位。
+        保留仅为向后兼容，直接委托 _season_from_dangling。
+        """
+        return self._season_from_dangling(yue_jian)
 
     # -------------------------------------------------------------------------
     # 9. 三传分类
@@ -1529,8 +1632,25 @@ def detect_sanchuan_kege(sanchuan_list: List[str],
                          ri_gan: str = '', ri_zhi: str = '',
                          keti_raw: str = '',
                          kongwang: Optional[List[str]] = None,
-                         season: str = '') -> Dict:
+                         season: str = '',
+                         tian_jiang: Optional[List[str]] = None,
+                         yue_jian: str = '',
+                         si_ke: Optional[List] = None,
+                         jieqi: str = '',
+                         nianming: str = '',
+                         dang_ling: str = '',
+                         nian_zhi: str = '',
+                         shichen: str = '',
+                         xing_nian: str = '',
+                         ben_ming: str = '',
+                         tiandi_pan: Optional[Dict] = None) -> Dict:
     """快速检测三传课格
+
+    【BUG-FIX 2026-09-11 · 同型断链第 3 处】原签名只到 season，再原样透传 detect，
+    等价于「天将/月将/四课/月建/年支/占时/行年/本命/天地盘 全取空」——
+    依赖这些输入的课格（魄化/三阴/灾厄/合欢/时泰/死奇/繁华/孤辰…）在此入口下静默失效。
+    现补齐全部 16 参（全部可选，默认值与原行为一致 → 向后兼容）。
+    注：生产主链走 `SanChuanKegeDetector().detect(...)`，本函数为对外便捷入口。
 
     Args:
         sanchuan_list: 三传列表，如 ['申', '子', '辰']
@@ -1539,12 +1659,25 @@ def detect_sanchuan_kege(sanchuan_list: List[str],
         keti_raw: 已有课体名称
         kongwang: 空亡地支列表
         season: 季节（春/夏/秋/冬）
+        tian_jiang: 三传天将（3 元素）
+        yue_jian: 月将（**太阳**，仅供「辰为月将·死奇回光」等真月将判据）
+        si_ke: 四课
+        jieqi: 节气（天祸/天寇）
+        nianming: 夫妻年命（繁昌）
+        dang_ling: **月建**（当令；旺相休囚死 / 孤辰定季 等）
+        nian_zhi: 年支（太岁）
+        shichen: 占时
+        xing_nian: 行年地支
+        ben_ming: 本命地支
+        tiandi_pan: 天地盘 {地盘: 天盘}
 
     Returns:
         检测结果字典
     """
     detector = SanChuanKegeDetector()
-    return detector.detect(sanchuan_list, ri_gan, ri_zhi, keti_raw, kongwang, season)
+    return detector.detect(sanchuan_list, ri_gan, ri_zhi, keti_raw, kongwang, season,
+                           tian_jiang, yue_jian, si_ke, jieqi, nianming, dang_ling,
+                           nian_zhi, shichen, xing_nian, ben_ming, tiandi_pan)
 
 
 def get_sanchuan_kege_summary(result: Dict) -> str:

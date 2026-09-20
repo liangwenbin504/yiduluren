@@ -1,9 +1,46 @@
-flask==2.3.3
-flask-cors==4.0.0
-requests==2.31.0
-waitress==3.0.2
-reportlab==4.4.10
-PyPDF2==3.0.1
-fpdf2==2.8.7
-Pillow==12.1.1
-python-docx==1.1.2
+# ── Web 框架 ──
+flask>=2.3
+flask-cors>=4.0
+waitress>=3.0
+
+# ── 数据与科学计算 ──
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+
+# ── 机器学习 ──
+scikit-learn>=1.3
+xgboost>=2.0
+lightgbm>=4.0
+
+# ── LangGraph（多智能体流水线） ──
+langgraph>=0.2
+langchain>=0.3
+langchain-core>=0.3
+langchain-openai>=0.2
+
+# ── 股票数据 ──
+akshare>=1.14
+
+# ── HTTP 请求 ──
+requests>=2.31
+
+# ── 图表与可视化 ──
+matplotlib>=3.8
+echarts>=5.0
+
+# ── 文档处理 ──
+PyPDF2>=3.0
+python-docx>=1.1
+Pillow>=10.0
+reportlab>=4.4
+fpdf2>=2.8
+
+# ── 自动化 ──
+pyautogui>=0.9
+
+# ── 工具 ──
+python-dotenv>=1.0
+tqdm>=4.65
+# 测试（2026-09-06 引入 pytest 统一测试框架）
+pytest>=7.0
