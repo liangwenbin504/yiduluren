@@ -6001,7 +6001,14 @@ function openZeriModal(pai) {
     // 长 desc 走 title 悬停（憨爷偏好：长内容不占版面）。
     var _fw = (d.fangwei && (d.fangwei.sanchuan || d.fangwei.leishen_jia || d.fangwei.yima)) ? d.fangwei : null;
     var _sm = (d.shumu && (d.shumu.sum || d.shumu.cheng)) ? d.shumu : null;
-    var _zz = (d.zhuanzhe && d.zhuanzhe.mode) ? d.zhuanzhe : null;
+    // ⚠ 2026-09-21：严格模式下 zhuanzhe.mode 常为空（据不足不判），但 desc/课格 仍有值
+    //   ⇒ 判空**不能只看 mode**，否则整块卡片（含课格行）会被误吞。
+    var _zz = (d.zhuanzhe && (d.zhuanzhe.mode || d.zhuanzhe.desc ||
+              (d.zhuanzhe.kege_info && d.zhuanzhe.kege_info.length))) ? d.zhuanzhe : null;
+    var _escH = function (s) {
+      return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    };
     if (_fw || _sm || _zz) {
       body += '<div style="margin-top:8px;padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid #3a3a6a;border-radius:8px;">';
       body += '<div style="font-size:12px;font-weight:600;color:#8ea2ff;margin-bottom:5px;">🧭 方位·数目·转折（何地·几何·如何变化）</div>';
@@ -6025,10 +6032,37 @@ function openZeriModal(pai) {
         }
       }
       if (_zz) {
-        body += '<div style="margin-top:3px;font-size:12px;color:#e0e0e0;line-height:1.6;" title="' + String(_zz.desc || '').replace(/"/g, '&quot;') + '">' +
-          '转折：<span style="color:#fff;">' + _zz.mode + '</span>' +
-          ((_zz.kege && _zz.kege.length) ? '　<span style="color:#c4b5fd;">课格：' + _zz.kege.join('、') + '</span>' : '') +
-          ((_zz.desc) ? '　<span style="font-size:11px;color:#7a7a9a;">（悬停看判据）</span>' : '') + '</div>';
+        // 严格模式下 mode 为空 ⇒ 显示「未判（据不足）」而不是编一个方向（见后端 ZHUANZHE_STRICT）。
+        var _zzTip = _escH(String(_zz.desc || '')) +
+          (_zz.basis ? '　【依据】' + _escH(_zz.basis) : '');
+        var _zzTxt = _zz.mode
+          ? '<span style="color:#fff;">' + _escH(_zz.mode) + '</span>'
+          : '<span style="color:#9aa0b5;">未判（据不足）</span>';
+        body += '<div style="margin-top:3px;font-size:12px;color:#e0e0e0;line-height:1.6;" title="' + _zzTip + '">' +
+          '转折：' + _zzTxt +
+          '　<span style="font-size:11px;color:#7a7a9a;">（悬停看判据）</span></div>';
+      }
+      // ── 课格单独成行（2026-09-21 憨爷拍板）──
+      // 课格是「课体性质」，与「转折(时序走向)」是两回事，不该只在转折行里带一嘴。
+      // 数据来自 zhuanzhe.kege_info：64课经有的取 64课经，乱首/赘婿取《通解》原文，
+      // ⛔ 查无原文者后端不输出 ⇒ 前端这里也不会出现无据课格。
+      var _kg = (_zz && _zz.kege_info) ? _zz.kege_info : [];
+      if (_kg.length) {
+        var _kgHtml = _kg.map(function (g) {
+          var tip = [];
+          if (g.象曰) { tip.push('象曰：' + g.象曰); }
+          if (g.时序) { tip.push(g.时序); }
+          if (g.宜 && g.宜.length) { tip.push('宜：' + g.宜.join('、')); }
+          if (g.忌 && g.忌.length) { tip.push('忌：' + g.忌.join('、')); }
+          if (g.src) { tip.push('出处：' + g.src); }
+          var _tp = tip.join('　');
+          _tp = String(_tp).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+          var _nm = String(g.名 || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          return '<span title="' + _tp + '" style="color:#c4b5fd;border-bottom:1px dotted #6d5ba8;cursor:help;">' +
+            _nm + (g.吉凶 ? '<span style="color:#94a3b8;">（' + String(g.吉凶).replace(/</g, '&lt;') + '）</span>' : '') + '</span>';
+        }).join('　｜　');
+        body += '<div style="margin-top:3px;font-size:12px;color:#e0e0e0;line-height:1.6;">课格：' + _kgHtml +
+          '　<span style="font-size:11px;color:#7a7a9a;">（悬停看象曰/宜忌/出处）</span></div>';
       }
       body += '</div>';
     }

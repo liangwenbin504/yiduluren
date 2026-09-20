@@ -332,6 +332,80 @@ def _kege_for_zhuanzhe(si_ke, ri_gan: str, ri_zhi: str, sanchuan_dizhi: List[str
     return names, det
 
 
+# 🔴🔴 转折 mode 是否「严格化」（2026-09-21：②扩标到 n=53 后据实拍板）
+#   实测（engine/shuzheng_zhuanzhe_gt.json，n=53；探针 _冗余待删/_eval_zhuanzhe_gt53.py）：
+#     现网(天将合成＋乱首override) 12/53 = **22.6%**
+#     对照组：恒定猜「先凶后吉」= 58.5%｜均匀随机 = 50.1%
+#     ⇒ 22.6% **低于随机** ⇒ 该判据是**负价值**信息，继续输出等于误导。
+#     过拟合检验：老 21 案 38.1% ⇒ 新增 32 案仅 **4/32 = 12.5%**（38.1% 是小样本假象）。
+#     无偏见特征扫描（_冗余待删/_exp_zz_feature_scan.py）：Δ>20pp 的特征**全是 n≤5**；
+#     唯一有原文铁证的是「乱首」（通解_下:8394），GT 上 2/2。
+#   ⇒ 默认 1：**只在有原文时序铁证的课格（乱首）时给 mode**，其余**不判**（mode=""），
+#     desc 走纯描述（初/中/末 天将·六亲·旺衰·课格·空亡），信息量不减、不下结论。
+#   ⇒ 设 ZHUANZHE_STRICT=0 可回到旧行为（恒输出 mode），便于 A/B 对照。
+ZHUANZHE_STRICT = int(os.environ.get('ZHUANZHE_STRICT', '1'))
+
+# 64 课经里**没有**的课格 ⇒ 用《通解》原文补（⛔ 查无原文者一律不列入）
+_KEGE_EXTRA_SRC = {
+    "上门乱首": {
+        "吉凶": "凶",
+        "象曰": "辰来临日又克日，卑幼上门肆侵欺；二者皆名为乱首，父子兄弟各离析（通解_上:3212）",
+        "时序": "通解_下:8394「旺相相生灾未发，死囚刑克便灾临」⇒ 其凶应时令而后发",
+        "src": "通解_上:5136「乱首支加干克干」；通解_下:2833「支加干克干，卑凌尊、下犯上，为上门乱首，大凶之象」",
+    },
+    "自取乱首": {
+        "吉凶": "凶",
+        "象曰": "干加支受支克，自取其克（通解_上:3240）",
+        "时序": "通解_下:8394「旺相相生灾未发，死囚刑克便灾临」⇒ 其凶应时令而后发",
+        "src": "通解_上:5136「干加支上被克同」；通解_下:4455「亥加辰，乃自取乱首」",
+    },
+    "乱首": {
+        "吉凶": "凶",
+        "象曰": "辰来临日又克日，卑幼上门肆侵欺（通解_上:3212）",
+        "时序": "通解_下:8394「旺相相生灾未发，死囚刑克便灾临」⇒ 其凶应时令而后发",
+        "src": "通解_上:5136「乱首支加干克干，干加支上被克同」（干支同宫 ⇒ 二义同归）",
+    },
+    "赘婿": {
+        "吉凶": "凶",
+        "象曰": "支临干而被干克，屈从于人（通解_上:3240「以尊就卑」）",
+        "src": "通解_上:5136「赘婿支临干被克」；通解_上:4958「赘婿乱首日同量」",
+    },
+}
+
+
+def _kege_enrich(names: List[str]) -> List[Dict[str, Any]]:
+    """给课格名补「吉凶/象曰/宜忌/原文出处」。
+
+    64 课经（`liuren_64ke_v2`）里有的（斩关/天狱）直接取；
+    没有的（乱首/赘婿）用 `_KEGE_EXTRA_SRC` 的《通解》原文；
+    ⛔ **两边都没有的不输出**（防臆造）。
+    """
+    out: List[Dict[str, Any]] = []
+    for n in names or []:
+        item: Dict[str, Any] = {"名": n}
+        info = None
+        try:
+            from engine.liuren_64ke_v2 import get_keti_info
+            info = get_keti_info(n)
+        except Exception:
+            info = None
+        if info:
+            item["吉凶"] = info.get("吉凶", "")
+            if info.get("象曰"):
+                item["象曰"] = info["象曰"]
+            if info.get("宜"):
+                item["宜"] = list(info["宜"])
+            if info.get("忌"):
+                item["忌"] = list(info["忌"])
+            item["src"] = "64课经（通解_上:5136 课体口诀同源）"
+        else:
+            item.update({k: v for k, v in (_KEGE_EXTRA_SRC.get(n) or {}).items() if v})
+            if len(item) == 1:      # 只有「名」⇒ 无原文支撑，不输出
+                continue
+        out.append(item)
+    return out
+
+
 def _zhuanzhe_for_ancient(sanchuan_dizhi: List[str],
                           sanchuan_tianjiang: List[str],
                           kongwang: Optional[List[str]] = None,
@@ -406,7 +480,8 @@ def _zhuanzhe_for_ancient(sanchuan_dizhi: List[str],
     if lq_mode and lq_mode != jiang_mode and jiang_mode != "平平无变":
         tension = (f"；⚠ 六亲走向相反（初{a.get('liuqin','') or '—'}→末{c.get('liuqin','') or '—'}，"
                    f"主{lq_mode}）")
-    mode = jiang_mode
+    # 🔴 严格模式下天将合成**不作结论**（已被 n=53 GT 证伪：22.6% < 随机 50%）
+    mode = "" if ZHUANZHE_STRICT else jiang_mode
 
     # L4 旺衰：**只描述不判定**（实测作判据会降分）
     ws_txt = ""
@@ -418,12 +493,13 @@ def _zhuanzhe_for_ancient(sanchuan_dizhi: List[str],
     # ---- 旬空修正（§035「寅是空亡…见生不生，反成凶咎」）----
     kw = set(kongwang or [])
     kong_flags = [z in kw for z in sc]
-    if kong_flags[2] and mode in ("先凶后吉", "始终吉"):
-        mode = f"{mode}（末传空亡，转吉落空→反成凶咎）"
-    elif kong_flags[2] and mode in ("先吉后凶", "始终凶"):
-        mode = f"{mode}（末传空亡，凶亦落空）"
-    elif kong_flags[0]:
-        mode = f"初传{sc[0]}空亡（起始之力落空）→ {mode}"
+    if mode:      # ⛔ 严格模式 mode="" ⇒ 不追加任何时序后缀（避免"无中生有"）
+        if kong_flags[2] and mode in ("先凶后吉", "始终吉"):
+            mode = f"{mode}（末传空亡，转吉落空→反成凶咎）"
+        elif kong_flags[2] and mode in ("先吉后凶", "始终凶"):
+            mode = f"{mode}（末传空亡，凶亦落空）"
+        elif kong_flags[0]:
+            mode = f"初传{sc[0]}空亡（起始之力落空）→ {mode}"
 
     # ---- L3 课格 ----
     kege, kege_det = _kege_for_zhuanzhe(si_ke, ri_gan, ri_zhi, sc, tiandi_pan)
@@ -443,8 +519,9 @@ def _zhuanzhe_for_ancient(sanchuan_dizhi: List[str],
     mid = ""
     if vb != 0 and ((vb > 0 and va < 0 and vc < 0) or (vb < 0 and va > 0 and vc > 0)):
         mid = "，中传生变"
+    _tail = f"，主{mode}" if mode else "；时序未判（据不足）"
     desc = (f"初传{sc[0]}乘{tj[0]}（{a['xing']}）→ 中传{sc[1]}乘{tj[1]}（{b['xing']}）"
-            f"→ 末传{sc[2]}乘{tj[2]}（{c['xing']}），主{mode}{mid}")
+            f"→ 末传{sc[2]}乘{tj[2]}（{c['xing']}）{_tail}{mid}")
     if any(x.get("liuqin") for x in (a, b, c)):
         desc += (f"；六亲：初{a.get('liuqin','') or '—'}→中{b.get('liuqin','') or '—'}"
                  f"→末{c.get('liuqin','') or '—'}")
@@ -455,8 +532,12 @@ def _zhuanzhe_for_ancient(sanchuan_dizhi: List[str],
         desc += f"；空亡：{'、'.join(f'{z}空' for z, f in zip(sc, kong_flags) if f)}"
     return {
         "初": a, "中": b, "末": c, "mode": mode,
+        "basis": ("课格乱首时序（通解_下:8394「旺相相生灾未发，死囚刑克便灾临」）" if mode else
+                  ("三传天将合成（TIANJIANG_SCORE）" if not ZHUANZHE_STRICT else
+                   "未判：三传天将合成判据在 n=53 人工 GT 上仅 22.6%，低于随机 50%、恒定基线 58.5% ⇒ 不下结论")),
+        "strict": bool(ZHUANZHE_STRICT),
         "liuqin": {"初": a.get("liuqin", ""), "中": b.get("liuqin", ""), "末": c.get("liuqin", "")},
-        "kege": kege, "kege_detail": kege_det,
+        "kege": kege, "kege_detail": kege_det, "kege_info": _kege_enrich(kege),
         "kong": kong_flags, "desc": desc,
         "src": ("§前程仕进03·046「此课先失后得，先虚后实」；"
                 "§宅墓02·035「望先凶后吉」（+「寅是空亡…见生不生，反成凶咎」⇒ 旬空修正）；"
