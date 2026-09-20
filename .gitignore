@@ -278,3 +278,4 @@ DATA/**/*.7z
 # ── 回测产物（每次跑会重写，不入库）──
 /engine/ancient_backtest_report.json
 /engine/ancient_backtest_details.json
+_预览_*
