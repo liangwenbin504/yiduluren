@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>返吟(反吟)课定义审计 · 人工审核材料</title>
+<style>
+  :root{ --bg:#f7f5f0; --card:#ffffff; --ink:#2b2620; --muted:#7a7064; --line:#e3ddd2;
+         --red:#c0392b; --green:#2e7d57; --amber:#b8860b; --blue:#2c5f8a; }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.7;}
+  .wrap{max-width:900px;margin:0 auto;padding:32px 22px 60px;}
+  h1{font-size:24px;margin:0 0 4px;}
+  h2{font-size:19px;margin:34px 0 10px;padding-left:10px;border-left:5px solid var(--blue);}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:8px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:14px 0;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+  .decl{background:#fff6f4;border-color:#f0c9c0;}
+  code{background:#f0ece3;padding:1px 6px;border-radius:4px;font-size:13px;color:#5a3b2e;}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:14px;}
+  th,td{border:1px solid var(--line);padding:7px 9px;text-align:center;}
+  th{background:#f2ede3;font-weight:600;}
+  .hit{background:#fdecea;color:var(--red);font-weight:700;}
+  .miss{color:var(--muted);}
+  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-size:12px;font-weight:600;}
+  .tag.no{background:#fdecea;color:var(--red);}
+  .tag.yes{background:#e7f4ec;color:var(--green);}
+  .verdict{font-size:15px;padding:12px 16px;border-radius:8px;margin:10px 0;}
+  .vbad{background:#fdecea;border:1px solid #f0c9c0;color:var(--red);}
+  .vgood{background:#e7f4ec;border:1px solid #bfe3cd;color:var(--green);}
+  ul{margin:8px 0 8px 4px;padding-left:20px;}
+  li{margin:5px 0;}
+  .path{color:var(--blue);font-size:13px;}
+  .note{color:var(--muted);font-size:13px;}
+  .ask{background:#fbf7ec;border:1px dashed var(--amber);}
+  b.k{color:#5a3b2e;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>返吟（反吟）课定义审计 · 人工审核材料</h1>
+  <div class="sub">案号 #1048（丙午日 · 月将午 · 时酉）｜ 审计日期 2026-07-30 ｜ 引擎实算核验</div>
+
+  <div class="card decl">
+    <h2 style="border-color:var(--red);margin-top:4px;">① 诚实声明（先认错）</h2>
+    <p>上一轮回答「返吟是怎么来的」时，我<b class="k">没有引用任何原始典籍</b>，只是依据代码里的判定规则和一般性六壬常识作了解释。
+    这是严谨性上的疏漏——返吟是经典课体，应当回到《六壬大全》64课经等原典核对，而不是用代码代理当标准。本材料即补做这件人工可复核的核查。</p>
+  </div>
+
+  <div class="card">
+    <h2>② 经典定义（引自项目已抽取的《六壬大全》64课经）</h2>
+    <p class="path">出处 1 · <code>data/supervised_training_result.json</code> → rule <code>R104_04</code></p>
+    <div class="verdict vgood">
+      <b>「反吟课：天地盘相冲，十二神各居冲位，主动、主变、主反复、主迅速。」</b><br>
+      <span class="note">该条 <code>"source": "六壬大全"</code>，分类为「九宗门-别责八专伏吟反吟」。</span>
+    </div>
+    <p class="path">出处 2 · <code>data/sanchuan_kege_knowledge_base.json</code> → <code>_meta.sources</code></p>
+    <ul>
+      <li>陈公献《大六壬指南》心印赋 + 指掌赋</li>
+      <li>《六壬大全》64课经 + 毕法赋100法</li>
+      <li>壬占汇选704古案例 NLP 提取</li>
+    </ul>
+    <p class="note">项目本地也存有原典 PDF，可逐字核对：<br>
+      · <code>data/图解六壬大全.第2部.吉凶占断.pdf</code>（含 64 课经）<br>
+      · <code>data/大六壬指南例题解-杨景磐.pdf</code><br>
+      · <code>data/大六壬断案疏正.pdf</code></p>
+    <p><b>核心结论：经典返吟 = 天地盘相冲（十二地支天盘全部落在其对冲位）。</b>这是取用神「九宗门」里返吟法的<b>前置条件</b>，不是看三传长相。</p>
+  </div>
+
+  <div class="card">
+    <h2>③ 代码实际用的规则（与经典不等价）</h2>
+    <p class="path"><code>engine/liuren_keti_bifa.py</code> · <code>derive_sanchuan_kege()</code> · 第 331–335 行</p>
+    <pre style="background:#f4f0e8;padding:12px 14px;border-radius:8px;overflow:auto;font-size:13px;"># 返吟冲：初传与末传相冲
+chong = {'子':'午','午':'子','丑':'未','未':'丑','寅':'申','申':'寅',
+         '卯':'酉','酉':'卯','辰':'戌','戌':'辰','巳':'亥','亥':'巳'}
+if chong.get(a) == c:
+    names.append('返吟'); v += KETI_VALENCE['返吟']   # KETI_VALENCE['返吟'] = -2</pre>
+    <ul>
+      <li>代码用「<b>初传与末传相冲</b>」作为返吟的代理判定。</li>
+      <li>经典返吟用「<b>天地盘相冲</b>」——二者<b class="k">不等价</b>：三传初末冲是「天地盘冲」的<b>必要非充分条件</b>（返吟法排出的三传确实初末冲，但反过来不成立）。</li>
+      <li>这是一层位错配：返吟属<b>九宗门（取用法）</b>，由天地盘决定；代码却在<b>三传课格</b>这一层、仅凭三传就标返吟，且 <code>derive_jiuzongmen()</code> 根本没检测返吟。</li>
+      <li>后果：任何「三传初末恰好相冲、但天地盘并不冲」的课，都会被<b>过度标定</b>为返吟（superset）。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>④ #1048 引擎实测核验（可复现）</h2>
+    <p class="note">调用真实引擎 <code>SiKeSanChuanCalculator2().calculate('丙','午','午','酉')</code> 实排：</p>
+
+    <p><b>天地盘（地盘 → 天盘，★=该支落在其对冲位）</b></p>
+    <table>
+      <tr><th>地盘</th><td>子</td><td>丑</td><td>寅</td><td>卯</td><td>辰</td><td>巳</td><td>午</td><td>未</td><td>申</td><td>酉</td><td>戌</td><td>亥</td></tr>
+      <tr><th>天盘</th><td>酉</td><td>戌</td><td>亥</td><td>子</td><td>丑</td><td>寅</td><td>卯</td><td>辰</td><td>巳</td><td>午</td><td>未</td><td>申</td></tr>
+      <tr><th>是否冲位</th>
+        <td class="miss">—</td><td class="miss">—</td><td class="miss">—</td><td class="miss">—</td>
+        <td class="miss">—</td><td class="miss">—</td><td class="miss">—</td><td class="miss">—</td>
+        <td class="miss">—</td><td class="miss">—</td><td class="miss">—</td><td class="miss">—</td></tr>
+    </table>
+    <div class="verdict vbad">
+      命中冲位的支数：<b>0 / 12</b>。经典返吟要求 12 支全居冲位 →
+      <span class="tag no">经典返吟 = 否</span>
+    </div>
+
+    <p><b>四课</b>：第一课 寅/丙 ｜ 第二课 亥/寅 ｜ 第三课 卯/午 ｜ 第四课 子/卯</p>
+    <p><b>三传</b>：初传 <b>子</b> · 中传 酉 · 末传 <b>午</b></p>
+    <div class="verdict vbad">
+      初传(子) 与 末传(午) 相冲 → <span class="tag yes">代码代理触发返吟 = 是</span>
+    </div>
+
+    <div class="verdict vbad">
+      <b>审计定论：</b>按《六壬大全》经典定义，#1048 <b>不是返吟课</b>。引擎之所以标「遥克 <b>返吟</b>」，是被「初末传冲」这条过度标定的代理规则误判。
+      （注：人工起的「天机」记录也只写了「遥克课」，未标返吟，与经典判定一致。）
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>⑤ 影响范围</h2>
+    <ul>
+      <li><b>单案标签错误</b>：#1048 的 <code>keti</code> 应为「遥克」而非「遥克 返吟」；并因此多注入了 <code>KETI_VALENCE['返吟'] = -2</code> 的凶性 valence（虽本案人机结论同为跌/凶，但课体标签本身不准确）。</li>
+      <li><b>可能污染古例基线</b>：任何「三传初末恰冲、天地盘不冲」的古案都会被误标返吟，从而扰动诚实基线的课体信号。若改为经典判定，部分案列的 keti 与基线需重验。</li>
+    </ul>
+  </div>
+
+  <div class="card ask">
+    <h2 style="border-color:var(--amber);margin-top:4px;">⑥ 待你决策</h2>
+    <ol>
+      <li>是否把返吟判定改回<b>经典「天地盘相冲」</b>（需把天地盘传入 <code>derive_sanchuan_kege</code> / 课体派生路径，移除「初末传冲」代理）？</li>
+      <li>若改，是否授权我<b>重验诚实基线</b>并将 #1048 的 <code>keti</code> 改回「遥克」、刷新天机记录？</li>
+      <li>是否要我把「代码返吟判定 ≠ 经典定义」这条写入项目长期记忆，避免后续误用？</li>
+    </ol>
+    <p class="note">你也可先打开上面列出的原典 PDF 自行逐字核对「天地盘相冲，十二神各居冲位」一句，再决定。</p>
+  </div>
+
+</div>
+</body>
+</html>

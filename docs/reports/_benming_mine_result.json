@@ -1,0 +1,92 @@
+[
+ {
+  "case_id": "§宅墓02·007",
+  "name": "邵秀才癸丑年生",
+  "zhanlei": "家宅",
+  "birth": "癸丑",
+  "ben_ming_zhi": "丑",
+  "how": "name",
+  "hit": "邵秀才癸丑年生"
+ },
+ {
+  "case_id": "§宅墓02·020",
+  "name": "何宣义丁丑年",
+  "zhanlei": "家宅",
+  "birth": "丁丑",
+  "ben_ming_zhi": "丑",
+  "how": "name",
+  "hit": "何宣义丁丑年"
+ },
+ {
+  "case_id": "§前程仕进03·045",
+  "name": "何秀才己未牛",
+  "zhanlei": "功名",
+  "birth": "己未",
+  "ben_ming_zhi": "未",
+  "how": "name",
+  "hit": "何秀才己未牛"
+ },
+ {
+  "case_id": "§前程仕进03·073",
+  "name": "童七秀才壬中生",
+  "zhanlei": "功名",
+  "birth": "壬申",
+  "ben_ming_zhi": "申",
+  "how": "课式",
+  "hit": "例二十七：董七秀才，壬申生，三十七岁，占前程，戊申年六月丁巳日未将未时。"
+ },
+ {
+  "case_id": "§前程仕进03·075",
+  "name": "徐通判戊午乍",
+  "zhanlei": "功名",
+  "birth": "戊午",
+  "ben_ming_zhi": "午",
+  "how": "name",
+  "hit": "徐通判戊午乍"
+ },
+ {
+  "case_id": "§前程仕进03·095",
+  "name": "姜子安壬申年",
+  "zhanlei": "功名",
+  "birth": "壬申",
+  "ben_ming_zhi": "申",
+  "how": "name",
+  "hit": "姜子安壬申年"
+ },
+ {
+  "case_id": "§终身04·105",
+  "name": "袁知镇癸酉命",
+  "zhanlei": "其他",
+  "birth": "癸酉",
+  "ben_ming_zhi": "酉",
+  "how": "name",
+  "hit": "袁知镇癸酉命"
+ },
+ {
+  "case_id": "§终身04·108",
+  "name": "傅清卿壬申年",
+  "zhanlei": "其他",
+  "birth": "壬申",
+  "ben_ming_zhi": "申",
+  "how": "name",
+  "hit": "傅清卿壬申年"
+ },
+ {
+  "case_id": "§流年05·121",
+  "name": "",
+  "zhanlei": "其他",
+  "birth": "丁巳",
+  "ben_ming_zhi": "巳",
+  "how": "课式",
+  "hit": "例八：赵将仕，丁巳生五十二岁占武职前程，己酉年正月初一庚辰日子将子时。赵生于丁巳年六月初七日亥时。  "
+ },
+ {
+  "case_id": "§官讼16·206",
+  "name": "祝秀才壬申牛",
+  "zhanlei": "官讼",
+  "birth": "壬申",
+  "ben_ming_zhi": "申",
+  "how": "name",
+  "hit": "祝秀才壬申牛"
+ }
+]

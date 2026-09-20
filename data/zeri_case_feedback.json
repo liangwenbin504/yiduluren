@@ -1,0 +1,77 @@
+[
+ {
+  "id": "FB-001",
+  "date": "2035-08-17",
+  "shichen": "巳",
+  "rizhu": "庚戌",
+  "yue_jiang": "午",
+  "sanchuan": [
+   "亥",
+   "子",
+   "丑"
+  ],
+  "keti": "重审课",
+  "mountain": "壬",
+  "shan_zhi": "子",
+  "xiang_zhi": "午",
+  "lailong": "壬",
+  "lai_zhi": "子",
+  "zetiri_type": "催龙补气",
+  "zhanlei": "其他",
+  "ben_ming": "甲子",
+  "label": "吉",
+  "note": "催龙后三房发丁",
+  "source": "user_feedback",
+  "created_at": "2026-08-17 19:15:02"
+ },
+ {
+  "id": "FB-002",
+  "date": "2026-08-20",
+  "shichen": "午",
+  "rizhu": "丙寅",
+  "yue_jiang": "午",
+  "sanchuan": [
+   "巳",
+   "申",
+   "寅"
+  ],
+  "keti": "伏吟课",
+  "mountain": "子",
+  "shan_zhi": "子",
+  "xiang_zhi": "午",
+  "lailong": "",
+  "lai_zhi": "",
+  "zetiri_type": "提车",
+  "zhanlei": "出行",
+  "ben_ming": "",
+  "label": "凶",
+  "note": "提车次日追尾",
+  "source": "user_feedback",
+  "created_at": "2026-08-17 19:15:02"
+ },
+ {
+  "id": "FB-003",
+  "date": "2026-08-20",
+  "shichen": "午",
+  "rizhu": "丙寅",
+  "yue_jiang": "午",
+  "sanchuan": [
+   "巳",
+   "申",
+   "寅"
+  ],
+  "keti": "伏吟课",
+  "mountain": "子",
+  "shan_zhi": "子",
+  "xiang_zhi": "午",
+  "lailong": "",
+  "lai_zhi": "",
+  "zetiri_type": "提车",
+  "zhanlei": "出行",
+  "ben_ming": "",
+  "label": "凶",
+  "note": "浏览器端到端测试：提车次日出险",
+  "source": "user_feedback",
+  "created_at": "2026-08-17 19:16:57"
+ }
+]

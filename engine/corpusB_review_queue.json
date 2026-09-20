@@ -1,0 +1,2993 @@
+{
+  "count": 178,
+  "queue": [
+    {
+      "id": "SZ-002",
+      "category": "疾病",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.95,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 205,
+      "match_reasons": [
+        "年龄35",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "real_case_id": "§疾病13·163",
+      "real_name": "王县丞甲戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-008",
+      "category": "走失",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄38",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·108",
+      "real_name": "傅清卿壬申年",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-009",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.95,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄32",
+        "三传重叠1"
+      ],
+      "real_case_id": "§财产08·134",
+      "real_name": "邵七丞务戊寅生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-010",
+      "category": "功名",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.7,
+      "suggested_label": "吉",
+      "suggested_conf": 0.95,
+      "match_score": 190,
+      "match_reasons": [
+        "年龄30",
+        "姓名共生"
+      ],
+      "real_case_id": "§前程仕进03·056",
+      "real_name": "邹大官人庚辰生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-013",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 1.0,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 180,
+      "match_reasons": [
+        "年龄36"
+      ],
+      "real_case_id": "§终身04·105",
+      "real_name": "袁知镇癸酉命",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-014",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.95,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄25",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·115",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-016",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.95,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄40",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·110",
+      "real_name": "傅大禄己巳生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-018",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.95,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同乙",
+        "三传重叠1"
+      ],
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-020",
+      "category": "其他",
+      "age": null,
+      "current_label": "平",
+      "current_conf": 0.75,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄50",
+        "三传重叠1"
+      ],
+      "real_case_id": "§一课二事各断式09·145",
+      "real_name": "刘判官己未生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-021",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同戊",
+        "三传重叠1"
+      ],
+      "real_case_id": "§天时01·002",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-024",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 1.0,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄42",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·109",
+      "real_name": "叶七秀才丁卯生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-025",
+      "category": "其他",
+      "age": null,
+      "current_label": "未知",
+      "current_conf": 0.0,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同壬",
+        "三传重叠1"
+      ],
+      "real_case_id": "§杂占17·217",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-027",
+      "category": "其他",
+      "age": null,
+      "current_label": "未知",
+      "current_conf": 0.0,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄48",
+        "三传重叠1"
+      ],
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-028",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.95,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 180,
+      "match_reasons": [
+        "年龄36"
+      ],
+      "real_case_id": "§终身04·105",
+      "real_name": "袁知镇癸酉命",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-031",
+      "category": "疾病",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.95,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同戊",
+        "三传重叠1"
+      ],
+      "real_case_id": "§疾病13·169",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-032",
+      "category": "功名",
+      "age": null,
+      "current_label": "未知",
+      "current_conf": 0.0,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 180,
+      "match_reasons": [
+        "年龄26"
+      ],
+      "real_case_id": "§前程仕进03·067",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-033",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 200,
+      "match_reasons": [
+        "年龄40",
+        "日干同庚"
+      ],
+      "real_case_id": "§流年05·120",
+      "real_name": "刘监仓庚午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-034",
+      "category": "家宅",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同辛",
+        "三传重叠1"
+      ],
+      "real_case_id": "§宅墓02·021",
+      "real_name": "林丞务丙辰生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-035",
+      "category": "其他",
+      "age": null,
+      "current_label": "未知",
+      "current_conf": 0.0,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄38",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·108",
+      "real_name": "傅清卿壬申年",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-038",
+      "category": "其他",
+      "age": null,
+      "current_label": "未知",
+      "current_conf": 0.0,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同乙",
+        "三传重叠1"
+      ],
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-039",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 180,
+      "match_reasons": [
+        "年龄36"
+      ],
+      "real_case_id": "§终身04·105",
+      "real_name": "袁知镇癸酉命",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-041",
+      "category": "其他",
+      "age": null,
+      "current_label": "未知",
+      "current_conf": 0.0,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同戊",
+        "三传重叠1"
+      ],
+      "real_case_id": "§天时01·002",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-044",
+      "category": "疾病",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.95,
+      "suggested_label": "吉",
+      "suggested_conf": 0.6,
+      "match_score": 180,
+      "match_reasons": [
+        "年龄50"
+      ],
+      "real_case_id": "§疾病13·170",
+      "real_name": "尹邦达庚申",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-045",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.95,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄42",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·109",
+      "real_name": "叶七秀才丁卯生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-048",
+      "category": "其他",
+      "age": null,
+      "current_label": "未知",
+      "current_conf": 0.0,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄40",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·110",
+      "real_name": "傅大禄己巳生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-052",
+      "category": "疾病",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 210,
+      "match_reasons": [
+        "年龄21",
+        "三传重叠2"
+      ],
+      "real_case_id": "§疾病13·162",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-053",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同丙",
+        "三传重叠1"
+      ],
+      "real_case_id": "§财产08·143",
+      "real_name": "钱三郎甲戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-054",
+      "category": "婚姻",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-056",
+      "category": "征战",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄25",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·115",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-058",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄27",
+        "三传重叠1"
+      ],
+      "real_case_id": "§财产08·135",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-059",
+      "category": "功名",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 145,
+      "match_reasons": [
+        "三传重叠3"
+      ],
+      "real_case_id": "§前程仕进03·067",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-060",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同癸",
+        "三传重叠1"
+      ],
+      "real_case_id": "§亡盗15·188",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-061",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 150,
+      "match_reasons": [
+        "日干同甲",
+        "三传重叠2"
+      ],
+      "real_case_id": "§一课二事各断式09·144",
+      "real_name": "王县丞丙寅生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-062",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同乙",
+        "三传重叠1"
+      ],
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-063",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同丙",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·104",
+      "real_name": "何三公丙午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-064",
+      "category": "胎产",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同丁",
+        "三传重叠1"
+      ],
+      "real_case_id": "§胎产子息07·129",
+      "real_name": "郭彦和壬午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-065",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 140,
+      "match_reasons": [
+        "三传重叠2",
+        "姓名共生"
+      ],
+      "real_case_id": "§一课二事各断式09·144",
+      "real_name": "王县丞丙寅生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-066",
+      "category": "家宅",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 155,
+      "match_reasons": [
+        "三传重叠3",
+        "姓名共翁"
+      ],
+      "real_case_id": "§宅墓02·004",
+      "real_name": "张九翁戊午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-068",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄37",
+        "三传重叠1"
+      ],
+      "real_case_id": "§财产08·138",
+      "real_name": "曹八秀才癸酉生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-069",
+      "category": "婚姻",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-070",
+      "category": "功名",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄39",
+        "三传重叠1"
+      ],
+      "real_case_id": "§前程仕进03·049",
+      "real_name": "杨秀才辛未生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-071",
+      "category": "征战",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 200,
+      "match_reasons": [
+        "年龄40",
+        "日干同甲"
+      ],
+      "real_case_id": "§终身04·110",
+      "real_name": "傅大禄己巳生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-072",
+      "category": "走失",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 145,
+      "match_reasons": [
+        "日干同乙",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-073",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 180,
+      "match_reasons": [
+        "年龄42"
+      ],
+      "real_case_id": "§财产08·137",
+      "real_name": "曹八秀才戊辰生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-074",
+      "category": "功名",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 215,
+      "match_reasons": [
+        "年龄43",
+        "日干同丁",
+        "三传重叠1"
+      ],
+      "real_case_id": "§前程仕进03·093",
+      "real_name": "童巡检丁卯生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-075",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 180,
+      "match_reasons": [
+        "年龄44"
+      ],
+      "real_case_id": "§终身04·107",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-077",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 180,
+      "match_reasons": [
+        "年龄46"
+      ],
+      "real_case_id": "§终身04·114",
+      "real_name": "顾孔目甲子生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-079",
+      "category": "胎产",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§胎产子息07·130",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-080",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同癸",
+        "三传重叠1"
+      ],
+      "real_case_id": "§亡盗15·188",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-081",
+      "category": "家宅",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 145,
+      "match_reasons": [
+        "三传重叠3"
+      ],
+      "real_case_id": "§宅墓02·004",
+      "real_name": "张九翁戊午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-082",
+      "category": "疾病",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§疾病13·162",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-083",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同丙",
+        "三传重叠1"
+      ],
+      "real_case_id": "§财产08·143",
+      "real_name": "钱三郎甲戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-084",
+      "category": "婚姻",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-085",
+      "category": "功名",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 200,
+      "match_reasons": [
+        "年龄54",
+        "日干同戊"
+      ],
+      "real_case_id": "§前程仕进03·085",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-086",
+      "category": "征战",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 145,
+      "match_reasons": [
+        "日干同己",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "real_case_id": "§终身04·113",
+      "real_name": "姜子昭庚午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-087",
+      "category": "走失",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 150,
+      "match_reasons": [
+        "日干同庚",
+        "三传重叠2"
+      ],
+      "real_case_id": "§流年05·121",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-088",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§财产08·136",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-090",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 180,
+      "match_reasons": [
+        "年龄59"
+      ],
+      "real_case_id": "§杂占17·214",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-091",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 150,
+      "match_reasons": [
+        "日干同甲",
+        "三传重叠2"
+      ],
+      "real_case_id": "§一课二事各断式09·144",
+      "real_name": "王县丞丙寅生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-092",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同乙",
+        "三传重叠1"
+      ],
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-093",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 205,
+      "match_reasons": [
+        "年龄22",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "real_case_id": "§一课二事各断式09·146",
+      "real_name": "何秀才丁亥生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-094",
+      "category": "胎产",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同丁",
+        "三传重叠1"
+      ],
+      "real_case_id": "§胎产子息07·129",
+      "real_name": "郭彦和壬午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-096",
+      "category": "家宅",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 145,
+      "match_reasons": [
+        "三传重叠3"
+      ],
+      "real_case_id": "§宅墓02·004",
+      "real_name": "张九翁戊午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-097",
+      "category": "疾病",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 150,
+      "match_reasons": [
+        "日干同庚",
+        "三传重叠2"
+      ],
+      "real_case_id": "§疾病13·166",
+      "real_name": "张逸士庚戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-098",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄27",
+        "三传重叠1"
+      ],
+      "real_case_id": "§财产08·135",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-099",
+      "category": "婚姻",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-100",
+      "category": "功名",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 205,
+      "match_reasons": [
+        "年龄29",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "real_case_id": "§前程仕进03·057",
+      "real_name": "龚县尉辛巳生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-101",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 200,
+      "match_reasons": [
+        "年龄40",
+        "日干同甲"
+      ],
+      "real_case_id": "§终身04·110",
+      "real_name": "傅大禄己巳生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-102",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同乙",
+        "三传重叠1"
+      ],
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-103",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄42",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·109",
+      "real_name": "叶七秀才丁卯生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-104",
+      "category": "胎产",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "平",
+      "suggested_conf": 0.7,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄43",
+        "三传重叠1"
+      ],
+      "real_case_id": "§胎产子息07·125",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-105",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 180,
+      "match_reasons": [
+        "年龄44"
+      ],
+      "real_case_id": "§终身04·107",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-106",
+      "category": "家宅",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 155,
+      "match_reasons": [
+        "三传重叠3",
+        "姓名共生"
+      ],
+      "real_case_id": "§宅墓02·004",
+      "real_name": "张九翁戊午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-107",
+      "category": "疾病",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 150,
+      "match_reasons": [
+        "日干同庚",
+        "三传重叠2"
+      ],
+      "real_case_id": "§疾病13·166",
+      "real_name": "张逸士庚戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-108",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄47",
+        "三传重叠1"
+      ],
+      "real_case_id": "§财产08·140",
+      "real_name": "刘五官己巳生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-109",
+      "category": "婚姻",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-110",
+      "category": "功名",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 145,
+      "match_reasons": [
+        "三传重叠3"
+      ],
+      "real_case_id": "§前程仕进03·067",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-111",
+      "category": "征战",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 215,
+      "match_reasons": [
+        "年龄50",
+        "日干同甲",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·111",
+      "real_name": "王知县己末生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-112",
+      "category": "走失",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 140,
+      "match_reasons": [
+        "三传重叠2",
+        "姓名共王"
+      ],
+      "real_case_id": "§一课二事各断式09·144",
+      "real_name": "王县丞丙寅生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-113",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 145,
+      "match_reasons": [
+        "日干同丙",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "real_case_id": "§财产08·143",
+      "real_name": "钱三郎甲戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-115",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同戊",
+        "三传重叠1"
+      ],
+      "real_case_id": "§杂占17·215",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-117",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 150,
+      "match_reasons": [
+        "日干同庚",
+        "三传重叠2"
+      ],
+      "real_case_id": "§流年05·121",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-118",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§终身04·106",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-119",
+      "category": "胎产",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§胎产子息07·130",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-120",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 180,
+      "match_reasons": [
+        "年龄59"
+      ],
+      "real_case_id": "§杂占17·214",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-122",
+      "category": "疾病",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 210,
+      "match_reasons": [
+        "年龄21",
+        "三传重叠2"
+      ],
+      "real_case_id": "§疾病13·162",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-123",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同丙",
+        "三传重叠1"
+      ],
+      "real_case_id": "§财产08·143",
+      "real_name": "钱三郎甲戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-124",
+      "category": "婚姻",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-126",
+      "category": "征战",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄25",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·115",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-128",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄27",
+        "三传重叠1"
+      ],
+      "real_case_id": "§财产08·135",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-129",
+      "category": "功名",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 145,
+      "match_reasons": [
+        "三传重叠3"
+      ],
+      "real_case_id": "§前程仕进03·067",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-130",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同癸",
+        "三传重叠1"
+      ],
+      "real_case_id": "§亡盗15·188",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-131",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 150,
+      "match_reasons": [
+        "日干同甲",
+        "三传重叠2"
+      ],
+      "real_case_id": "§一课二事各断式09·144",
+      "real_name": "王县丞丙寅生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-132",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同乙",
+        "三传重叠1"
+      ],
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-133",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同丙",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·104",
+      "real_name": "何三公丙午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-134",
+      "category": "胎产",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 145,
+      "match_reasons": [
+        "日干同丁",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "real_case_id": "§胎产子息07·129",
+      "real_name": "郭彦和壬午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-135",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同戊",
+        "三传重叠1"
+      ],
+      "real_case_id": "§杂占17·215",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-136",
+      "category": "家宅",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 145,
+      "match_reasons": [
+        "三传重叠3"
+      ],
+      "real_case_id": "§宅墓02·004",
+      "real_name": "张九翁戊午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-138",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄37",
+        "三传重叠1"
+      ],
+      "real_case_id": "§财产08·138",
+      "real_name": "曹八秀才癸酉生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-139",
+      "category": "婚姻",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-140",
+      "category": "功名",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄39",
+        "三传重叠1"
+      ],
+      "real_case_id": "§前程仕进03·049",
+      "real_name": "杨秀才辛未生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-141",
+      "category": "征战",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 210,
+      "match_reasons": [
+        "年龄40",
+        "日干同甲",
+        "姓名共生"
+      ],
+      "real_case_id": "§终身04·110",
+      "real_name": "傅大禄己巳生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-142",
+      "category": "走失",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同乙",
+        "三传重叠1"
+      ],
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-143",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 180,
+      "match_reasons": [
+        "年龄42"
+      ],
+      "real_case_id": "§财产08·137",
+      "real_name": "曹八秀才戊辰生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-144",
+      "category": "功名",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 215,
+      "match_reasons": [
+        "年龄43",
+        "日干同丁",
+        "三传重叠1"
+      ],
+      "real_case_id": "§前程仕进03·093",
+      "real_name": "童巡检丁卯生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-145",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 180,
+      "match_reasons": [
+        "年龄44"
+      ],
+      "real_case_id": "§终身04·107",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-147",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 180,
+      "match_reasons": [
+        "年龄46"
+      ],
+      "real_case_id": "§终身04·114",
+      "real_name": "顾孔目甲子生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-149",
+      "category": "胎产",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§胎产子息07·130",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-150",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同癸",
+        "三传重叠1"
+      ],
+      "real_case_id": "§亡盗15·188",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-151",
+      "category": "家宅",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 145,
+      "match_reasons": [
+        "三传重叠3"
+      ],
+      "real_case_id": "§宅墓02·004",
+      "real_name": "张九翁戊午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-152",
+      "category": "疾病",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§疾病13·162",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-153",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同丙",
+        "三传重叠1"
+      ],
+      "real_case_id": "§财产08·143",
+      "real_name": "钱三郎甲戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-154",
+      "category": "婚姻",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-155",
+      "category": "功名",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 200,
+      "match_reasons": [
+        "年龄54",
+        "日干同戊"
+      ],
+      "real_case_id": "§前程仕进03·085",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-156",
+      "category": "征战",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同己",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·113",
+      "real_name": "姜子昭庚午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-157",
+      "category": "走失",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 150,
+      "match_reasons": [
+        "日干同庚",
+        "三传重叠2"
+      ],
+      "real_case_id": "§流年05·121",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-158",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§财产08·136",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-160",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 180,
+      "match_reasons": [
+        "年龄59"
+      ],
+      "real_case_id": "§杂占17·214",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-161",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 150,
+      "match_reasons": [
+        "日干同甲",
+        "三传重叠2"
+      ],
+      "real_case_id": "§一课二事各断式09·144",
+      "real_name": "王县丞丙寅生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-162",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 145,
+      "match_reasons": [
+        "日干同乙",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-163",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄22",
+        "三传重叠1"
+      ],
+      "real_case_id": "§一课二事各断式09·146",
+      "real_name": "何秀才丁亥生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-164",
+      "category": "胎产",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同丁",
+        "三传重叠1"
+      ],
+      "real_case_id": "§胎产子息07·129",
+      "real_name": "郭彦和壬午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-166",
+      "category": "家宅",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 145,
+      "match_reasons": [
+        "三传重叠3"
+      ],
+      "real_case_id": "§宅墓02·004",
+      "real_name": "张九翁戊午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-167",
+      "category": "疾病",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 150,
+      "match_reasons": [
+        "日干同庚",
+        "三传重叠2"
+      ],
+      "real_case_id": "§疾病13·166",
+      "real_name": "张逸士庚戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-168",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄27",
+        "三传重叠1"
+      ],
+      "real_case_id": "§财产08·135",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-169",
+      "category": "婚姻",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 140,
+      "match_reasons": [
+        "三传重叠2",
+        "姓名共生"
+      ],
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-170",
+      "category": "功名",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄29",
+        "三传重叠1"
+      ],
+      "real_case_id": "§前程仕进03·057",
+      "real_name": "龚县尉辛巳生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-172",
+      "category": "走失",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同乙",
+        "三传重叠1"
+      ],
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-173",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 180,
+      "match_reasons": [
+        "年龄32"
+      ],
+      "real_case_id": "§财产08·134",
+      "real_name": "邵七丞务戊寅生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-174",
+      "category": "功名",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄33",
+        "三传重叠1"
+      ],
+      "real_case_id": "§前程仕进03·079",
+      "real_name": "欧阳秘教戊寅生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-175",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同戊",
+        "三传重叠1"
+      ],
+      "real_case_id": "§杂占17·215",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-177",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 180,
+      "match_reasons": [
+        "年龄36"
+      ],
+      "real_case_id": "§终身04·105",
+      "real_name": "袁知镇癸酉命",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-178",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄37",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·119",
+      "real_name": "韩监仓修职癸酉生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-179",
+      "category": "胎产",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§胎产子息07·130",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-180",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄39",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·118",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-181",
+      "category": "家宅",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 180,
+      "match_reasons": [
+        "年龄40"
+      ],
+      "real_case_id": "§宅墓02·016",
+      "real_name": "刘将仕庚午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-182",
+      "category": "疾病",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§疾病13·162",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-183",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 190,
+      "match_reasons": [
+        "年龄42",
+        "姓名共生"
+      ],
+      "real_case_id": "§财产08·137",
+      "real_name": "曹八秀才戊辰生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-184",
+      "category": "婚姻",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-185",
+      "category": "功名",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 200,
+      "match_reasons": [
+        "年龄44",
+        "日干同戊"
+      ],
+      "real_case_id": "§前程仕进03·103",
+      "real_name": "刘干运丙寅生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-186",
+      "category": "征战",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同己",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·113",
+      "real_name": "姜子昭庚午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-187",
+      "category": "走失",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 180,
+      "match_reasons": [
+        "年龄46"
+      ],
+      "real_case_id": "§终身04·114",
+      "real_name": "顾孔目甲子生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-188",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 205,
+      "match_reasons": [
+        "年龄47",
+        "三传重叠1",
+        "姓名共官"
+      ],
+      "real_case_id": "§财产08·140",
+      "real_name": "刘五官己巳生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-189",
+      "category": "功名",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 145,
+      "match_reasons": [
+        "三传重叠3"
+      ],
+      "real_case_id": "§前程仕进03·067",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-190",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 140,
+      "match_reasons": [
+        "三传重叠2",
+        "姓名共生"
+      ],
+      "real_case_id": "§一课二事各断式09·144",
+      "real_name": "王县丞丙寅生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-191",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 215,
+      "match_reasons": [
+        "年龄50",
+        "日干同甲",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·111",
+      "real_name": "王知县己末生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-192",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 140,
+      "match_reasons": [
+        "三传重叠2",
+        "姓名共王"
+      ],
+      "real_case_id": "§一课二事各断式09·144",
+      "real_name": "王县丞丙寅生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-193",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同丙",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·104",
+      "real_name": "何三公丙午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-194",
+      "category": "胎产",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同丁",
+        "三传重叠1"
+      ],
+      "real_case_id": "§胎产子息07·129",
+      "real_name": "郭彦和壬午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-195",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同戊",
+        "三传重叠1"
+      ],
+      "real_case_id": "§杂占17·215",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-196",
+      "category": "家宅",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄55",
+        "三传重叠1"
+      ],
+      "real_case_id": "§宅墓02·015",
+      "real_name": "徐八公甲寅生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-197",
+      "category": "疾病",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 160,
+      "match_reasons": [
+        "日干同庚",
+        "三传重叠2",
+        "姓名共生"
+      ],
+      "real_case_id": "§疾病13·166",
+      "real_name": "张逸士庚戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-198",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§财产08·136",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-199",
+      "category": "婚姻",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-200",
+      "category": "功名",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 145,
+      "match_reasons": [
+        "三传重叠3"
+      ],
+      "real_case_id": "§前程仕进03·067",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-202",
+      "category": "走失",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同乙",
+        "三传重叠1"
+      ],
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-204",
+      "category": "功名",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 205,
+      "match_reasons": [
+        "年龄23",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "real_case_id": "§前程仕进03·069",
+      "real_name": "冯机宜丁亥生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-205",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同戊",
+        "三传重叠1"
+      ],
+      "real_case_id": "§杂占17·215",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-206",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄25",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·115",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-207",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 150,
+      "match_reasons": [
+        "日干同庚",
+        "三传重叠2"
+      ],
+      "real_case_id": "§流年05·121",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-209",
+      "category": "胎产",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄28",
+        "三传重叠1"
+      ],
+      "real_case_id": "§胎产子息07·129",
+      "real_name": "郭彦和壬午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-210",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同癸",
+        "三传重叠1"
+      ],
+      "real_case_id": "§亡盗15·188",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-211",
+      "category": "家宅",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 205,
+      "match_reasons": [
+        "年龄30",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "real_case_id": "§宅墓02·022",
+      "real_name": "冯修职己卯生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-212",
+      "category": "疾病",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§疾病13·162",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-213",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 180,
+      "match_reasons": [
+        "年龄32"
+      ],
+      "real_case_id": "§财产08·134",
+      "real_name": "邵七丞务戊寅生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-214",
+      "category": "婚姻",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 130,
+      "match_reasons": [
+        "三传重叠2"
+      ],
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-215",
+      "category": "功名",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 210,
+      "match_reasons": [
+        "年龄34",
+        "三传重叠2"
+      ],
+      "real_case_id": "§前程仕进03·065",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-216",
+      "category": "征战",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 140,
+      "match_reasons": [
+        "三传重叠2",
+        "姓名共王"
+      ],
+      "real_case_id": "§一课二事各断式09·144",
+      "real_name": "王县丞丙寅生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-217",
+      "category": "走失",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 180,
+      "match_reasons": [
+        "年龄36"
+      ],
+      "real_case_id": "§终身04·105",
+      "real_name": "袁知镇癸酉命",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-218",
+      "category": "求财",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "吉",
+      "suggested_conf": 0.85,
+      "match_score": 205,
+      "match_reasons": [
+        "年龄37",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "real_case_id": "§财产08·138",
+      "real_name": "曹八秀才癸酉生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-219",
+      "category": "功名",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄38",
+        "三传重叠1"
+      ],
+      "real_case_id": "§前程仕进03·064",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-220",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄39",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·118",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-221",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 200,
+      "match_reasons": [
+        "年龄40",
+        "日干同甲"
+      ],
+      "real_case_id": "§终身04·110",
+      "real_name": "傅大禄己巳生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-222",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.85,
+      "match_score": 135,
+      "match_reasons": [
+        "日干同乙",
+        "三传重叠1"
+      ],
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-223",
+      "category": "其他",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0.95,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄42",
+        "三传重叠1"
+      ],
+      "real_case_id": "§终身04·109",
+      "real_name": "叶七秀才丁卯生",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-224",
+      "category": "胎产",
+      "age": null,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "平",
+      "suggested_conf": 0.7,
+      "match_score": 195,
+      "match_reasons": [
+        "年龄43",
+        "三传重叠1"
+      ],
+      "real_case_id": "§胎产子息07·125",
+      "real_name": "",
+      "note": "已匹配但缺强键(占类+年龄为主)"
+    },
+    {
+      "id": "SZ-004",
+      "category": "婚姻",
+      "age": 24,
+      "current_label": "吉",
+      "current_conf": 0.55,
+      "suggested_label": "凶",
+      "suggested_conf": 0,
+      "match_score": 115,
+      "match_reasons": [
+        "三传重叠1"
+      ],
+      "real_case_id": "§婚姻06·123",
+      "real_name": "",
+      "note": "歧义(候选分<120)"
+    },
+    {
+      "id": "SZ-037",
+      "category": "官讼",
+      "age": 48,
+      "current_label": "未知",
+      "current_conf": 0.0,
+      "suggested_label": "凶",
+      "suggested_conf": 0,
+      "match_score": 115,
+      "match_reasons": [
+        "三传重叠1"
+      ],
+      "real_case_id": "§官讼16·202",
+      "real_name": "",
+      "note": "歧义(候选分<120)"
+    }
+  ]
+}

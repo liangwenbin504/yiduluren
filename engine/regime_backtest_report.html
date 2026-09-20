@@ -1,0 +1,132 @@
+<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8">
+<title>六壬精准引擎 · 跨牛熊扩大回测报告</title>
+<style>
+ body{font-family:-apple-system,'Segoe UI','Microsoft YaHei',sans-serif;background:#f5f7fa;color:#222;margin:0;padding:24px;}
+ h1{font-size:22px;margin:0 0 4px;} .sub{color:#666;font-size:13px;margin-bottom:18px;}
+ .cards{display:flex;gap:14px;flex-wrap:wrap;margin:18px 0;}
+ .card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;width:200px;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+ .cname{font-weight:600;font-size:14px;margin-bottom:6px;}
+ .big{font-size:30px;font-weight:700;color:#2c3e50;}
+ .sub{font-size:11px;color:#888;margin-bottom:8px;}
+ .row{display:flex;justify-content:space-between;font-size:12px;padding:2px 0;color:#444;}
+ .verdict{margin-top:8px;font-size:11px;font-weight:600;padding:4px 6px;border-radius:5px;background:#eafaf1;color:#1e7e34;}
+ .panel{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 18px;margin:16px 0;}
+ .panel h2{font-size:16px;margin:0 0 10px;}
+ table{width:100%;border-collapse:collapse;font-size:12px;}
+ th,td{border:1px solid #eef;padding:5px 7px;text-align:center;}
+ th{background:#f0f4f8;}
+ .note{font-size:12px;color:#555;line-height:1.7;background:#fff8e1;border-left:4px solid #f1c40f;padding:10px 14px;border-radius:4px;margin:14px 0;}
+ .key{font-size:13px;line-height:1.8;}
+ .key b{color:#c0392b;}
+</style></head><body>
+<h1>六壬精准判断引擎 · 跨牛熊扩大回测</h1>
+<div class="sub">数据源：上证指数 sh000001 日线（腾讯自选股）｜ 标签：收>开 为涨 ｜ 时辰：午 ｜ 样本区间 2005-01-04 ~ 2026-07-30 ｜ 共 5239 个交易日</div>
+
+<div class="cards">
+    <div class="card">
+      <div class="cname">M1 原20d引擎</div>
+      <div class="big">45.9%</div>
+      <div class="sub">决断准确率 (CI 44.4–47.3%)</div>
+      <div class="row"><span>覆盖率</span><b>84.9%</b></div>
+      <div class="row"><span>看跌偏置</span><b>74.7%</b></div>
+      <div class="row"><span>Brier</span><b>—</b></div>
+      <div class="row"><span>p 值(vs 50%)</span><b>0.000</b></div>
+      <div class="verdict">⚠️ 显著劣于随机</div>
+    </div>
+    <div class="card">
+      <div class="cname">M2 融合①②③</div>
+      <div class="big">50.5%</div>
+      <div class="sub">决断准确率 (CI 49.0–51.9%)</div>
+      <div class="row"><span>覆盖率</span><b>84.9%</b></div>
+      <div class="row"><span>看跌偏置</span><b>47.5%</b></div>
+      <div class="row"><span>Brier</span><b>0.689</b></div>
+      <div class="row"><span>p 值(vs 50%)</span><b>0.539</b></div>
+      <div class="verdict">✅ 无显著</div>
+    </div>
+    <div class="card">
+      <div class="cname">M3 融合+CBR</div>
+      <div class="big">49.7%</div>
+      <div class="sub">决断准确率 (CI 48.3–51.2%)</div>
+      <div class="row"><span>覆盖率</span><b>84.7%</b></div>
+      <div class="row"><span>看跌偏置</span><b>51.5%</b></div>
+      <div class="row"><span>Brier</span><b>0.679</b></div>
+      <div class="row"><span>p 值(vs 50%)</span><b>0.730</b></div>
+      <div class="verdict">✅ 无显著</div>
+    </div>
+    <div class="card">
+      <div class="cname">M4 CBR单独</div>
+      <div class="big">46.0%</div>
+      <div class="sub">决断准确率 (CI 44.3–47.8%)</div>
+      <div class="row"><span>覆盖率</span><b>59.5%</b></div>
+      <div class="row"><span>看跌偏置</span><b>82.4%</b></div>
+      <div class="row"><span>Brier</span><b>—</b></div>
+      <div class="row"><span>p 值(vs 50%)</span><b>0.000</b></div>
+      <div class="verdict">⚠️ 显著劣于随机</div>
+    </div></div>
+
+<div class="panel"><h2>① 四方法对比：决断准确率（含95%置信区间）与看跌偏置</h2>
+<svg viewBox="0 0 720 320" width="100%"><line x1="60" y1="155.0" x2="700" y2="155.0" stroke="#e67e22" stroke-dasharray="5 4" stroke-width="1.5"/><text x="702" y="149.0" fill="#e67e22" font-size="11">50% 随机基准</text><rect x="70.0" y="165.31130591144077" width="64" height="114.68869408855923" fill="#3498db"/><line x1="102.0" y1="161.64337912830933" x2="102.0" y2="168.96144094882973" stroke="#1f3a5f" stroke-width="2"/><text x="102.0" y="159.31130591144077" fill="#1f3a5f" font-size="11" text-anchor="middle">45.9%</text><rect x="140.0" y="93.16026073274895" width="32.0" height="186.83973926725105" fill="#e74c3c" opacity="0.55"/><text x="102.0" y="298" fill="#333" font-size="12" text-anchor="middle">M1</text><rect x="230.0" y="153.84805574286355" width="64" height="126.15194425713645" fill="#3498db"/><line x1="262.0" y1="150.17767212090646" x2="262.0" y2="157.5204269985412" stroke="#1f3a5f" stroke-width="2"/><text x="262.0" y="147.84805574286355" fill="#1f3a5f" font-size="11" text-anchor="middle">50.5%</text><rect x="300.0" y="161.2092605079793" width="32.0" height="118.79073949202069" fill="#e74c3c" opacity="0.55"/><text x="262.0" y="298" fill="#333" font-size="12" text-anchor="middle">M2</text><rect x="390.0" y="155.6479603335587" width="64" height="124.3520396664413" fill="#3498db"/><line x1="422.0" y1="151.97095870324264" x2="422.0" y2="159.32384091311837" stroke="#1f3a5f" stroke-width="2"/><text x="422.0" y="149.6479603335587" fill="#1f3a5f" font-size="11" text-anchor="middle">49.7%</text><rect x="460.0" y="151.25309894072572" width="32.0" height="128.74690105927428" fill="#e74c3c" opacity="0.55"/><text x="422.0" y="298" fill="#333" font-size="12" text-anchor="middle">M3</text><rect x="550.0" y="164.98556304138594" width="64" height="115.01443695861406" fill="#3498db"/><line x1="582.0" y1="160.60165774706633" x2="582.0" y2="169.34488487784614" stroke="#1f3a5f" stroke-width="2"/><text x="582.0" y="158.98556304138594" fill="#1f3a5f" font-size="11" text-anchor="middle">46.0%</text><rect x="620.0" y="73.95251844722486" width="32.0" height="206.04748155277514" fill="#e74c3c" opacity="0.55"/><text x="582.0" y="298" fill="#333" font-size="12" text-anchor="middle">M4</text></svg>
+<div class="sub" style="color:#666;font-size:11px">蓝柱=决断准确率（误差线=Wilson 95%CI）；红半透明柱=看跌偏置（占决断数比例）。橙虚线=50% 随机基准。</div>
+</div>
+
+<div class="note">
+<b>核心结论（有效边界）：</b><br>
+• <b>M1 原引擎与 M4 CBR 单独</b> 准确率分别为 45.9% / 46.0%，p 值均 &lt;0.001，<b>显著劣于随机</b>——二者存在强烈的<b>结构性看跌偏置</b>（74.7% / 82.4%）。若据此交易必亏。<br>
+• <b>融合层（M2/M3）把看跌偏置从 74.7% 纠正到 ~50%</b>，准确率回到 50.5% / 49.7%（p=0.54 / 0.73），即<b>无方向性 alpha 的公平硬币</b>。这是支柱①②③校准的实质性成功：它中和了朴素引擎的有害偏置。<br>
+• <b>CBR（M3 vs M2）的边际贡献是概率校准而非方向</b>：Brier 由 0.689 微降至 0.679（越低越好），方向准确率几乎不变 → CBR 权重保持中性(1.0)是正确的。<br>
+• 大盘实际跌占比基准为 44.7%（略偏牛），所有方法都无法系统性战胜它。
+</div>
+
+<div class="panel"><h2>② 分牛熊周期：M3(融合+CBR) 决断准确率</h2>
+<svg viewBox="0 0 760 360" width="100%"><line x1="90" y1="170.0" x2="750" y2="170.0" stroke="#e67e22" stroke-dasharray="5 4"/><text x="752" y="164.0" fill="#e67e22" font-size="11" text-anchor="end">50%</text><rect x="100.0" y="163.14360770577935" width="50.18181818181818" height="141.85639229422065" fill="#27ae60" opacity="0.85"/><text x="125.0909090909091" y="159.14360770577935" fill="#333" font-size="9" text-anchor="middle">52.5</text><text x="125.0909090909091" y="320" fill="#555" font-size="9" text-anchor="middle" transform="rotate(40 125.0909090909091 320)">2005-2007</text><rect x="158.1818181818182" y="177.8" width="50.18181818181818" height="127.19999999999999" fill="#27ae60" opacity="0.85"/><text x="183.27272727272728" y="173.8" fill="#333" font-size="9" text-anchor="middle">47.1</text><text x="183.27272727272728" y="320" fill="#555" font-size="9" text-anchor="middle" transform="rotate(40 183.27272727272728 320)">2007-2008</text><rect x="216.36363636363637" y="189.53947368421052" width="50.18181818181818" height="115.46052631578948" fill="#27ae60" opacity="0.85"/><text x="241.45454545454547" y="185.53947368421052" fill="#333" font-size="9" text-anchor="middle">42.8</text><text x="241.45454545454547" y="320" fill="#555" font-size="9" text-anchor="middle" transform="rotate(40 241.45454545454547 320)">2008-2009</text><rect x="274.5454545454545" y="169.34017595307918" width="50.18181818181818" height="135.65982404692082" fill="#27ae60" opacity="0.85"/><text x="299.63636363636357" y="165.34017595307918" fill="#333" font-size="9" text-anchor="middle">50.2</text><text x="299.63636363636357" y="320" fill="#555" font-size="9" text-anchor="middle" transform="rotate(40 299.63636363636357 320)">2009-2014</text><rect x="332.72727272727275" y="161.88524590163934" width="50.18181818181818" height="143.11475409836066" fill="#27ae60" opacity="0.85"/><text x="357.8181818181818" y="157.88524590163934" fill="#333" font-size="9" text-anchor="middle">53.0</text><text x="357.8181818181818" y="320" fill="#555" font-size="9" text-anchor="middle" transform="rotate(40 357.8181818181818 320)">2014-2015</text><rect x="390.9090909090909" y="188.13432835820896" width="50.18181818181818" height="116.86567164179104" fill="#27ae60" opacity="0.85"/><text x="415.99999999999994" y="184.13432835820896" fill="#333" font-size="9" text-anchor="middle">43.3</text><text x="415.99999999999994" y="320" fill="#555" font-size="9" text-anchor="middle" transform="rotate(40 415.99999999999994 320)">2015-2016</text><rect x="449.09090909090907" y="166.77033492822966" width="50.18181818181818" height="138.22966507177034" fill="#27ae60" opacity="0.85"/><text x="474.18181818181813" y="162.77033492822966" fill="#333" font-size="9" text-anchor="middle">51.2</text><text x="474.18181818181813" y="320" fill="#555" font-size="9" text-anchor="middle" transform="rotate(40 474.18181818181813 320)">2016-2018</text><rect x="507.27272727272725" y="162.30569948186528" width="50.18181818181818" height="142.69430051813472" fill="#27ae60" opacity="0.85"/><text x="532.3636363636364" y="158.30569948186528" fill="#333" font-size="9" text-anchor="middle">52.8</text><text x="532.3636363636364" y="320" fill="#555" font-size="9" text-anchor="middle" transform="rotate(40 532.3636363636364 320)">2018-2019</text><rect x="565.4545454545455" y="169.36915887850466" width="50.18181818181818" height="135.63084112149534" fill="#27ae60" opacity="0.85"/><text x="590.5454545454546" y="165.36915887850466" fill="#333" font-size="9" text-anchor="middle">50.2</text><text x="590.5454545454546" y="320" fill="#555" font-size="9" text-anchor="middle" transform="rotate(40 590.5454545454546 320)">2019-2021</text><rect x="623.6363636363636" y="170.36684782608694" width="50.18181818181818" height="134.63315217391306" fill="#27ae60" opacity="0.85"/><text x="648.7272727272727" y="166.36684782608694" fill="#333" font-size="9" text-anchor="middle">49.9</text><text x="648.7272727272727" y="320" fill="#555" font-size="9" text-anchor="middle" transform="rotate(40 648.7272727272727 320)">2021-2024</text><rect x="681.8181818181818" y="182.99465240641712" width="50.18181818181818" height="122.00534759358288" fill="#27ae60" opacity="0.85"/><text x="706.9090909090909" y="178.99465240641712" fill="#333" font-size="9" text-anchor="middle">45.2</text><text x="706.9090909090909" y="320" fill="#555" font-size="9" text-anchor="middle" transform="rotate(40 706.9090909090909 320)">2024-2026</text></svg>
+<div class="sub" style="color:#666;font-size:11px">每根柱为该周期的 M3 准确率；绿=不显著，红=显著(p&lt;0.05)。所有周期都在 50% 附近抖动，无一显著优于随机。</div>
+</div>
+
+<div class="panel"><h2>③ 分周期明细表</h2>
+<table><tr><th>历史阶段</th><th>n</th><th>实际跌占比</th><th>M3准确率</th><th>95%CI</th><th>p值</th><th>覆盖率</th><th>看跌偏置</th></tr>
+<tr><td>2005-2007 大牛市</td><td>672</td><td>41.4%</td>
+        <td>52.5%</td><td>48.4–56.6%</td>
+        <td>0.225 </td><td>85.0%</td><td>51.8%</td></tr><tr><td>2007-2008 金融危机熊市</td><td>258</td><td>55.8%</td>
+        <td>47.1%</td><td>40.7–53.6%</td>
+        <td>0.386 </td><td>87.2%</td><td>49.8%</td></tr><tr><td>2008-2009 四万亿反弹</td><td>184</td><td>38.0%</td>
+        <td>42.8%</td><td>35.2–50.7%</td>
+        <td>0.074 </td><td>82.6%</td><td>50.0%</td></tr><tr><td>2009-2014 漫长震荡熊</td><td>1202</td><td>47.5%</td>
+        <td>50.2%</td><td>47.2–53.3%</td>
+        <td>0.876 </td><td>85.1%</td><td>52.8%</td></tr><tr><td>2014-2015 杠杆牛</td><td>219</td><td>34.2%</td>
+        <td>53.0%</td><td>45.8–60.1%</td>
+        <td>0.416 </td><td>83.6%</td><td>46.4%</td></tr><tr><td>2015-2016 股灾</td><td>155</td><td>46.5%</td>
+        <td>43.3%</td><td>35.2–51.7%</td>
+        <td>0.120 </td><td>86.5%</td><td>53.0%</td></tr><tr><td>2016-2018 慢牛</td><td>486</td><td>38.3%</td>
+        <td>51.2%</td><td>46.4–56.0%</td>
+        <td>0.625 </td><td>86.0%</td><td>46.9%</td></tr><tr><td>2018-2019 贸易战熊市</td><td>228</td><td>52.2%</td>
+        <td>52.8%</td><td>45.8–59.8%</td>
+        <td>0.428 </td><td>84.6%</td><td>49.7%</td></tr><tr><td>2019-2021 结构牛</td><td>513</td><td>45.2%</td>
+        <td>50.2%</td><td>45.5–54.9%</td>
+        <td>0.923 </td><td>83.4%</td><td>53.0%</td></tr><tr><td>2021-2024 长期震荡熊</td><td>875</td><td>47.2%</td>
+        <td>49.9%</td><td>46.3–53.5%</td>
+        <td>0.941 </td><td>84.1%</td><td>54.3%</td></tr><tr><td>2024-2026 政策修复</td><td>447</td><td>40.5%</td>
+        <td>45.2%</td><td>40.2–50.3%</td>
+        <td>0.063 </td><td>83.7%</td><td>49.7%</td></tr></table>
+<div class="sub" style="color:#666;font-size:11px">🔻=显著劣于随机，🔺=显著优于随机。11 个周期中仅个别 p&lt;0.05，符合多重比较下 ~0.5 个假阳性的预期。</div>
+</div>
+
+<div class="panel"><h2>④ 分年份明细</h2>
+<table><tr><th>年份</th><th>n</th><th>实际跌占比</th><th>M3准确率</th><th>p值</th><th>覆盖率</th></tr>
+<tr><td>2005</td><td>242</td><td>52.5%</td><td>53.1%</td><td>0.366</td><td>85.5%</td></tr><tr><td>2006</td><td>241</td><td>36.5%</td><td>52.6%</td><td>0.447</td><td>86.7%</td></tr><tr><td>2007</td><td>242</td><td>37.6%</td><td>52.2%</td><td>0.528</td><td>83.9%</td></tr><tr><td>2008</td><td>246</td><td>54.9%</td><td>46.0%</td><td>0.244</td><td>86.6%</td></tr><tr><td>2009</td><td>244</td><td>40.6%</td><td>43.9%</td><td>0.088</td><td>81.1%</td></tr><tr><td>2010</td><td>242</td><td>46.3%</td><td>50.5%</td><td>0.890</td><td>86.0%</td></tr><tr><td>2011</td><td>244</td><td>48.0%</td><td>48.3%</td><td>0.623</td><td>83.2%</td></tr><tr><td>2012</td><td>243</td><td>47.3%</td><td>54.1%</td><td>0.240</td><td>86.0%</td></tr><tr><td>2013</td><td>238</td><td>48.7%</td><td>54.9%</td><td>0.163</td><td>86.6%</td></tr><tr><td>2014</td><td>245</td><td>42.4%</td><td>43.5%</td><td>0.062</td><td>85.3%</td></tr><tr><td>2015</td><td>244</td><td>38.5%</td><td>49.5%</td><td>0.890</td><td>85.2%</td></tr><tr><td>2016</td><td>244</td><td>43.0%</td><td>50.5%</td><td>0.891</td><td>86.9%</td></tr><tr><td>2017</td><td>244</td><td>37.7%</td><td>51.9%</td><td>0.579</td><td>85.2%</td></tr><tr><td>2018</td><td>243</td><td>49.0%</td><td>51.7%</td><td>0.625</td><td>84.4%</td></tr><tr><td>2019</td><td>244</td><td>43.4%</td><td>48.5%</td><td>0.673</td><td>82.8%</td></tr><tr><td>2020</td><td>243</td><td>47.3%</td><td>51.4%</td><td>0.677</td><td>85.6%</td></tr><tr><td>2021</td><td>243</td><td>42.4%</td><td>50.7%</td><td>0.833</td><td>83.5%</td></tr><tr><td>2022</td><td>242</td><td>45.5%</td><td>51.0%</td><td>0.778</td><td>83.5%</td></tr><tr><td>2023</td><td>242</td><td>50.0%</td><td>56.6%</td><td>0.059</td><td>84.7%</td></tr><tr><td>2024</td><td>242</td><td>49.6%</td><td>40.2%</td><td>0.006🔻</td><td>80.2%</td></tr><tr><td>2025</td><td>243</td><td>39.9%</td><td>43.6%</td><td>0.069</td><td>84.0%</td></tr><tr><td>2026</td><td>138</td><td>39.9%</td><td>47.9%</td><td>0.649</td><td>87.7%</td></tr></table>
+</div>
+
+<div class="panel"><h2>⑤ 按 trailing 120日收益带 分段</h2>
+<table><tr><th>收益带</th><th>n</th><th>实际跌占比</th><th>M3准确率</th><th>p值</th><th>看跌偏置</th></tr>
+<tr><td>牛( trailing +%)</td><td>1474</td><td>39.8%</td><td>50.4%</td><td>0.777</td><td>49.4%</td></tr><tr><td>震荡</td><td>2654</td><td>44.4%</td><td>49.4%</td><td>0.598</td><td>52.2%</td></tr><tr><td>熊( trailing -%)</td><td>991</td><td>50.7%</td><td>49.9%</td><td>0.945</td><td>53.0%</td></tr><tr><td>早期(样本不足)</td><td>120</td><td>60.8%</td><td>47.0%</td><td>0.549</td><td>49.0%</td></tr></table>
+<div class="sub" style="color:#666;font-size:11px">牛/熊/震荡三段 M3 准确率分别为 50.4% / 49.9% / 49.4% —— 引擎的"看跌偏置"并不随真实熊市升高，证实其为<b>日历人为产物而非市场技能</b>。</div>
+</div>
+
+<div class="panel"><h2>⑥ 对"有效边界"的最终判定</h2>
+<div class="key">
+1. <b>作为方向预测器：无效。</b> 融合+CBR 在 5239 个交易日、11 个牛熊周期、22 个年份上，方向准确率始终≈50%（无统计显著 edge）。这是<b>确定性日历方法</b>与价格无因果联系的必然结果。<br>
+2. <b>作为偏置中和器：有效。</b> 它的真实价值在于把朴素引擎(M1)与CBR(M4)那 75%~82% 的有害看跌偏置，纠正为公平的 ~50%，使系统从"必亏"变为"不偏不倚的硬币"。<br>
+3. <b>CBR 的正确定位：解释层，不是信号层。</b> 仅贡献边际 Brier 改善，权重保持中性；切勿放大。<br>
+4. <b>诚实边界：</b>该引擎是"结构化解读/叙事透镜"，不应作为交易信号。任何将其包装为择时 alpha 的用法都是不成立的。
+</div>
+</div>
+</body></html>

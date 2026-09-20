@@ -1,0 +1,62 @@
+{
+  "optimization_time": "2026-08-28T09:30:10.013658",
+  "total_low_quality_rules": 6,
+  "successful_enhancements": 6,
+  "failed_enhancements": 0,
+  "updated_rules": 6,
+  "detailed_results": [
+    {
+      "original_rule": "中传戌 → 中",
+      "zhanshi": "出行",
+      "original_quality": 0.2,
+      "enhanced_rule": "中传戌 → 中平，出行宜谨慎，变动多端，天将吉则半吉，凶则半凶，需防意外。",
+      "enhanced_quality": 0.8,
+      "success": true
+    },
+    {
+      "original_rule": "初传申 → 无克",
+      "zhanshi": "官讼",
+      "original_quality": 0.2,
+      "enhanced_rule": "初传申 → 无克，官讼事无阻碍，宜速决，防半吉之拖延，大六壬课体，毕法赋云：\"申为无克，事无阻碍，宜速决，防半吉之拖延。\"",
+      "enhanced_quality": 1.0,
+      "success": true
+    },
+    {
+      "original_rule": "中传子 → 无克",
+      "zhanshi": "官讼",
+      "original_quality": 0.2,
+      "enhanced_rule": "中传子 → 半吉，官讼中子为贵人，无克表示事态平稳，宜谨慎行事，防小人之害。",
+      "enhanced_quality": 0.8,
+      "success": true
+    },
+    {
+      "original_rule": "末传辰 → 上克下",
+      "zhanshi": "官讼",
+      "original_quality": 0.2,
+      "enhanced_rule": "末传辰 → 上克下，官讼事中，主对方有克制之力，事态可能不利，需谨慎应对，吉凶需结合天时、地支及将星综合判断。",
+      "enhanced_quality": 0.8,
+      "success": true
+    },
+    {
+      "original_rule": "中传申 → 变动",
+      "zhanshi": "家宅",
+      "original_quality": 0.2,
+      "enhanced_rule": "中传申 → 变动，家宅事遇之，吉凶难定，需观天将吉凶及地盘五行，防事态波折，课体为家宅课，毕法赋云：“中传申，事多波折，宜静观其变。”",
+      "enhanced_quality": 1.0,
+      "success": true
+    },
+    {
+      "original_rule": "末传辰 → 不宁",
+      "zhanshi": "家宅",
+      "original_quality": 0.2,
+      "enhanced_rule": "末传辰 → 半凶，家宅事多波折，需谨慎应对，防意外之变，结合天将吉凶综合判断。",
+      "enhanced_quality": 0.8,
+      "success": true
+    }
+  ],
+  "post_optimization_quality": {
+    "high": 59,
+    "medium": 96,
+    "low": 4
+  }
+}

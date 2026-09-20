@@ -1,0 +1,1511 @@
+{
+  "generated_at": "2026-08-29T10:09:02.863745",
+  "dataset": 134,
+  "accuracy": {
+    "original": 49.25373134328358,
+    "data_driven": 75.3731343283582,
+    "data_driven_with_jiuying": 75.3731343283582
+  },
+  "keti_weights": {
+    "时泰": {
+      "original": 2,
+      "data_driven": -1.5,
+      "ji_rate": 0.0,
+      "ji_count": 0,
+      "xiong_count": 4,
+      "total": 4,
+      "verdict": "凶"
+    },
+    "元首": {
+      "original": 4,
+      "data_driven": 4,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "三交": {
+      "original": 0,
+      "data_driven": -1.39,
+      "ji_rate": 0.2222222222222222,
+      "ji_count": 2,
+      "xiong_count": 7,
+      "total": 9,
+      "verdict": "凶"
+    },
+    "引从": {
+      "original": 0,
+      "data_driven": 1.5,
+      "ji_rate": 0.8,
+      "ji_count": 4,
+      "xiong_count": 1,
+      "total": 5,
+      "verdict": "吉"
+    },
+    "六合": {
+      "original": 4,
+      "data_driven": 4,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "重审": {
+      "original": 2,
+      "data_driven": 2,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "返吟": {
+      "original": -1,
+      "data_driven": -1,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "朱雀": {
+      "original": 2,
+      "data_driven": 2,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "灾厄": {
+      "original": -3,
+      "data_driven": -2.45,
+      "ji_rate": 0.22727272727272727,
+      "ji_count": 5,
+      "xiong_count": 17,
+      "total": 22,
+      "verdict": "凶"
+    },
+    "覆盂": {
+      "original": 4,
+      "data_driven": 4,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "九丑": {
+      "original": 0,
+      "data_driven": -2.36,
+      "ji_rate": 0.23809523809523808,
+      "ji_count": 5,
+      "xiong_count": 16,
+      "total": 21,
+      "verdict": "凶"
+    },
+    "魄化": {
+      "original": -2,
+      "data_driven": -3.0,
+      "ji_rate": 0.125,
+      "ji_count": 2,
+      "xiong_count": 14,
+      "total": 16,
+      "verdict": "凶"
+    },
+    "乱首": {
+      "original": 0,
+      "data_driven": -2.5,
+      "ji_rate": 0.0,
+      "ji_count": 0,
+      "xiong_count": 7,
+      "total": 7,
+      "verdict": "凶"
+    },
+    "励德": {
+      "original": 1,
+      "data_driven": -2.07,
+      "ji_rate": 0.2926829268292683,
+      "ji_count": 12,
+      "xiong_count": 29,
+      "total": 41,
+      "verdict": "凶"
+    },
+    "金车": {
+      "original": 4,
+      "data_driven": 4,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "游子": {
+      "original": 0,
+      "data_driven": 0,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 1,
+      "total": 1,
+      "verdict": "原始"
+    },
+    "三奇": {
+      "original": 5,
+      "data_driven": -2.5,
+      "ji_rate": 0.25,
+      "ji_count": 9,
+      "xiong_count": 27,
+      "total": 36,
+      "verdict": "凶"
+    },
+    "铸印": {
+      "original": 5,
+      "data_driven": -0.75,
+      "ji_rate": 0.25,
+      "ji_count": 1,
+      "xiong_count": 3,
+      "total": 4,
+      "verdict": "凶"
+    },
+    "鬼墓": {
+      "original": 0,
+      "data_driven": -0.36,
+      "ji_rate": 0.42857142857142855,
+      "ji_count": 3,
+      "xiong_count": 4,
+      "total": 7,
+      "verdict": "凶"
+    },
+    "斫轮": {
+      "original": 4,
+      "data_driven": -3.5,
+      "ji_rate": 0.0,
+      "ji_count": 0,
+      "xiong_count": 11,
+      "total": 11,
+      "verdict": "凶"
+    },
+    "合欢": {
+      "original": 2,
+      "data_driven": -1.0,
+      "ji_rate": 0.35714285714285715,
+      "ji_count": 5,
+      "xiong_count": 9,
+      "total": 14,
+      "verdict": "凶"
+    },
+    "六纯": {
+      "original": 0,
+      "data_driven": -1.67,
+      "ji_rate": 0.3333333333333333,
+      "ji_count": 10,
+      "xiong_count": 20,
+      "total": 30,
+      "verdict": "凶"
+    },
+    "亨通": {
+      "original": -1,
+      "data_driven": -3.21,
+      "ji_rate": 0.14285714285714285,
+      "ji_count": 3,
+      "xiong_count": 18,
+      "total": 21,
+      "verdict": "凶"
+    },
+    "淫佚": {
+      "original": -2,
+      "data_driven": -2.33,
+      "ji_rate": 0.26666666666666666,
+      "ji_count": 8,
+      "xiong_count": 22,
+      "total": 30,
+      "verdict": "凶"
+    },
+    "六龙": {
+      "original": 3,
+      "data_driven": 3,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "伏吟": {
+      "original": -2,
+      "data_driven": -2,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "龙德": {
+      "original": 0,
+      "data_driven": 0.0,
+      "ji_rate": 0.5,
+      "ji_count": 5,
+      "xiong_count": 5,
+      "total": 10,
+      "verdict": "吉"
+    },
+    "官爵": {
+      "original": 0,
+      "data_driven": -0.75,
+      "ji_rate": 0.25,
+      "ji_count": 1,
+      "xiong_count": 3,
+      "total": 4,
+      "verdict": "凶"
+    },
+    "六仪": {
+      "original": -3,
+      "data_driven": -2.84,
+      "ji_rate": 0.21621621621621623,
+      "ji_count": 8,
+      "xiong_count": 29,
+      "total": 37,
+      "verdict": "凶"
+    },
+    "侵害": {
+      "original": 0,
+      "data_driven": -1.25,
+      "ji_rate": 0.25,
+      "ji_count": 2,
+      "xiong_count": 6,
+      "total": 8,
+      "verdict": "凶"
+    },
+    "度厄": {
+      "original": -3,
+      "data_driven": -1.94,
+      "ji_rate": 0.1111111111111111,
+      "ji_count": 1,
+      "xiong_count": 8,
+      "total": 9,
+      "verdict": "凶"
+    },
+    "玄胎": {
+      "original": 2,
+      "data_driven": -0.9,
+      "ji_rate": 0.4,
+      "ji_count": 10,
+      "xiong_count": 15,
+      "total": 25,
+      "verdict": "凶"
+    },
+    "和美": {
+      "original": 0,
+      "data_driven": -0.83,
+      "ji_rate": 0.3333333333333333,
+      "ji_count": 3,
+      "xiong_count": 6,
+      "total": 9,
+      "verdict": "凶"
+    },
+    "绝嗣": {
+      "original": 0,
+      "data_driven": -1.5,
+      "ji_rate": 0.0,
+      "ji_count": 0,
+      "xiong_count": 3,
+      "total": 3,
+      "verdict": "凶"
+    },
+    "斩关": {
+      "original": -2,
+      "data_driven": -0.82,
+      "ji_rate": 0.4090909090909091,
+      "ji_count": 9,
+      "xiong_count": 13,
+      "total": 22,
+      "verdict": "凶"
+    },
+    "殃咎": {
+      "original": -3,
+      "data_driven": -0.5,
+      "ji_rate": 0.3333333333333333,
+      "ji_count": 1,
+      "xiong_count": 2,
+      "total": 3,
+      "verdict": "凶"
+    },
+    "盘珠": {
+      "original": 2,
+      "data_driven": -1.67,
+      "ji_rate": 0.3333333333333333,
+      "ji_count": 18,
+      "xiong_count": 36,
+      "total": 54,
+      "verdict": "凶"
+    },
+    "间传": {
+      "original": 1,
+      "data_driven": -2.59,
+      "ji_rate": 0.17647058823529413,
+      "ji_count": 3,
+      "xiong_count": 14,
+      "total": 17,
+      "verdict": "凶"
+    },
+    "刑伤": {
+      "original": -2,
+      "data_driven": -2.33,
+      "ji_rate": 0.16666666666666666,
+      "ji_count": 2,
+      "xiong_count": 10,
+      "total": 12,
+      "verdict": "凶"
+    },
+    "德庆": {
+      "original": 4,
+      "data_driven": 0.83,
+      "ji_rate": 0.6666666666666666,
+      "ji_count": 6,
+      "xiong_count": 3,
+      "total": 9,
+      "verdict": "吉"
+    },
+    "解离": {
+      "original": 0,
+      "data_driven": -0.75,
+      "ji_rate": 0.25,
+      "ji_count": 1,
+      "xiong_count": 3,
+      "total": 4,
+      "verdict": "凶"
+    },
+    "解离课": {
+      "original": -2,
+      "data_driven": -2,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "冲破": {
+      "original": -2,
+      "data_driven": -1.88,
+      "ji_rate": 0.23076923076923078,
+      "ji_count": 3,
+      "xiong_count": 10,
+      "total": 13,
+      "verdict": "凶"
+    },
+    "龙战": {
+      "original": 0,
+      "data_driven": -1.07,
+      "ji_rate": 0.2857142857142857,
+      "ji_count": 2,
+      "xiong_count": 5,
+      "total": 7,
+      "verdict": "凶"
+    },
+    "比用": {
+      "original": 2,
+      "data_driven": 2,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "连珠": {
+      "original": 3,
+      "data_driven": -2.0,
+      "ji_rate": 0.21428571428571427,
+      "ji_count": 3,
+      "xiong_count": 11,
+      "total": 14,
+      "verdict": "凶"
+    },
+    "太常": {
+      "original": 3,
+      "data_driven": 3,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "闭口": {
+      "original": -2,
+      "data_driven": -1.5,
+      "ji_rate": 0.3125,
+      "ji_count": 5,
+      "xiong_count": 11,
+      "total": 16,
+      "verdict": "凶"
+    },
+    "赘婿": {
+      "original": 0,
+      "data_driven": 0,
+      "ji_rate": null,
+      "ji_count": 1,
+      "xiong_count": 1,
+      "total": 2,
+      "verdict": "原始"
+    },
+    "死奇": {
+      "original": -4,
+      "data_driven": -0.27,
+      "ji_rate": 0.46153846153846156,
+      "ji_count": 6,
+      "xiong_count": 7,
+      "total": 13,
+      "verdict": "凶"
+    },
+    "轩盖": {
+      "original": 0,
+      "data_driven": 0,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 2,
+      "total": 2,
+      "verdict": "原始"
+    },
+    "全局": {
+      "original": -3,
+      "data_driven": -1.37,
+      "ji_rate": 0.34782608695652173,
+      "ji_count": 8,
+      "xiong_count": 15,
+      "total": 23,
+      "verdict": "凶"
+    }
+  },
+  "special_weights": {
+    "末助初克": {
+      "original": -1,
+      "data_driven": -1,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "互相": {
+      "original": -2,
+      "data_driven": -2,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "罡塞鬼户": {
+      "original": 3,
+      "data_driven": -2.23,
+      "ji_rate": 0.18181818181818182,
+      "ji_count": 2,
+      "xiong_count": 9,
+      "total": 11,
+      "verdict": "凶"
+    },
+    "干支乘墓": {
+      "original": -2,
+      "data_driven": -2,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "劫煞": {
+      "original": -1,
+      "data_driven": -1,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "干支三合": {
+      "original": 2,
+      "data_driven": 2,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "初遭夹克": {
+      "original": -3,
+      "data_driven": -2.0,
+      "ji_rate": 0.25,
+      "ji_count": 4,
+      "xiong_count": 12,
+      "total": 16,
+      "verdict": "凶"
+    },
+    "破印损模": {
+      "original": -3,
+      "data_driven": -0.5,
+      "ji_rate": 0.3333333333333333,
+      "ji_count": 1,
+      "xiong_count": 2,
+      "total": 3,
+      "verdict": "凶"
+    },
+    "虎临干鬼": {
+      "original": -3,
+      "data_driven": -2.5,
+      "ji_rate": 0.0,
+      "ji_count": 0,
+      "xiong_count": 7,
+      "total": 7,
+      "verdict": "凶"
+    },
+    "龙虎交驰": {
+      "original": -1,
+      "data_driven": -2.5,
+      "ji_rate": 0.0,
+      "ji_count": 0,
+      "xiong_count": 7,
+      "total": 7,
+      "verdict": "凶"
+    },
+    "贵登天门": {
+      "original": 3,
+      "data_driven": -3.6,
+      "ji_rate": 0.1,
+      "ji_count": 2,
+      "xiong_count": 18,
+      "total": 20,
+      "verdict": "凶"
+    },
+    "朽木难雕": {
+      "original": 0,
+      "data_driven": -1.5,
+      "ji_rate": 0.0,
+      "ji_count": 0,
+      "xiong_count": 4,
+      "total": 4,
+      "verdict": "凶"
+    },
+    "铸印乘轩": {
+      "original": 0,
+      "data_driven": 0,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 1,
+      "total": 1,
+      "verdict": "原始"
+    },
+    "死符": {
+      "original": -2,
+      "data_driven": -2,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "干支皆空": {
+      "original": -3,
+      "data_driven": -3,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "两蛇夹墓": {
+      "original": -3,
+      "data_driven": -1.5,
+      "ji_rate": 0.2,
+      "ji_count": 1,
+      "xiong_count": 4,
+      "total": 5,
+      "verdict": "凶"
+    },
+    "白虎临干": {
+      "original": -3,
+      "data_driven": -3,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "三传互克": {
+      "original": -2,
+      "data_driven": -2,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "蛇化龙": {
+      "original": 0,
+      "data_driven": -0.5,
+      "ji_rate": 0.3333333333333333,
+      "ji_count": 1,
+      "xiong_count": 2,
+      "total": 3,
+      "verdict": "凶"
+    },
+    "游子课": {
+      "original": 0,
+      "data_driven": 0,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 1,
+      "total": 1,
+      "verdict": "原始"
+    },
+    "末助初生": {
+      "original": 2,
+      "data_driven": 2,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "干支比和": {
+      "original": 0,
+      "data_driven": 0,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "天罗地网": {
+      "original": -3,
+      "data_driven": -3,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "交车刑": {
+      "original": 0,
+      "data_driven": 0,
+      "ji_rate": null,
+      "ji_count": 1,
+      "xiong_count": 0,
+      "total": 1,
+      "verdict": "原始"
+    },
+    "病符": {
+      "original": -2,
+      "data_driven": -2,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "干支皆败": {
+      "original": -3,
+      "data_driven": -3,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "丧门": {
+      "original": -2,
+      "data_driven": -2,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "三传递生": {
+      "original": 3,
+      "data_driven": 3,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "德丧禄绝": {
+      "original": -3,
+      "data_driven": -3,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "龙化蛇": {
+      "original": -2,
+      "data_driven": -0.5,
+      "ji_rate": 0.4,
+      "ji_count": 2,
+      "xiong_count": 3,
+      "total": 5,
+      "verdict": "凶"
+    },
+    "干支生合": {
+      "original": 1,
+      "data_driven": 1,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "人宅坐墓": {
+      "original": -2,
+      "data_driven": -2,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "贵临鬼户": {
+      "original": -3,
+      "data_driven": -3,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "交车害": {
+      "original": -2,
+      "data_driven": -2.4,
+      "ji_rate": 0.2,
+      "ji_count": 3,
+      "xiong_count": 12,
+      "total": 15,
+      "verdict": "凶"
+    },
+    "解离课": {
+      "original": 0,
+      "data_driven": -0.75,
+      "ji_rate": 0.25,
+      "ji_count": 1,
+      "xiong_count": 3,
+      "total": 4,
+      "verdict": "凶"
+    },
+    "吊客": {
+      "original": -2,
+      "data_driven": -2,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "贵塞鬼户": {
+      "original": 2,
+      "data_driven": -2.46,
+      "ji_rate": 0.2543859649122807,
+      "ji_count": 29,
+      "xiong_count": 85,
+      "total": 114,
+      "verdict": "凶"
+    },
+    "将逢内战": {
+      "original": -2,
+      "data_driven": -2.43,
+      "ji_rate": 0.2571428571428571,
+      "ji_count": 18,
+      "xiong_count": 52,
+      "total": 70,
+      "verdict": "凶"
+    },
+    "闭口": {
+      "original": -2,
+      "data_driven": -2,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "三传递克": {
+      "original": -3,
+      "data_driven": -3,
+      "ji_rate": null,
+      "ji_count": 0,
+      "xiong_count": 0,
+      "total": 0,
+      "verdict": "原始"
+    },
+    "贵人作日鬼": {
+      "original": -3,
+      "data_driven": -1.35,
+      "ji_rate": 0.3076923076923077,
+      "ji_count": 4,
+      "xiong_count": 9,
+      "total": 13,
+      "verdict": "凶"
+    },
+    "芜淫卦": {
+      "original": 0,
+      "data_driven": -0.83,
+      "ji_rate": 0.3333333333333333,
+      "ji_count": 2,
+      "xiong_count": 4,
+      "total": 6,
+      "verdict": "凶"
+    },
+    "魁度天门": {
+      "original": 0,
+      "data_driven": -0.5,
+      "ji_rate": 0.3333333333333333,
+      "ji_count": 1,
+      "xiong_count": 2,
+      "total": 3,
+      "verdict": "凶"
+    }
+  },
+  "jiuying_rules": [
+    {
+      "xiong": "玄胎",
+      "jiuying": "刑伤",
+      "base_rate": 0.6,
+      "combo_rate": 1.0,
+      "lift": 0.4,
+      "count": 5,
+      "rescue_points": 2.0
+    },
+    {
+      "xiong": "玄胎",
+      "jiuying": "魄化",
+      "base_rate": 0.6,
+      "combo_rate": 1.0,
+      "lift": 0.4,
+      "count": 3,
+      "rescue_points": 2.0
+    },
+    {
+      "xiong": "玄胎",
+      "jiuying": "灾厄",
+      "base_rate": 0.6,
+      "combo_rate": 1.0,
+      "lift": 0.4,
+      "count": 3,
+      "rescue_points": 2.0
+    },
+    {
+      "xiong": "龙化蛇",
+      "jiuying": "六仪",
+      "base_rate": 0.6,
+      "combo_rate": 1.0,
+      "lift": 0.4,
+      "count": 3,
+      "rescue_points": 2.0
+    },
+    {
+      "xiong": "合欢",
+      "jiuying": "间传",
+      "base_rate": 0.643,
+      "combo_rate": 1.0,
+      "lift": 0.357,
+      "count": 3,
+      "rescue_points": 1.79
+    },
+    {
+      "xiong": "合欢",
+      "jiuying": "灾厄",
+      "base_rate": 0.643,
+      "combo_rate": 1.0,
+      "lift": 0.357,
+      "count": 3,
+      "rescue_points": 1.79
+    },
+    {
+      "xiong": "全局",
+      "jiuying": "亨通",
+      "base_rate": 0.652,
+      "combo_rate": 1.0,
+      "lift": 0.348,
+      "count": 6,
+      "rescue_points": 1.74
+    },
+    {
+      "xiong": "全局",
+      "jiuying": "魄化",
+      "base_rate": 0.652,
+      "combo_rate": 1.0,
+      "lift": 0.348,
+      "count": 3,
+      "rescue_points": 1.74
+    },
+    {
+      "xiong": "全局",
+      "jiuying": "贵登天门",
+      "base_rate": 0.652,
+      "combo_rate": 1.0,
+      "lift": 0.348,
+      "count": 3,
+      "rescue_points": 1.74
+    },
+    {
+      "xiong": "六纯",
+      "jiuying": "亨通",
+      "base_rate": 0.667,
+      "combo_rate": 1.0,
+      "lift": 0.333,
+      "count": 4,
+      "rescue_points": 1.67
+    },
+    {
+      "xiong": "六纯",
+      "jiuying": "贵登天门",
+      "base_rate": 0.667,
+      "combo_rate": 1.0,
+      "lift": 0.333,
+      "count": 10,
+      "rescue_points": 1.67
+    },
+    {
+      "xiong": "盘珠",
+      "jiuying": "冲破",
+      "base_rate": 0.667,
+      "combo_rate": 1.0,
+      "lift": 0.333,
+      "count": 3,
+      "rescue_points": 1.67
+    },
+    {
+      "xiong": "盘珠",
+      "jiuying": "魄化",
+      "base_rate": 0.667,
+      "combo_rate": 1.0,
+      "lift": 0.333,
+      "count": 5,
+      "rescue_points": 1.67
+    },
+    {
+      "xiong": "盘珠",
+      "jiuying": "虎临干鬼",
+      "base_rate": 0.667,
+      "combo_rate": 1.0,
+      "lift": 0.333,
+      "count": 3,
+      "rescue_points": 1.67
+    },
+    {
+      "xiong": "盘珠",
+      "jiuying": "龙战",
+      "base_rate": 0.667,
+      "combo_rate": 1.0,
+      "lift": 0.333,
+      "count": 3,
+      "rescue_points": 1.67
+    },
+    {
+      "xiong": "盘珠",
+      "jiuying": "斫轮",
+      "base_rate": 0.667,
+      "combo_rate": 1.0,
+      "lift": 0.333,
+      "count": 4,
+      "rescue_points": 1.67
+    },
+    {
+      "xiong": "励德",
+      "jiuying": "刑伤",
+      "base_rate": 0.707,
+      "combo_rate": 1.0,
+      "lift": 0.293,
+      "count": 4,
+      "rescue_points": 1.46
+    },
+    {
+      "xiong": "励德",
+      "jiuying": "斫轮",
+      "base_rate": 0.707,
+      "combo_rate": 1.0,
+      "lift": 0.293,
+      "count": 7,
+      "rescue_points": 1.46
+    },
+    {
+      "xiong": "励德",
+      "jiuying": "乱首",
+      "base_rate": 0.707,
+      "combo_rate": 1.0,
+      "lift": 0.293,
+      "count": 3,
+      "rescue_points": 1.46
+    },
+    {
+      "xiong": "励德",
+      "jiuying": "龙战",
+      "base_rate": 0.707,
+      "combo_rate": 1.0,
+      "lift": 0.293,
+      "count": 3,
+      "rescue_points": 1.46
+    },
+    {
+      "xiong": "励德",
+      "jiuying": "朽木难雕",
+      "base_rate": 0.707,
+      "combo_rate": 1.0,
+      "lift": 0.293,
+      "count": 3,
+      "rescue_points": 1.46
+    },
+    {
+      "xiong": "龙战",
+      "jiuying": "斫轮",
+      "base_rate": 0.714,
+      "combo_rate": 1.0,
+      "lift": 0.286,
+      "count": 4,
+      "rescue_points": 1.43
+    },
+    {
+      "xiong": "龙战",
+      "jiuying": "淫佚",
+      "base_rate": 0.714,
+      "combo_rate": 1.0,
+      "lift": 0.286,
+      "count": 3,
+      "rescue_points": 1.43
+    },
+    {
+      "xiong": "龙战",
+      "jiuying": "盘珠",
+      "base_rate": 0.714,
+      "combo_rate": 1.0,
+      "lift": 0.286,
+      "count": 3,
+      "rescue_points": 1.43
+    },
+    {
+      "xiong": "龙战",
+      "jiuying": "励德",
+      "base_rate": 0.714,
+      "combo_rate": 1.0,
+      "lift": 0.286,
+      "count": 3,
+      "rescue_points": 1.43
+    },
+    {
+      "xiong": "淫佚",
+      "jiuying": "间传",
+      "base_rate": 0.733,
+      "combo_rate": 1.0,
+      "lift": 0.267,
+      "count": 3,
+      "rescue_points": 1.33
+    },
+    {
+      "xiong": "淫佚",
+      "jiuying": "龙战",
+      "base_rate": 0.733,
+      "combo_rate": 1.0,
+      "lift": 0.267,
+      "count": 3,
+      "rescue_points": 1.33
+    },
+    {
+      "xiong": "淫佚",
+      "jiuying": "斫轮",
+      "base_rate": 0.733,
+      "combo_rate": 1.0,
+      "lift": 0.267,
+      "count": 8,
+      "rescue_points": 1.33
+    },
+    {
+      "xiong": "淫佚",
+      "jiuying": "六仪",
+      "base_rate": 0.733,
+      "combo_rate": 1.0,
+      "lift": 0.267,
+      "count": 4,
+      "rescue_points": 1.33
+    },
+    {
+      "xiong": "将逢内战",
+      "jiuying": "时泰",
+      "base_rate": 0.743,
+      "combo_rate": 1.0,
+      "lift": 0.257,
+      "count": 3,
+      "rescue_points": 1.29
+    },
+    {
+      "xiong": "将逢内战",
+      "jiuying": "虎临干鬼",
+      "base_rate": 0.743,
+      "combo_rate": 1.0,
+      "lift": 0.257,
+      "count": 4,
+      "rescue_points": 1.29
+    },
+    {
+      "xiong": "将逢内战",
+      "jiuying": "魄化",
+      "base_rate": 0.743,
+      "combo_rate": 1.0,
+      "lift": 0.257,
+      "count": 5,
+      "rescue_points": 1.29
+    },
+    {
+      "xiong": "将逢内战",
+      "jiuying": "乱首",
+      "base_rate": 0.743,
+      "combo_rate": 1.0,
+      "lift": 0.257,
+      "count": 3,
+      "rescue_points": 1.29
+    },
+    {
+      "xiong": "将逢内战",
+      "jiuying": "斫轮",
+      "base_rate": 0.743,
+      "combo_rate": 1.0,
+      "lift": 0.257,
+      "count": 4,
+      "rescue_points": 1.29
+    },
+    {
+      "xiong": "贵塞鬼户",
+      "jiuying": "度厄",
+      "base_rate": 0.746,
+      "combo_rate": 1.0,
+      "lift": 0.254,
+      "count": 8,
+      "rescue_points": 1.27
+    },
+    {
+      "xiong": "贵塞鬼户",
+      "jiuying": "时泰",
+      "base_rate": 0.746,
+      "combo_rate": 1.0,
+      "lift": 0.254,
+      "count": 4,
+      "rescue_points": 1.27
+    },
+    {
+      "xiong": "贵塞鬼户",
+      "jiuying": "虎临干鬼",
+      "base_rate": 0.746,
+      "combo_rate": 1.0,
+      "lift": 0.254,
+      "count": 5,
+      "rescue_points": 1.27
+    },
+    {
+      "xiong": "贵塞鬼户",
+      "jiuying": "斫轮",
+      "base_rate": 0.746,
+      "combo_rate": 1.0,
+      "lift": 0.254,
+      "count": 11,
+      "rescue_points": 1.27
+    },
+    {
+      "xiong": "贵塞鬼户",
+      "jiuying": "绝嗣",
+      "base_rate": 0.746,
+      "combo_rate": 1.0,
+      "lift": 0.254,
+      "count": 3,
+      "rescue_points": 1.27
+    },
+    {
+      "xiong": "贵塞鬼户",
+      "jiuying": "龙虎交驰",
+      "base_rate": 0.746,
+      "combo_rate": 1.0,
+      "lift": 0.254,
+      "count": 4,
+      "rescue_points": 1.27
+    },
+    {
+      "xiong": "贵塞鬼户",
+      "jiuying": "乱首",
+      "base_rate": 0.746,
+      "combo_rate": 1.0,
+      "lift": 0.254,
+      "count": 6,
+      "rescue_points": 1.27
+    },
+    {
+      "xiong": "贵塞鬼户",
+      "jiuying": "解离",
+      "base_rate": 0.746,
+      "combo_rate": 1.0,
+      "lift": 0.254,
+      "count": 3,
+      "rescue_points": 1.27
+    },
+    {
+      "xiong": "贵塞鬼户",
+      "jiuying": "解离课",
+      "base_rate": 0.746,
+      "combo_rate": 1.0,
+      "lift": 0.254,
+      "count": 3,
+      "rescue_points": 1.27
+    },
+    {
+      "xiong": "贵塞鬼户",
+      "jiuying": "朽木难雕",
+      "base_rate": 0.746,
+      "combo_rate": 1.0,
+      "lift": 0.254,
+      "count": 4,
+      "rescue_points": 1.27
+    },
+    {
+      "xiong": "三奇",
+      "jiuying": "间传",
+      "base_rate": 0.75,
+      "combo_rate": 1.0,
+      "lift": 0.25,
+      "count": 4,
+      "rescue_points": 1.25
+    },
+    {
+      "xiong": "三奇",
+      "jiuying": "罡塞鬼户",
+      "base_rate": 0.75,
+      "combo_rate": 1.0,
+      "lift": 0.25,
+      "count": 3,
+      "rescue_points": 1.25
+    },
+    {
+      "xiong": "三奇",
+      "jiuying": "魄化",
+      "base_rate": 0.75,
+      "combo_rate": 1.0,
+      "lift": 0.25,
+      "count": 7,
+      "rescue_points": 1.25
+    },
+    {
+      "xiong": "三奇",
+      "jiuying": "龙虎交驰",
+      "base_rate": 0.75,
+      "combo_rate": 1.0,
+      "lift": 0.25,
+      "count": 4,
+      "rescue_points": 1.25
+    },
+    {
+      "xiong": "三奇",
+      "jiuying": "乱首",
+      "base_rate": 0.75,
+      "combo_rate": 1.0,
+      "lift": 0.25,
+      "count": 4,
+      "rescue_points": 1.25
+    },
+    {
+      "xiong": "初遭夹克",
+      "jiuying": "度厄",
+      "base_rate": 0.75,
+      "combo_rate": 1.0,
+      "lift": 0.25,
+      "count": 3,
+      "rescue_points": 1.25
+    },
+    {
+      "xiong": "初遭夹克",
+      "jiuying": "六仪",
+      "base_rate": 0.75,
+      "combo_rate": 1.0,
+      "lift": 0.25,
+      "count": 5,
+      "rescue_points": 1.25
+    },
+    {
+      "xiong": "九丑",
+      "jiuying": "斫轮",
+      "base_rate": 0.762,
+      "combo_rate": 1.0,
+      "lift": 0.238,
+      "count": 3,
+      "rescue_points": 1.19
+    },
+    {
+      "xiong": "九丑",
+      "jiuying": "冲破",
+      "base_rate": 0.762,
+      "combo_rate": 1.0,
+      "lift": 0.238,
+      "count": 3,
+      "rescue_points": 1.19
+    },
+    {
+      "xiong": "玄胎",
+      "jiuying": "励德",
+      "base_rate": 0.6,
+      "combo_rate": 0.833,
+      "lift": 0.233,
+      "count": 6,
+      "rescue_points": 1.17
+    },
+    {
+      "xiong": "冲破",
+      "jiuying": "盘珠",
+      "base_rate": 0.769,
+      "combo_rate": 1.0,
+      "lift": 0.231,
+      "count": 3,
+      "rescue_points": 1.15
+    },
+    {
+      "xiong": "冲破",
+      "jiuying": "九丑",
+      "base_rate": 0.769,
+      "combo_rate": 1.0,
+      "lift": 0.231,
+      "count": 3,
+      "rescue_points": 1.15
+    },
+    {
+      "xiong": "冲破",
+      "jiuying": "交车害",
+      "base_rate": 0.769,
+      "combo_rate": 1.0,
+      "lift": 0.231,
+      "count": 3,
+      "rescue_points": 1.15
+    },
+    {
+      "xiong": "灾厄",
+      "jiuying": "龙虎交驰",
+      "base_rate": 0.773,
+      "combo_rate": 1.0,
+      "lift": 0.227,
+      "count": 4,
+      "rescue_points": 1.14
+    },
+    {
+      "xiong": "灾厄",
+      "jiuying": "玄胎",
+      "base_rate": 0.773,
+      "combo_rate": 1.0,
+      "lift": 0.227,
+      "count": 3,
+      "rescue_points": 1.14
+    },
+    {
+      "xiong": "灾厄",
+      "jiuying": "虎临干鬼",
+      "base_rate": 0.773,
+      "combo_rate": 1.0,
+      "lift": 0.227,
+      "count": 4,
+      "rescue_points": 1.14
+    },
+    {
+      "xiong": "灾厄",
+      "jiuying": "合欢",
+      "base_rate": 0.773,
+      "combo_rate": 1.0,
+      "lift": 0.227,
+      "count": 3,
+      "rescue_points": 1.14
+    },
+    {
+      "xiong": "三交",
+      "jiuying": "斫轮",
+      "base_rate": 0.778,
+      "combo_rate": 1.0,
+      "lift": 0.222,
+      "count": 3,
+      "rescue_points": 1.11
+    },
+    {
+      "xiong": "六仪",
+      "jiuying": "度厄",
+      "base_rate": 0.784,
+      "combo_rate": 1.0,
+      "lift": 0.216,
+      "count": 4,
+      "rescue_points": 1.08
+    },
+    {
+      "xiong": "六仪",
+      "jiuying": "刑伤",
+      "base_rate": 0.784,
+      "combo_rate": 1.0,
+      "lift": 0.216,
+      "count": 3,
+      "rescue_points": 1.08
+    },
+    {
+      "xiong": "六仪",
+      "jiuying": "间传",
+      "base_rate": 0.784,
+      "combo_rate": 1.0,
+      "lift": 0.216,
+      "count": 6,
+      "rescue_points": 1.08
+    },
+    {
+      "xiong": "六仪",
+      "jiuying": "罡塞鬼户",
+      "base_rate": 0.784,
+      "combo_rate": 1.0,
+      "lift": 0.216,
+      "count": 5,
+      "rescue_points": 1.08
+    },
+    {
+      "xiong": "六仪",
+      "jiuying": "初遭夹克",
+      "base_rate": 0.784,
+      "combo_rate": 1.0,
+      "lift": 0.216,
+      "count": 5,
+      "rescue_points": 1.08
+    },
+    {
+      "xiong": "六仪",
+      "jiuying": "淫佚",
+      "base_rate": 0.784,
+      "combo_rate": 1.0,
+      "lift": 0.216,
+      "count": 4,
+      "rescue_points": 1.08
+    },
+    {
+      "xiong": "六仪",
+      "jiuying": "龙化蛇",
+      "base_rate": 0.784,
+      "combo_rate": 1.0,
+      "lift": 0.216,
+      "count": 3,
+      "rescue_points": 1.08
+    },
+    {
+      "xiong": "盘珠",
+      "jiuying": "亨通",
+      "base_rate": 0.667,
+      "combo_rate": 0.875,
+      "lift": 0.208,
+      "count": 8,
+      "rescue_points": 1.04
+    },
+    {
+      "xiong": "玄胎",
+      "jiuying": "冲破",
+      "base_rate": 0.6,
+      "combo_rate": 0.8,
+      "lift": 0.2,
+      "count": 5,
+      "rescue_points": 1.0
+    }
+  ],
+  "improvement_count": 54,
+  "regression_count": 19
+}

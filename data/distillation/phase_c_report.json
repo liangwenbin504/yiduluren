@@ -1,0 +1,838 @@
+{
+  "generated_at": "2026-08-29T10:12:03.769554",
+  "phase": "Phase C - 占事类型差异化校准",
+  "dataset": 134,
+  "accuracy": {
+    "phase_a_original": 49.3,
+    "phase_b_v2_global": 75.4,
+    "phase_c_hybrid": 75.4
+  },
+  "diff_report": [
+    {
+      "element": "六仪",
+      "global_ji_rate": 0.784,
+      "global_count": 37,
+      "zhanshi_rates": {
+        "官讼": {
+          "ji_rate": 0.6,
+          "delta_vs_global": -0.184,
+          "count": 5
+        },
+        "婚姻": {
+          "ji_rate": 0.0,
+          "delta_vs_global": -0.784,
+          "count": 2
+        },
+        "占病": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.216,
+          "count": 6
+        },
+        "出行": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.216,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "三交",
+      "global_ji_rate": 0.778,
+      "global_count": 9,
+      "zhanshi_rates": {
+        "官讼": {
+          "ji_rate": 0.0,
+          "delta_vs_global": -0.778,
+          "count": 2
+        },
+        "家宅": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.222,
+          "count": 3
+        }
+      }
+    },
+    {
+      "element": "将逢内战",
+      "global_ji_rate": 0.743,
+      "global_count": 70,
+      "zhanshi_rates": {
+        "婚姻": {
+          "ji_rate": 0.0,
+          "delta_vs_global": -0.743,
+          "count": 2
+        },
+        "家宅": {
+          "ji_rate": 0.895,
+          "delta_vs_global": 0.152,
+          "count": 19
+        },
+        "求财": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.257,
+          "count": 2
+        },
+        "功名": {
+          "ji_rate": 0.48,
+          "delta_vs_global": -0.263,
+          "count": 25
+        },
+        "胎产": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.257,
+          "count": 5
+        },
+        "占病": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.257,
+          "count": 9
+        },
+        "出行": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.257,
+          "count": 3
+        }
+      }
+    },
+    {
+      "element": "龙战",
+      "global_ji_rate": 0.714,
+      "global_count": 7,
+      "zhanshi_rates": {
+        "官讼": {
+          "ji_rate": 0.0,
+          "delta_vs_global": -0.714,
+          "count": 2
+        },
+        "家宅": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.286,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "和美",
+      "global_ji_rate": 0.667,
+      "global_count": 9,
+      "zhanshi_rates": {
+        "官讼": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.333,
+          "count": 2
+        },
+        "功名": {
+          "ji_rate": 0.0,
+          "delta_vs_global": -0.667,
+          "count": 3
+        }
+      }
+    },
+    {
+      "element": "全局",
+      "global_ji_rate": 0.652,
+      "global_count": 23,
+      "zhanshi_rates": {
+        "失物": {
+          "ji_rate": 0.5,
+          "delta_vs_global": -0.152,
+          "count": 2
+        },
+        "功名": {
+          "ji_rate": 0.0,
+          "delta_vs_global": -0.652,
+          "count": 5
+        },
+        "占病": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.348,
+          "count": 5
+        }
+      }
+    },
+    {
+      "element": "鬼墓",
+      "global_ji_rate": 0.571,
+      "global_count": 7,
+      "zhanshi_rates": {
+        "功名": {
+          "ji_rate": 0.0,
+          "delta_vs_global": -0.571,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "死奇",
+      "global_ji_rate": 0.538,
+      "global_count": 13,
+      "zhanshi_rates": {
+        "家宅": {
+          "ji_rate": 0.8,
+          "delta_vs_global": 0.262,
+          "count": 5
+        },
+        "功名": {
+          "ji_rate": 0.0,
+          "delta_vs_global": -0.538,
+          "count": 3
+        },
+        "占病": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.462,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "斩关",
+      "global_ji_rate": 0.591,
+      "global_count": 22,
+      "zhanshi_rates": {
+        "家宅": {
+          "ji_rate": 0.833,
+          "delta_vs_global": 0.242,
+          "count": 6
+        },
+        "功名": {
+          "ji_rate": 0.167,
+          "delta_vs_global": -0.424,
+          "count": 6
+        },
+        "占病": {
+          "ji_rate": 0.833,
+          "delta_vs_global": 0.242,
+          "count": 6
+        }
+      }
+    },
+    {
+      "element": "贵塞鬼户",
+      "global_ji_rate": 0.746,
+      "global_count": 114,
+      "zhanshi_rates": {
+        "婚姻": {
+          "ji_rate": 0.333,
+          "delta_vs_global": -0.412,
+          "count": 3
+        },
+        "求财": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.254,
+          "count": 4
+        },
+        "功名": {
+          "ji_rate": 0.564,
+          "delta_vs_global": -0.182,
+          "count": 39
+        },
+        "胎产": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.254,
+          "count": 5
+        },
+        "出行": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.254,
+          "count": 3
+        }
+      }
+    },
+    {
+      "element": "玄胎",
+      "global_ji_rate": 0.6,
+      "global_count": 25,
+      "zhanshi_rates": {
+        "官讼": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.4,
+          "count": 2
+        },
+        "家宅": {
+          "ji_rate": 0.8,
+          "delta_vs_global": 0.2,
+          "count": 5
+        },
+        "功名": {
+          "ji_rate": 0.364,
+          "delta_vs_global": -0.236,
+          "count": 11
+        }
+      }
+    },
+    {
+      "element": "贵登天门",
+      "global_ji_rate": 0.9,
+      "global_count": 20,
+      "zhanshi_rates": {
+        "功名": {
+          "ji_rate": 0.5,
+          "delta_vs_global": -0.4,
+          "count": 4
+        }
+      }
+    },
+    {
+      "element": "龙化蛇",
+      "global_ji_rate": 0.6,
+      "global_count": 5,
+      "zhanshi_rates": {
+        "占病": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.4,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "淫佚",
+      "global_ji_rate": 0.733,
+      "global_count": 30,
+      "zhanshi_rates": {
+        "官讼": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.267,
+          "count": 4
+        },
+        "家宅": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.267,
+          "count": 5
+        },
+        "求财": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.267,
+          "count": 3
+        },
+        "功名": {
+          "ji_rate": 0.333,
+          "delta_vs_global": -0.4,
+          "count": 9
+        },
+        "出行": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.267,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "盘珠",
+      "global_ji_rate": 0.667,
+      "global_count": 54,
+      "zhanshi_rates": {
+        "家宅": {
+          "ji_rate": 0.857,
+          "delta_vs_global": 0.19,
+          "count": 14
+        },
+        "求财": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.333,
+          "count": 3
+        },
+        "功名": {
+          "ji_rate": 0.294,
+          "delta_vs_global": -0.373,
+          "count": 17
+        },
+        "胎产": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.333,
+          "count": 2
+        },
+        "占病": {
+          "ji_rate": 0.833,
+          "delta_vs_global": 0.167,
+          "count": 6
+        },
+        "出行": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.333,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "九丑",
+      "global_ji_rate": 0.762,
+      "global_count": 21,
+      "zhanshi_rates": {
+        "功名": {
+          "ji_rate": 0.4,
+          "delta_vs_global": -0.362,
+          "count": 5
+        },
+        "占病": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.238,
+          "count": 3
+        }
+      }
+    },
+    {
+      "element": "励德",
+      "global_ji_rate": 0.707,
+      "global_count": 41,
+      "zhanshi_rates": {
+        "官讼": {
+          "ji_rate": 0.5,
+          "delta_vs_global": -0.207,
+          "count": 4
+        },
+        "家宅": {
+          "ji_rate": 0.923,
+          "delta_vs_global": 0.216,
+          "count": 13
+        },
+        "求财": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.293,
+          "count": 2
+        },
+        "功名": {
+          "ji_rate": 0.364,
+          "delta_vs_global": -0.344,
+          "count": 11
+        },
+        "占病": {
+          "ji_rate": 0.875,
+          "delta_vs_global": 0.168,
+          "count": 8
+        },
+        "出行": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.293,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "蛇化龙",
+      "global_ji_rate": 0.667,
+      "global_count": 3,
+      "zhanshi_rates": {
+        "求财": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.333,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "芜淫卦",
+      "global_ji_rate": 0.667,
+      "global_count": 6,
+      "zhanshi_rates": {
+        "官讼": {
+          "ji_rate": 0.5,
+          "delta_vs_global": -0.167,
+          "count": 2
+        },
+        "家宅": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.333,
+          "count": 2
+        },
+        "功名": {
+          "ji_rate": 0.5,
+          "delta_vs_global": -0.167,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "六纯",
+      "global_ji_rate": 0.667,
+      "global_count": 30,
+      "zhanshi_rates": {
+        "官讼": {
+          "ji_rate": 0.333,
+          "delta_vs_global": -0.333,
+          "count": 3
+        },
+        "家宅": {
+          "ji_rate": 0.875,
+          "delta_vs_global": 0.208,
+          "count": 8
+        },
+        "求财": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.333,
+          "count": 2
+        },
+        "功名": {
+          "ji_rate": 0.333,
+          "delta_vs_global": -0.333,
+          "count": 9
+        },
+        "占病": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.333,
+          "count": 3
+        },
+        "出行": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.333,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "罡塞鬼户",
+      "global_ji_rate": 0.818,
+      "global_count": 11,
+      "zhanshi_rates": {
+        "家宅": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.182,
+          "count": 3
+        },
+        "功名": {
+          "ji_rate": 0.5,
+          "delta_vs_global": -0.318,
+          "count": 4
+        },
+        "占病": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.182,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "闭口",
+      "global_ji_rate": 0.688,
+      "global_count": 16,
+      "zhanshi_rates": {
+        "官讼": {
+          "ji_rate": 0.5,
+          "delta_vs_global": -0.188,
+          "count": 2
+        },
+        "求财": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.312,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "贵人作日鬼",
+      "global_ji_rate": 0.692,
+      "global_count": 13,
+      "zhanshi_rates": {
+        "官讼": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.308,
+          "count": 2
+        },
+        "功名": {
+          "ji_rate": 0.5,
+          "delta_vs_global": -0.192,
+          "count": 8
+        }
+      }
+    },
+    {
+      "element": "冲破",
+      "global_ji_rate": 0.769,
+      "global_count": 13,
+      "zhanshi_rates": {
+        "官讼": {
+          "ji_rate": 0.5,
+          "delta_vs_global": -0.269,
+          "count": 2
+        },
+        "出行": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.231,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "亨通",
+      "global_ji_rate": 0.857,
+      "global_count": 21,
+      "zhanshi_rates": {
+        "功名": {
+          "ji_rate": 0.6,
+          "delta_vs_global": -0.257,
+          "count": 5
+        }
+      }
+    },
+    {
+      "element": "铸印",
+      "global_ji_rate": 0.75,
+      "global_count": 4,
+      "zhanshi_rates": {
+        "功名": {
+          "ji_rate": 0.5,
+          "delta_vs_global": -0.25,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "三奇",
+      "global_ji_rate": 0.75,
+      "global_count": 36,
+      "zhanshi_rates": {
+        "求财": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.25,
+          "count": 3
+        },
+        "功名": {
+          "ji_rate": 0.5,
+          "delta_vs_global": -0.25,
+          "count": 10
+        },
+        "胎产": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.25,
+          "count": 2
+        },
+        "占病": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.25,
+          "count": 4
+        },
+        "出行": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.25,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "初遭夹克",
+      "global_ji_rate": 0.75,
+      "global_count": 16,
+      "zhanshi_rates": {
+        "家宅": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.25,
+          "count": 3
+        },
+        "功名": {
+          "ji_rate": 0.6,
+          "delta_vs_global": -0.15,
+          "count": 10
+        }
+      }
+    },
+    {
+      "element": "侵害",
+      "global_ji_rate": 0.75,
+      "global_count": 8,
+      "zhanshi_rates": {
+        "家宅": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.25,
+          "count": 3
+        },
+        "功名": {
+          "ji_rate": 0.5,
+          "delta_vs_global": -0.25,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "合欢",
+      "global_ji_rate": 0.643,
+      "global_count": 14,
+      "zhanshi_rates": {
+        "家宅": {
+          "ji_rate": 0.833,
+          "delta_vs_global": 0.19,
+          "count": 6
+        },
+        "功名": {
+          "ji_rate": 0.4,
+          "delta_vs_global": -0.243,
+          "count": 5
+        }
+      }
+    },
+    {
+      "element": "灾厄",
+      "global_ji_rate": 0.773,
+      "global_count": 22,
+      "zhanshi_rates": {
+        "功名": {
+          "ji_rate": 0.571,
+          "delta_vs_global": -0.201,
+          "count": 7
+        },
+        "胎产": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.227,
+          "count": 2
+        },
+        "占病": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.227,
+          "count": 4
+        }
+      }
+    },
+    {
+      "element": "连珠",
+      "global_ji_rate": 0.786,
+      "global_count": 14,
+      "zhanshi_rates": {
+        "家宅": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.214,
+          "count": 3
+        }
+      }
+    },
+    {
+      "element": "魄化",
+      "global_ji_rate": 0.875,
+      "global_count": 16,
+      "zhanshi_rates": {
+        "官讼": {
+          "ji_rate": 0.667,
+          "delta_vs_global": -0.208,
+          "count": 3
+        }
+      }
+    },
+    {
+      "element": "引从",
+      "global_ji_rate": 0.2,
+      "global_count": 5,
+      "zhanshi_rates": {
+        "功名": {
+          "ji_rate": 0.0,
+          "delta_vs_global": -0.2,
+          "count": 3
+        }
+      }
+    },
+    {
+      "element": "交车害",
+      "global_ji_rate": 0.8,
+      "global_count": 15,
+      "zhanshi_rates": {
+        "家宅": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.2,
+          "count": 4
+        },
+        "失物": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.2,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "两蛇夹墓",
+      "global_ji_rate": 0.8,
+      "global_count": 5,
+      "zhanshi_rates": {
+        "功名": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.2,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "间传",
+      "global_ji_rate": 0.824,
+      "global_count": 17,
+      "zhanshi_rates": {
+        "家宅": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.176,
+          "count": 5
+        },
+        "功名": {
+          "ji_rate": 0.667,
+          "delta_vs_global": -0.157,
+          "count": 6
+        },
+        "占病": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.176,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "龙德",
+      "global_ji_rate": 0.5,
+      "global_count": 10,
+      "zhanshi_rates": {
+        "功名": {
+          "ji_rate": 0.333,
+          "delta_vs_global": -0.167,
+          "count": 6
+        }
+      }
+    },
+    {
+      "element": "德庆",
+      "global_ji_rate": 0.333,
+      "global_count": 9,
+      "zhanshi_rates": {
+        "家宅": {
+          "ji_rate": 0.5,
+          "delta_vs_global": 0.167,
+          "count": 2
+        },
+        "功名": {
+          "ji_rate": 0.167,
+          "delta_vs_global": -0.167,
+          "count": 6
+        }
+      }
+    },
+    {
+      "element": "破印损模",
+      "global_ji_rate": 0.667,
+      "global_count": 3,
+      "zhanshi_rates": {
+        "功名": {
+          "ji_rate": 0.5,
+          "delta_vs_global": -0.167,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "魁度天门",
+      "global_ji_rate": 0.667,
+      "global_count": 3,
+      "zhanshi_rates": {
+        "占病": {
+          "ji_rate": 0.5,
+          "delta_vs_global": -0.167,
+          "count": 2
+        }
+      }
+    },
+    {
+      "element": "刑伤",
+      "global_ji_rate": 0.833,
+      "global_count": 12,
+      "zhanshi_rates": {
+        "家宅": {
+          "ji_rate": 1.0,
+          "delta_vs_global": 0.167,
+          "count": 4
+        }
+      }
+    }
+  ],
+  "hybrid_fixes_count": 0,
+  "hybrid_new_errors_count": 0
+}

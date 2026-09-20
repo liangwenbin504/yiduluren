@@ -1,0 +1,9915 @@
+[
+ {
+  "case_id": "§天时01·001",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 23,
+  "chains": [
+   {
+    "premise": "今得此课，明日天色",
+    "conclusion": "必变，巳时风起转寒，未时有雨",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "日上又见天河之水，腾运乎上",
+    "conclusion": "必流乎下；",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "春，夏、秋",
+    "conclusion": "必雨，冬必雪",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "末传卯作白虎，与申皆是白色，申",
+    "conclusion": "乃空亡",
+    "marker": "乃",
+    "type": "神煞"
+   },
+   {
+    "premise": "正是空中降下",
+    "conclusion": "乃造化之所生也",
+    "marker": "乃",
+    "type": "干支生克"
+   },
+   {
+    "premise": "子作勾陈，占雨",
+    "conclusion": "主连绵，占雪主深厚",
+    "marker": "主",
+    "type": "天将"
+   },
+   {
+    "premise": "凡铸印课，占天时",
+    "conclusion": "必大雨雪",
+    "marker": "必",
+    "type": "六亲"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "申",
+    "lei": "夜贵",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "白虎",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "空亡",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "水",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "雷",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "勾陈",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§天时01·002",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "吉",
+  "n_sents": 3,
+  "chains": [
+   {
+    "premise": "若春占",
+    "conclusion": "主水涨，今冬占必有大雪",
+    "marker": "主",
+    "type": "其他"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§宅墓02·004",
+  "name": "张九翁戊午生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 14,
+  "chains": [
+   {
+    "premise": "又为妻叔与陈姓吏人作鬼，因来动店内物，却",
+    "conclusion": "乃争讼",
+    "marker": "乃",
+    "type": "六亲"
+   },
+   {
+    "premise": "盖庚生于巳，寅生于亥，庚脱于亥，寅脱于巳，干支俱受生，而互受脱，是先兴旺而后衰败也，亥数四、寅数七，乃十一年也，亥脱今日干，则耗泄我矣",
+    "conclusion": "故主费财",
+    "marker": "故主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "宅上亥乃脱神，从宅发出为末传，又来脱我，亥为妇人",
+    "conclusion": "故曰为子娶妇费坏也；",
+    "marker": "故曰",
+    "type": "干支生克"
+   },
+   {
+    "premise": "上加太阴，为老阴人，故又",
+    "conclusion": "主阴人守寡",
+    "marker": "主",
+    "type": "天将"
+   },
+   {
+    "premise": "上为蛇挠，又为今日绝神，且寅又为今日财神，阴人得亥为脱气",
+    "conclusion": "故主因妻与吏人争讼也",
+    "marker": "故主",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "亥",
+    "lei": "支之长生",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "脱神",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "妇人",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "吏人",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "脱气",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·005",
+  "name": "叶助教戊午生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 17,
+  "chains": [
+   {
+    "premise": "太岁入宅克宅，宅来就人，又被人克，六年中家破屋拆，遂成墓地",
+    "conclusion": "必葬尊长在内",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "六年之前，四分五裂，门户分张",
+    "conclusion": "主外姓或还俗僧人入挠，遂宅破矣",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "卯数六",
+    "conclusion": "故不出六年",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "(或乙酉见辛卯，或辛酉见乙酉，皆系还俗僧。乙为沙门，辛为僧舍也。)卯上见元武",
+    "conclusion": "故主门户分张",
+    "marker": "故主",
+    "type": "其他"
+   },
+   {
+    "premise": "与叔共五子，助教亦得一分，作六分分矣，戊申至癸丑",
+    "conclusion": "乃六年",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "当年又死一男一女，乃太岁克宅",
+    "conclusion": "故也",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "丑",
+    "lei": "辛日之墓神",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "僧",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "乙",
+    "lei": "沙门",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辛",
+    "lei": "僧舍也",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "僧",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "六年",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·006",
+  "name": "",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 11,
+  "chains": [
+   {
+    "premise": "此课乃妻为",
+    "conclusion": "主，日去加辰，夫去脱妻，妻为长，夫反为少也",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "目下主丧妻，缘是磨压东门",
+    "conclusion": "所以有再娶之患也",
+    "marker": "所以",
+    "type": "方位"
+   },
+   {
+    "premise": "干又就支，反致勾留，上见勾陈",
+    "conclusion": "故也",
+    "marker": "故",
+    "type": "天将"
+   },
+   {
+    "premise": "申加卯上，作天空，申",
+    "conclusion": "乃今日之同类，而加妻上，是兄之妻也",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "(申同类为兄，加卯妻爻上，是为兄之妻。然不知申本空亡，又作天空",
+    "conclusion": "必兄已亡过，遂有其妻，所以邵公敢开此口。若申不空，则不可乱断。)末丑为辛之墓，加于同类之上，并蛇；",
+    "marker": "必",
+    "type": "干支生克"
+   },
+   {
+    "premise": "丑八数",
+    "conclusion": "是以八年因开生地，与兄弟不和，丑土生申金，乃生地也",
+    "marker": "是以",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "申",
+    "lei": "磨",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "压东门也",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "妻",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "今日之同类",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "辛之墓",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·007",
+  "name": "邵秀才癸丑年生",
+  "zhanlei": "家宅",
+  "label": "吉",
+  "n_sents": 14,
+  "chains": [
+   {
+    "premise": "皆由用术不精，反云六壬不灵",
+    "conclusion": "岂不诬哉！",
+    "marker": "岂不",
+    "type": "其他"
+   },
+   {
+    "premise": "初传辰，自宅上传出，中仍归卯位，此",
+    "conclusion": "乃夺父之财禄",
+    "marker": "乃",
+    "type": "六亲"
+   },
+   {
+    "premise": "三传不离支干，乙以卯为禄，寅为同类",
+    "conclusion": "必有兄弟出去了，后复归来",
+    "marker": "必",
+    "type": "六亲"
+   },
+   {
+    "premise": "辰为勾陈",
+    "conclusion": "主争讼，课中不见父母，止同类自相吞并",
+    "marker": "主",
+    "type": "天将"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "巳",
+    "lei": "干先据",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "禄",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "同类",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辰",
+    "lei": "勾陈",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·008",
+  "name": "",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 14,
+  "chains": [
+   {
+    "premise": "此宅十二年后出怪，住不得",
+    "conclusion": "必别迁",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "盖金日得润下局，及干支上神各为脱气，庚以子为真气，子息乘青龙脱气，又有元武、螣蛇二凶，兼青龙，三个皆水兽，只管盗其真气",
+    "conclusion": "故一子死，一子又来",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "螣蛇变龙",
+    "conclusion": "所以怪出扰害，遂迁寺中居住",
+    "marker": "所以",
+    "type": "天将"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "子",
+    "lei": "真气",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辰",
+    "lei": "蛇",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·009",
+  "name": "任三翁庚午生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 11,
+  "chains": [
+   {
+    "premise": "盖天盘酉之阴神，却",
+    "conclusion": "乃寅加酉，又是宅也",
+    "marker": "乃",
+    "type": "其他"
+   },
+   {
+    "premise": "兼西加辰与辰合，天将勾陈夹住，勾陈为牙人",
+    "conclusion": "故主辰日其婢再还也",
+    "marker": "故主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "(辰又日上神",
+    "conclusion": "故也。)大凡隔七八局，三传回还",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "只是发用，与宅六害",
+    "conclusion": "故事多阻",
+    "marker": "故",
+    "type": "其他"
+   },
+   {
+    "premise": "巳既绝地",
+    "conclusion": "故至甲辰、乙巳日自绝也",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "勾陈",
+    "lei": "牙人",
+    "type": "天将类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·010",
+  "name": "",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 16,
+  "chains": [
+   {
+    "premise": "未传戌属土，生今日之庚",
+    "conclusion": "乃是尊长作干人",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "戌又为仆",
+    "conclusion": "乃干仆也",
+    "marker": "乃",
+    "type": "其他"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "辰",
+    "lei": "宅",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "店业",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "太阴",
+    "lei": "妇人",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "太阴",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "店",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "北方",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "太阴",
+    "lei": "妇人",
+    "type": "天将类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·011",
+  "name": "童保仪丁巳生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 17,
+  "chains": [
+   {
+    "premise": "(阅此更妙，卯阴上得丑为墓，日治得朱，暮治得勾，且又发用，是以",
+    "conclusion": "主闲事相扰。)十二月外乡一人来树下自缢",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "丁巳日又传归阴方绝地，宅上卯，末传酉，俱六数",
+    "conclusion": "故主六年败尽",
+    "marker": "故主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "(此断家宅",
+    "conclusion": "故取宅上神，酉为归计门，是以取此二处决之也。)加于巳、亥上，亦四年之数",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "丑",
+    "lei": "墓",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "归计门",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·013",
+  "name": "王德卿辛酉生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 16,
+  "chains": [
+   {
+    "premise": "今年进子又添孙，中传及支子也，子边作亥",
+    "conclusion": "乃“孫”字也",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "末传卯乘朱雀",
+    "conclusion": "主门户不宁，户役事拢",
+    "marker": "主",
+    "type": "天将"
+   },
+   {
+    "premise": "堂上不合安符",
+    "conclusion": "主家中无一时安静",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "家资得地，池塘之利",
+    "conclusion": "必然大发",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "尚有十六年寿",
+    "conclusion": "主水肿而亡",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "(此非先生意，乃及门诸子增人之辞也。何则？课传止二亥，亥未旺气，当倍进，即曰伏吟，断少则二亥八年，又不可云十六年矣。且亥乃日禄，何反之决死？是此说之谬可知矣。按邵公之意，或用越十六年而行年在辰，辰为壬日之墓，流年太岁在亥，太岁乘空临身，所谓当头立也。太岁即临身，而行年又入墓地",
+    "conclusion": "故主十六年而亡耳。邵公之",
+    "marker": "故主",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "亥",
+    "lei": "日禄",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辰",
+    "lei": "壬日之墓",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·014",
+  "name": "童得松丁巳生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 9,
+  "chains": [
+   {
+    "premise": "生气受克，而死气为",
+    "conclusion": "主，是谓人亡",
+    "marker": "主",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "亥",
+    "lei": "闭口",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "灶",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "厕",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·015",
+  "name": "徐八公甲寅生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 14,
+  "chains": [
+   {
+    "premise": "然物极",
+    "conclusion": "必变，今宅中现在六分共居，而甲寅人多是从门侧出入",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "(本命寅，天上寅，却作合，为私门。又在卯侧",
+    "conclusion": "故主从门侧出入。)来年有阴人死，各自东西南北去，必升进，颇胜于前",
+    "marker": "故主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "明有阴贵人，乃守缺贵人，后时",
+    "conclusion": "必做成家计也",
+    "marker": "必",
+    "type": "天将"
+   },
+   {
+    "premise": "其子又好",
+    "conclusion": "必晚年亨福，寿又高，得贵家阴人力，做成家业也",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "次年太孺人",
+    "conclusion": "故，八公即出外去住",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "中末传见贵人，用并太阴",
+    "conclusion": "故徐公续娶，得某先待制之妾，带二千贯财物嫁来",
+    "marker": "故",
+    "type": "天将"
+   },
+   {
+    "premise": "盖癸以巳为妻财，而太阴作贵人之侧室",
+    "conclusion": "故有宠人嫁他",
+    "marker": "故",
+    "type": "天将"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "亥",
+    "lei": "六甲极日",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "极日",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "妻财",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "太阴",
+    "lei": "贵人之侧室",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "待制妾所生可",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·016",
+  "name": "刘将仕庚午生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 14,
+  "chains": [
+   {
+    "premise": "宅上子作螣蛇",
+    "conclusion": "主子外横，乃宅水不合被长生耗去，故多招是非，常不安妥",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "沟渠为土淤塞，(子作沟渠，上加辰作武",
+    "conclusion": "故主为土淤塞。)坤申方有涧水来克，子必不肖，而婢为宅主也",
+    "marker": "故主",
+    "type": "方位"
+   },
+   {
+    "premise": "破碎乘勾",
+    "conclusion": "主旧事扰攘",
+    "marker": "主",
+    "type": "神煞"
+   },
+   {
+    "premise": "只因库中有鬼贼，(辰比劫财，又元盗神",
+    "conclusion": "故也。)所以偷去",
+    "marker": "故",
+    "type": "六亲"
+   },
+   {
+    "premise": "子作蛇加申",
+    "conclusion": "主子息非理废用",
+    "marker": "主",
+    "type": "六亲"
+   },
+   {
+    "premise": "(巳上见酉为破碎",
+    "conclusion": "故丁巳退八分。申上见子，作蛇挠之，故退尽。)辛酉年四月脏毒死矣",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "盖酉为脏毒，临巳为四月，又遇酉年，破碎重见",
+    "conclusion": "故也",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "子",
+    "lei": "螣蛇",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "沟渠",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辰",
+    "lei": "武",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "勾陈",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "蛇加申",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "破碎",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "脏毒",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "四月",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·017",
+  "name": "何丞务丁巳生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 14,
+  "chains": [
+   {
+    "premise": "若移出各人自为活计，将因太阴扰动而兴词讼，(太阴乘卯为今日鬼",
+    "conclusion": "故就卯上论之，在未传，故至十三年后。)十三年后见之",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "其壬戌年有卯制",
+    "conclusion": "故不动；",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "甲子年人宅相逼",
+    "conclusion": "所以至此方争也",
+    "marker": "所以",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "卯",
+    "lei": "今日鬼",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "店业",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·018",
+  "name": "任太公甲午生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 17,
+  "chains": [
+   {
+    "premise": "此课干支六害，一",
+    "conclusion": "主牛马自伤，戌以丑为刑神，作朱雀，是害牛也",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "春丙火相气相生",
+    "conclusion": "主息，牛乃生息之物也",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "午为屋、为马，言马不言屋也，因午空亡，乃不定之物，且正月天马在午",
+    "conclusion": "故也",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "二主妇人失明，盖午为妇人，午",
+    "conclusion": "乃离，为目，入墓，是失明也",
+    "marker": "乃",
+    "type": "干支生克"
+   },
+   {
+    "premise": "五主山地有争",
+    "conclusion": "乃末传丑是也",
+    "marker": "乃",
+    "type": "其他"
+   },
+   {
+    "premise": "然至末传则是秋冬，非丙火旺可以生丑土言也",
+    "conclusion": "故曰山地",
+    "marker": "故曰",
+    "type": "干支生克"
+   },
+   {
+    "premise": "朱雀主争，子主池塘，行年上见子加辰，又乘蛇，主争",
+    "conclusion": "必失理也",
+    "marker": "必",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "丑",
+    "lei": "刑神",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "屋",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "妇人",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "离",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "丙干",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "妻",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "婢",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "宠婢也",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "天空",
+    "lei": "奴",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "太阴",
+    "lei": "老妇",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "血",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "也",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·019",
+  "name": "王解元辛未生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 23,
+  "chains": [
+   {
+    "premise": "日上墓作天后",
+    "conclusion": "主迟滞，时运未通",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "幸得宅之六仪长生而引进，又与宅合",
+    "conclusion": "主进人口，妇人怀胎；",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "亥作天空乘丁",
+    "conclusion": "主移动缸瓮",
+    "marker": "主",
+    "type": "天将"
+   },
+   {
+    "premise": "田遭水患，行年在申",
+    "conclusion": "主内事讼，得一道士解和",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "王自发解后，皆不利，疑其宅生灾",
+    "conclusion": "故占之",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "身乘墓作天后，辰虽月建",
+    "conclusion": "主兴讼，旺却是墓神滞神，目下如何发得？",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "宅上见本句仪神，引出长生，旬首加旬尾",
+    "conclusion": "乃周而复始格",
+    "marker": "乃",
+    "type": "干支生克"
+   },
+   {
+    "premise": "六合发用",
+    "conclusion": "故主进人口、血财",
+    "marker": "故主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "辰加丑为破，不可开田",
+    "conclusion": "必被水冲",
+    "marker": "必",
+    "type": "干支生克"
+   },
+   {
+    "premise": "盖寅并元武",
+    "conclusion": "主堕胎",
+    "marker": "主",
+    "type": "其他"
+   },
+   {
+    "premise": "幸申作六合引长生，能制之",
+    "conclusion": "故保全也",
+    "marker": "故",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "亥",
+    "lei": "天空乘丁",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "破",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "六合引长生",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "长生道士身",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·020",
+  "name": "何宣义丁丑年",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 16,
+  "chains": [
+   {
+    "premise": "三传与宅并在南方，一生难为眷属，未为眷属空亡",
+    "conclusion": "故也",
+    "marker": "故",
+    "type": "方位"
+   },
+   {
+    "premise": "有一妾为",
+    "conclusion": "主，反欺众人，终死于此妾之手",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "行年支破作太常",
+    "conclusion": "主外服",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "宅上财与三传皆在南方",
+    "conclusion": "所以此人运货至南方，获利成家",
+    "marker": "所以",
+    "type": "方位"
+   },
+   {
+    "premise": "盖日上天后乘寅木脱神，而寅木又脱于巳、午",
+    "conclusion": "故主三、四月妇人不产，寅以酉为破碎加申，故七月亦然",
+    "marker": "故主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "寅以亥为长生，上作太常",
+    "conclusion": "故主孝服",
+    "marker": "故主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "(亥卯未三合，五月月建上得未",
+    "conclusion": "故五月有服。)其晚年愈贪色者，酉作天空，加癸水长生之上也",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "未",
+    "lei": "眷属空亡故也",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "破碎加申",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "长生",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "天空",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·021",
+  "name": "林丞务丙辰生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 17,
+  "chains": [
+   {
+    "premise": "日上子为盗气，义见天空",
+    "conclusion": "主下部遗泄，兼子息不美",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "子为一阳之始，巳为六阳之终，而始于身、终于宅也，故始",
+    "conclusion": "主自身下部遗泄，而卒于破家",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "子为子息",
+    "conclusion": "所以败家由子也",
+    "marker": "所以",
+    "type": "六亲"
+   },
+   {
+    "premise": "初传宅上，中、末俱空，号曰不行",
+    "conclusion": "故只以干支二处分断",
+    "marker": "故",
+    "type": "其他"
+   },
+   {
+    "premise": "(中、末皆空，初仍宅上，等之无传矣",
+    "conclusion": "故只就干支分断。若初传不从宅与日上起，则又!垮细审，不得概为不行也。)然初传更加一重破碎，子为脱空，六阳至此极处；",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "若占病",
+    "conclusion": "必死之课，占前程脱精而亡",
+    "marker": "必",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "子",
+    "lei": "盗气",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "盗气",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "一阳之始",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "六阳之终",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "子息",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "脱空",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·022",
+  "name": "冯修职己卯生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 20,
+  "chains": [
+   {
+    "premise": "义用神当冈死，斗罡系日本加亥，名天狱，不有大服",
+    "conclusion": "必有大祸",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "时冯为",
+    "conclusion": "主簿，五月初二日占课，六月十七(一作七月)日，婢子争宠，因责之，遂自缢",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "县尉与",
+    "conclusion": "主簿不足，依法看验、申州，被拘在能仁寺，将及一月",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "盖支辰犯日",
+    "conclusion": "乃下犯上也",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "酉为婢，六合为人口，五月火鬼在酉",
+    "conclusion": "故婢横死；",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "酉金克乙木",
+    "conclusion": "故为所累",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "贵人六害",
+    "conclusion": "所以被拘",
+    "marker": "所以",
+    "type": "天将"
+   },
+   {
+    "premise": "又未为眷属，本宫上见子为父母，母受土克，又受未害，行年加之，重克重害",
+    "conclusion": "所以母亡",
+    "marker": "所以",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "酉",
+    "lei": "婢妾",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "父母",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "婢",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "六合",
+    "lei": "人口",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "未",
+    "lei": "眷属",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "父母",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "月病符",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "六合",
+    "lei": "棺木",
+    "type": "天将类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·023",
+  "name": "叶油饼店店主庚戌生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 14,
+  "chains": [
+   {
+    "premise": "丑、亥、酉为极阴课，幸甲子旬中末皆空",
+    "conclusion": "故虽有灾危，不至不测",
+    "marker": "故",
+    "type": "六亲"
+   },
+   {
+    "premise": "不合土塞东门，其外又不合堆木板，太阴乘酉加亥，败处乘宅，母",
+    "conclusion": "主酒病死，家道衰矣",
+    "marker": "主",
+    "type": "方位"
+   },
+   {
+    "premise": "果有泥土，乃戊辰干支加土，丑土又加卯门之上发用",
+    "conclusion": "故主土塞东门",
+    "marker": "故主",
+    "type": "方位"
+   },
+   {
+    "premise": "二木来克干支二土",
+    "conclusion": "故知壁外有木板",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "课得极阴",
+    "conclusion": "主灾变，最喜空亡可解",
+    "marker": "主",
+    "type": "神煞"
+   },
+   {
+    "premise": "今中末空，不入亥地阴极之处",
+    "conclusion": "故不至大灾，然毕竟阴耗财物也",
+    "marker": "故",
+    "type": "六亲"
+   },
+   {
+    "premise": "甲子旬中乙丑、丙寅、丁卯乃真三奇",
+    "conclusion": "所以无灾",
+    "marker": "所以",
+    "type": "六亲"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "酉",
+    "lei": "极阴课",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "真三奇",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "酒也",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·024",
+  "name": "童秀才庚辰生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 11,
+  "chains": [
+   {
+    "premise": "宅左青龙带破碎，(此云宅左青龙是以支阴论，不以大盘论。惟断坟墓方用大盘看坐山朝山等。家宅则止就四课言，邵公诸案皆然也。)须用土填，将来",
+    "conclusion": "必富",
+    "marker": "必",
+    "type": "方位"
+   },
+   {
+    "premise": "(青龙加丑虽云破碎，却又不备，故左",
+    "conclusion": "必不完，宜用土填也。)但无清秀之士",
+    "marker": "必",
+    "type": "神煞"
+   },
+   {
+    "premise": "初传青龙，妻为之",
+    "conclusion": "主，末财作天后，主妇人守寡",
+    "marker": "主",
+    "type": "天将"
+   },
+   {
+    "premise": "(未财作后，何以便曰妇人守寡？盖财，妻也；后，女也；未，妇人也。未又今日乙未之墓，却来刑日上之丑，刑则克",
+    "conclusion": "故主妇人皆寡。受圅窃谓：未为年之寡宿杀，故邵公敢如此断。)又主家西北界未备，主与人争界",
+    "marker": "故主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "(西北当作东北，爱圅见数本皆作西北，玩味争界二字，似指戌乘朱雀而言，戌为西北，雀",
+    "conclusion": "主争也。)奈何都无水出，主出人重浊",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "乙以土为财，又临旺地，天将更无凶神",
+    "conclusion": "故主其家人发",
+    "marker": "故主",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "青龙",
+    "lei": "以支阴论",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "未",
+    "lei": "年之寡宿杀",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "戌",
+    "lei": "西北",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·025",
+  "name": "何七秀才壬申生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 14,
+  "chains": [
+   {
+    "premise": "岁内眷属人来",
+    "conclusion": "必成大狱",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "天罡加日本，名天狱",
+    "conclusion": "故也",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "(《指掌赋》云：太常乘破碎为孝服，加天狱螣蛇，生灾致讼。)破碎作太常入宅",
+    "conclusion": "主有丧服人归来分挠，被他争产",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "以行年与身作一处，(爱圅曰：盖未交生，行年尚在丑，丑加申命",
+    "conclusion": "故曰“行年与身作一处”。)只是今年事",
+    "marker": "故曰",
+    "type": "应期数字"
+   },
+   {
+    "premise": "盖未加甲",
+    "conclusion": "乃墓神，未为眷属，天空为平地起堆之象",
+    "marker": "乃",
+    "type": "干支生克"
+   },
+   {
+    "premise": "传归人宅，却是两重破碎，巳为厨灶",
+    "conclusion": "必主分灶不宁也",
+    "marker": "必主",
+    "type": "神煞"
+   },
+   {
+    "premise": "州县断理拨财产与之，着依旧归姊夫家，他",
+    "conclusion": "乃不服，直至大理与拘法遂有归条",
+    "marker": "乃",
+    "type": "六亲"
+   },
+   {
+    "premise": "(甲以巳为子息，末传戌刑末，故动而有事，所谓不冲不发，不刑不动也。戌乘六合，卯与戌合",
+    "conclusion": "主进人口，主此子归来之兆。当年六月兴讼，未上子蛇挠",
+    "marker": "主",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "甲",
+    "lei": "墓神",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "未",
+    "lei": "眷属",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "天空",
+    "lei": "平地起堆之象",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "父母",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "未",
+    "lei": "眷属",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "厨灶",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "子息",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·026",
+  "name": "",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 5,
+  "chains": [
+   {
+    "premise": "见一人裹帽而行，乃六十老人墓于内，尚有游尸",
+    "conclusion": "所以出来作怪",
+    "marker": "所以",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "丑",
+    "lei": "裹帽老人也",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·027",
+  "name": "郁氏女乙酉生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 3,
+  "chains": [
+   {
+    "premise": "弹射格，一",
+    "conclusion": "主妇人患血气，二主门户不宁，三主婢妾出去，四主家主患口舌之疾",
+    "marker": "主",
+    "type": "课体"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§宅墓02·028",
+  "name": "邵三公壬申生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 19,
+  "chains": [
+   {
+    "premise": "盖乘天马",
+    "conclusion": "故也",
+    "marker": "故",
+    "type": "其他"
+   },
+   {
+    "premise": "(午乃妻财",
+    "conclusion": "故起家，乘六合故多子。)九年痨病(午九数)，连克子孙矣",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "壬子年娶第二新妇",
+    "conclusion": "乃宦家女，日费数倍",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "日上自刑",
+    "conclusion": "乃人刑人也；",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "元武为费用神，元武本是本身之亥，我去刑他，元武便走在子息上",
+    "conclusion": "故主子息使钱",
+    "marker": "故主",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "午",
+    "lei": "妻财",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "元武",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·029",
+  "name": "",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 10,
+  "chains": [
+   {
+    "premise": "汝家中所奉之神非正",
+    "conclusion": "乃邪也",
+    "marker": "乃",
+    "type": "其他"
+   },
+   {
+    "premise": "丁主怪异坏物，课中有酉、丑会起巳，巳临门",
+    "conclusion": "故主蛇入宅",
+    "marker": "故主",
+    "type": "课体"
+   },
+   {
+    "premise": "丁以酉为妻，丁主独足",
+    "conclusion": "故主妻生独足儿",
+    "marker": "故主",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "酉",
+    "lei": "五通",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "妻",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·030",
+  "name": "",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 16,
+  "chains": [
+   {
+    "premise": "支来加日、墓日，上又螣蛇夹住",
+    "conclusion": "主人如处云雾中，进退不得",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "妻加天地转杀上，六合夹之，妻不宜孕，孕",
+    "conclusion": "主亡",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "(申妻也。上作合，儿也。卯即申金之胎",
+    "conclusion": "故以孕断，妙绝！)本命上午作末传，虽空却是帝旺",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "墓本身上见卯",
+    "conclusion": "乃天地转杀，乘旺克宅；",
+    "marker": "乃",
+    "type": "干支生克"
+   },
+   {
+    "premise": "(爱圅曰：午为阳刃死气，加命害命，子年冲动大凶。况行年又见阳刃，午为自刑",
+    "conclusion": "是以自戕而死也",
+    "marker": "是以",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "太常",
+    "lei": "服",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "母",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "申金之胎",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "阳刃死气",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "自刑",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·031",
+  "name": "",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 5,
+  "chains": [
+   {
+    "premise": "人宅皆逢旺神，今六月占非本姓之旺",
+    "conclusion": "乃守东方之旺，只宜守分，不宜运用",
+    "marker": "乃",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "辰",
+    "lei": "勾地网",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·032",
+  "name": "",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 11,
+  "chains": [
+   {
+    "premise": "只因西北水路闭塞",
+    "conclusion": "所以如此",
+    "marker": "所以",
+    "type": "方位"
+   },
+   {
+    "premise": "若不开通，定",
+    "conclusion": "主妇人癫狂重病也",
+    "marker": "主",
+    "type": "其他"
+   },
+   {
+    "premise": "盖三传辰土壅亥水，亥克午火，午却逃临身宅，身虽制得他，宅却为他所害",
+    "conclusion": "故宅被害而反害人也",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "干属水，支属土，土来克水，中传又是水，末传天罡截住，壅塞亥水",
+    "conclusion": "故水不通，血脉不行，致生诸疾",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "至戊午年，妇人产后遂患癫病，盖为螣蛇所挠",
+    "conclusion": "故耳",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "午为心，血脉不通而克心",
+    "conclusion": "故有是病",
+    "marker": "故",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "午",
+    "lei": "心",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·033",
+  "name": "童三十四公丙申生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 15,
+  "chains": [
+   {
+    "premise": "身上见眷属，行年上引出破败，宅上戌作元武",
+    "conclusion": "主诸子分居，财各入己",
+    "marker": "主",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "天后",
+    "lei": "少女",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "戌",
+    "lei": "元武",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "未",
+    "lei": "眷属",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "子息也",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "老阳",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "老阴",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辰",
+    "lei": "财库",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·034",
+  "name": "汪四六公癸丑生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 8,
+  "chains": [
+   {
+    "premise": "否则是庙宇中木",
+    "conclusion": "主雷嗔惊人，更十年在讼中死",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "寅加午在高处也",
+    "conclusion": "故当是栋木",
+    "marker": "故",
+    "type": "其他"
+   },
+   {
+    "premise": "自己酉数十年，太岁在午，甲木死于午",
+    "conclusion": "故此年死",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§宅墓02·035",
+  "name": "伊伯廷甲戌生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 11,
+  "chains": [
+   {
+    "premise": "奈何寅是空亡",
+    "conclusion": "所以不能引进，见生不生，反成凶咎",
+    "marker": "所以",
+    "type": "干支生克"
+   },
+   {
+    "premise": "今甲辰旬却入见寅，进则空亡，退又子克",
+    "conclusion": "所以灾起子丑之年，死亡于甲寅之岁也",
+    "marker": "所以",
+    "type": "应期数字"
+   },
+   {
+    "premise": "夫以旬末而又引入空亡",
+    "conclusion": "故即以其年分言之",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "寅",
+    "lei": "空亡",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·036",
+  "name": "",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 6,
+  "chains": [
+   {
+    "premise": "子作蛇入宅为用，虎乘午在酉上作末，是蛇虎加二八门也",
+    "conclusion": "故主重丧",
+    "marker": "故主",
+    "type": "六亲"
+   },
+   {
+    "premise": "因虎乘死气在末传，又子、午为道路神，而乘蛇虎加门户，上乘死煞",
+    "conclusion": "故尔如此",
+    "marker": "故",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "子",
+    "lei": "蛇入宅为用",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "道路神",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·037",
+  "name": "",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 14,
+  "chains": [
+   {
+    "premise": "盖四阳虽临东南，无关格拘检，日后",
+    "conclusion": "主水坏宅，因身役而尽败也",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "此宅基乃庚兑山行龙，坎山为",
+    "conclusion": "主，盖缘逼迫，遂欲凿辛山为之，果是后逼山，前近水",
+    "marker": "主",
+    "type": "其他"
+   },
+   {
+    "premise": "东南两处风路，为螣蛇所挠",
+    "conclusion": "故主吏人，又主失陷财物，兼木败坏在子故也",
+    "marker": "故主",
+    "type": "方位"
+   },
+   {
+    "premise": "末传辰为军卒仆从，六合加之",
+    "conclusion": "故也",
+    "marker": "故",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "子",
+    "lei": "吏人",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "天后",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辰",
+    "lei": "军卒仆从",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·038",
+  "name": "",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 7,
+  "chains": [
+   {
+    "premise": "灭后水又败在酉，即用死败神，则",
+    "conclusion": "主男女淫奔",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "今加宅",
+    "conclusion": "主宅中有淫乱不明事也",
+    "marker": "主",
+    "type": "其他"
+   },
+   {
+    "premise": "戌加日上",
+    "conclusion": "主动，故应此也",
+    "marker": "主",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "酉",
+    "lei": "后发用",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "龙加卯",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "酒色淫败",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·039",
+  "name": "",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 5,
+  "chains": [
+   {
+    "premise": "盖用申作勾加巳，巳为双女为口，申为骨牙，勾主损折，传破",
+    "conclusion": "故主此",
+    "marker": "故主",
+    "type": "其他"
+   },
+   {
+    "premise": "更巳为炉灶，乘旺相",
+    "conclusion": "主新修",
+    "marker": "主",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "申",
+    "lei": "勾加巳",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "双女为口",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "骨牙",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "炉灶",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·040",
+  "name": "",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 19,
+  "chains": [
+   {
+    "premise": "右边有水，末",
+    "conclusion": "主人为道童",
+    "marker": "主",
+    "type": "其他"
+   },
+   {
+    "premise": "郑三公乍富，教子读书，指望及第",
+    "conclusion": "故请先生占之",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "其地果艮山来，坎山落穴，无正山，以过山为",
+    "conclusion": "主，有两重白虎，案山亦从右边来，似乎三重",
+    "marker": "主",
+    "type": "天将"
+   },
+   {
+    "premise": "申作白虎，午加申上，又是虎",
+    "conclusion": "故两重来为案山",
+    "marker": "故",
+    "type": "天将"
+   },
+   {
+    "premise": "子午作元合",
+    "conclusion": "故主子孙邪淫",
+    "marker": "故主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "壬日酉作天空",
+    "conclusion": "故主酒败，子孙为酒家佣，亦主妇人为妓",
+    "marker": "故主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "酉六数",
+    "conclusion": "故主六年酒败，更三年死，酉增一半也",
+    "marker": "故主",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "申",
+    "lei": "白虎",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "元合",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "天空",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·041",
+  "name": "徐承务丁未生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 16,
+  "chains": [
+   {
+    "premise": "徐曰：如何?先生曰：前后左右皆有空穴，山侧又有一阴人坟，如何葬得?须于中陪钱去之，然后可葬",
+    "conclusion": "必出贵人；",
+    "marker": "必",
+    "type": "干支生克"
+   },
+   {
+    "premise": "夫辰为坟地，作空亡而发用",
+    "conclusion": "故主有空穴",
+    "marker": "故主",
+    "type": "神煞"
+   },
+   {
+    "premise": "以初传为",
+    "conclusion": "主山穴，对前戌墓也",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "徐宅问汪家买山，汪兄弟三分其二分，将来买长兄一分",
+    "conclusion": "故将空棺自埋其内",
+    "marker": "故",
+    "type": "六亲"
+   },
+   {
+    "premise": "巳加辰作贵，巳",
+    "conclusion": "主双，故有双峰，号为文笔星",
+    "marker": "主",
+    "type": "其他"
+   },
+   {
+    "premise": "宅又得贵人，癸见卯不可为脱气",
+    "conclusion": "乃子孙贵人也",
+    "marker": "乃",
+    "type": "干支生克"
+   },
+   {
+    "premise": "申、酉为今日水母",
+    "conclusion": "故水来去，皆合星辰",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "巳为双女",
+    "conclusion": "故出双贵人也",
+    "marker": "故",
+    "type": "天将"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "辰",
+    "lei": "坟地",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "天空",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "子孙作贵人",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辰",
+    "lei": "贵",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "今日水母",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "双女",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·042",
+  "name": "",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 7,
+  "chains": [
+   {
+    "premise": "宅上午上螣蛇带羊刃",
+    "conclusion": "主家人争屋，四散分飞",
+    "marker": "主",
+    "type": "神煞"
+   },
+   {
+    "premise": "初传丑作天空在卯",
+    "conclusion": "主泥土塞门户",
+    "marker": "主",
+    "type": "天将"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "丑",
+    "lei": "天空在卯",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§宅墓02·043",
+  "name": "郭仲起辛未生",
+  "zhanlei": "家宅",
+  "label": "凶",
+  "n_sents": 10,
+  "chains": [
+   {
+    "premise": "又来本命上发用，又见空亡，中传又临空处，乃子息上又见子息",
+    "conclusion": "主克子退子，定是星运不利",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "末又见妻财",
+    "conclusion": "必是再娶",
+    "marker": "必",
+    "type": "六亲"
+   },
+   {
+    "premise": "若不肯迁移",
+    "conclusion": "必主十二年而死",
+    "marker": "必主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "先个八年全用，后用一半",
+    "conclusion": "故十二年也",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "未",
+    "lei": "八数",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·044",
+  "name": "应贡元丁卯生",
+  "zhanlei": "功名",
+  "label": "吉",
+  "n_sents": 13,
+  "chains": [
+   {
+    "premise": "此课虽魁杜天门，不作阻隔论",
+    "conclusion": "乃六仪扶护，三奇拱秀，小则郎官，大则侍从，未易量也",
+    "marker": "乃",
+    "type": "六亲"
+   },
+   {
+    "premise": "丁德在亥，戌、亥、子俱属阴",
+    "conclusion": "故知阴德洪大，神明福佑也",
+    "marker": "故",
+    "type": "六亲"
+   },
+   {
+    "premise": "亥为上帝，子为紫微，丑为北斗",
+    "conclusion": "是以得上天之降福电",
+    "marker": "是以",
+    "type": "方位"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "戌",
+    "lei": "六仪",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "三奇拱照",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "丁禄临干",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "上帝",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "紫微",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "北斗",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·045",
+  "name": "何秀才己未牛",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 13,
+  "chains": [
+   {
+    "premise": "若人场",
+    "conclusion": "必不教子作此等文字，不下第必矣",
+    "marker": "必",
+    "type": "六亲"
+   },
+   {
+    "premise": "”盖日上亥是庚之子孙，来夺庚之气，庚去生水，又得勾陈，不落第矣",
+    "conclusion": "所以子得中试",
+    "marker": "所以",
+    "type": "应期数字"
+   },
+   {
+    "premise": "亥为水道，勾乃滞神，加日上",
+    "conclusion": "故本身痢疾",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "庚以寅为妻，加盗气上，临于十月，自虎又加",
+    "conclusion": "所以丧妻",
+    "marker": "所以",
+    "type": "应期数字"
+   },
+   {
+    "premise": "(寅财加亥，虽脱气，却六合而长生，不知乃是脱上逢脱，故邵公方敢下此口。然非白虎乘之，其又不可此断也。爱圅窃以为，干支乘丧门吊客，行年上又见吊客",
+    "conclusion": "主孝服。寅财乘虎，而加丧门之上；且行年上未，又为寅财之墓，财乃妻，故此丧妻断也。)夜贵在宅乘未闭口，又是本命，故将来虽得官，不久即死",
+    "marker": "主",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "子",
+    "lei": "此等文字",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "庚之子孙",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "水道",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "妻",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·046",
+  "name": "",
+  "zhanlei": "功名",
+  "label": "吉",
+  "n_sents": 16,
+  "chains": [
+   {
+    "premise": "又在脱上发用，脱上逢脱",
+    "conclusion": "必诗书荒废，家道空虚",
+    "marker": "必",
+    "type": "干支生克"
+   },
+   {
+    "premise": "寅上巳",
+    "conclusion": "乃庚长生也",
+    "marker": "乃",
+    "type": "干支生克"
+   },
+   {
+    "premise": "(末申乃是禄神",
+    "conclusion": "故晚年享福。爱圅曰：巳为店业，禄加之，故因做酒生理而起家，但应秀才不知是何年命。查阅各书皆不载，盖在当时已遗之也。大凡占前程，禄重于财，邵公诸案皆然，可考而知。)",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "巳",
+    "lei": "庚长生也",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "是禄神",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "店业",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·047",
+  "name": "徐将仕辛卯生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 17,
+  "chains": [
+   {
+    "premise": "涉三渊数",
+    "conclusion": "主劳，跋涉奔波，劳力无成",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "况初传子息，居阳刃鬼上",
+    "conclusion": "故难得子；",
+    "marker": "故",
+    "type": "六亲"
+   },
+   {
+    "premise": "末妻爻坐空，天后秽神，加之不吉",
+    "conclusion": "故因产而亡",
+    "marker": "故",
+    "type": "天将"
+   },
+   {
+    "premise": "戊辰干支皆东南神，辛卯命又是东方，三传反流入西方，那更涉三渊，顺行陷于西北",
+    "conclusion": "故死于外州",
+    "marker": "故",
+    "type": "方位"
+   },
+   {
+    "premise": "传既不回",
+    "conclusion": "故子亦不归也",
+    "marker": "故",
+    "type": "六亲"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "申",
+    "lei": "子孙",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·048",
+  "name": "徐教授丙子生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 10,
+  "chains": [
+   {
+    "premise": "申本时临日，为日所克，又丙为夫，申为妻，初传又临其上，空亡又临妻宫，目下",
+    "conclusion": "主克妻，亥四主克四妻，仲冬子息亦克，以六合不得地也",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "申为西北之金，到巳之炉冶上",
+    "conclusion": "必有声名于西北也",
+    "marker": "必",
+    "type": "方位"
+   },
+   {
+    "premise": "将四旬",
+    "conclusion": "必遇曹姓人而显身，又坐本命之马而长生，所以至老不倦也",
+    "marker": "必",
+    "type": "干支生克"
+   },
+   {
+    "premise": "终于六曹，中传亥",
+    "conclusion": "乃月将，不论空亡，但时少迟",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "又寅来生身，十一月天马天寅临天门，玄归本家，为黑煞，中传既有天门，末又在天门上以见天，天",
+    "conclusion": "必出疆见诸侯，然后入奉天子，处六曹中带刑职者，黑杀之故也",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "四维主代天子而守四方",
+    "conclusion": "必四任也",
+    "marker": "必",
+    "type": "方位"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "丙",
+    "lei": "夫",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "妻",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "西北之金",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "月将",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·049",
+  "name": "杨秀才辛未生",
+  "zhanlei": "功名",
+  "label": "吉",
+  "n_sents": 12,
+  "chains": [
+   {
+    "premise": "末传盗气",
+    "conclusion": "主子孙不读书，宜改业，临于店案之上",
+    "marker": "主",
+    "type": "六亲"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "戌",
+    "lei": "模范",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "水碓生理",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·050",
+  "name": "",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 15,
+  "chains": [
+   {
+    "premise": "凡行皆是妒忌之心，好闻是非，好谈人短",
+    "conclusion": "所以灭前程也",
+    "marker": "所以",
+    "type": "其他"
+   },
+   {
+    "premise": "大凡七杀元辰，若占前程，多妒忌，常占多",
+    "conclusion": "主事体切害",
+    "marker": "主",
+    "type": "其他"
+   },
+   {
+    "premise": "虎伤卯，又为坠轩",
+    "conclusion": "故主功名不成",
+    "marker": "故主",
+    "type": "其他"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "子",
+    "lei": "勾陈",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "空亡",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "父母",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "元武加子",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "白虎加戌",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "车轿驴骡",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·051",
+  "name": "叶助教",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 8,
+  "chains": [
+   {
+    "premise": "干支皆天罗羊刃，凹课发传，归于日上",
+    "conclusion": "主目下赴任",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "但值罗、刃，来年行到地盘亥上见子，即凑今日之地网，来年",
+    "conclusion": "必阻父丧",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "十六、七年",
+    "conclusion": "必降官闲住；",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "先生以卯、辰、巳三位，共十五年，而不及午者，何也?盖以从支上迤逦而来",
+    "conclusion": "故迁转",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "午数九，八年出得",
+    "conclusion": "所以死也",
+    "marker": "所以",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§前程仕进03·052",
+  "name": "伊秀才戊辰生",
+  "zhanlei": "功名",
+  "label": "吉",
+  "n_sents": 10,
+  "chains": [
+   {
+    "premise": "盖癸亥乃六甲极日，日去就支",
+    "conclusion": "主终身如斯而已",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "幕贵传出，又出而向日贵，日贵在夜贵之上",
+    "conclusion": "故先晦后明",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "寅上辰为本年，昼夜贵人拱之，故",
+    "conclusion": "必及第也",
+    "marker": "必",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "卯",
+    "lei": "幕贵",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "六甲极日",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辰",
+    "lei": "本年",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·053",
+  "name": "应寺簿甲戌生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 17,
+  "chains": [
+   {
+    "premise": "其一宠妾而贱妻，其二不孝母",
+    "conclusion": "故减前程，且寿不永",
+    "marker": "故",
+    "type": "六亲"
+   },
+   {
+    "premise": "此时秦桧正嫌此说，若非指明",
+    "conclusion": "必招窜贬也",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "日贵作鬼，加岁克日，是上书",
+    "conclusion": "必窜也",
+    "marker": "必",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "申",
+    "lei": "妻",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "妾",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "母",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·054",
+  "name": "",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 6,
+  "chains": [
+   {
+    "premise": "登三天本",
+    "conclusion": "主升迁之象，但嫌登不过关",
+    "marker": "主",
+    "type": "其他"
+   },
+   {
+    "premise": "若跳过则又进锐退速，目下",
+    "conclusion": "必有阻，堂上孺人定难久远",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "白虎入宅，父母乘之",
+    "conclusion": "主父母棺内白蚁蚀坏，遂成灾咎，不利子孙",
+    "marker": "主",
+    "type": "天将"
+   },
+   {
+    "premise": "盖辰为命，为丙火子孙，自子升起登三天，却及身而止，(午撞巳而止",
+    "conclusion": "故曰及身。)末传虽透过身去，又是空亡，所以子孙不利也",
+    "marker": "故曰",
+    "type": "神煞"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "辰",
+    "lei": "命",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·055",
+  "name": "赵将仕丁巳生",
+  "zhanlei": "功名",
+  "label": "吉",
+  "n_sents": 8,
+  "chains": [
+   {
+    "premise": "将仕之禄",
+    "conclusion": "乃虚禄也",
+    "marker": "乃",
+    "type": "其他"
+   },
+   {
+    "premise": "此课无武有文，今任",
+    "conclusion": "必不赴，改岳庙之职，就彼处宜读书取科第也",
+    "marker": "必",
+    "type": "课体"
+   },
+   {
+    "premise": "盖庚禄在申，禄空，太常又不入传",
+    "conclusion": "故不可为武，寅上青龙入庙，天后为恩泽神，故宜习文",
+    "marker": "故",
+    "type": "天将"
+   },
+   {
+    "premise": "末巳作朱雀，一为长生，双为官星学堂",
+    "conclusion": "故主科甲",
+    "marker": "故主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "日干天地盘皆空，禄空",
+    "conclusion": "故武不成，宜岳庙者，宅上见辰，辰为山岗，寅为庙，故宜就岳庙读书而取功名也",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "天后",
+    "lei": "恩泽神",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "朱雀",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辰",
+    "lei": "山岗",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "庙",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·056",
+  "name": "邹大官人庚辰生",
+  "zhanlei": "功名",
+  "label": "吉",
+  "n_sents": 9,
+  "chains": [
+   {
+    "premise": "盖干支上各自刑，宾",
+    "conclusion": "主不投",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "干见酉，支见午，名四胜杀",
+    "conclusion": "主各逞其能",
+    "marker": "主",
+    "type": "其他"
+   },
+   {
+    "premise": "初戌作元武，又六害，如何比得中?盖巳为弓，申为箭，今有马有箭而无弓",
+    "conclusion": "所以事终不成也",
+    "marker": "所以",
+    "type": "其他"
+   },
+   {
+    "premise": "邹后果屡试不中，得赵侍郎权兵部",
+    "conclusion": "乃与他一虚官衔",
+    "marker": "乃",
+    "type": "六亲"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "申",
+    "lei": "箭",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "戌",
+    "lei": "元武",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "弓",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "箭",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·057",
+  "name": "龚县尉辛巳生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 15,
+  "chains": [
+   {
+    "premise": "此课本身现在戴禄，又兼太常",
+    "conclusion": "必有兼职之事，俸禄亦增",
+    "marker": "必",
+    "type": "天将"
+   },
+   {
+    "premise": "盖干支自刑",
+    "conclusion": "主自满",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "月建前一辰，子上是元武",
+    "conclusion": "乃为天医",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "冲起行年上午之六合，昼贵又乘后，为干之偏财",
+    "conclusion": "乃妾也",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "上见武、合、后",
+    "conclusion": "故主贪色不正",
+    "marker": "故主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "子又为天医",
+    "conclusion": "故主寻医之兆",
+    "marker": "故主",
+    "type": "六亲"
+   },
+   {
+    "premise": "月建前神是外监司",
+    "conclusion": "必外除方解",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "龚尉因",
+    "conclusion": "主簿坏去，遂权其职，得太守宠，遂傍若无人，乃干支自刑，故自满也",
+    "marker": "主",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "午",
+    "lei": "官员往来之所",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·058",
+  "name": "",
+  "zhanlei": "功名",
+  "label": "吉",
+  "n_sents": 9,
+  "chains": [
+   {
+    "premise": "大凡占官要见官，今寅值龙作官，奈何寅空",
+    "conclusion": "必不得也",
+    "marker": "必",
+    "type": "六亲"
+   },
+   {
+    "premise": "却就支宅上去作朱雀",
+    "conclusion": "乃戊禄临支也，宅神申又加亥为末传，此任莫非虚度?盖寅是官星，巳是禄位，寅乘龙不空，即当赴任",
+    "marker": "乃",
+    "type": "天将"
+   },
+   {
+    "premise": "即空反作鬼论，鬼来逼日，日去加支，克支之申",
+    "conclusion": "主权摄不正",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "又戊禄在巳，巳与申合，禄在支",
+    "conclusion": "故正任不可望，却乃食禄",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "行年上午乘蛇临行时",
+    "conclusion": "主妇人缠绕也",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "邓果于当年十一月上任，因陈提刑与伊尊人有仇隙",
+    "conclusion": "故行至半途，遂不敢往",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "寅",
+    "lei": "官星",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "禄位",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·059",
+  "name": "",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 12,
+  "chains": [
+   {
+    "premise": "及至庚戌年，行年在申，甲木绝于申",
+    "conclusion": "故死",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "庚戌年身死，印寅年子死",
+    "conclusion": "乃刑冲之故",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "又行年神克第三课，死神乘白虎人宅，为水所克，又甲木以午为子息，故子",
+    "conclusion": "必受殃也",
+    "marker": "必",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "寅",
+    "lei": "天后",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "甲",
+    "lei": "尊也",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "卑也",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "子息",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·060",
+  "name": "谢省元乙丑生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 9,
+  "chains": [
+   {
+    "premise": "盖因亥加戌，亥乃甲之长生学堂，甲子旬亥、戌空亡，学堂加空，而宅上日贵又乘天空",
+    "conclusion": "故虚名文学耳",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "中末传巳午脱去，不意午之心病，见蛇病",
+    "conclusion": "必死",
+    "marker": "必",
+    "type": "干支生克"
+   },
+   {
+    "premise": "盖甲木生巳午蛇雀诸火，木又随火上炎，又去南奔，本",
+    "conclusion": "主便死",
+    "marker": "主",
+    "type": "方位"
+   },
+   {
+    "premise": "造化前定",
+    "conclusion": "所以不由人也",
+    "marker": "所以",
+    "type": "其他"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "亥",
+    "lei": "甲之长生学堂",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·061",
+  "name": "",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 7,
+  "chains": [
+   {
+    "premise": "官星临厨",
+    "conclusion": "必入天厨，今年必高中，官星作幕贵也",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "癸丑及第，(寅贵加丑上之",
+    "conclusion": "故。)只是不享，终三十五岁矣",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "盖十月辛上见亥作元武，一金生二水，水",
+    "conclusion": "主肾，自然遗洩，不合末又人空，空上又见天空，是得官徒窄也",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "巾七、未八，空亡减半，平生为亥所苦",
+    "conclusion": "故又见癸亥年而死",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "亥",
+    "lei": "元武",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·062",
+  "name": "",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 7,
+  "chains": [
+   {
+    "premise": "盖亥加辛乃面前脱气，午勾是日贵，作鬼人宅，支干上皆自刑，自支上一阴至亥，乃六阴也，一味行阴道，如何得久?更何问功名?(爱圅曰，课同断异因亥为本命而脱干",
+    "conclusion": "故其凶较甚。)",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "辛",
+    "lei": "面前脱气",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "本命而脱干",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·063",
+  "name": "",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 9,
+  "chains": [
+   {
+    "premise": "盖戊申年未为旧政，初末日辰皆见，又十二月月建丑，又加于旧上，来往皆是旧人",
+    "conclusion": "故不能速",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "未八是八年，满盘是鬼，丑为墓田，未与常加之",
+    "conclusion": "故然",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "未",
+    "lei": "旧政",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "墓田",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·064",
+  "name": "",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 11,
+  "chains": [
+   {
+    "premise": "干支皆墓",
+    "conclusion": "主前程迟滞，凡事不通",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "今喜甲申旬未",
+    "conclusion": "乃空亡，本身之墓既空，渐次脱去，次第亨通",
+    "marker": "乃",
+    "type": "干支生克"
+   },
+   {
+    "premise": "偏堂太阴亦不利，旬末终为病扰妻宫，加子",
+    "conclusion": "主无子",
+    "marker": "主",
+    "type": "天将"
+   },
+   {
+    "premise": "(行年上申为医，而为蛇鬼",
+    "conclusion": "故耳。)本命是木墓，在本身上，贵人又乘空，乃是虚贵",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "未",
+    "lei": "空亡",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "医",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·065",
+  "name": "",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 8,
+  "chains": [
+   {
+    "premise": "盖课名赘婿",
+    "conclusion": "所以无正居也",
+    "marker": "所以",
+    "type": "课体"
+   },
+   {
+    "premise": "传见蛇虎",
+    "conclusion": "必多丧服，将来终于曹职",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "大凡占官，寅申为迁转之神，既为蛇虎所挠",
+    "conclusion": "故止于知录",
+    "marker": "故",
+    "type": "六亲"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "寅",
+    "lei": "虎",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "曹职",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "迁转之神",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·066",
+  "name": "",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 16,
+  "chains": [
+   {
+    "premise": "(武壬皆亥，夹克午",
+    "conclusion": "故主亥年而应。)男女皆因酒而败",
+    "marker": "故主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "(水死于卯，又卯上得戌作鬼",
+    "conclusion": "故卯年应。)戊午身丧",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "盖壬以申为父，父在墓，守白虎",
+    "conclusion": "主白蚁",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "日上午为目、为妻，火绝于亥",
+    "conclusion": "故不利",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "宅上见酉，壬败于酉，故为所败，又是破碎",
+    "conclusion": "主男女皆因酒败也",
+    "marker": "主",
+    "type": "神煞"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "戌",
+    "lei": "鬼",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "父",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "目",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "田园",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "屋",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·067",
+  "name": "",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 9,
+  "chains": [
+   {
+    "premise": "盖申来生壬为长生学堂",
+    "conclusion": "故壬子年发解，初巳作贵，为德神加学堂上，寅又加巳生贵生德，故终得前程",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "寅木未成船，而卯已成船",
+    "conclusion": "故主船场修造也",
+    "marker": "故主",
+    "type": "其他"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "贵人",
+    "lei": "财",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "壬",
+    "lei": "长生学堂",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "贵",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·068",
+  "name": "",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 8,
+  "chains": [
+   {
+    "premise": "司户今无正位",
+    "conclusion": "必主上司责罚，而别有迁改",
+    "marker": "必主",
+    "type": "其他"
+   },
+   {
+    "premise": "宅犯丁神，(以未中有丁，非旬丁也。)丁",
+    "conclusion": "主动，天空主空屋，宅亦主空",
+    "marker": "主",
+    "type": "天将"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "寅",
+    "lei": "今日鬼",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "今日阳刃杀",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "日鬼",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·069",
+  "name": "冯机宜丁亥生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 10,
+  "chains": [
+   {
+    "premise": "主此人",
+    "conclusion": "必见回避，前程未通",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "此乱首自下犯上，照管堂上孺人，既有大灾难治，皆自已命滞",
+    "conclusion": "所以如此",
+    "marker": "所以",
+    "type": "其他"
+   },
+   {
+    "premise": "宅上巳四，日上戌五，共九年",
+    "conclusion": "故主九年",
+    "marker": "故主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "九年后卯",
+    "conclusion": "主事，败而加丙墓上，即是败木，乃棺椁入墓，自然死也",
+    "marker": "主",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "卯",
+    "lei": "今日之母",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·070",
+  "name": "刘运干丁卯生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 14,
+  "chains": [
+   {
+    "premise": "此课身坐贵人，又来生日，三传又是木局，乙木生亥、旺卯、库未，自墓传旺，自旺传出亥",
+    "conclusion": "必由穷途渐至荣显，至侍从",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "末亥为天门，木局为持橐",
+    "conclusion": "故主侍郎也",
+    "marker": "故主",
+    "type": "课体"
+   },
+   {
+    "premise": "此课本",
+    "conclusion": "主父子同类，作六合，是纳兄弟之子",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "妻财空墓乘虎",
+    "conclusion": "主先丧偶",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "(爱圅曰：未财为前妻，乘白虎，阴神卯木克之",
+    "conclusion": "故丧也。天后为后妻，为长生而临日禄，故后妻财物旺也。)",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "子",
+    "lei": "子",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "天门",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "天后",
+    "lei": "妻",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "天后",
+    "lei": "后妻",
+    "type": "天将类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·071",
+  "name": "郑子云乙亥生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 5,
+  "chains": [
+   {
+    "premise": "初任临安教授，历太学秘书郎、司业、工刑二部，皆京官，因与秦桧一言不合而罢，盖乙禄在卯，迤逦归亥长生之地，自亥至卯，一带生旺，地支相连，禄神作太阳，朱缺作仪神，中末若不空，则五府之课，今既迤逦入近天门",
+    "conclusion": "故在朝八座也",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "子为紫微宫，亥为元穹宫，亦",
+    "conclusion": "主八座",
+    "marker": "主",
+    "type": "六亲"
+   },
+   {
+    "premise": "退入空亡",
+    "conclusion": "主晚年谪降矣",
+    "marker": "主",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "子",
+    "lei": "紫微宫",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "元穹宫",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·072",
+  "name": "",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 13,
+  "chains": [
+   {
+    "premise": "官星又作贵人，辛藏于戌",
+    "conclusion": "主庚戌年及第",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "及第后便丁父母服，服满赴任，见禄而终，(酉加空亡",
+    "conclusion": "故也。)止于五十四矣",
+    "marker": "故",
+    "type": "神煞"
+   },
+   {
+    "premise": "三传无子爻",
+    "conclusion": "故子不得力",
+    "marker": "故",
+    "type": "六亲"
+   },
+   {
+    "premise": "五十四者",
+    "conclusion": "乃午九、酉六，六、九五十四也",
+    "marker": "乃",
+    "type": "其他"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "丁",
+    "lei": "蛇",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "德神",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "官",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "生方作旬丁",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·073",
+  "name": "童七秀才壬中生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 19,
+  "chains": [
+   {
+    "premise": "盖丁以末传寅为学堂，末寅行年卯扶",
+    "conclusion": "故次年发解举",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "又日上常为职，初传临官天空",
+    "conclusion": "主声誉也，充解",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "中传妻宫，元武乘之，并光怪杀，申为猿，武为贼",
+    "conclusion": "故主猿迷",
+    "marker": "故主",
+    "type": "六亲"
+   },
+   {
+    "premise": "归妻家者，日止一丁，巳有两丁，支上、初传也，皆生于寅，宅为妻",
+    "conclusion": "故主人妻家，丁生于寅，故同居",
+    "marker": "故主",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "寅",
+    "lei": "学堂",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "猿",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·074",
+  "name": "陈主簿戊寅生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 11,
+  "chains": [
+   {
+    "premise": "(寅为驿马",
+    "conclusion": "故主经过，又是本命，所以主自蒙差出，而后经乡里也。)不然须是有甚不到处，不合日上退归本命入宅，为蛇所扰，又是共屋人之事",
+    "marker": "故主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "况在任只要升转，今初传是上降下，又自外回家",
+    "conclusion": "岂不倒退?又名顾祖，夫复何疑?况庚以寅为财，是争财也，本命作财，我与彼争也，蛇在寅，我被挠也",
+    "marker": "岂不",
+    "type": "六亲"
+   },
+   {
+    "premise": "未为眷属，天卒",
+    "conclusion": "主争，是因眷属而争也",
+    "marker": "主",
+    "type": "其他"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "寅",
+    "lei": "驿马",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "堂屋",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "退鳞",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "财",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "未",
+    "lei": "眷属",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·075",
+  "name": "徐通判戊午乍",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 15,
+  "chains": [
+   {
+    "premise": "若速移此坟，可保性命，否则戊午年",
+    "conclusion": "必见凶也",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "而徐有仆童吉，常持二十千贯以挟其",
+    "conclusion": "主，遂奸其妻，夫知竞不敢明责",
+    "marker": "主",
+    "type": "六亲"
+   },
+   {
+    "premise": "亥加辰，乃自取乱首，天空仆犯",
+    "conclusion": "主也",
+    "marker": "主",
+    "type": "天将"
+   },
+   {
+    "premise": "午为财，丑为鬼，丑鬼加午财上",
+    "conclusion": "故在任受财",
+    "marker": "故",
+    "type": "六亲"
+   },
+   {
+    "premise": "午到亥，六阴终始，仆奸其妻，壬乘午之",
+    "conclusion": "故也",
+    "marker": "故",
+    "type": "六亲"
+   },
+   {
+    "premise": "天后在上",
+    "conclusion": "主淫乱",
+    "marker": "主",
+    "type": "天将"
+   },
+   {
+    "premise": "午、亥俱自刑",
+    "conclusion": "故仆伤，下犯上，乱首也",
+    "marker": "故",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "午",
+    "lei": "财",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "鬼",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "父",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "父墓",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·076",
+  "name": "钱通判丁巳生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 10,
+  "chains": [
+   {
+    "premise": "无禄课，虽受通判",
+    "conclusion": "必不能食禄；",
+    "marker": "必",
+    "type": "课体"
+   },
+   {
+    "premise": "且申乃今日之庚，便是我身，身上有卯，卯中有乙，申乃今日之庚，墓丑",
+    "conclusion": "故乙丑年死",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "丑",
+    "lei": "死",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "今日之庚",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "今日之庚",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·077",
+  "name": "时监院庚午生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 17,
+  "chains": [
+   {
+    "premise": "监庙满后",
+    "conclusion": "必得京局监，多是药院之类",
+    "marker": "必",
+    "type": "课体"
+   },
+   {
+    "premise": "又是夜贵人",
+    "conclusion": "乃久困之贵人，今得用于朝，因此可以引之",
+    "marker": "乃",
+    "type": "天将"
+   },
+   {
+    "premise": "亥加申为元武，武",
+    "conclusion": "乃水神为池，元武又为堕水；",
+    "marker": "乃",
+    "type": "其他"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "子",
+    "lei": "汤所伤",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辛",
+    "lei": "墓神",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丁",
+    "lei": "动换",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "医药",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "天空",
+    "lei": "仆",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "元武",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "子息",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·078",
+  "name": "陈上舍戊辰生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 18,
+  "chains": [
+   {
+    "premise": "巳、戌、卯铸印格",
+    "conclusion": "乃贵人课；",
+    "marker": "乃",
+    "type": "天将"
+   },
+   {
+    "premise": "有坎山坟，白蚁遍食",
+    "conclusion": "所以前程不通",
+    "marker": "所以",
+    "type": "其他"
+   },
+   {
+    "premise": "墓加宅",
+    "conclusion": "所以引起孝服",
+    "marker": "所以",
+    "type": "干支生克"
+   },
+   {
+    "premise": "庚申年死者，行年又临巳宫",
+    "conclusion": "乃是绝地",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "巳与申合，合起墓绝",
+    "conclusion": "所以死也",
+    "marker": "所以",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "巳",
+    "lei": "绝",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辰",
+    "lei": "墓",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·079",
+  "name": "欧阳秘教戊寅生",
+  "zhanlei": "功名",
+  "label": "吉",
+  "n_sents": 11,
+  "chains": [
+   {
+    "premise": "己日得木局，助支克干，专",
+    "conclusion": "主用伤，今年不是功名之年",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "今行年上见马，马",
+    "conclusion": "主动在外，而破碎元武，又是不正神，已是不利；",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "不合本命又来刑了行年上巳，是刑了马与破碎，扛起元、合",
+    "conclusion": "故生起是非犯上",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "且白虎",
+    "conclusion": "主斗，天后主朋友相识乎?然若非年上驿马引出，或主内乱，不可专言外也",
+    "marker": "主",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§前程仕进03·080",
+  "name": "徐秀才丙子生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 11,
+  "chains": [
+   {
+    "premise": "兼破碎位太常乘鬼入宅，若无疾则有服，碎临空",
+    "conclusion": "主外服",
+    "marker": "主",
+    "type": "神煞"
+   },
+   {
+    "premise": "初墓加破上，虽空亦",
+    "conclusion": "主妇人有血气疾",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "盖甲寅加癸亥真闭口，元又乘之，又是一重闭口，寅主风，元亦主风，寅与亥合",
+    "conclusion": "故主瘫痪",
+    "marker": "故主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "辰戌丑未重重臃塞，又兼闭口，便是血气不调，所以",
+    "conclusion": "主此病",
+    "marker": "主",
+    "type": "其他"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§前程仕进03·081",
+  "name": "何知录丁丑生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 16,
+  "chains": [
+   {
+    "premise": "吾兄今虽授台州知录，然此任不能赴",
+    "conclusion": "必有阻也",
+    "marker": "必",
+    "type": "六亲"
+   },
+   {
+    "premise": "午为心",
+    "conclusion": "所以不得赴任，而遭心丧",
+    "marker": "所以",
+    "type": "其他"
+   },
+   {
+    "premise": "次任江西者，亥加戌，水受土制则为江，临西方",
+    "conclusion": "故言江西",
+    "marker": "故",
+    "type": "方位"
+   },
+   {
+    "premise": "刑法二字者，支、干皆自刑，更“法”字从“水”、从“去”，亥、子、丑顺流而去",
+    "conclusion": "故为“法”字",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "子为江湖，又在北方，初中皆官相连",
+    "conclusion": "故江西与湖南、北相连也",
+    "marker": "故",
+    "type": "方位"
+   },
+   {
+    "premise": "又四任近京者，丁生人丙日占，丙、丁皆寅为生地，父母之邦",
+    "conclusion": "故言京也",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "但与日远",
+    "conclusion": "故不言都下，而言京西",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "午",
+    "lei": "龙",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "心",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "江湖",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "生地",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "本命",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·082",
+  "name": "",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 16,
+  "chains": [
+   {
+    "premise": "酉作六合",
+    "conclusion": "主生莲花痔，因色中躁怒而得",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "(色者何?酉为色也。何言躁怒?酉克乙木，木肝，肝主怒，非色中躁怒而何?)正妻无子",
+    "conclusion": "必主偏生",
+    "marker": "必主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "(初巳子爻，加于子水之上作虎，虎，凶将，又遭下克，是以",
+    "conclusion": "主乎水厄。中戌，戌阳乙阴，正妻也，加子爻空亡上，乌能生子?奈又作子爻之墓何?)戌作雀，防妻有汤火厄",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "日上酉作合，酉为血，合为莲花，来克身",
+    "conclusion": "故主莲花痔",
+    "marker": "故主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "以巳为子息，巳",
+    "conclusion": "乃旬空，又作虎，中妻又临空，无子又妨妻",
+    "marker": "乃",
+    "type": "六亲"
+   },
+   {
+    "premise": "卯六戌五，五六三十",
+    "conclusion": "故更三十死",
+    "marker": "故",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "酉",
+    "lei": "六合",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "色也",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "虎",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "戌",
+    "lei": "雀",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "玄",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "合",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "血",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "子息",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "旬空",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "戌",
+    "lei": "财乘空",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·083",
+  "name": "盖判院辛未生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 10,
+  "chains": [
+   {
+    "premise": "只因损掘艮方父母坟",
+    "conclusion": "所以前程不通也",
+    "marker": "所以",
+    "type": "方位"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "申",
+    "lei": "虎入墓",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "未",
+    "lei": "常",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "父母",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·084",
+  "name": "应解元辛未生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 10,
+  "chains": [
+   {
+    "premise": "应疏狂，贪酒好色，家中姬妾最多，常携妓于庙宇行淫",
+    "conclusion": "故先生止之",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "今何以言神道也?寅、申为寺观，申",
+    "conclusion": "乃空亡，是空中神道来克我也",
+    "marker": "乃",
+    "type": "干支生克"
+   },
+   {
+    "premise": "日上亥，亥乃天门，乘勾，是勾追也",
+    "conclusion": "故主多凶",
+    "marker": "故主",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "申",
+    "lei": "寺观",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "空亡",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "天门",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·085",
+  "name": "",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 16,
+  "chains": [
+   {
+    "premise": "勾陈乘子息",
+    "conclusion": "乃是虚勾",
+    "marker": "乃",
+    "type": "天将"
+   },
+   {
+    "premise": "盖行年在酉，因青龙在辰",
+    "conclusion": "故也，从酉数至辰八位，故八年",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "丑作贵加酉，虎视课",
+    "conclusion": "主边郡兼武也",
+    "marker": "主",
+    "type": "课体"
+   },
+   {
+    "premise": "第三子受恩者，丑作贵人，季",
+    "conclusion": "乃三也",
+    "marker": "乃",
+    "type": "天将"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "丑",
+    "lei": "贵加酉",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "贵人",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·086",
+  "name": "",
+  "zhanlei": "功名",
+  "label": "吉",
+  "n_sents": 9,
+  "chains": [
+   {
+    "premise": "此课日上见辰",
+    "conclusion": "乃浊气所生，非秀丽也",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "长生陷入鬼地带绝，此不是及第课",
+    "conclusion": "主三番读书，四番废业，少学无成，头不应尾，五年后做东不成，又去做西",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "若辛巳日，辛生于巳，巳绝于亥，初临尚可，末又临绝，长生尚自受克绝，我何望生乎?即不可望生，却就辰之生，为失十得一",
+    "conclusion": "岂不费力哉?",
+    "marker": "岂不",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§前程仕进03·087",
+  "name": "毛主簿乙亥生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 11,
+  "chains": [
+   {
+    "premise": "日上酉为妻，雀",
+    "conclusion": "乃文书，妻之恩泽也",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "中官星又加破碎上，三传日辰遍地贵人",
+    "conclusion": "主簿在任，须多差使兼权摄",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "且九丑在宅",
+    "conclusion": "主淫乱",
+    "marker": "主",
+    "type": "其他"
+   },
+   {
+    "premise": "本命上丑见太阴",
+    "conclusion": "主贪色而死",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "末又见丑，加官星上",
+    "conclusion": "主在任死",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "毛巨富，受妻恩泽，缘此结纳四方",
+    "conclusion": "乃得此任",
+    "marker": "乃",
+    "type": "方位"
+   },
+   {
+    "premise": "乙卯年死，盖乙卯年上有巳，却会起巳、酉、丑，合起破碎、九丑、日上死神，兼与中亥相冲，冲起绝神，死与绝会",
+    "conclusion": "是以死也",
+    "marker": "是以",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "酉",
+    "lei": "妻",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·088",
+  "name": "王司法乙亥生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 20,
+  "chains": [
+   {
+    "premise": "只不合是旬末，为闭口",
+    "conclusion": "主父母闭口",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "父母加",
+    "conclusion": "主父母亡，自身闭口，仕途不通",
+    "marker": "主",
+    "type": "六亲"
+   },
+   {
+    "premise": "然既言七十四，又言七十八，何也?亥加寅，亥四，寅七",
+    "conclusion": "乃七十四也",
+    "marker": "乃",
+    "type": "其他"
+   },
+   {
+    "premise": "况甲与寅上两个亥",
+    "conclusion": "故云",
+    "marker": "故",
+    "type": "其他"
+   },
+   {
+    "premise": "又云，亥",
+    "conclusion": "乃父母爻，作真闭口，作太常；",
+    "marker": "乃",
+    "type": "天将"
+   },
+   {
+    "premise": "空上乘空",
+    "conclusion": "故终身不能守土",
+    "marker": "故",
+    "type": "其他"
+   },
+   {
+    "premise": "亥乃天门，又是长生学堂，中末都是",
+    "conclusion": "所以人学馆也",
+    "marker": "所以",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "亥",
+    "lei": "本命",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辰",
+    "lei": "锹锄杀",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "父母爻",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "天门",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·089",
+  "name": "赵监务丁丑生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 13,
+  "chains": [
+   {
+    "premise": "日上官星作贵，会火局，金被火逼，行年又来赶",
+    "conclusion": "必然动身",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "宅上丁神已动了，临交代之时",
+    "conclusion": "必有阻节",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "盖平人怕官鬼劈头来克",
+    "conclusion": "主有官事丧祸",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "辛长生于巳，巳为父，巳加酉上见蛇，酉为酒，蛇挠之",
+    "conclusion": "所以为酒伤",
+    "marker": "所以",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "巳",
+    "lei": "父",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "酒",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·090",
+  "name": "赵知县丁巳生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 17,
+  "chains": [
+   {
+    "premise": "初是死地，午为心，见天空",
+    "conclusion": "主心问恍惚",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "乙以丑为妻，丑为产神，加今日六害上",
+    "conclusion": "故主产厄",
+    "marker": "故主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "末神七，申乃日鬼，入于深墓中",
+    "conclusion": "故能谮而不能脱",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "子作贵加巳，子为漕，巳为德",
+    "conclusion": "主姓卢运使解纷也",
+    "marker": "主",
+    "type": "六亲"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "寅",
+    "lei": "太阴",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "心",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "太阴",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "曹职吏人",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "子",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "妻",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "产神",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "日鬼",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "贵加巳",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "漕",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "德",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·091",
+  "name": "韩省干乙亥生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 11,
+  "chains": [
+   {
+    "premise": "支干夹定三传，更三、四课及初传俱是鬼，有官人欲赴任，为催官符，上任",
+    "conclusion": "必在三月尽，四月初",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "奈何末禄却空亡，上任不久",
+    "conclusion": "必主尊堂服动，子又病",
+    "marker": "必主",
+    "type": "神煞"
+   },
+   {
+    "premise": "只不合日辰夹住，又空亡临身，太阴乘之",
+    "conclusion": "所以丧母",
+    "marker": "所以",
+    "type": "应期数字"
+   },
+   {
+    "premise": "(干支乘天罗地网",
+    "conclusion": "主丁忧。)庚以子为子息，又加子息亥上，为虎所逼，幸不刑伤，所以不死只病也",
+    "marker": "主",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "子",
+    "lei": "子息",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·092",
+  "name": "伊知县丙寅生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 20,
+  "chains": [
+   {
+    "premise": "若不节欲",
+    "conclusion": "必入泉乡",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "先生曰：此乃醉饱之后，郁气积聚，五脏走作",
+    "conclusion": "故呕逆也",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "盖癸上见酉作天空，干支皆败于酉，阴阳俱败",
+    "conclusion": "故主女色男色，酉为色故也",
+    "marker": "故主",
+    "type": "天将"
+   },
+   {
+    "premise": "癸见酉为酒，天空",
+    "conclusion": "主吐逆，故渐不纳酒",
+    "marker": "主",
+    "type": "天将"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "酉",
+    "lei": "天空",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "色故也",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "酒",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "丁神而临行年",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "灶",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "太阴",
+    "lei": "阴私",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "婢",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·093",
+  "name": "童巡检丁卯生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 11,
+  "chains": [
+   {
+    "premise": "若止一件",
+    "conclusion": "必有大灾，只愿寿永也，是大幸，不可别图升擢也",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "盖火生四土四勾，岂不脱气?丑为旧事，又为今日子孙勾",
+    "conclusion": "主后必被诸事脱耗财物也",
+    "marker": "主",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "丑",
+    "lei": "旧事",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·094",
+  "name": "应汝言癸未生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 10,
+  "chains": [
+   {
+    "premise": "身宅、初传皆财，中传上下皆财，财多宜以财营运",
+    "conclusion": "必因妻财起家，须把稳不可狂图",
+    "marker": "必",
+    "type": "六亲"
+   },
+   {
+    "premise": "蛇主非横",
+    "conclusion": "所以自婢仆生出事来，因此破财，不意而死",
+    "marker": "所以",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§前程仕进03·095",
+  "name": "姜子安壬申年",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 16,
+  "chains": [
+   {
+    "premise": "况初中空亡，惟末撞在日之后，作败神",
+    "conclusion": "主酒色伤身夭寿",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "(爱圅曰：日干之后也。己日在未，申为前，而午为后，酉加午",
+    "conclusion": "故曰在日后也。)夫太常到酉上败，是进败也；",
+    "marker": "故曰",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "子",
+    "lei": "常",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "财",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "前",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "后",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "太阴",
+    "lei": "酉",
+    "type": "天将类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·096",
+  "name": "童知丞乙亥生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 20,
+  "chains": [
+   {
+    "premise": "本路除一监司，合",
+    "conclusion": "主回避",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "童曰：何等贵人?曰：",
+    "conclusion": "必提刑与知丞是亲，来此得请职，因得周旋文字改官",
+    "marker": "必",
+    "type": "干支生克"
+   },
+   {
+    "premise": "初六害，勾亦辰",
+    "conclusion": "所以滞许多时",
+    "marker": "所以",
+    "type": "其他"
+   },
+   {
+    "premise": "末禄在马上",
+    "conclusion": "主坑冶干官之属",
+    "marker": "主",
+    "type": "六亲"
+   },
+   {
+    "premise": "盖日上贵人长生",
+    "conclusion": "乃尊长父母属；",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "行年丑作虎，丑",
+    "conclusion": "乃丁神，虎乘丁是极动；",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "中马巳，丑合起，其势",
+    "conclusion": "必动",
+    "marker": "必",
+    "type": "干支生克"
+   },
+   {
+    "premise": "巳为炉冶，午为雀并之",
+    "conclusion": "故文书职事在炉冶中",
+    "marker": "故",
+    "type": "其他"
+   },
+   {
+    "premise": "(日上贵人长生，故得此周旋文字改官",
+    "conclusion": "必竟空亡脱气，所以此任合当回避。)",
+    "marker": "必",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "午",
+    "lei": "炉",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "六合",
+    "lei": "模范",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "虎",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "丁神",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丁",
+    "lei": "极动",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辰",
+    "lei": "勾",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "炉冶",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "雀并之",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·097",
+  "name": "赵主簿丙子生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 12,
+  "chains": [
+   {
+    "premise": "两次二任岳庙，后虽授美差，必不得赴而丁忧，服满更授差遣，下梢丧妻，以妾为",
+    "conclusion": "主，贪酒中风而死",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "一味投绝，又自日传夜",
+    "conclusion": "所以如此",
+    "marker": "所以",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "申",
+    "lei": "太阴",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "神佛",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "庙",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·098",
+  "name": "",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 8,
+  "chains": [],
+  "leixiang": [
+   {
+    "xiang": "寅",
+    "lei": "蛇",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·099",
+  "name": "",
+  "zhanlei": "功名",
+  "label": "吉",
+  "n_sents": 10,
+  "chains": [
+   {
+    "premise": "登三天",
+    "conclusion": "主有挠",
+    "marker": "主",
+    "type": "其他"
+   },
+   {
+    "premise": "寅作龙入宅，明年三月",
+    "conclusion": "必转官",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "寅作龙入宅，寅为天吏",
+    "conclusion": "故主升转",
+    "marker": "故主",
+    "type": "其他"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "午",
+    "lei": "蛇",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "后",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "龙入宅",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "天后也",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "龙入宅",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "天吏",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·100",
+  "name": "姜伯达丁卯生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 14,
+  "chains": [
+   {
+    "premise": "中亥为同类，临屋上",
+    "conclusion": "主官讼争产",
+    "marker": "主",
+    "type": "六亲"
+   },
+   {
+    "premise": "(爱圅曰：勾陈",
+    "conclusion": "主争也。此惟仪贵则乘勾，若作亥将午时，则用昼贵，亥乃乘天空，何从而断其官讼争屋乎?)末墓作天后，主女人血气之灾",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "自身随传入墓",
+    "conclusion": "必是公姑乾亥山之坟内，有泥水侵棺，走兽人内为穴，所以前程不通",
+    "marker": "必",
+    "type": "干支生克"
+   },
+   {
+    "premise": "若不动移",
+    "conclusion": "必然丧身也",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "遂移公婆之坟，启攒视之，泥土淤塞，除泥改丧，后",
+    "conclusion": "乃安宁",
+    "marker": "乃",
+    "type": "其他"
+   },
+   {
+    "premise": "盖午受癸克，走回本家，又受亥克，虽虎贲之勇，亦不能当",
+    "conclusion": "所以见诸般不利",
+    "marker": "所以",
+    "type": "干支生克"
+   },
+   {
+    "premise": "午为目、为屋、为妻",
+    "conclusion": "故皆不安也",
+    "marker": "故",
+    "type": "六亲"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "亥",
+    "lei": "同类",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "乘天空",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "目",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·101",
+  "name": "",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 9,
+  "chains": [
+   {
+    "premise": "此课德绝禄丧，妇人",
+    "conclusion": "主家，干支尽伤，病符临身，不久主瘫痪风疾之忧，生气作蛇入宅，主生男子",
+    "marker": "主",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§前程仕进03·102",
+  "name": "",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 18,
+  "chains": [
+   {
+    "premise": "身上是昼贵作天空",
+    "conclusion": "主帘幕贵人驰声于我，我遂得功名也",
+    "marker": "主",
+    "type": "天将"
+   },
+   {
+    "premise": "须三换名字，及换卷子，并令人代之，此",
+    "conclusion": "所以不正中也",
+    "marker": "所以",
+    "type": "六亲"
+   },
+   {
+    "premise": "甲辰旬十日，皆是魁星，此",
+    "conclusion": "乃为魁首也，但不知何以有",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "辰土生于申",
+    "conclusion": "乃真库也",
+    "marker": "乃",
+    "type": "干支生克"
+   },
+   {
+    "premise": "天罡为鱼盐之物",
+    "conclusion": "故盐务兼煎盐，故此实大验也",
+    "marker": "故",
+    "type": "其他"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "辰",
+    "lei": "库",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§前程仕进03·103",
+  "name": "刘干运丙寅生",
+  "zhanlei": "功名",
+  "label": "凶",
+  "n_sents": 6,
+  "chains": [],
+  "leixiang": [
+   {
+    "xiang": "卯",
+    "lei": "官星",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "长生学堂",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§终身04·104",
+  "name": "何三公丙午生",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 11,
+  "chains": [
+   {
+    "premise": "六月死神在戌，作蛇",
+    "conclusion": "主有伏尸；",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "中传虽有生气，受克，化为鬼",
+    "conclusion": "是以不利",
+    "marker": "是以",
+    "type": "干支生克"
+   },
+   {
+    "premise": "考何三公宅内，原是旧冢，闻先生之言，乃掘之，共掘得十四穴，皆无",
+    "conclusion": "主之墓",
+    "marker": "主",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§终身04·105",
+  "name": "袁知镇癸酉命",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 10,
+  "chains": [
+   {
+    "premise": "(丑为父母类神，贵人加之更的",
+    "conclusion": "故曰享父之福。)末传酉为日败，又是本命，而加于亥，主自身自败坏矣",
+    "marker": "故曰",
+    "type": "应期数字"
+   },
+   {
+    "premise": "中水、末酉",
+    "conclusion": "必因酒色也",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "又乘阴常，丑土归西北而倾",
+    "conclusion": "必因酒色而成痨病",
+    "marker": "必",
+    "type": "方位"
+   },
+   {
+    "premise": "亥四、酉六",
+    "conclusion": "主四十六岁亡",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "后又因有服尊长为",
+    "conclusion": "主，凡事尽决于他",
+    "marker": "主",
+    "type": "其他"
+   },
+   {
+    "premise": "盖以宅上见申，戊土生于申",
+    "conclusion": "故为有服尊长也",
+    "marker": "故",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "丑",
+    "lei": "父母类神",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "日败",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§终身04·106",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 19,
+  "chains": [
+   {
+    "premise": "酉作贵，登天门",
+    "conclusion": "乃夜贵用事，又是不明",
+    "marker": "乃",
+    "type": "其他"
+   },
+   {
+    "premise": "行年上太阴，门户亦",
+    "conclusion": "主分破",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "七十岁",
+    "conclusion": "必死也",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "何以见外人有服入分?宅",
+    "conclusion": "主破碎，作事乘马故也",
+    "marker": "主",
+    "type": "神煞"
+   },
+   {
+    "premise": "太常己未土人本家",
+    "conclusion": "乃家人也",
+    "marker": "乃",
+    "type": "天将"
+   },
+   {
+    "premise": "又自阳贵人上发传，终历阴贵人，末又归我身上，依旧支破，当",
+    "conclusion": "主炉灶败坏",
+    "marker": "主",
+    "type": "天将"
+   },
+   {
+    "premise": "巳之本家，又见卯作天空",
+    "conclusion": "主门户分破",
+    "marker": "主",
+    "type": "天将"
+   },
+   {
+    "premise": "此事戊申何",
+    "conclusion": "故不发，至己酉四月方发耶?盖戊申阳年，虽六阴全而不能举，己酉阴年故发也",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "酉",
+    "lei": "贵",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "太阴",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "太阴",
+    "lei": "酉",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "未",
+    "lei": "太阴入酉",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "天空",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§终身04·107",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 14,
+  "chains": [
+   {
+    "premise": "盖身宅皆居西北极地，迤逦出东南来，将来",
+    "conclusion": "必做富人",
+    "marker": "必",
+    "type": "方位"
+   },
+   {
+    "premise": "长生入财位，子先死，孙送终矣，长生能害子孙",
+    "conclusion": "故也",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "初辰为鬼，又临寅地，中午为财，末申为长生",
+    "conclusion": "故有财有寿，而难为子息也",
+    "marker": "故",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "寅",
+    "lei": "子息空亡",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辰",
+    "lei": "鬼",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "财",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "长生",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "孙",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§终身04·108",
+  "name": "傅清卿壬申年",
+  "zhanlei": "其他",
+  "label": "吉",
+  "n_sents": 4,
+  "chains": [
+   {
+    "premise": "自有随身库，何必求财?傅曰：随身库所",
+    "conclusion": "主何也?曰：只利书会",
+    "marker": "主",
+    "type": "六亲"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§终身04·109",
+  "name": "叶七秀才丁卯生",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 20,
+  "chains": [
+   {
+    "premise": "你堂上所葬",
+    "conclusion": "乃丑加寅，艮山地也",
+    "marker": "乃",
+    "type": "其他"
+   },
+   {
+    "premise": "庚上有一石山，其形甚丑",
+    "conclusion": "必主人腰钱而死",
+    "marker": "必主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "你因妻起家(妻财作贵之",
+    "conclusion": "故)，不是六年，是七年丧妻，自此退耗",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "一则男女债，二",
+    "conclusion": "乃子不成器，三有水坏田",
+    "marker": "乃",
+    "type": "六亲"
+   },
+   {
+    "premise": "叶母艮山坤向(丑上乘天后",
+    "conclusion": "故主乎母)，水从胁下流去西北，庚上有一山，生来皆是怪石",
+    "marker": "故主",
+    "type": "方位"
+   },
+   {
+    "premise": "盖丑土生辛金",
+    "conclusion": "故为母",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "辛以寅为妻",
+    "conclusion": "故因妻起家",
+    "marker": "故",
+    "type": "六亲"
+   },
+   {
+    "premise": "寅艮方，丑加之",
+    "conclusion": "故艮山坟地",
+    "marker": "故",
+    "type": "方位"
+   },
+   {
+    "premise": "金绝于寅",
+    "conclusion": "故主妻死",
+    "marker": "故主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "传见子亥，金水相生，传见退脱",
+    "conclusion": "是以退也",
+    "marker": "是以",
+    "type": "干支生克"
+   },
+   {
+    "premise": "亥四、子九，四九三十六，亥为肾，元武",
+    "conclusion": "主疝气，金死于子，故十三年疝气而亡",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "(沈曰：丑为辛墓，又是父母，足以",
+    "conclusion": "主堂上坟。然不发用，不可乱断。水便陡泻，自两北上出去者，子亥逆入西北，是以言陡泻也",
+    "marker": "主",
+    "type": "方位"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "寅",
+    "lei": "妻",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "子",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "女",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "肾",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "辛墓",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§终身04·110",
+  "name": "傅大禄己巳生",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 5,
+  "chains": [
+   {
+    "premise": "此课亥来生日，是官星垂顾，太阴神佑之象，但羊刃作雀入宅",
+    "conclusion": "乃本家之朱雀，恐目下本家有事起，初虎作鬼，亡祟暗害，是家中人所为，从此遂自生事，末寅加巳，远则四年，近则四月，被事牵缠",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "傅后与弟不足，挟恨告其子违法事(巳",
+    "conclusion": "乃子也)，第四年八月配英州死",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "盖第四年太岁在子，子上得酉，乃己酉太岁得助",
+    "conclusion": "故为祸百端，八月者复助酉也",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "巳",
+    "lei": "子也",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§终身04·111",
+  "name": "王知县己末生",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 20,
+  "chains": [
+   {
+    "premise": "日上乘破碎，作鬼克身",
+    "conclusion": "主与阴人兴讼，官位不明",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "来年或八月事起",
+    "conclusion": "必相扰",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "更老阴人因一子不成器，用度不足，心中怏怏，但难开口，四月十一日",
+    "conclusion": "必进人口，来年己酉太岁防谪为曹属也",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "盖徐长子",
+    "conclusion": "乃义子，与次子争分，次子乃亲子也",
+    "marker": "乃",
+    "type": "六亲"
+   },
+   {
+    "premise": "王受贿判与长子",
+    "conclusion": "故至此",
+    "marker": "故",
+    "type": "六亲"
+   },
+   {
+    "premise": "盖阳日阴官作雀",
+    "conclusion": "故本身有讼，官位不明",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "酉为兑，兑为泽",
+    "conclusion": "故恩泽受财",
+    "marker": "故",
+    "type": "六亲"
+   },
+   {
+    "premise": "酉加寅上",
+    "conclusion": "故曰曹属",
+    "marker": "故曰",
+    "type": "其他"
+   },
+   {
+    "premise": "庚戌年死者，巳加戌，乃甲申旬末",
+    "conclusion": "故闭口不能言也",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "庚戌行年在巳之本宫，为子所克，反加戌又入墓，又是极末",
+    "conclusion": "故闭口而死也",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "盖巳为闭口，乘太阴",
+    "conclusion": "故怏怏不言也",
+    "marker": "故",
+    "type": "天将"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "子",
+    "lei": "义子",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "亲子也",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "兑",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "戌",
+    "lei": "财",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "闭口",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§终身04·112",
+  "name": "何子重辛酉生",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 5,
+  "chains": [
+   {
+    "premise": "巳四加亥七",
+    "conclusion": "乃十一年也",
+    "marker": "乃",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§终身04·113",
+  "name": "姜子昭庚午生",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 11,
+  "chains": [
+   {
+    "premise": "支来加干败，又作夭后，一",
+    "conclusion": "主不能读书，二不得妻子力，三宅气衰败，走失财物，四坟中满棺是水，又有泥并白蚁",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "武、亥加血上，亥本宫被丑克",
+    "conclusion": "故反胃",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "丑作虎",
+    "conclusion": "故小肠痛，大肠结也",
+    "marker": "故",
+    "type": "其他"
+   },
+   {
+    "premise": "巳作六合，绝处入庙锁定，兼六阴相继",
+    "conclusion": "所以不通，传绝而死",
+    "marker": "所以",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "酉",
+    "lei": "血",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "虎",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "六合",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§终身04·114",
+  "name": "顾孔目甲子生",
+  "zhanlei": "其他",
+  "label": "吉",
+  "n_sents": 8,
+  "chains": [
+   {
+    "premise": "己去就禄，便就禄上作初传，若贵人相委财赋，须是仔细，不得走作财物，及非理饮酒，与亲戚妇人交往，皆",
+    "conclusion": "主杖责",
+    "marker": "主",
+    "type": "天将"
+   },
+   {
+    "premise": "盖己禄在午，刃在未作蛇",
+    "conclusion": "主非横得罪；",
+    "marker": "主",
+    "type": "其他"
+   },
+   {
+    "premise": "未为眷属、酒浆，蛇",
+    "conclusion": "主棒，故见之，且不合在初传也",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "盖土生金，申又作贵，为日长生，中、末皆是",
+    "conclusion": "故以此终",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "未",
+    "lei": "蛇",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "未",
+    "lei": "眷属",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§终身04·115",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 14,
+  "chains": [
+   {
+    "premise": "日后宅子及财物皆为人所有，当",
+    "conclusion": "主为阴人所坏",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "丑是空亡，中间家资",
+    "conclusion": "必丧尽",
+    "marker": "必",
+    "type": "神煞"
+   },
+   {
+    "premise": "人问其",
+    "conclusion": "故，先生曰：予与此人占时，乃宣和三年十二月二十七日，十二月十一日立春，则作壬寅岁占也(爱圅以历法推之，果不错误，益知非后人之托名也。)占人二十五岁，行年在寅见午，午为日之禄神，并干支旺相，故无恙",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "是岁行年在巳，巳上酉，乃破碎，雀乃文书，是",
+    "conclusion": "必阴贵人文书，兜罗卷尽也",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "(爱圅曰：靖康元年，岁在丙午，从丙午逆计之，则三十岁",
+    "conclusion": "乃系丁丑年生也。他书作戊寅生者误也。今爱圅改正。)其母守寡",
+    "marker": "乃",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "酉",
+    "lei": "财",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "太阴",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "空亡",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "宅神",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "日之禄神",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§终身04·116",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 12,
+  "chains": [
+   {
+    "premise": "巳本蛇属，与蛇夹一墓在中间，其人腹必有疾病，戌土",
+    "conclusion": "主块积，答曰：腹中果有一块",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "先生曰：原因感风起，因人丧家，遇食不化，遂成痞块，不医命",
+    "conclusion": "必不久",
+    "marker": "必",
+    "type": "干支生克"
+   },
+   {
+    "premise": "问：何",
+    "conclusion": "故?曰：初传卯上见申作六合，合亦是卯，两卯夹一申，卯为风，申为肺，风传人肺脏也",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "戌既为卯所克，走来墓于干上，二巳又夹一墓，墓",
+    "conclusion": "乃坚牢",
+    "marker": "乃",
+    "type": "干支生克"
+   },
+   {
+    "premise": "盖丙即巳，行年到子，巳受官鬼克，兼作天空",
+    "conclusion": "必主虚诈财物",
+    "marker": "必主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "丙禄在巳，禄即财，子水为地盘之鬼，天空克耗之",
+    "conclusion": "故也",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "八月火死土旺，前面便是戌，戊是墓，九月建戌",
+    "conclusion": "所以过不得也",
+    "marker": "所以",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "申",
+    "lei": "六合",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "风",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "肺",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "申金所克",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "风",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丙",
+    "lei": "巳",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "戊",
+    "lei": "墓",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§终身04·117",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 7,
+  "chains": [
+   {
+    "premise": "申作合，加宅发用",
+    "conclusion": "主迁宅改宅",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "午为宅也",
+    "conclusion": "主二娶妻",
+    "marker": "主",
+    "type": "六亲"
+   },
+   {
+    "premise": "戌加申乘龙",
+    "conclusion": "主儿得解",
+    "marker": "主",
+    "type": "其他"
+   },
+   {
+    "premise": "子加戌作虎，明年",
+    "conclusion": "主死小口二人",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "此课日上见类神",
+    "conclusion": "故得田也",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "申",
+    "lei": "合",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "宅也",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "戌",
+    "lei": "虎",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "壬",
+    "lei": "常",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§终身04·118",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 13,
+  "chains": [
+   {
+    "premise": "承局服侍通判，岂可得犯上之课?此课支加干、克干，名上门乱首课，传得曲直，又名失友",
+    "conclusion": "主日后因犯官长，断勒归家",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "至秋木囚死，则事乖张，便",
+    "conclusion": "主争竞；",
+    "marker": "主",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§终身04·119",
+  "name": "韩监仓修职癸酉生",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 9,
+  "chains": [
+   {
+    "premise": "支内干外，支刑日上神",
+    "conclusion": "主孝服",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "(爱圅曰：太常破碎加干!亦",
+    "conclusion": "主服。)虽是空亡不死人，亦多是非",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "现在子息临宅，加于犬地而见虎，若见鼠咬衣服，小儿",
+    "conclusion": "必有大灾",
+    "marker": "必",
+    "type": "六亲"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§流年05·120",
+  "name": "刘监仓庚午生",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 12,
+  "chains": [
+   {
+    "premise": "盖午为仓库火鬼，来乘克身",
+    "conclusion": "故应",
+    "marker": "故",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "午",
+    "lei": "仓库火鬼",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§流年05·121",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 7,
+  "chains": [
+   {
+    "premise": "其人当年三月丧妻，十一月再娶",
+    "conclusion": "乃客人之妻",
+    "marker": "乃",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§婚姻06·122",
+  "name": "",
+  "zhanlei": "婚姻",
+  "label": "凶",
+  "n_sents": 13,
+  "chains": [
+   {
+    "premise": "此课占婚，何",
+    "conclusion": "必有媒?私情久已通矣",
+    "marker": "必",
+    "type": "课体"
+   },
+   {
+    "premise": "血支在卯，必非女身",
+    "conclusion": "主暗有退子",
+    "marker": "主",
+    "type": "六亲"
+   },
+   {
+    "premise": "且男以克干为嗣，女以干生为子(爱圅曰：此二句",
+    "conclusion": "乃禄命家之言，今亦用之，何也?)一土生二金，是退子也",
+    "marker": "乃",
+    "type": "干支生克"
+   },
+   {
+    "premise": "女命乘男，男年乘女，婚姻岂有不成之理?酉",
+    "conclusion": "乃婢，六合加之，为和合",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "且门来加户，户又加门，是",
+    "conclusion": "主门户重叠",
+    "marker": "主",
+    "type": "其他"
+   },
+   {
+    "premise": "卯为宅，上见酉",
+    "conclusion": "故云小门在宅也",
+    "marker": "故",
+    "type": "其他"
+   },
+   {
+    "premise": "凡占婚，遇此等课",
+    "conclusion": "必然之应",
+    "marker": "必",
+    "type": "课体"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "子",
+    "lei": "脚",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "婢",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "引无疑",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "宅",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§婚姻06·123",
+  "name": "孔七公戊午生",
+  "zhanlei": "婚姻",
+  "label": "凶",
+  "n_sents": 13,
+  "chains": [
+   {
+    "premise": "今日上方出墓寻生，其亲",
+    "conclusion": "必成也",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "盖癸日见初传申长生",
+    "conclusion": "主轻盈；",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "但亥乘丁临长生之上，又乘常",
+    "conclusion": "故主服动",
+    "marker": "故主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "末寅为子孙，同天后加木之长生丁亥上",
+    "conclusion": "所以成亲即有子息",
+    "marker": "所以",
+    "type": "干支生克"
+   },
+   {
+    "premise": "巳与申合，寅与亥合",
+    "conclusion": "所以无不成就",
+    "marker": "所以",
+    "type": "干支生克"
+   },
+   {
+    "premise": "四课三传无空亡",
+    "conclusion": "所以终身享福也",
+    "marker": "所以",
+    "type": "神煞"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "寅",
+    "lei": "子孙",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§婚姻06·124",
+  "name": "李二伯乙酉生",
+  "zhanlei": "婚姻",
+  "label": "凶",
+  "n_sents": 5,
+  "chains": [
+   {
+    "premise": "盖酉作勾",
+    "conclusion": "故也",
+    "marker": "故",
+    "type": "其他"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "子",
+    "lei": "蛇",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "勾故也",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§胎产子息07·125",
+  "name": "",
+  "zhanlei": "胎产",
+  "label": "平",
+  "n_sents": 11,
+  "chains": [
+   {
+    "premise": "干支不分，人宅不辨",
+    "conclusion": "故不可晓",
+    "marker": "故",
+    "type": "其他"
+   },
+   {
+    "premise": "且庚为子，申为母，见酉为阳刃",
+    "conclusion": "乃面前阳刃也，太阴兼之尤甚；",
+    "marker": "乃",
+    "type": "天将"
+   },
+   {
+    "premise": "申母以酉为破碎",
+    "conclusion": "乃面前破碎也",
+    "marker": "乃",
+    "type": "神煞"
+   },
+   {
+    "premise": "夫干支、中末，俱见阳刃破碎，又是自刑自害",
+    "conclusion": "必不利于子母也",
+    "marker": "必",
+    "type": "干支生克"
+   },
+   {
+    "premise": "今虽得免，若不戒欲",
+    "conclusion": "必为他害",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "盖干支见酉，皆阳刃破碎自刑",
+    "conclusion": "故先害身，却来害母耳",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "于是白生与妾分居",
+    "conclusion": "乃得免",
+    "marker": "乃",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "庚",
+    "lei": "子",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "母",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "阳刃",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "破碎",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "祟耳",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§胎产子息07·126",
+  "name": "",
+  "zhanlei": "胎产",
+  "label": "凶",
+  "n_sents": 11,
+  "chains": [
+   {
+    "premise": "未临申上",
+    "conclusion": "乃是长生，可招一子",
+    "marker": "乃",
+    "type": "干支生克"
+   },
+   {
+    "premise": "除非移了艮山坟墓，不克妻宫，庶几丙火生未土，土长生于申，子息",
+    "conclusion": "所以存住也",
+    "marker": "所以",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "辰",
+    "lei": "青龙",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "未",
+    "lei": "朱雀",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "坟墓",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§胎产子息07·127",
+  "name": "何解元癸酉生",
+  "zhanlei": "胎产",
+  "label": "凶",
+  "n_sents": 13,
+  "chains": [
+   {
+    "premise": "本身有肠风痔病",
+    "conclusion": "乃好色得之",
+    "marker": "乃",
+    "type": "其他"
+   },
+   {
+    "premise": "三传日辰俱见酉",
+    "conclusion": "故主五女也",
+    "marker": "故主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "酉来合丑，而卯相冲，上见元武盗耗",
+    "conclusion": "所以不成胎也",
+    "marker": "所以",
+    "type": "干支生克"
+   },
+   {
+    "premise": "酉金为大肠，又酉为血",
+    "conclusion": "故为肠风脏毒也",
+    "marker": "故",
+    "type": "其他"
+   },
+   {
+    "premise": "酉为脱气，又为色欲，六合为女",
+    "conclusion": "故主好色也",
+    "marker": "故主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "酉六、未八",
+    "conclusion": "乃六、八四十八也",
+    "marker": "乃",
+    "type": "其他"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "酉",
+    "lei": "六合",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "兑",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "血",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "脱气",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "六合",
+    "lei": "女",
+    "type": "天将类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§胎产子息07·128",
+  "name": "季官人己卯生",
+  "zhanlei": "胎产",
+  "label": "吉",
+  "n_sents": 8,
+  "chains": [
+   {
+    "premise": "支干上午与未合，合起天网，妻卯加鬼上，必无亲子，末子爻加妻爻上作天空，天空本家戌，即今日之辛，是己与妻皆空，何能有子?子本空，却阴上酉作元武",
+    "conclusion": "主妾生子，又非己出，因奸而成也",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "因酉加子",
+    "conclusion": "故子年乘元武是偷合",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "酉",
+    "lei": "元武",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§胎产子息07·129",
+  "name": "郭彦和壬午生",
+  "zhanlei": "胎产",
+  "label": "吉",
+  "n_sents": 16,
+  "chains": [
+   {
+    "premise": "三传干支，皆是贵人，此子恐日后",
+    "conclusion": "必不服，而心有回家之意",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "酉作贵人，内中有丁，终",
+    "conclusion": "主动",
+    "marker": "主",
+    "type": "天将"
+   },
+   {
+    "premise": "宅上又作中传，丁绝于亥，且权住脚，似乎尊阃不看顾他，惟有老阴人抚恤，终老阴人之世，他",
+    "conclusion": "必去也",
+    "marker": "必",
+    "type": "干支生克"
+   },
+   {
+    "premise": "三传贵人太多",
+    "conclusion": "所以贵多不贵，两头不得也",
+    "marker": "所以",
+    "type": "天将"
+   },
+   {
+    "premise": "丁以酉为妻，妻后自有子",
+    "conclusion": "故不看管他",
+    "marker": "故",
+    "type": "六亲"
+   },
+   {
+    "premise": "(酉乃丁之妻，亥乃酉之子，亥加酉上",
+    "conclusion": "故曰妻有子。三十二岁行年到酉，乃应也。)然宅中有上穹像，不合触秽，所以缺子",
+    "marker": "故曰",
+    "type": "应期数字"
+   },
+   {
+    "premise": "又兼主山不合造猪圈，辱主气",
+    "conclusion": "故不得子也",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "果有乾、亥山来近相冲，正是右胁下",
+    "conclusion": "主妇人堕胎，故无子",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "盖酉为贵人，一则支来就干",
+    "conclusion": "主子显父母；",
+    "marker": "主",
+    "type": "天将"
+   },
+   {
+    "premise": "二则遍地乃贵人，今亥为元穹",
+    "conclusion": "主触秽；",
+    "marker": "主",
+    "type": "天将"
+   },
+   {
+    "premise": "三乃鬼入宅，是",
+    "conclusion": "主山来处不合猪圈污秽，乃太阴为鬼也",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "丑为墓，加亥及乾，丑乃丁之子孙，作土犯亥",
+    "conclusion": "故墓不利",
+    "marker": "故",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "酉",
+    "lei": "贵人",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "妻",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "丁之妻",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "酉之子",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "贵人",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "元穹",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "太阴",
+    "lei": "鬼也",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "墓",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "丁之子孙",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§胎产子息07·130",
+  "name": "",
+  "zhanlei": "胎产",
+  "label": "吉",
+  "n_sents": 2,
+  "chains": [],
+  "leixiang": [
+   {
+    "xiang": "巳",
+    "lei": "德神",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辰",
+    "lei": "天喜",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "水土长生",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§胎产子息07·131",
+  "name": "",
+  "zhanlei": "胎产",
+  "label": "凶",
+  "n_sents": 3,
+  "chains": [
+   {
+    "premise": "经曰：“支是母兮干是儿”，今丑克后，母发用，传归凶将，虎乘墓入内门",
+    "conclusion": "故母死",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "子存者，干是儿，乘寅为少阳作雀，乙日木旺火相，日干得旺相之气",
+    "conclusion": "故儿存也",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "酉",
+    "lei": "内门",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "前门",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "少阳作雀",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§财产08·132",
+  "name": "童监税庚午生",
+  "zhanlei": "求财",
+  "label": "吉",
+  "n_sents": 18,
+  "chains": [
+   {
+    "premise": "此课日上见财",
+    "conclusion": "主进田庄",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "后却得众财",
+    "conclusion": "乃是服满人家得来",
+    "marker": "乃",
+    "type": "六亲"
+   },
+   {
+    "premise": "是年童监税与妻家",
+    "conclusion": "主张分产，遂得田二十亩及财物",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "盖乙木以辰戌丑未为财，又以丑未为妻",
+    "conclusion": "故财自妻家而得",
+    "marker": "故",
+    "type": "六亲"
+   },
+   {
+    "premise": "何以见彼之分产?乙未日破碎杀在丑，丑为田，田上有青龙",
+    "conclusion": "故得之不费钱买",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "中传戌作朱雀",
+    "conclusion": "故有人争",
+    "marker": "故",
+    "type": "天将"
+   },
+   {
+    "premise": "既还产又得众财",
+    "conclusion": "乃辰加未，便是乙加未也",
+    "marker": "乃",
+    "type": "六亲"
+   },
+   {
+    "premise": "去克宅，宅者，彼也",
+    "conclusion": "故彼为财；",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "辰为众",
+    "conclusion": "故得众人之财也",
+    "marker": "故",
+    "type": "六亲"
+   },
+   {
+    "premise": "盖日为尊长，日为前，支为后，日加支",
+    "conclusion": "故为宅前；",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "辰为日墓",
+    "conclusion": "故曰新墓",
+    "marker": "故曰",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "未",
+    "lei": "财",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "未",
+    "lei": "妻",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "田",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "戌",
+    "lei": "朱雀",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "未",
+    "lei": "天后",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辰",
+    "lei": "众",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辰",
+    "lei": "日墓",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§财产08·133",
+  "name": "",
+  "zhanlei": "求财",
+  "label": "凶",
+  "n_sents": 3,
+  "chains": [],
+  "leixiang": [
+   {
+    "xiang": "酉",
+    "lei": "兑",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "六合",
+    "lei": "船",
+    "type": "天将类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§财产08·134",
+  "name": "邵七丞务戊寅生",
+  "zhanlei": "求财",
+  "label": "凶",
+  "n_sents": 11,
+  "chains": [
+   {
+    "premise": "盖癸以午为财，又为妻，旬空",
+    "conclusion": "故未得",
+    "marker": "故",
+    "type": "六亲"
+   },
+   {
+    "premise": "日上寅为子孙，生起午火",
+    "conclusion": "故云又借",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "中传为日长生，为尊长，又乘龙为财类神，再借",
+    "conclusion": "必得也",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "酉为婢，天空淫，阴上戌作鬼",
+    "conclusion": "故也",
+    "marker": "故",
+    "type": "天将"
+   },
+   {
+    "premise": "邵有人力宜童、婢荣奴，奴偷钱与人力，被邵见了",
+    "conclusion": "乃行吊打",
+    "marker": "乃",
+    "type": "其他"
+   },
+   {
+    "premise": "当夜宜童持刀要杀荣奴及",
+    "conclusion": "主，荣奴被刀杀，不死，邵幸走脱",
+    "marker": "主",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "午",
+    "lei": "财",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "子孙",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "婢",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "戌",
+    "lei": "鬼故也",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§财产08·135",
+  "name": "",
+  "zhanlei": "求财",
+  "label": "凶",
+  "n_sents": 15,
+  "chains": [
+   {
+    "premise": "支上幸有卯在长生上，一为驴骡，二为竹木，三为术士沙门，三者皆汝前程",
+    "conclusion": "必遂所得也",
+    "marker": "必",
+    "type": "干支生克"
+   },
+   {
+    "premise": "盖乙日木局，全旺在卯，卯生于亥",
+    "conclusion": "故卯全有气也",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "元武人庙，又就本家生旺，此",
+    "conclusion": "所以大全美也",
+    "marker": "所以",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§财产08·136",
+  "name": "",
+  "zhanlei": "求财",
+  "label": "凶",
+  "n_sents": 8,
+  "chains": [
+   {
+    "premise": "(亥为庚脱，且巳为店，亥又克之",
+    "conclusion": "故重会亥而歇业。)甲寅欠债狼狈，为人所讼",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "(寅支为店，既为巳脱",
+    "conclusion": "故至寅而废也。)妻病浮肿而死也",
+    "marker": "故",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "亥",
+    "lei": "庚脱",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "店",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§财产08·137",
+  "name": "曹八秀才戊辰生",
+  "zhanlei": "求财",
+  "label": "吉",
+  "n_sents": 15,
+  "chains": [],
+  "leixiang": []
+ },
+ {
+  "case_id": "§财产08·138",
+  "name": "曹八秀才癸酉生",
+  "zhanlei": "求财",
+  "label": "吉",
+  "n_sents": 5,
+  "chains": [
+   {
+    "premise": "斫轮课，须仔细，后",
+    "conclusion": "必争竞",
+    "marker": "必",
+    "type": "课体"
+   },
+   {
+    "premise": "支受干制之课，犯者畜产不生，宅上天空作害",
+    "conclusion": "主有幼小干上，互换罗网，必有小扰大之事",
+    "marker": "主",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "天空",
+    "lei": "害",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "天罗",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "地网",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§财产08·139",
+  "name": "",
+  "zhanlei": "求财",
+  "label": "凶",
+  "n_sents": 6,
+  "chains": [
+   {
+    "premise": "但讨得此财，下梢",
+    "conclusion": "必被他扰害，定成不足，四年外必见是非",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "(丑年着，惹动丑上朱雀鬼",
+    "conclusion": "故也。)",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§财产08·140",
+  "name": "刘五官己巳生",
+  "zhanlei": "求财",
+  "label": "凶",
+  "n_sents": 6,
+  "chains": [
+   {
+    "premise": "三年后其",
+    "conclusion": "主必定来赎，此店却发",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "此屋死人多，无气",
+    "conclusion": "故也",
+    "marker": "故",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§财产08·141",
+  "name": "甲申生人",
+  "zhanlei": "求财",
+  "label": "吉",
+  "n_sents": 5,
+  "chains": [
+   {
+    "premise": "日上申加丁作六合，支上戌加酉作蛇，六合",
+    "conclusion": "乃卯，蛇乃巳，此是卯与戌合，巳与申合",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "此是来往",
+    "conclusion": "故事，再三方得",
+    "marker": "故",
+    "type": "方位"
+   },
+   {
+    "premise": "本命行年俱在传课，又本命作财",
+    "conclusion": "必主喜兆，非鬼兆也",
+    "marker": "必主",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "丁",
+    "lei": "六合",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "蛇",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "六合",
+    "lei": "卯",
+    "type": "天将类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§财产08·142",
+  "name": "己巳生人",
+  "zhanlei": "求财",
+  "label": "凶",
+  "n_sents": 4,
+  "chains": [
+   {
+    "premise": "据课体本无财，盖此人己巳",
+    "conclusion": "乃是寅作德，又蛇制申金，行年财临，甲戌日得之也",
+    "marker": "乃",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "寅",
+    "lei": "德",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§财产08·143",
+  "name": "钱三郎甲戌生",
+  "zhanlei": "求财",
+  "label": "凶",
+  "n_sents": 15,
+  "chains": [
+   {
+    "premise": "本主无人，此",
+    "conclusion": "必是隔皮亲人，反去报他，遂来相攻",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "此向三阳",
+    "conclusion": "乃向高之意，终不可止也",
+    "marker": "乃",
+    "type": "其他"
+   },
+   {
+    "premise": "今因开店，邵令彼",
+    "conclusion": "主母人状，索前签过帐内钱七十贯",
+    "marker": "主",
+    "type": "六亲"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "未",
+    "lei": "勾陈",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "天后",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "元武",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辰",
+    "lei": "向虎",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§一课二事各断式09·144",
+  "name": "王县丞丙寅生",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 22,
+  "chains": [
+   {
+    "premise": "日上见巳作太常",
+    "conclusion": "主兼职而费力",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "初传官",
+    "conclusion": "主兼职；",
+    "marker": "主",
+    "type": "六亲"
+   },
+   {
+    "premise": "中传临宅上",
+    "conclusion": "主上人垂顾，兼职而加俸；",
+    "marker": "主",
+    "type": "其他"
+   },
+   {
+    "premise": "末传寅临亥，名字",
+    "conclusion": "必达到庭",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "缘日上见巳，是甲木生巳火",
+    "conclusion": "故费力也",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "太常为职，巳为双女",
+    "conclusion": "故曰兼职",
+    "marker": "故曰",
+    "type": "天将"
+   },
+   {
+    "premise": "甲以亥为长生学堂",
+    "conclusion": "故主绛帐之职",
+    "marker": "故主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "甲木生巳火，虽云费力，却得天后水及亥水之生，申金官星居巳火之上，又得青龙",
+    "conclusion": "所以费力中而加升也",
+    "marker": "所以",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "巳",
+    "lei": "太常",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "太常",
+    "lei": "职",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "双女",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "天庭",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "朱雀",
+    "lei": "举荐",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "己身",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "长生学堂",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§一课二事各断式09·145",
+  "name": "刘判官己未生",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 17,
+  "chains": [
+   {
+    "premise": "若要求官仍复为鬼，所以治生",
+    "conclusion": "必然兴发，为甚佳也",
+    "marker": "必",
+    "type": "干支生克"
+   },
+   {
+    "premise": "缘丁了三服",
+    "conclusion": "乃是庶出，兼有丧服",
+    "marker": "乃",
+    "type": "其他"
+   },
+   {
+    "premise": "或问：此人与刘判官同月将日时，同得此课，何",
+    "conclusion": "故前言治生，此言就死?邵先生曰：前是己未生，中传得本命，自墓引出来；",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "未",
+    "lei": "旬末",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "戌",
+    "lei": "闭口",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "戌",
+    "lei": "九月",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§一课二事各断式09·146",
+  "name": "何秀才丁亥生",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 19,
+  "chains": [
+   {
+    "premise": "本命在日上作初传，即是官星，上见贵人，贵人带官来，三十岁定",
+    "conclusion": "主及第",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "三十乃丙辰年分，辰上见申，申金生亥水，官星有气",
+    "conclusion": "故及第",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "病得不死者，亥、卯、未木局，木能生火",
+    "conclusion": "故了",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "卯乃生丁之神，卯数六",
+    "conclusion": "故六任",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "末传未是本身，加日禄卯上，为勾陈所拘，木能生风，死败之气",
+    "conclusion": "乃虚风也",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "勾陈留滞之神",
+    "conclusion": "故终为之缠也",
+    "marker": "故",
+    "type": "天将"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "丑",
+    "lei": "太阴",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丁",
+    "lei": "官",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "生丁之神",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "未",
+    "lei": "本身",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "未",
+    "lei": "今日之丁",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "未",
+    "lei": "守土之任",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§交易谋为10·147",
+  "name": "",
+  "zhanlei": "求财",
+  "label": "凶",
+  "n_sents": 7,
+  "chains": [
+   {
+    "premise": "反吟体，见凶将",
+    "conclusion": "必难成",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "又日上见财乘雀",
+    "conclusion": "必见争闹而后成",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "其闹者",
+    "conclusion": "乃过房子也",
+    "marker": "乃",
+    "type": "六亲"
+   },
+   {
+    "premise": "盖乙以巳为儿，巳中丙、戊，二姓",
+    "conclusion": "主过房子来争也",
+    "marker": "主",
+    "type": "六亲"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "巳",
+    "lei": "儿",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§交易谋为10·148",
+  "name": "曹将仕丙午生",
+  "zhanlei": "求财",
+  "label": "凶",
+  "n_sents": 4,
+  "chains": [],
+  "leixiang": [
+   {
+    "xiang": "丑",
+    "lei": "勾陈",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§出行访谒11·149",
+  "name": "应秀才",
+  "zhanlei": "出行",
+  "label": "凶",
+  "n_sents": 16,
+  "chains": [
+   {
+    "premise": "此课出行，当",
+    "conclusion": "主半路归家",
+    "marker": "主",
+    "type": "课体"
+   },
+   {
+    "premise": "应曰：何",
+    "conclusion": "故?先生曰：初以巳发用，中传复回，末传又见巳，如何去得?应恐家中有事，先生曰：非也",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "次至抚州界，却有一亲戚",
+    "conclusion": "乃伊亲姐，在信州玉山县，赴任病重，遂遣人赶应回",
+    "marker": "乃",
+    "type": "其他"
+   },
+   {
+    "premise": "盖宅上见巳，初末皆巳，巳",
+    "conclusion": "乃癸之绝神",
+    "marker": "乃",
+    "type": "干支生克"
+   },
+   {
+    "premise": "虽为绝神，却是三层驿马，又以旬丁，所以",
+    "conclusion": "主动",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "但中即传宅阴",
+    "conclusion": "所以半路归也",
+    "marker": "所以",
+    "type": "其他"
+   },
+   {
+    "premise": "日上未鬼作太常",
+    "conclusion": "主亲戚眷属之服",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "日主外",
+    "conclusion": "故主外服",
+    "marker": "故主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "发用太阴",
+    "conclusion": "主阴人丧",
+    "marker": "主",
+    "type": "天将"
+   },
+   {
+    "premise": "既动彼此俱绝",
+    "conclusion": "所以止也",
+    "marker": "所以",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "巳",
+    "lei": "癸之绝神",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "妻",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§出行访谒11·150",
+  "name": "",
+  "zhanlei": "出行",
+  "label": "凶",
+  "n_sents": 10,
+  "chains": [
+   {
+    "premise": "因事未毕",
+    "conclusion": "必然不出见也",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "盖子发用，虽与日辰三合，奈辰课不足",
+    "conclusion": "必主事务未毕也",
+    "marker": "必主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "且今日庚金，子水发用，庚落空亡，不能生子，子反畏日上天罡，所以",
+    "conclusion": "主不出见",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "罡加孟，为在内",
+    "conclusion": "故言在家",
+    "marker": "故",
+    "type": "其他"
+   },
+   {
+    "premise": "润下卦，有螣蛇火神为用",
+    "conclusion": "故曰近水火之傍也",
+    "marker": "故曰",
+    "type": "天将"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "庚",
+    "lei": "水之源",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§出行访谒11·151",
+  "name": "",
+  "zhanlei": "出行",
+  "label": "吉",
+  "n_sents": 13,
+  "chains": [
+   {
+    "premise": "详课意，吾兄若欲行正道，则不",
+    "conclusion": "必见之；",
+    "marker": "必",
+    "type": "六亲"
+   },
+   {
+    "premise": "(爱圅曰：此四句当有讹错。)盖寅、午、戌相习而为狂党，天后六合不正之神，又为失友",
+    "conclusion": "主下梢埋怨不足，互相冤抑",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "又午来蚀甲，天后、六合皆不正之神",
+    "conclusion": "主酒色蛊惑；",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "且四课不足，虽厚本亦",
+    "conclusion": "主消折，况赤手空拳乎?",
+    "marker": "主",
+    "type": "课体"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§出行访谒11·152",
+  "name": "",
+  "zhanlei": "出行",
+  "label": "凶",
+  "n_sents": 9,
+  "chains": [
+   {
+    "premise": "盖发用空传，又贵为日之三合",
+    "conclusion": "故主一贵人来",
+    "marker": "故主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "酉来合乙，得六合",
+    "conclusion": "故主寺门相见",
+    "marker": "故主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "酉为酒，克日",
+    "conclusion": "故虽有酒，不宴我也",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "未",
+    "lei": "酒食",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "酒",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§出行访谒11·153",
+  "name": "",
+  "zhanlei": "出行",
+  "label": "凶",
+  "n_sents": 11,
+  "chains": [
+   {
+    "premise": "盖丙以申为妻，巳与申合，又作六合，更未作勾陈在本家",
+    "conclusion": "所以恋家，卒难脱解",
+    "marker": "所以",
+    "type": "干支生克"
+   },
+   {
+    "premise": "所以能行动于东北者",
+    "conclusion": "乃寅马合亥难脱，得冲则行也",
+    "marker": "乃",
+    "type": "方位"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "申",
+    "lei": "妻",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "未",
+    "lei": "勾陈在本家",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辰",
+    "lei": "岁之墓也",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§出行访谒11·154",
+  "name": "某人丁巳生",
+  "zhanlei": "出行",
+  "label": "吉",
+  "n_sents": 4,
+  "chains": [
+   {
+    "premise": "盖日上驿马交驰，寅申各七数",
+    "conclusion": "故有七年之测",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "行年亥加巳，天门地足",
+    "conclusion": "主动必远也",
+    "marker": "主",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§出行访谒11·155",
+  "name": "",
+  "zhanlei": "出行",
+  "label": "凶",
+  "n_sents": 2,
+  "chains": [
+   {
+    "premise": "盖亥加申为用，乃六害空亡，是真正孤辰寡宿课",
+    "conclusion": "故知其人单独一人而已",
+    "marker": "故",
+    "type": "神煞"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§行人音信11·156",
+  "name": "",
+  "zhanlei": "出行",
+  "label": "吉",
+  "n_sents": 12,
+  "chains": [
+   {
+    "premise": "亥又来克我，本",
+    "conclusion": "主行人来",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "亥为绝神，临日克日",
+    "conclusion": "主必归",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "行年上见申又来生",
+    "conclusion": "故不归",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "日上亥水，病于东北，巳",
+    "conclusion": "乃水绝，反去彼绝，其人在彼，是三不归也",
+    "marker": "乃",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "亥",
+    "lei": "贵人",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "绝神",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "水绝",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§行人音信12·157",
+  "name": "",
+  "zhanlei": "出行",
+  "label": "凶",
+  "n_sents": 6,
+  "chains": [
+   {
+    "premise": "上得辰土克之",
+    "conclusion": "故浅",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "十二月至任者，甲日子加申，子乃十二月太阳，今在申",
+    "conclusion": "故主十二月",
+    "marker": "故主",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "子",
+    "lei": "元",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "十二月太阳",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§行人音信12·158",
+  "name": "",
+  "zhanlei": "出行",
+  "label": "凶",
+  "n_sents": 5,
+  "chains": [
+   {
+    "premise": "七月内",
+    "conclusion": "必有朝廷文字来，被蒿恼不意而动",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "申是岁马，带鬼克日，申为传送，又为道路，鬼害",
+    "conclusion": "故来速也",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "申",
+    "lei": "岁马",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "传送",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§行人音信12·159",
+  "name": "",
+  "zhanlei": "出行",
+  "label": "吉",
+  "n_sents": 4,
+  "chains": [
+   {
+    "premise": "盖课传俱马，又乘青龙，作官星，禄又得后",
+    "conclusion": "故主得官",
+    "marker": "故主",
+    "type": "天将"
+   },
+   {
+    "premise": "天罡加支，望事立至，用事严紧",
+    "conclusion": "故速来",
+    "marker": "故",
+    "type": "其他"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§行人音信12·160",
+  "name": "",
+  "zhanlei": "出行",
+  "label": "凶",
+  "n_sents": 6,
+  "chains": [
+   {
+    "premise": "盖初传日马乘后，为恩泽神，又月建",
+    "conclusion": "主州文字",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "巳时为用",
+    "conclusion": "故不出时见之也",
+    "marker": "故",
+    "type": "其他"
+   },
+   {
+    "premise": "只是长老得了，自却有灾，宜保重",
+    "conclusion": "乃虎乘墓加身也",
+    "marker": "乃",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§行人音信12·161",
+  "name": "",
+  "zhanlei": "出行",
+  "label": "凶",
+  "n_sents": 4,
+  "chains": [
+   {
+    "premise": "文字今日",
+    "conclusion": "必来，果应",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "盖昴星课，卯日子加卯，朱雀临门",
+    "conclusion": "主文字立至",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "又子、卯相刑",
+    "conclusion": "主其来紧速也",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "又三传俱在日辰之上，自",
+    "conclusion": "主日下必然到也",
+    "marker": "主",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§疾病13·162",
+  "name": "",
+  "zhanlei": "疾病",
+  "label": "凶",
+  "n_sents": 13,
+  "chains": [
+   {
+    "premise": "不曾娶妻，至绍兴十六年四月三日病",
+    "conclusion": "故，果二十八岁也",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "壬受申之虚生，却去生寅木，木生巳火，巳火克申金，申金受克，走来壬上避之，非本意来生也",
+    "conclusion": "故终身瘦弱",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "初巳火",
+    "conclusion": "主上热，末亥水主下冷，上膈在热而不渴，中间缘寅木，主风气相击，下部不通",
+    "marker": "主",
+    "type": "其他"
+   },
+   {
+    "premise": "又巳火伤申金，肺脏上喘",
+    "conclusion": "必矣",
+    "marker": "必",
+    "type": "其他"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "申",
+    "lei": "寺院",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§疾病13·163",
+  "name": "王县丞甲戌生",
+  "zhanlei": "疾病",
+  "label": "凶",
+  "n_sents": 13,
+  "chains": [
+   {
+    "premise": "须先克了子，便",
+    "conclusion": "乃心病，且作废人也",
+    "marker": "乃",
+    "type": "干支生克"
+   },
+   {
+    "premise": "盖日上午、辰上午、中传午、末传午，共四午来蚀甲寅，是四个月病符、四个天鬼、(天鬼常传四仲神，建寅居酉逆相巡，行年日上如遭着，灾祸刑伤病扰人。)四个天地转杀、(春卯，夏午，秋西，冬子。)四个白虎",
+    "conclusion": "所以丧四子",
+    "marker": "所以",
+    "type": "应期数字"
+   },
+   {
+    "premise": "午为心，遇虎",
+    "conclusion": "故主颠狂",
+    "marker": "故主",
+    "type": "其他"
+   },
+   {
+    "premise": "木死于午",
+    "conclusion": "故为废人",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "天鬼多生于疫病",
+    "conclusion": "故死者非二、四，即五、六也",
+    "marker": "故",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "午",
+    "lei": "月病符",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "心",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§疾病13·164",
+  "name": "徐孺人己卯生",
+  "zhanlei": "疾病",
+  "label": "凶",
+  "n_sents": 18,
+  "chains": [
+   {
+    "premise": "父死，随孺人在徐司理家，常与司理不合",
+    "conclusion": "故孺人得病，以乳母故也",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "午为阴人，空则无位，为妾，蛇在午上扰",
+    "conclusion": "故知为此阴人所苦",
+    "marker": "故",
+    "type": "其他"
+   },
+   {
+    "premise": "饥痛者，己卯生人，禄在午，空则乱也，蛇扰",
+    "conclusion": "故痛",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "戌土上见青龙",
+    "conclusion": "故主多趾，又戌为足也",
+    "marker": "故主",
+    "type": "天将"
+   },
+   {
+    "premise": "血败者，亥坐空亡，又乘天空",
+    "conclusion": "故也",
+    "marker": "故",
+    "type": "神煞"
+   },
+   {
+    "premise": "血瘿者，辰加亥为天后，辰坚土，加血上",
+    "conclusion": "故为血瘿",
+    "marker": "故",
+    "type": "天将"
+   },
+   {
+    "premise": "天后主厌秽，癸水人辰墓",
+    "conclusion": "故瘿破而死也",
+    "marker": "故",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "午",
+    "lei": "蛇",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "阴人",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "目",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "戌",
+    "lei": "足也",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "天后",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§疾病13·165",
+  "name": "",
+  "zhanlei": "疾病",
+  "label": "凶",
+  "n_sents": 12,
+  "chains": [
+   {
+    "premise": "盖父母既",
+    "conclusion": "故，是下世重见父母也",
+    "marker": "故",
+    "type": "六亲"
+   },
+   {
+    "premise": "行年与本身并，(爱圅曰：六十四岁行年在巳，巳既丙，丙为本身，故云行年与本身并。然则的是六十四岁。)因财上及旧事不足，(酉年以申财为病符，病符",
+    "conclusion": "主旧事，的是己酉年占，其本命定丙午年。爱圅又识。)以致伤心",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "中间又是财爻入课",
+    "conclusion": "必是财切，兼与妻不足，遂激成病",
+    "marker": "必",
+    "type": "六亲"
+   },
+   {
+    "premise": "末传生气，此课本",
+    "conclusion": "主未死，缘父母宫艮山坟，左边地风吹骨转，右边白蚁又入棺，若急移坟，可以延年，否则归冥矣",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "(六旬人见父爻，本不利。然寅为丙之长生",
+    "conclusion": "故得不",
+    "marker": "故",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "丙",
+    "lei": "本身",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "父母爻",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "丙之长生",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§疾病13·166",
+  "name": "张逸士庚戌生",
+  "zhanlei": "疾病",
+  "label": "凶",
+  "n_sents": 5,
+  "chains": [
+   {
+    "premise": "此课大凶，上下俱脱，其病恐是泄泻上得之，自后寒热往来",
+    "conclusion": "必成五痔七伤，又兼翻胃吐食",
+    "marker": "必",
+    "type": "干支生克"
+   },
+   {
+    "premise": "况日上生水，金去生水，多",
+    "conclusion": "主冷涎；",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "支上见巳，木生虚火",
+    "conclusion": "必心下不宁，遂至此病，兼之白浊",
+    "marker": "必",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§疾病13·167",
+  "name": "",
+  "zhanlei": "疾病",
+  "label": "凶",
+  "n_sents": 20,
+  "chains": [
+   {
+    "premise": "汝屋上不合着一兽头东立，人家亦有一兽头，相触而害人",
+    "conclusion": "故财不入耳",
+    "marker": "故",
+    "type": "方位"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§疾病13·168",
+  "name": "",
+  "zhanlei": "疾病",
+  "label": "凶",
+  "n_sents": 18,
+  "chains": [
+   {
+    "premise": "因暗中相约，又失去情人所赠之物，遂思虑而得病，久而不治",
+    "conclusion": "必成痨怯",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "及闻樊郎中之言，妻",
+    "conclusion": "乃出帕还之，樊深戒利害，服药而愈",
+    "marker": "乃",
+    "type": "六亲"
+   },
+   {
+    "premise": "辰为皮，为肌肤，加酉败气上，乘元武，为走泄",
+    "conclusion": "故主消瘦",
+    "marker": "故主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "行年在戌，戌上巳作太常，常",
+    "conclusion": "主丝棉，是手帕也",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "巳与酉三合",
+    "conclusion": "故主情人之物也",
+    "marker": "故主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "(爱圅曰：太常加空",
+    "conclusion": "故遗失。)明说而安者",
+    "marker": "故",
+    "type": "天将"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "酉",
+    "lei": "勾陈",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "闭口",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "未",
+    "lei": "妻",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "勾陈",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "色",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "闭口",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辰",
+    "lei": "皮",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "太常",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§疾病13·169",
+  "name": "",
+  "zhanlei": "疾病",
+  "label": "凶",
+  "n_sents": 6,
+  "chains": [
+   {
+    "premise": "天鬼午，受病鬼之生，犯了东岳城隍香火神，乃疫气入宅",
+    "conclusion": "主合宅病",
+    "marker": "主",
+    "type": "方位"
+   },
+   {
+    "premise": "盖中、末、日上三个羊刃杀",
+    "conclusion": "所以丧三人",
+    "marker": "所以",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§疾病13·170",
+  "name": "尹邦达庚申",
+  "zhanlei": "疾病",
+  "label": "吉",
+  "n_sents": 14,
+  "chains": [
+   {
+    "premise": "丁日会起水局，日上子作六合",
+    "conclusion": "主孕，恐是鬼胎",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "今正秋占，及时之课",
+    "conclusion": "故主怀孕",
+    "marker": "故主",
+    "type": "课体"
+   },
+   {
+    "premise": "只不会丁日会水局",
+    "conclusion": "故主鬼胎",
+    "marker": "故主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "次年二月三日生",
+    "conclusion": "乃鬼胎也",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "然会起水局为鬼",
+    "conclusion": "故曰鬼胎",
+    "marker": "故曰",
+    "type": "六亲"
+   },
+   {
+    "premise": "末见卯与子刑",
+    "conclusion": "故次年二月见鬼形也",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "若不会起申、子、辰，却是官星",
+    "conclusion": "必生贵子，非鬼胎也",
+    "marker": "必",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "子",
+    "lei": "六合",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§疾病13·171",
+  "name": "叶解元丁丑生",
+  "zhanlei": "疾病",
+  "label": "凶",
+  "n_sents": 10,
+  "chains": [
+   {
+    "premise": "宅上见绝神，三传丑、寅、卯，若非行年退却一步，定见进脱，不可疗矣!大凡壬日得丑、寅、卯，迄逦进脱，支上又见绝神",
+    "conclusion": "必不可治，不问老少皆以死论",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "然喜时令在秋，壬癸水秋生，得亥子相并旺相",
+    "conclusion": "必不至死",
+    "marker": "必",
+    "type": "干支生克"
+   },
+   {
+    "premise": "主今冬得子，若是来年正月节生",
+    "conclusion": "必贵子，内有暗贵人故也",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "目下主服，初丑破碎作常",
+    "conclusion": "是以主之",
+    "marker": "是以",
+    "type": "神煞"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "太常",
+    "lei": "燕乐神",
+    "type": "天将类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§疾病13·172",
+  "name": "韩省干戊寅生",
+  "zhanlei": "疾病",
+  "label": "凶",
+  "n_sents": 12,
+  "chains": [
+   {
+    "premise": "曰：若作风病，其病",
+    "conclusion": "必死",
+    "marker": "必",
+    "type": "干支生克"
+   },
+   {
+    "premise": "加亥水",
+    "conclusion": "故曰冷粽",
+    "marker": "故曰",
+    "type": "其他"
+   },
+   {
+    "premise": "太阴老妇",
+    "conclusion": "乃仆人之母与之也",
+    "marker": "乃",
+    "type": "天将"
+   },
+   {
+    "premise": "酉麦、申面",
+    "conclusion": "故曰面，元武主过水，是以为冷淘也",
+    "marker": "故曰",
+    "type": "其他"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "戌",
+    "lei": "同宗",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "己",
+    "lei": "未",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§疾病13·173",
+  "name": "蒋六公乙巳生",
+  "zhanlei": "疾病",
+  "label": "凶",
+  "n_sents": 17,
+  "chains": [
+   {
+    "premise": "吾丈年高，尚有此病，何也?凡三交中有空亡六合者，皆不正之合，其患有三，一",
+    "conclusion": "主吾丈思前妻；",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "后先生劝彼",
+    "conclusion": "乃郎，取此意中人与之，其病渐减",
+    "marker": "乃",
+    "type": "干支生克"
+   },
+   {
+    "premise": "却又空亡",
+    "conclusion": "乃虚想其合，而无实效",
+    "marker": "乃",
+    "type": "干支生克"
+   },
+   {
+    "premise": "四课遥克为传，事",
+    "conclusion": "主在内",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "长子非横，乃卯为长子，作蛇",
+    "conclusion": "故主非横",
+    "marker": "故主",
+    "type": "六亲"
+   },
+   {
+    "premise": "喜得末上行年相接",
+    "conclusion": "所以用之",
+    "marker": "所以",
+    "type": "应期数字"
+   },
+   {
+    "premise": "日上丑土得中午生，土遂生金，丑八",
+    "conclusion": "故八年也",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "卯",
+    "lei": "长子",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§疾病13·174",
+  "name": "蒋七婆戊申生",
+  "zhanlei": "疾病",
+  "label": "凶",
+  "n_sents": 14,
+  "chains": [
+   {
+    "premise": "此情人乃官作使女之类，欲见不能，思恋极矣",
+    "conclusion": "故生心病",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "盖未作后生日，支上午与未合",
+    "conclusion": "乃鬼合，便是不正之交，传退与妇人相离也",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "欲合不合，传退既值空亡，只得在此思想",
+    "conclusion": "所以成痨",
+    "marker": "所以",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "未",
+    "lei": "后生日",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "贵人",
+    "lei": "合入贵人宅去",
+    "type": "天将类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§疾病13·175",
+  "name": "",
+  "zhanlei": "疾病",
+  "label": "凶",
+  "n_sents": 12,
+  "chains": [
+   {
+    "premise": "白虎乘午作鬼，男病",
+    "conclusion": "主三日内死也",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "此是血病，盖午",
+    "conclusion": "主心，心主血也",
+    "marker": "主",
+    "type": "其他"
+   },
+   {
+    "premise": "要阴鬼退，须门前社庙作福，午是阴人，乘虎作鬼",
+    "conclusion": "故也",
+    "marker": "故",
+    "type": "六亲"
+   },
+   {
+    "premise": "又午是天之真火，克日",
+    "conclusion": "主灸神，乘虎故不宜灸",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "又是天医",
+    "conclusion": "故不宜服药",
+    "marker": "故",
+    "type": "其他"
+   },
+   {
+    "premise": "涉害深为用",
+    "conclusion": "主久病",
+    "marker": "主",
+    "type": "其他"
+   },
+   {
+    "premise": "且火加水",
+    "conclusion": "主寒热往来，克日，主痨血",
+    "marker": "主",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "午",
+    "lei": "鬼",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "阴人",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "天之真火",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§疾病13·176",
+  "name": "",
+  "zhanlei": "疾病",
+  "label": "凶",
+  "n_sents": 5,
+  "chains": [
+   {
+    "premise": "丁日巳用皆火，中又蛇乘戌加巳，是火加旺地",
+    "conclusion": "故主发狂",
+    "marker": "故主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "凡人以内阴气为",
+    "conclusion": "主，阴日养阳，今已绝，则阳气上攻，而不能生，阴绝阳弱，更主发喘",
+    "marker": "主",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "巳",
+    "lei": "常为用",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§疾病13·177",
+  "name": "",
+  "zhanlei": "疾病",
+  "label": "凶",
+  "n_sents": 5,
+  "chains": [
+   {
+    "premise": "盖三传金，主肺主嗽，而午火又加丙，午火盛发，心神散乱",
+    "conclusion": "故主发躁狂言",
+    "marker": "故主",
+    "type": "其他"
+   },
+   {
+    "premise": "鬼神之状者，申加未，未临宅，未",
+    "conclusion": "主鬼神之状",
+    "marker": "主",
+    "type": "六亲"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§疾病13·178",
+  "name": "",
+  "zhanlei": "疾病",
+  "label": "凶",
+  "n_sents": 5,
+  "chains": [
+   {
+    "premise": "阳气将尽，外应虚热烦躁，又",
+    "conclusion": "主热渴",
+    "marker": "主",
+    "type": "其他"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "辰",
+    "lei": "常覆日",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§亡盗15·188",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 3,
+  "chains": [],
+  "leixiang": [
+   {
+    "xiang": "亥",
+    "lei": "酒器",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "太常",
+    "lei": "丧服",
+    "type": "天将类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§亡盗15·189",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 12,
+  "chains": [
+   {
+    "premise": "子、未相害，虽喜未能制子，无奈未",
+    "conclusion": "乃旬空，不能克制，徒作干上空亡，自合失脱也",
+    "marker": "乃",
+    "type": "干支生克"
+   },
+   {
+    "premise": "未空不能生辛金，而辛金反能生支上子水，为之脱气",
+    "conclusion": "故捉贼不得",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "占人行年又在卯上",
+    "conclusion": "乃家贼无疑耳",
+    "marker": "乃",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "未",
+    "lei": "旬空",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§亡盗15·190",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 11,
+  "chains": [
+   {
+    "premise": "日辰上见魁罡",
+    "conclusion": "必主动",
+    "marker": "必主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "殊不知甲寅水墓辰，辰为初传，午为阴妇人，在辰上日阻关",
+    "conclusion": "所以不进",
+    "marker": "所以",
+    "type": "应期数字"
+   },
+   {
+    "premise": "戌为楼阁",
+    "conclusion": "故藏高处阁上",
+    "marker": "故",
+    "type": "其他"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "寅",
+    "lei": "六合",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "阴妇人",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "后",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "戌",
+    "lei": "楼阁",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§亡盗15·191",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 6,
+  "chains": [
+   {
+    "premise": "此婢不失，但往来处寻之，六里内",
+    "conclusion": "必见也",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "日辰三传俱在阴位，阴",
+    "conclusion": "主伏匿，巳作虎临门户上，其人出门去便止也",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "日辰相加",
+    "conclusion": "所以不走",
+    "marker": "所以",
+    "type": "应期数字"
+   },
+   {
+    "premise": "酉六，故不出六里",
+    "conclusion": "必见",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "果往东方六里内寻见",
+    "conclusion": "乃失路不能归也",
+    "marker": "乃",
+    "type": "方位"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "巳",
+    "lei": "虎临门户上",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辰",
+    "lei": "婢",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§亡盗15·192",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 2,
+  "chains": [],
+  "leixiang": [
+   {
+    "xiang": "酉",
+    "lei": "婢",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§亡盗15·193",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 7,
+  "chains": [
+   {
+    "premise": "有类神",
+    "conclusion": "主其物不失",
+    "marker": "主",
+    "type": "其他"
+   },
+   {
+    "premise": "中、未墓作天空，主污秽，那更辰作元武，传人勾陈，勾陈在酉，而败元武",
+    "conclusion": "故主寻之必得",
+    "marker": "故主",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "寅",
+    "lei": "后加酉",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辰",
+    "lei": "元武",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§亡盗15·194",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "吉",
+  "n_sents": 3,
+  "chains": [
+   {
+    "premise": "盖寅加亥为用，末申系类神，辰作元武加丑金墓，辰上见天空",
+    "conclusion": "主污秽处藏匿，寻之必见",
+    "marker": "主",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "辰",
+    "lei": "元武加丑金墓",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§亡盗15·195",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 4,
+  "chains": [
+   {
+    "premise": "金环以酉为类神，初传即加巳上，乃长生之地，不落空亡，又是三合金局，此物乃自己遗失，见在",
+    "conclusion": "必得",
+    "marker": "必",
+    "type": "干支生克"
+   },
+   {
+    "premise": "火至冬而死",
+    "conclusion": "故云灰中",
+    "marker": "故",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "酉",
+    "lei": "类神",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "巳",
+    "lei": "炉灶",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§亡盗15·196",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 5,
+  "chains": [
+   {
+    "premise": "盖度牒以朱雀为类神，申为僧人，而元武乘卯合辛",
+    "conclusion": "故为亲人",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "辛克卯",
+    "conclusion": "故卯遂偷去",
+    "marker": "故",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "朱雀",
+    "lei": "类神",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "僧人",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§亡盗15·197",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 9,
+  "chains": [
+   {
+    "premise": "其人须在高处下来作窃，其物",
+    "conclusion": "必藏在神庙中，未出衙门",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "丁己在未",
+    "conclusion": "故主二姓人",
+    "marker": "故主",
+    "type": "其他"
+   },
+   {
+    "premise": "癸为日",
+    "conclusion": "主，刑戌，成为人力，又为高楼宿处，伏吟不离本家也",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "未为木墓，内有鬼宿乘太阴",
+    "conclusion": "主神庙",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "后果于本衙中神庙龛下寻见",
+    "conclusion": "乃是楼上打更人偷",
+    "marker": "乃",
+    "type": "其他"
+   },
+   {
+    "premise": "丑为官星，勾作刑",
+    "conclusion": "故获",
+    "marker": "故",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "癸",
+    "lei": "日主",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "未",
+    "lei": "木墓",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "高处也",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "官星",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§亡盗15·198",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 6,
+  "chains": [
+   {
+    "premise": "若落水缸畔，中有杨树傍",
+    "conclusion": "乃有木果处寻",
+    "marker": "乃",
+    "type": "其他"
+   },
+   {
+    "premise": "近水泥湿者",
+    "conclusion": "乃午、未上遁得壬、癸水也",
+    "marker": "乃",
+    "type": "其他"
+   },
+   {
+    "premise": "类神酉临火墓，作太阴",
+    "conclusion": "是以贼不出去也",
+    "marker": "是以",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": []
+ },
+ {
+  "case_id": "§亡盗15·199",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 7,
+  "chains": [
+   {
+    "premise": "盖辰作元武",
+    "conclusion": "主仆辈",
+    "marker": "主",
+    "type": "其他"
+   },
+   {
+    "premise": "酉为类神，作勾临午，更太阴临水",
+    "conclusion": "故主湿处",
+    "marker": "故主",
+    "type": "天将"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "辰",
+    "lei": "元武",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "类神",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§亡盗15·200",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "吉",
+  "n_sents": 7,
+  "chains": [
+   {
+    "premise": "舡在旱地上",
+    "conclusion": "所以不进",
+    "marker": "所以",
+    "type": "其他"
+   },
+   {
+    "premise": "寅木也，乘合、卯",
+    "conclusion": "乃舡",
+    "marker": "乃",
+    "type": "干支生克"
+   },
+   {
+    "premise": "寅、卯木三数，辰五数，共八",
+    "conclusion": "故初八日内也",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "寅",
+    "lei": "合加辰为用",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "舡",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "类神",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§亡盗15·201",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 5,
+  "chains": [
+   {
+    "premise": "盖巳为炉灶，又铸印体，太常为博士，亦",
+    "conclusion": "主酒食",
+    "marker": "主",
+    "type": "天将"
+   },
+   {
+    "premise": "申为麦面",
+    "conclusion": "故云",
+    "marker": "故",
+    "type": "其他"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "巳",
+    "lei": "炉灶",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "太常",
+    "lei": "博士",
+    "type": "天将类象"
+   },
+   {
+    "xiang": "戌",
+    "lei": "人力",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "麦面",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§官讼16·202",
+  "name": "童秀才壬戌生",
+  "zhanlei": "官讼",
+  "label": "凶",
+  "n_sents": 9,
+  "chains": [
+   {
+    "premise": "昼贵在夜，夜贵在昼，谓之贵人失位，不宜讼",
+    "conclusion": "必主断理不明",
+    "marker": "必主",
+    "type": "天将"
+   },
+   {
+    "premise": "今贵人差迭",
+    "conclusion": "主以财结托，及暗通贵人关节",
+    "marker": "主",
+    "type": "天将"
+   },
+   {
+    "premise": "酉作雀，徒然结托",
+    "conclusion": "必主又换衙门",
+    "marker": "必主",
+    "type": "其他"
+   },
+   {
+    "premise": "行年寅，又为今日父母",
+    "conclusion": "主吏人及尊长为鬼",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "盖不合寅反加鬼乡",
+    "conclusion": "故也",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "官断不明，末传太阴",
+    "conclusion": "故也",
+    "marker": "故",
+    "type": "天将"
+   },
+   {
+    "premise": "以后彼",
+    "conclusion": "必葬老阴人于内，太阴作丑，为墓故也",
+    "marker": "必",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "酉",
+    "lei": "雀",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "太阴",
+    "lei": "丑",
+    "type": "天将类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§官讼16·203",
+  "name": "",
+  "zhanlei": "官讼",
+  "label": "凶",
+  "n_sents": 19,
+  "chains": [
+   {
+    "premise": "辛墓于丑，丑墓于申",
+    "conclusion": "主在外州入狱而羁绊也",
+    "marker": "主",
+    "type": "干支生克"
+   },
+   {
+    "premise": "盖午作贵人，作日鬼临支，却是六害",
+    "conclusion": "故彼自然失理也",
+    "marker": "故",
+    "type": "应期数字"
+   },
+   {
+    "premise": "汪氏被人啜了银一百两",
+    "conclusion": "乃卯作元武临干也",
+    "marker": "乃",
+    "type": "其他"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "午",
+    "lei": "贵人",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "元武临干也",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "卯",
+    "lei": "闭口",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§官讼16·204",
+  "name": "陆孔目癸亥生",
+  "zhanlei": "官讼",
+  "label": "凶",
+  "n_sents": 21,
+  "chains": [
+   {
+    "premise": "此课讼有源头，今",
+    "conclusion": "乃再发，非蓦地生起也",
+    "marker": "乃",
+    "type": "干支生克"
+   },
+   {
+    "premise": "盖顺祖课",
+    "conclusion": "主原有讼根耳",
+    "marker": "主",
+    "type": "课体"
+   },
+   {
+    "premise": "何以知之?行年自会起火局",
+    "conclusion": "所以招致",
+    "marker": "所以",
+    "type": "应期数字"
+   },
+   {
+    "premise": "用火自去烧身，甲寅旬见寅",
+    "conclusion": "乃第一位公人害你",
+    "marker": "乃",
+    "type": "其他"
+   },
+   {
+    "premise": "所渭会成火局",
+    "conclusion": "乃是他自凑起",
+    "marker": "乃",
+    "type": "课体"
+   },
+   {
+    "premise": "午加申",
+    "conclusion": "乃西南方，阳刃破碎加本命，真针也",
+    "marker": "乃",
+    "type": "方位"
+   },
+   {
+    "premise": "其青龙加申为退鳞",
+    "conclusion": "所以笞背",
+    "marker": "所以",
+    "type": "天将"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "午",
+    "lei": "伙汁",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "退鳞",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§官讼16·205",
+  "name": "林文丙辰生",
+  "zhanlei": "官讼",
+  "label": "凶",
+  "n_sents": 19,
+  "chains": [
+   {
+    "premise": "主有服人争讼，挟起卑幼，遂",
+    "conclusion": "乃动众",
+    "marker": "乃",
+    "type": "其他"
+   },
+   {
+    "premise": "寅木又生鬼",
+    "conclusion": "故有事",
+    "marker": "故",
+    "type": "干支生克"
+   },
+   {
+    "premise": "然诸木又生于亥，故住与不住，皆由于亥，故",
+    "conclusion": "必贴幼小方得止也",
+    "marker": "必",
+    "type": "方位"
+   },
+   {
+    "premise": "午则妇人",
+    "conclusion": "故因嫂而动也",
+    "marker": "故",
+    "type": "其他"
+   },
+   {
+    "premise": "午空无力，故不",
+    "conclusion": "必贴妇人",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "亥能制午",
+    "conclusion": "是以贴幼子耳",
+    "marker": "是以",
+    "type": "六亲"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "子",
+    "lei": "止者",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "幼子",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§官讼16·206",
+  "name": "祝秀才壬申牛",
+  "zhanlei": "官讼",
+  "label": "凶",
+  "n_sents": 7,
+  "chains": [],
+  "leixiang": []
+ },
+ {
+  "case_id": "§官讼16·207",
+  "name": "陆孔目己巳生",
+  "zhanlei": "官讼",
+  "label": "凶",
+  "n_sents": 16,
+  "chains": [
+   {
+    "premise": "己巳生人，见酉",
+    "conclusion": "乃破碎",
+    "marker": "乃",
+    "type": "干支生克"
+   },
+   {
+    "premise": "行年便作背后悬针杀，一因奸事，二防官钱，三防酒",
+    "conclusion": "必配本州",
+    "marker": "必",
+    "type": "应期数字"
+   },
+   {
+    "premise": "盖独足课",
+    "conclusion": "故在本州",
+    "marker": "故",
+    "type": "课体"
+   },
+   {
+    "premise": "既飞散",
+    "conclusion": "必再出外方",
+    "marker": "必",
+    "type": "方位"
+   },
+   {
+    "premise": "酉、亥、丑传归西北，乃江海",
+    "conclusion": "必润州矣",
+    "marker": "必",
+    "type": "方位"
+   },
+   {
+    "premise": "有二己字，岂一番可了?(不合是己巳生)末传飞开，丑加亥是西北海角，亥为点水，酉为门，丑似玉字，点水边作门，门内有玉",
+    "conclusion": "乃润字也",
+    "marker": "乃",
+    "type": "方位"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "酉",
+    "lei": "破碎",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "未",
+    "lei": "是己",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "西北海角",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "点水",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "门",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§官讼16·208",
+  "name": "",
+  "zhanlei": "官讼",
+  "label": "凶",
+  "n_sents": 4,
+  "chains": [
+   {
+    "premise": "主事未了，又一事发",
+    "conclusion": "必吃棒也",
+    "marker": "必",
+    "type": "其他"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "午",
+    "lei": "龙为用",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§官讼16·209",
+  "name": "",
+  "zhanlei": "官讼",
+  "label": "吉",
+  "n_sents": 5,
+  "chains": [
+   {
+    "premise": "盖申作勾加身为鬼",
+    "conclusion": "所以枷锢",
+    "marker": "所以",
+    "type": "六亲"
+   },
+   {
+    "premise": "却足日德合，末有龙",
+    "conclusion": "故无事",
+    "marker": "故",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "申",
+    "lei": "勾加身为鬼",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§官讼16·210",
+  "name": "",
+  "zhanlei": "官讼",
+  "label": "凶",
+  "n_sents": 7,
+  "chains": [
+   {
+    "premise": "宅上有寡母",
+    "conclusion": "乃天空加宅也",
+    "marker": "乃",
+    "type": "天将"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "午",
+    "lei": "目",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§官讼16·211",
+  "name": "",
+  "zhanlei": "官讼",
+  "label": "凶",
+  "n_sents": 6,
+  "chains": [],
+  "leixiang": [
+   {
+    "xiang": "辰",
+    "lei": "勾",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "元为用",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§官讼16·212",
+  "name": "",
+  "zhanlei": "官讼",
+  "label": "吉",
+  "n_sents": 3,
+  "chains": [
+   {
+    "premise": "喜得中戌作常，末天喜乘龙作解神",
+    "conclusion": "必有恩赦相救，先凶而后吉也",
+    "marker": "必",
+    "type": "神煞"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "戌",
+    "lei": "常",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§杂占17·213",
+  "name": "沈保正壬戌生",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 11,
+  "chains": [
+   {
+    "premise": "你若不认此役，须是监系",
+    "conclusion": "必待认了方释",
+    "marker": "必",
+    "type": "方位"
+   },
+   {
+    "premise": "若不认",
+    "conclusion": "必入狱",
+    "marker": "必",
+    "type": "其他"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "乙",
+    "lei": "蛇",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "太阴",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "官所制",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "天空为官吏",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "勾陈",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§杂占17·214",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "吉",
+  "n_sents": 14,
+  "chains": [
+   {
+    "premise": "所得之物，可以移翁棺葬此内",
+    "conclusion": "必生贵子，为大和尚",
+    "marker": "必",
+    "type": "干支生克"
+   },
+   {
+    "premise": "母与女劝不听",
+    "conclusion": "乃自做了",
+    "marker": "乃",
+    "type": "六亲"
+   },
+   {
+    "premise": "后童分家，请沈公作",
+    "conclusion": "主，沈却于公共内，取一生坟安葬",
+    "marker": "主",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "子",
+    "lei": "母",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "女",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "父",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "翁",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "墓",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "申",
+    "lei": "僧",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "贤",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§杂占17·215",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "吉",
+  "n_sents": 18,
+  "chains": [
+   {
+    "premise": "春得炎上局，却喜旺相，只是不合阳刃乘后加支",
+    "conclusion": "主住持九月与朱姓人交通，遂受刑而出",
+    "marker": "主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "丑为僧，僧与道同，此住持",
+    "conclusion": "必成",
+    "marker": "必",
+    "type": "其他"
+   },
+   {
+    "premise": "戊日阳刃在午",
+    "conclusion": "故主刑",
+    "marker": "故主",
+    "type": "应期数字"
+   },
+   {
+    "premise": "自第四课传出",
+    "conclusion": "故出观",
+    "marker": "故",
+    "type": "课体"
+   },
+   {
+    "premise": "暗贵作空",
+    "conclusion": "故可至观",
+    "marker": "故",
+    "type": "其他"
+   },
+   {
+    "premise": "(一订云，午乃离、朱雀，故姓朱。午、未字像朱说非。又曰，后乃妇人，午亦妇也。加支为日之刃，故因妇人受责。在支上是以",
+    "conclusion": "主得住持而始蒙责。)",
+    "marker": "主",
+    "type": "应期数字"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "丑",
+    "lei": "空",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "天空",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "僧",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "天后",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "午",
+    "lei": "离",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§杂占17·216",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 13,
+  "chains": [
+   {
+    "premise": "必旬日内盗欲入方丈不得",
+    "conclusion": "乃入库下偷三人物，后来干三人命",
+    "marker": "乃",
+    "type": "应期数字"
+   },
+   {
+    "premise": "皆因连茹在不明，末虎作鬼",
+    "conclusion": "故也",
+    "marker": "故",
+    "type": "六亲"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "子",
+    "lei": "元武",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "阳刃",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "子",
+    "lei": "常",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "亥",
+    "lei": "元武类",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "丑",
+    "lei": "库也",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§杂占17·217",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "凶",
+  "n_sents": 3,
+  "chains": [
+   {
+    "premise": "酉加子作天空，支为酒，其酒",
+    "conclusion": "必败，器必破，必无酒也",
+    "marker": "必",
+    "type": "天将"
+   },
+   {
+    "premise": "酉为酒加子，酉破子",
+    "conclusion": "乃破器也",
+    "marker": "乃",
+    "type": "六亲"
+   },
+   {
+    "premise": "子水败于酉，酉金死于子，乘空为虚诈，又传入空亡",
+    "conclusion": "是以无酒",
+    "marker": "是以",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "子",
+    "lei": "天空",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "酉",
+    "lei": "酒加子",
+    "type": "地支类象"
+   }
+  ]
+ },
+ {
+  "case_id": "§杂占17·218",
+  "name": "",
+  "zhanlei": "其他",
+  "label": "吉",
+  "n_sents": 9,
+  "chains": [
+   {
+    "premise": "酉作龙为用，酉于辛为上元真禄，寅乃地下真官，又是天吏，中、末又俱自刑，相公目下虽有挠，全罪有赦，将来朝廷",
+    "conclusion": "必大用，威权震上矣",
+    "marker": "必",
+    "type": "干支生克"
+   },
+   {
+    "premise": "大凡四上克下，名无禄，天动于上为纯阳",
+    "conclusion": "主动",
+    "marker": "主",
+    "type": "干支生克"
+   }
+  ],
+  "leixiang": [
+   {
+    "xiang": "酉",
+    "lei": "龙为用",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "辛",
+    "lei": "上元真禄",
+    "type": "地支类象"
+   },
+   {
+    "xiang": "寅",
+    "lei": "地下真官",
+    "type": "地支类象"
+   }
+  ]
+ }
+]

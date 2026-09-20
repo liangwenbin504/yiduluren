@@ -1,0 +1,474 @@
+{
+  "total": 54,
+  "rules": [
+    {
+      "rule_id": "BIFA前后01",
+      "name": "前后引从升迁吉",
+      "category": "毕法赋",
+      "stock_signal": "涨",
+      "confidence": "high",
+      "explanation": "日线级别出现‘阳-阴-阳’K线组合，且第三日阳线收盘价高于第一日阳线收盘价，成交量逐日递增10%以上，如同被吉神引从，预示后续上涨概率大，可视为买入或持股信号。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA首尾02",
+      "name": "首尾相见始终宜",
+      "category": "毕法赋",
+      "stock_signal": "涨",
+      "confidence": "high",
+      "explanation": "日线图出现W底形态，两个低点价格相差不超过3%，且中间反弹高点突破颈线，成交量在突破时放大。首尾呼应，趋势完整，预示后续可能反转向上或延续上涨。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA帘幕03",
+      "name": "帘幕贵人高甲第",
+      "category": "毕法赋",
+      "stock_signal": "涨",
+      "confidence": "high",
+      "explanation": "个股发布净利润预增超过50%等重大利好公告，次日开盘涨幅>3%，且30分钟内未回补缺口，成交量较前日放大2倍。如同贵人高照，预示短期强势，可追涨。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA催官04",
+      "name": "催官使者赴官期",
+      "category": "毕法赋",
+      "stock_signal": "涨",
+      "confidence": "high",
+      "explanation": "股价放量突破120日均线，当日涨幅>5%，成交量是5日均量的3倍以上，且MACD在零轴上方金叉。如同催官使者催促，预示主升浪开启，是强烈的买入信号。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA六阳05",
+      "name": "六阳数足须公用",
+      "category": "毕法赋",
+      "stock_signal": "涨",
+      "confidence": "medium",
+      "explanation": "连续6个交易日收阳线，每日涨幅在1%-3%之间，成交量维持在5日均量以上，RSI指标在60-80之间。代表多头力量强劲，行情可延续，但需注意连续上涨后的回调风险。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA六阴02",
+      "name": "六阴相继尽昏迷",
+      "category": "毕法赋",
+      "stock_signal": "跌",
+      "confidence": "high",
+      "explanation": "连续六根阴线（或六日下跌），每日收盘价均低于前日，成交量萎缩，代表空头主导，行情低迷，不宜抄底。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA旺禄03",
+      "name": "旺禄临身徒妄作",
+      "category": "毕法赋",
+      "stock_signal": "涨",
+      "confidence": "high",
+      "explanation": "股价处于上升通道中，且位于重要均线（如20日均线）之上，如同旺禄临身，应持股不动，避免频繁交易。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA权摄04",
+      "name": "权摄不正禄临支",
+      "category": "毕法赋",
+      "stock_signal": "震荡/跌",
+      "confidence": "medium",
+      "explanation": "股价上涨但成交量未能有效放大，或由跟风盘推动而非主力资金主导，如同权摄不正，上涨难以持续。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA避难05",
+      "name": "避难逃生须弃旧",
+      "category": "毕法赋",
+      "stock_signal": "跌",
+      "confidence": "high",
+      "explanation": "持仓股出现破位下跌（如跌破重要支撑位），应果断止损，避免更大损失，如同弃旧逃生。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA朽木06",
+      "name": "朽木难雕别作为",
+      "category": "毕法赋",
+      "stock_signal": "跌",
+      "confidence": "high",
+      "explanation": "个股基本面恶化（如连续亏损、ST风险），技术面呈空头排列，不宜参与，应换股操作。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_01",
+      "name": "众鬼虽彰全不畏",
+      "category": "毕法赋",
+      "stock_signal": "震荡偏涨（抗跌）",
+      "confidence": "high",
+      "explanation": "大盘或个股面临多重利空（如加息、经济数据差、行业利空），但股价低开高走或盘中抗跌，显示内在强势与主力护盘意愿。此为“利空出尽”或“该跌不跌”的强势信号，可视为逢低吸纳机会。案例条件：大盘受利空低开1%以上，但30分钟内翻红，收盘涨幅>0.5%，且成交量较前日放大。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_02",
+      "name": "虽忧狐假虎威仪",
+      "category": "毕法赋",
+      "stock_signal": "震荡偏涨（洗盘）",
+      "confidence": "high",
+      "explanation": "利空消息看似严重（如传闻、谣言），但实际影响有限，属于虚惊一场。股价短暂下跌后迅速收复失地，甚至创出新高，此为典型的洗盘行为。主力借利空消息吓走散户，随后拉升。案例条件：个股因传闻利空下跌2%以上，但次日即发布澄清公告或消息被证伪，股价反弹并创出近期新高，成交量先缩后放。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_03",
+      "name": "鬼贼当时无畏忌",
+      "category": "毕法赋",
+      "stock_signal": "逆势上涨（强势股）",
+      "confidence": "medium",
+      "explanation": "市场整体处于下跌趋势（鬼贼当令），但个股因业绩优良、估值合理、有政策利好或大资金护盘，能够逆势上涨。这表示该股具备独立行情，是弱势中的避风港，可逆势持有或关注。案例条件：大盘下跌1%以上，但个股逆势上涨0.5%以上，且市盈率低于行业平均，主力资金净流入为正。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_04",
+      "name": "传财太旺反财亏",
+      "category": "毕法赋",
+      "stock_signal": "下跌（回调风险）",
+      "confidence": "high",
+      "explanation": "股价短期涨幅过大（如连续涨停），成交量异常放大，但主力资金开始流出，呈现“天量天价”或“高开低走”形态。此为“物极必反”，多头力量耗尽，预示即将回调或见顶，应警惕追高风险。案例条件：个股连续3个涨停板，第4日高开低走，成交量创历史天量，换手率>20%，主力资金净流出。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_05",
+      "name": "脱上逢脱防虚诈",
+      "category": "毕法赋",
+      "stock_signal": "震荡或下跌（虚涨/诱多）",
+      "confidence": "medium",
+      "explanation": "股价上涨但成交量萎缩（量价背离），或上涨缺乏实质性利好支撑，属于虚涨、诱多行为。主力可能利用少量资金拉高股价，吸引跟风盘后出货，后续存在突然下跌的风险。案例条件：股价连续上涨3日，但每日成交量逐级递减，MACD红柱缩短，且无明确业绩或政策利好公告。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_01",
+      "name": "空上逢空事莫追",
+      "category": "毕法赋",
+      "stock_signal": "下跌或回调风险，不宜追高",
+      "confidence": "high",
+      "explanation": "股市中，若股价已处于高位（如连续上涨后），且出现‘空上逢空’（即旬空之上又逢旬空，代表虚浮无根、力量衰竭），则意味着上涨动力已尽，后续大概率转为下跌或深度回调。此时追高买入极易被套，应果断放弃追涨，持币观望。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_02",
+      "name": "进茹空亡宜退步",
+      "category": "毕法赋",
+      "stock_signal": "下跌或回调，建议减仓或离场",
+      "confidence": "high",
+      "explanation": "股市中，若股价处于上升趋势末端（如连续阳线），但三传或关键位置出现‘空亡’（即力量真空），则代表上涨已后继无力，行情即将反转。此时应视为撤退信号，主动减仓或清仓离场，避免后续下跌带来的损失。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_03",
+      "name": "踏脚空亡进用谋",
+      "category": "毕法赋",
+      "stock_signal": "震荡或洗盘后上涨，可逢低布局",
+      "confidence": "medium",
+      "explanation": "股市中，若股价在上涨过程中出现短暂回调或横盘（‘踏脚’），且回调位置恰好落在‘空亡’区域（即虚位、支撑位），则此空亡并非真跌，而是主力洗盘或技术性调整。此时应视为买入机会，可逢低介入，等待后续拉升。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_04",
+      "name": "胎财生气妻怀孕",
+      "category": "毕法赋",
+      "stock_signal": "上涨或启动，孕育新机会",
+      "confidence": "high",
+      "explanation": "股市中，‘胎’代表新生、萌芽，‘财’代表资金或利润，‘生气’代表旺盛的生命力。此象预示市场或个股正处于底部孕育阶段，有新的资金或题材正在酝酿，如同怀孕待产。信号明确看涨，是中线布局或潜伏的良机，后续大概率出现一波上涨行情。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_05",
+      "name": "胎财死气损胎推",
+      "category": "毕法赋",
+      "stock_signal": "下跌或夭折，行情失败",
+      "confidence": "high",
+      "explanation": "股市中，‘胎财’代表刚刚启动的上涨或新题材，‘死气’代表衰败、无生命力。此象表示原本看好的上涨行情或新热点，因缺乏资金或利空打击而夭折，如同胎儿流产。信号明确看跌，应果断放弃原有看多计划，及时止损或离场，避免更大亏损。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_JIAO_CHE_01",
+      "name": "交车相合交关利",
+      "category": "毕法赋",
+      "stock_signal": "上涨或合作利好",
+      "confidence": "high",
+      "explanation": "股市中，'交车'代表不同主体（如机构与散户、板块与板块、资金与消息）的交互。'相合'指双方关系和谐、目标一致。此信号预示市场出现明显的合作共赢局面，例如主力资金与题材共振、政策利好与市场情绪配合、或上市公司与战略投资者达成协议。行情往往表现为量价齐升，趋势向好，适合参与合作相关的板块或个股。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_JIAO_CHE_02",
+      "name": "交车相害交关废",
+      "category": "毕法赋",
+      "stock_signal": "下跌或合作破裂",
+      "confidence": "high",
+      "explanation": "与上一条相反，'相害'代表双方互相伤害、利益冲突。在股市中，这预示着市场参与者之间出现严重分歧或恶性竞争，例如主力资金对倒出货、机构与游资互砸盘、上市公司与股东利益冲突（如减持、财务造假）。行情往往表现为放量滞涨、冲高回落或持续阴跌，任何基于合作预期的交易都可能失败，应回避相关个股或板块。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_SHANG_XIA_03",
+      "name": "上下皆合事可成",
+      "category": "毕法赋",
+      "stock_signal": "上涨趋势确立",
+      "confidence": "high",
+      "explanation": "'上下'在股市中可映射为K线图的上下影线、或股价的支撑与阻力位，也可指代管理层与执行层（如政策与市场）。'皆合'指所有层级、所有力量都形成一致看多的合力。此信号预示市场处于极度和谐的上涨结构中，例如均线多头排列、MACD金叉、成交量温和放大，且无任何背离。行情趋势明确，上涨动能强劲，是较为可靠的买入或持股信号。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_BI_JI_04",
+      "name": "彼己俱伤事可惊",
+      "category": "毕法赋",
+      "stock_signal": "暴跌或极端行情",
+      "confidence": "medium",
+      "explanation": "'彼己'指代市场中的多方与空方，或主力与散户。'俱伤'意味着双方都遭受重大损失，没有赢家。在股市中，这通常对应极端行情，如多杀多、踩踏式下跌、或流动性枯竭。例如，突发重大利空导致所有参与者（无论多空）都无法幸免，出现千股跌停或连续熔断。此信号预示市场情绪极度恐慌，风险极高，应果断离场观望。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_GAN_MU_05",
+      "name": "干墓并关人宅废",
+      "category": "毕法赋",
+      "stock_signal": "持续下跌或死气沉沉",
+      "confidence": "medium",
+      "explanation": "'干墓'指日干入墓，代表主力或核心力量被压制、困住；'并关'指关卡、阻力；'人宅'可映射为个股（人）与大盘（宅）。此信号预示市场整体陷入死局，例如大盘指数被关键均线或压力位死死压制，个股成交量极度萎缩，无人问津。行情表现为阴跌不止、反弹无力，如同被封印一般。这通常是大熊市或长期横盘末期的特征，代表市场缺乏生机，不宜操作。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA支坟06",
+      "name": "支坟财并旅程稽",
+      "category": "毕法赋",
+      "stock_signal": "震荡或滞涨",
+      "confidence": "medium",
+      "explanation": "支为地支，代表股票本身或持仓；坟为墓库，主停滞、收藏；财并，指财星与墓库相并。此句意为：股票（支）处于墓库状态且与财星相并，导致上涨旅程（行情）稽留不前。股市信号：股价可能进入高位盘整或箱体震荡，虽有盈利（财）但难以突破，如同被‘坟墓’困住，上涨乏力，需警惕久盘必跌。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA受虎07",
+      "name": "受虎克神为病症",
+      "category": "毕法赋",
+      "stock_signal": "下跌或利空",
+      "confidence": "high",
+      "explanation": "虎为白虎，主凶险、暴跌、利空；克神，指白虎克制课传中的用神（如日干、财爻等）。此句意为：股票或市场（用神）受到白虎的克制，如同患上重病。股市信号：明确的下跌信号，可能遭遇突发利空（如财报暴雷、政策打压）、主力砸盘或恐慌性抛售，行情走势极弱，应视为卖出或回避信号。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA制虎08",
+      "name": "制虎之神乃良医",
+      "category": "毕法赋",
+      "stock_signal": "反弹或反转",
+      "confidence": "medium",
+      "explanation": "制虎之神，指能够克制白虎（凶神）的五行或神将（如青龙、六合等）；良医，比喻解救力量。此句意为：当出现能克制白虎的力量时，如同找到了良医，可以治疗‘病症’。股市信号：在下跌趋势中，若出现明确的止跌信号（如放量阳线、政策托底、龙头股企稳），且该信号能克制之前的利空因素，则预示短期反弹或阶段性底部形成，可视为抄底或补仓时机。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA虎临09",
+      "name": "虎临干鬼凶速速",
+      "category": "毕法赋",
+      "stock_signal": "急跌或崩盘",
+      "confidence": "high",
+      "explanation": "虎临，指白虎神将临于课传；干鬼，指日干（代表投资者或市场整体）的鬼爻（克我者为鬼，如甲日见申酉金）。此句意为：白虎直接降临并克制日干，凶险会迅速到来。股市信号：极端凶险的信号，预示市场可能发生急跌、闪崩或系统性风险，投资者账户可能遭受快速且严重的损失。应果断清仓离场，不可抱有幻想。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA龙加10",
+      "name": "龙加生气吉迟迟",
+      "category": "毕法赋",
+      "stock_signal": "慢涨或缓升",
+      "confidence": "medium",
+      "explanation": "龙为青龙，主上涨、利好、财富；生气，指课传中有生气（如旺相、长生、德合等）；吉迟迟，指吉利的事情来得缓慢。此句意为：青龙加上生气，虽然吉利，但应期较迟。股市信号：预示行情将逐步向好，但上涨过程缓慢、曲折，不会出现急涨或连续涨停。可能是慢牛、震荡上行或底部逐步抬高的走势，适合中长线持有，不宜追涨杀跌。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_wuyong_01",
+      "name": "妄用三传灾祸侵",
+      "category": "毕法赋",
+      "stock_signal": "下跌或剧烈震荡",
+      "confidence": "high",
+      "explanation": "三传为事情发展主线，若课传结构混乱或强行使用不当的传用（如逆用、乱传），预示投资者操作方向错误，盲目追涨杀跌或逆势加仓，最终招致亏损。对应股市中因判断失误、频繁交易或重仓错误标的而引发的灾祸性损失。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_suomou_02",
+      "name": "所谋多拙逢罗网",
+      "category": "毕法赋",
+      "stock_signal": "震荡或下跌",
+      "confidence": "high",
+      "explanation": "罗网指天罗地网（辰巳为天罗，戌亥为地网），主困顿、束缚、难以施展。股市中遇此，预示投资者计划屡屡受挫，买入即跌、卖出即涨，或股价陷入窄幅盘整无法突破，操作效率极低，盈利困难。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_tianwang_03",
+      "name": "天网自裹己招非",
+      "category": "毕法赋",
+      "stock_signal": "下跌",
+      "confidence": "medium",
+      "explanation": "天网自裹指自己陷入罗网，咎由自取。对应股市中投资者因贪婪、侥幸或违反纪律（如不止损、追高、杠杆过重）而主动陷入困境，最终导致亏损或爆仓，属于自招的灾祸。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_fei_04",
+      "name": "费有余而得不足",
+      "category": "毕法赋",
+      "stock_signal": "震荡偏弱",
+      "confidence": "high",
+      "explanation": "付出多而收获少，成本与收益严重不匹配。股市中表现为频繁交易产生高额手续费、印花税，或投入大量时间精力研究却收益微薄，甚至出现持仓股分红少、涨幅远低于大盘等情形，整体效率低下。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_yongpo_05",
+      "name": "用破身心无所归",
+      "category": "毕法赋",
+      "stock_signal": "下跌或极度疲弱",
+      "confidence": "high",
+      "explanation": "身心俱疲、无依无靠，主彻底失败或失去方向。股市中预示投资者因连续亏损、深度套牢或资金链断裂而精神崩溃，丧失判断力，持仓处于无主状态（如被套后放任不管），最终可能割肉离场或血本无归。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA华盖08",
+      "name": "华盖覆日人昏晦",
+      "category": "毕法赋",
+      "stock_signal": "下跌或震荡偏空",
+      "confidence": "high",
+      "explanation": "华盖星遮蔽日干，主昏昧不明、压抑受阻。对应股市中，主力资金被压制或市场情绪低迷，股价走势晦暗，缺乏明确方向，易出现阴跌或横盘后下挫。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA太阳09",
+      "name": "太阳射宅屋光辉",
+      "category": "毕法赋",
+      "stock_signal": "上涨或利好驱动",
+      "confidence": "high",
+      "explanation": "太阳（月将）照射宅爻（支），主光明、显耀、吉庆。对应股市中，公司基本面或持仓标的迎来重大利好（如政策扶持、业绩超预期、资金关注），股价走势明朗，易出现上涨或突破行情。",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "YQ2_00_01",
+      "category": "应期",
+      "method": "初传应期法：初传对应1-3天。若初传为财爻且旺相，则应期快速（1天内）；若初传为官鬼，则应期延迟（3天左右）。",
+      "stock_application": "股市应期：若占股价上涨，初传（代表未来1-3天）见财爻旺相，则股价可能在1天内快速拉升；若初传见官鬼，则上涨可能推迟至第3天或受阻。",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "YQ2_00_02",
+      "category": "应期",
+      "method": "中传应期法：中传对应1-2周。应期以类神旺衰调整：类神旺相则应期偏近（1周），休囚则偏远（2周）。",
+      "stock_application": "股市应期：中传代表未来1-2周趋势。若中传类神（如财爻）旺相，则股价在1周内见顶或见底；若类神休囚，则行情可能延续至2周。",
+      "confidence": "medium",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "YQ2_00_03",
+      "category": "应期",
+      "method": "末传应期法：末传对应1-2月。应期以类神旺衰调整：类神旺相则应期偏近（1月），休囚则偏远（2月）。",
+      "stock_application": "股市应期：末传代表未来1-2个月趋势。若末传类神（如官鬼为阻力）旺相，则股价可能在1个月内见顶回落；若类神休囚，则调整可能持续至2个月。",
+      "confidence": "medium",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "YQ2_01_01",
+      "category": "应期",
+      "method": "日德临传=当日应",
+      "stock_application": "若个股出现日德（如甲日见寅，为日德）临于课传（即日干或日支），且当日成交量在突破关键价位（如前期高点、均线）时显著放大，则预示当日即为变盘或启动节点，应期在当天。",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "YQ2_01_02",
+      "category": "应期",
+      "method": "驿马临传=次日应",
+      "stock_application": "若个股出现驿马（如申子辰日见寅为驿马）临于课传，且次日股价高开或放量突破阻力位（如120日均线），则预示次日为快速启动或加速上涨的应期，适合次日早盘追涨。",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "YQ2_01_03",
+      "category": "应期",
+      "method": "墓神=旬内应",
+      "stock_application": "若个股出现墓神（如甲日见未为墓神）临于课传，且股价处于缩量整理或低位盘整阶段，则预示在当旬（10个交易日内）将出现变盘，可能为底部启动或反弹节点，需耐心等待。",
+      "confidence": "medium",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "YQ2_01_04",
+      "category": "应期",
+      "method": "旬空=填实时应",
+      "stock_application": "若个股出现旬空（如甲子旬中戌亥空），且股价在空方区域（如缩量阴跌）运行，则预示在填实之日（如戌日或亥日）或填实之时（如对应时辰）将出现反转或补量行情，适合在填实前低吸。",
+      "confidence": "medium",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "YQ2_01_05",
+      "category": "应期",
+      "method": "天喜=7日内应",
+      "stock_application": "若个股出现天喜（如春见戌为天喜）临于课传，且股价在利好公告（如业绩预增）后出现高开或放量，则预示在7个交易日内将维持强势或出现主升浪，适合持股或加仓。",
+      "confidence": "medium",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "YQ2_02_01",
+      "category": "应期",
+      "method": "伏吟课=应缓(月计)",
+      "stock_application": "当股价走势出现横盘、窄幅震荡、成交量极度萎缩，如同伏吟之象，行情突破或反转的时间周期应以月为单位计算，不宜急于操作。",
+      "confidence": "medium",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "YQ2_02_02",
+      "category": "应期",
+      "method": "反吟课=应速(日计)",
+      "stock_application": "当股价出现剧烈波动、大幅跳空、宽幅震荡，如同反吟之象，行情转折或方向选择的时间周期应以日为单位计算，需密切关注短期变化。",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "YQ2_02_03",
+      "category": "应期",
+      "method": "涉害=应深(周计)",
+      "stock_application": "当股价经历长期盘整、多空争夺激烈、筹码密集交换，如同涉害之象，行情最终突破或见顶见底的时间周期应以周为单位计算，趋势一旦形成将较为深远。",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "YQ2_02_04",
+      "category": "应期",
+      "method": "遥克=应远(半月计)",
+      "stock_application": "当股价受远方因素（如外围市场、远期政策、跨板块联动）影响而波动，如同遥克之象，行情兑现或影响显现的时间周期应以半月为单位计算，需保持耐心。",
+      "confidence": "medium",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "YQ2_03_xx",
+      "category": "应期",
+      "method": "财爻旺相",
+      "stock_application": "当股价沿20日均线上行，均线斜率>30度，MACD红柱持续放大，且无顶背离信号时，若财爻旺相，则上涨应期较快，可持股待涨，避免频繁交易。",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "YQ2_03_xy",
+      "category": "应期",
+      "method": "官鬼旺相",
+      "stock_application": "当股价上涨但成交量未能有效放大，或由跟风盘推动而非主力资金主导时，若官鬼旺相，则上涨应期中等，需警惕上涨难以持续，不宜追高。",
+      "confidence": "medium",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "YQ2_03_xz",
+      "category": "应期",
+      "method": "父母旺相",
+      "stock_application": "当持仓股出现破位下跌（如跌破60日均线），且60日均线开始走平或向下，当日跌幅>4%，成交量放大1.5倍以上时，若父母旺相，则下跌应期较缓，但应果断止损，避免更大损失。",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "YQ2_03_xa",
+      "category": "应期",
+      "method": "休囚",
+      "stock_application": "当个股基本面恶化（如连续亏损、ST风险），技术面呈空头排列时，若卦象休囚，则应期延迟，不宜参与，应换股操作。",
+      "confidence": "medium",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "YQ2_03_xb",
+      "category": "应期",
+      "method": "空亡",
+      "stock_application": "当大盘或个股面临多重利空，但股价低开高走或抗跌时，若卦象空亡，则需待填实（如利空兑现或消息明朗）后，方可确认上涨趋势，可逢低吸纳。",
+      "confidence": "medium",
+      "kb_verified": true
+    }
+  ]
+}

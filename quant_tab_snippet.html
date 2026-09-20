@@ -1,0 +1,89 @@
+id="tab-quant">
+    <div class="today-card" style="background:linear-gradient(135deg,#11998e,#38ef7d);">
+      <h2>📈 量化预测 — 20天周期（宽基ETF轮动 + 波动率目标）</h2>
+      <div class="pred-row" id="quantPred" style="display:flex;gap:24px;flex-wrap:wrap;">
+        <div class="pred-item"><span class="label">周期起</span><span class="val" id="qStart">--</span></div>
+        <div class="pred-item"><span class="label">周期止</span><span class="val" id="qEnd">--</span></div>
+        <div class="pred-item"><span class="label">趋势</span><span class="val" id="qTrend">--</span></div>
+        <div class="pred-item"><span class="label">置信度</span><span class="val" id="qConf">--</span></div>
+        <div class="pred-item"><span class="label">推荐ETF</span><span class="val" id="qBest">--</span></div>
+        <div class="pred-item"><span class="label">推荐仓位</span><span class="val" id="qPos">--</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>📊 ETF池分析</h2>
+      <div class="table-wrap">
+        <table id="quantEtfTable">
+          <thead>
+            <tr>
+              <th>ETF</th><th>最新价</th><th>20日动量</th><th>波动率</th>
+              <th>RSI</th><th>均线趋势</th><th>推荐仓位</th><th>综合评分</th>
+            </tr>
+          </thead>
+          <tbody id="quantEtfBody"><tr><td colspan="8" style="text-align:center;color:#999;">加载中...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>📈 量化预测历史</h2>
+      <div class="table-wrap">
+        <table id="quantHistoryTable">
+          <thead><tr><th>周期起</th><th>周期止</th><th>趋势</th><th>置信度</th><th>推荐ETF</th><th>评分</th></tr></thead>
+          <tbody id="quantHistoryBody"><tr><td colspan="6" style="text-align:center;color:#999;">暂无历史</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin:20px;">
+      <button class="op-btn report" onclick="runQuantPrediction(event)" style="background:#11998e;color:#fff;padding:12px 28px;border-radius:8px;border:none;cursor:pointer;font-weight:600;">🔄 运行量化预测</button>
+    </div>
+  </div>
+
+  <!-- ==================== Tab1c: 六壬预测(20天) ==================== -->
+  <div class="tab-content" id="tab-liuren20d">
+    <div class="today-card" style="background:linear-gradient(135deg,#667eea,#764ba2);">
+      <h2>🔮 大六壬预测 — 20天周期（人工指定时辰）</h2>
+      <div class="pred-row" id="liurenPred" style="display:flex;gap:20px;flex-wrap:wrap;">
+        <div class="pred-item"><span class="label">起课日</span><span class="val" id="lStart">--</span></div>
+        <div class="pred-item"><span class="label">月将</span><span class="val" id="lYuejiang">--</span></div>
+        <div class="pred-item"><span class="label">课体</span><span class="val" id="lKeti">--</span></div>
+        <div class="pred-item"><span class="label">三传</span><span class="val" id="lSanchuan">--</span></div>
+        <div class="pred-item"><span class="label">趋势</span><span class="val" id="lTrend">--</span></div>
+        <div class="pred-item"><span class="label">置信度</span><span class="val" id="lConf">--</span></div>
+      </div>
+      <div id="liurenFinalConclusion" style="margin-top:12px;padding:14px 20px;background:rgba(255,255,255,0.15);border-radius:10px;text-align:center;display:none;">
+        <div style="font-size:14px;opacity:0.8;margin-bottom:4px;">📌 最终结论</div>
+        <div id="lFinalVerdict" style="font-size:28px;font-weight:900;letter-spacing:2px;"></div>
+        <div id="lFinalDetail" style="font-size:13px;opacity:0.8;margin-top:4px;"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>🎯 起课设置</h3>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-end;">
+        <div>
+          <label style="display:block;font-size:13px;color:#666;margin-bottom:6px;">起课日期</label>
+          <input type="date" id="liurenDateInput" style="padding:8px 12px;border:1px solid #ddd;border-radius:6px;font-size:14px;">
+        </div>
+        <div>
+          <label style="display:block;font-size:13px;color:#666;margin-bottom:6px;">时辰</label>
+          <select id="liurenShichenInput" style="padding:8px 12px;border:1px solid #ddd;border-radius:6px;font-size:14px;min-width:100px;">
+            <option value="">自动（当前时辰）</option>
+            <option value="子">子时 (23-1)</option>
+            <option value="丑">丑时 (1-3)</option>
+            <option value="寅">寅时 (3-5)</option>
+            <option value="卯">卯时 (5-7)</option>
+            <option value="辰">辰时 (7-9)</option>
+            <option value="巳">巳时 (9-11)</option>
+            <option value="午">午时 (11-13)</option>
+            <option value="未">未时 (13-15)</option>
+            <option value="申">申时 (15-17)</option>
+            <option value="酉">酉时 (17-19)</option>
+            <option value="戌">戌时 (19-21)</option>
+            <option value="亥">亥时 (21-23)</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:13px;color:#666;margin-bottom:6px;">月将</labe

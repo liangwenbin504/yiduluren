@@ -1,0 +1,3768 @@
+{
+  "generated_at": "2026-08-29T10:07:35.858904",
+  "phase": "Phase B - 真实命中率校准",
+  "dataset_size": 134,
+  "accuracy_comparison": {
+    "original": {
+      "correct": 66,
+      "accuracy": 49.3
+    },
+    "calibrated_no_jiuying": {
+      "correct": 63,
+      "accuracy": 47.0
+    },
+    "calibrated_with_jiuying": {
+      "correct": 65,
+      "accuracy": 48.5
+    }
+  },
+  "per_zhanshi": {
+    "出行": {
+      "original_acc": 60.0,
+      "calibrated_acc": 40.0,
+      "calibrated_jiuying_acc": 40.0,
+      "total": 5
+    },
+    "功名": {
+      "original_acc": 60.0,
+      "calibrated_acc": 51.1,
+      "calibrated_jiuying_acc": 60.0,
+      "total": 45
+    },
+    "占病": {
+      "original_acc": 54.5,
+      "calibrated_acc": 40.9,
+      "calibrated_jiuying_acc": 40.9,
+      "total": 22
+    },
+    "失物": {
+      "original_acc": 66.7,
+      "calibrated_acc": 33.3,
+      "calibrated_jiuying_acc": 33.3,
+      "total": 3
+    },
+    "婚姻": {
+      "original_acc": 33.3,
+      "calibrated_acc": 100.0,
+      "calibrated_jiuying_acc": 100.0,
+      "total": 3
+    },
+    "官讼": {
+      "original_acc": 46.2,
+      "calibrated_acc": 38.5,
+      "calibrated_jiuying_acc": 46.2,
+      "total": 13
+    },
+    "家宅": {
+      "original_acc": 38.7,
+      "calibrated_acc": 48.4,
+      "calibrated_jiuying_acc": 38.7,
+      "total": 31
+    },
+    "求财": {
+      "original_acc": 16.7,
+      "calibrated_acc": 50.0,
+      "calibrated_jiuying_acc": 50.0,
+      "total": 6
+    },
+    "胎产": {
+      "original_acc": 33.3,
+      "calibrated_acc": 33.3,
+      "calibrated_jiuying_acc": 33.3,
+      "total": 6
+    }
+  },
+  "keti_hit_rates": {
+    "全局": {
+      "total": 23,
+      "ji": 8,
+      "xiong": 15,
+      "ji_rate": 0.348,
+      "xiong_rate": 0.652,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          5
+        ],
+        [
+          "家宅",
+          5
+        ],
+        [
+          "占病",
+          5
+        ]
+      ]
+    },
+    "六纯": {
+      "total": 30,
+      "ji": 10,
+      "xiong": 20,
+      "ji_rate": 0.333,
+      "xiong_rate": 0.667,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          9
+        ],
+        [
+          "家宅",
+          8
+        ],
+        [
+          "官讼",
+          3
+        ]
+      ]
+    },
+    "斩关": {
+      "total": 22,
+      "ji": 9,
+      "xiong": 13,
+      "ji_rate": 0.409,
+      "xiong_rate": 0.591,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "占病",
+          6
+        ],
+        [
+          "功名",
+          6
+        ],
+        [
+          "家宅",
+          6
+        ]
+      ]
+    },
+    "死奇": {
+      "total": 13,
+      "ji": 6,
+      "xiong": 7,
+      "ji_rate": 0.462,
+      "xiong_rate": 0.538,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "家宅",
+          5
+        ],
+        [
+          "功名",
+          3
+        ],
+        [
+          "占病",
+          2
+        ]
+      ]
+    },
+    "励德": {
+      "total": 41,
+      "ji": 12,
+      "xiong": 29,
+      "ji_rate": 0.293,
+      "xiong_rate": 0.707,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "家宅",
+          13
+        ],
+        [
+          "功名",
+          11
+        ],
+        [
+          "占病",
+          8
+        ]
+      ]
+    },
+    "六仪": {
+      "total": 37,
+      "ji": 8,
+      "xiong": 29,
+      "ji_rate": 0.216,
+      "xiong_rate": 0.784,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "家宅",
+          10
+        ],
+        [
+          "功名",
+          10
+        ],
+        [
+          "占病",
+          6
+        ]
+      ]
+    },
+    "闭口": {
+      "total": 16,
+      "ji": 5,
+      "xiong": 11,
+      "ji_rate": 0.312,
+      "xiong_rate": 0.688,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          5
+        ],
+        [
+          "家宅",
+          4
+        ],
+        [
+          "官讼",
+          2
+        ]
+      ]
+    },
+    "盘珠": {
+      "total": 54,
+      "ji": 18,
+      "xiong": 36,
+      "ji_rate": 0.333,
+      "xiong_rate": 0.667,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          17
+        ],
+        [
+          "家宅",
+          14
+        ],
+        [
+          "官讼",
+          8
+        ]
+      ]
+    },
+    "玄胎": {
+      "total": 25,
+      "ji": 10,
+      "xiong": 15,
+      "ji_rate": 0.4,
+      "xiong_rate": 0.6,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          11
+        ],
+        [
+          "家宅",
+          5
+        ],
+        [
+          "占病",
+          3
+        ]
+      ]
+    },
+    "德庆": {
+      "total": 9,
+      "ji": 6,
+      "xiong": 3,
+      "ji_rate": 0.667,
+      "xiong_rate": 0.333,
+      "dominant": "吉",
+      "zhanshi_top": [
+        [
+          "功名",
+          6
+        ],
+        [
+          "家宅",
+          2
+        ],
+        [
+          "出行",
+          1
+        ]
+      ]
+    },
+    "间传": {
+      "total": 17,
+      "ji": 3,
+      "xiong": 14,
+      "ji_rate": 0.176,
+      "xiong_rate": 0.824,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          6
+        ],
+        [
+          "家宅",
+          5
+        ],
+        [
+          "占病",
+          2
+        ]
+      ]
+    },
+    "亨通": {
+      "total": 21,
+      "ji": 3,
+      "xiong": 18,
+      "ji_rate": 0.143,
+      "xiong_rate": 0.857,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "家宅",
+          6
+        ],
+        [
+          "功名",
+          5
+        ],
+        [
+          "占病",
+          4
+        ]
+      ]
+    },
+    "淫佚": {
+      "total": 30,
+      "ji": 8,
+      "xiong": 22,
+      "ji_rate": 0.267,
+      "xiong_rate": 0.733,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          9
+        ],
+        [
+          "占病",
+          5
+        ],
+        [
+          "家宅",
+          5
+        ]
+      ]
+    },
+    "度厄": {
+      "total": 9,
+      "ji": 1,
+      "xiong": 8,
+      "ji_rate": 0.111,
+      "xiong_rate": 0.889,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          5
+        ],
+        [
+          "官讼",
+          2
+        ],
+        [
+          "占病",
+          1
+        ]
+      ]
+    },
+    "魄化": {
+      "total": 16,
+      "ji": 2,
+      "xiong": 14,
+      "ji_rate": 0.125,
+      "xiong_rate": 0.875,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          5
+        ],
+        [
+          "占病",
+          3
+        ],
+        [
+          "官讼",
+          3
+        ]
+      ]
+    },
+    "灾厄": {
+      "total": 22,
+      "ji": 5,
+      "xiong": 17,
+      "ji_rate": 0.227,
+      "xiong_rate": 0.773,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          7
+        ],
+        [
+          "占病",
+          4
+        ],
+        [
+          "家宅",
+          4
+        ]
+      ]
+    },
+    "时泰": {
+      "total": 4,
+      "ji": 0,
+      "xiong": 4,
+      "ji_rate": 0.0,
+      "xiong_rate": 1.0,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          2
+        ],
+        [
+          "家宅",
+          1
+        ],
+        [
+          "占病",
+          1
+        ]
+      ]
+    },
+    "刑伤": {
+      "total": 12,
+      "ji": 2,
+      "xiong": 10,
+      "ji_rate": 0.167,
+      "xiong_rate": 0.833,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          4
+        ],
+        [
+          "家宅",
+          4
+        ],
+        [
+          "胎产",
+          1
+        ]
+      ]
+    },
+    "冲破": {
+      "total": 13,
+      "ji": 3,
+      "xiong": 10,
+      "ji_rate": 0.231,
+      "xiong_rate": 0.769,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          6
+        ],
+        [
+          "官讼",
+          2
+        ],
+        [
+          "出行",
+          2
+        ]
+      ]
+    },
+    "三交": {
+      "total": 9,
+      "ji": 2,
+      "xiong": 7,
+      "ji_rate": 0.222,
+      "xiong_rate": 0.778,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "家宅",
+          3
+        ],
+        [
+          "官讼",
+          2
+        ],
+        [
+          "婚姻",
+          1
+        ]
+      ]
+    },
+    "龙战": {
+      "total": 7,
+      "ji": 2,
+      "xiong": 5,
+      "ji_rate": 0.286,
+      "xiong_rate": 0.714,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "官讼",
+          2
+        ],
+        [
+          "家宅",
+          2
+        ],
+        [
+          "婚姻",
+          1
+        ]
+      ]
+    },
+    "龙德": {
+      "total": 10,
+      "ji": 5,
+      "xiong": 5,
+      "ji_rate": 0.5,
+      "xiong_rate": 0.5,
+      "dominant": "吉",
+      "zhanshi_top": [
+        [
+          "功名",
+          6
+        ],
+        [
+          "官讼",
+          1
+        ],
+        [
+          "胎产",
+          1
+        ]
+      ]
+    },
+    "合欢": {
+      "total": 14,
+      "ji": 5,
+      "xiong": 9,
+      "ji_rate": 0.357,
+      "xiong_rate": 0.643,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "家宅",
+          6
+        ],
+        [
+          "功名",
+          5
+        ],
+        [
+          "官讼",
+          1
+        ]
+      ]
+    },
+    "引从": {
+      "total": 5,
+      "ji": 4,
+      "xiong": 1,
+      "ji_rate": 0.8,
+      "xiong_rate": 0.2,
+      "dominant": "吉",
+      "zhanshi_top": [
+        [
+          "功名",
+          3
+        ],
+        [
+          "官讼",
+          1
+        ],
+        [
+          "家宅",
+          1
+        ]
+      ]
+    },
+    "连珠": {
+      "total": 14,
+      "ji": 3,
+      "xiong": 11,
+      "ji_rate": 0.214,
+      "xiong_rate": 0.786,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          6
+        ],
+        [
+          "家宅",
+          3
+        ],
+        [
+          "占病",
+          3
+        ]
+      ]
+    },
+    "鬼墓": {
+      "total": 7,
+      "ji": 3,
+      "xiong": 4,
+      "ji_rate": 0.429,
+      "xiong_rate": 0.571,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          2
+        ],
+        [
+          "家宅",
+          2
+        ],
+        [
+          "胎产",
+          1
+        ]
+      ]
+    },
+    "殃咎": {
+      "total": 3,
+      "ji": 1,
+      "xiong": 2,
+      "ji_rate": 0.333,
+      "xiong_rate": 0.667,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "胎产",
+          1
+        ],
+        [
+          "功名",
+          1
+        ],
+        [
+          "求财",
+          1
+        ]
+      ]
+    },
+    "三奇": {
+      "total": 36,
+      "ji": 9,
+      "xiong": 27,
+      "ji_rate": 0.25,
+      "xiong_rate": 0.75,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          10
+        ],
+        [
+          "家宅",
+          10
+        ],
+        [
+          "占病",
+          4
+        ]
+      ]
+    },
+    "和美": {
+      "total": 9,
+      "ji": 3,
+      "xiong": 6,
+      "ji_rate": 0.333,
+      "xiong_rate": 0.667,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          3
+        ],
+        [
+          "官讼",
+          2
+        ],
+        [
+          "胎产",
+          1
+        ]
+      ]
+    },
+    "斫轮": {
+      "total": 11,
+      "ji": 0,
+      "xiong": 11,
+      "ji_rate": 0.0,
+      "xiong_rate": 1.0,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "家宅",
+          5
+        ],
+        [
+          "功名",
+          2
+        ],
+        [
+          "婚姻",
+          1
+        ]
+      ]
+    },
+    "九丑": {
+      "total": 21,
+      "ji": 5,
+      "xiong": 16,
+      "ji_rate": 0.238,
+      "xiong_rate": 0.762,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "家宅",
+          5
+        ],
+        [
+          "功名",
+          5
+        ],
+        [
+          "官讼",
+          4
+        ]
+      ]
+    },
+    "乱首": {
+      "total": 7,
+      "ji": 0,
+      "xiong": 7,
+      "ji_rate": 0.0,
+      "xiong_rate": 1.0,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "家宅",
+          2
+        ],
+        [
+          "官讼",
+          2
+        ],
+        [
+          "胎产",
+          1
+        ]
+      ]
+    },
+    "绝嗣": {
+      "total": 3,
+      "ji": 0,
+      "xiong": 3,
+      "ji_rate": 0.0,
+      "xiong_rate": 1.0,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          1
+        ],
+        [
+          "占病",
+          1
+        ],
+        [
+          "家宅",
+          1
+        ]
+      ]
+    },
+    "侵害": {
+      "total": 8,
+      "ji": 2,
+      "xiong": 6,
+      "ji_rate": 0.25,
+      "xiong_rate": 0.75,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "家宅",
+          3
+        ],
+        [
+          "功名",
+          2
+        ],
+        [
+          "占病",
+          1
+        ]
+      ]
+    },
+    "解离": {
+      "total": 4,
+      "ji": 1,
+      "xiong": 3,
+      "ji_rate": 0.25,
+      "xiong_rate": 0.75,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          3
+        ],
+        [
+          "官讼",
+          1
+        ]
+      ]
+    },
+    "铸印": {
+      "total": 4,
+      "ji": 1,
+      "xiong": 3,
+      "ji_rate": 0.25,
+      "xiong_rate": 0.75,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          2
+        ],
+        [
+          "家宅",
+          1
+        ],
+        [
+          "占病",
+          1
+        ]
+      ]
+    },
+    "官爵": {
+      "total": 4,
+      "ji": 1,
+      "xiong": 3,
+      "ji_rate": 0.25,
+      "xiong_rate": 0.75,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          3
+        ],
+        [
+          "占病",
+          1
+        ]
+      ]
+    }
+  },
+  "special_hit_rates": {
+    "贵塞鬼户": {
+      "total": 114,
+      "ji": 29,
+      "xiong": 85,
+      "ji_rate": 0.254,
+      "xiong_rate": 0.746,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          39
+        ],
+        [
+          "家宅",
+          27
+        ],
+        [
+          "占病",
+          19
+        ]
+      ]
+    },
+    "芜淫卦": {
+      "total": 6,
+      "ji": 2,
+      "xiong": 4,
+      "ji_rate": 0.333,
+      "xiong_rate": 0.667,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "官讼",
+          2
+        ],
+        [
+          "家宅",
+          2
+        ],
+        [
+          "功名",
+          2
+        ]
+      ]
+    },
+    "罡塞鬼户": {
+      "total": 11,
+      "ji": 2,
+      "xiong": 9,
+      "ji_rate": 0.182,
+      "xiong_rate": 0.818,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          4
+        ],
+        [
+          "家宅",
+          3
+        ],
+        [
+          "占病",
+          2
+        ]
+      ]
+    },
+    "龙虎交驰": {
+      "total": 7,
+      "ji": 0,
+      "xiong": 7,
+      "ji_rate": 0.0,
+      "xiong_rate": 1.0,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "家宅",
+          3
+        ],
+        [
+          "占病",
+          2
+        ],
+        [
+          "功名",
+          1
+        ]
+      ]
+    },
+    "将逢内战": {
+      "total": 70,
+      "ji": 18,
+      "xiong": 52,
+      "ji_rate": 0.257,
+      "xiong_rate": 0.743,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          25
+        ],
+        [
+          "家宅",
+          19
+        ],
+        [
+          "占病",
+          9
+        ]
+      ]
+    },
+    "贵人作日鬼": {
+      "total": 13,
+      "ji": 4,
+      "xiong": 9,
+      "ji_rate": 0.308,
+      "xiong_rate": 0.692,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          8
+        ],
+        [
+          "官讼",
+          2
+        ],
+        [
+          "家宅",
+          1
+        ]
+      ]
+    },
+    "交车害": {
+      "total": 15,
+      "ji": 3,
+      "xiong": 12,
+      "ji_rate": 0.2,
+      "xiong_rate": 0.8,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          5
+        ],
+        [
+          "家宅",
+          4
+        ],
+        [
+          "失物",
+          2
+        ]
+      ]
+    },
+    "贵登天门": {
+      "total": 20,
+      "ji": 2,
+      "xiong": 18,
+      "ji_rate": 0.1,
+      "xiong_rate": 0.9,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "家宅",
+          7
+        ],
+        [
+          "功名",
+          4
+        ],
+        [
+          "占病",
+          4
+        ]
+      ]
+    },
+    "虎临干鬼": {
+      "total": 7,
+      "ji": 0,
+      "xiong": 7,
+      "ji_rate": 0.0,
+      "xiong_rate": 1.0,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "家宅",
+          2
+        ],
+        [
+          "功名",
+          2
+        ],
+        [
+          "占病",
+          2
+        ]
+      ]
+    },
+    "龙化蛇": {
+      "total": 5,
+      "ji": 2,
+      "xiong": 3,
+      "ji_rate": 0.4,
+      "xiong_rate": 0.6,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "官讼",
+          2
+        ],
+        [
+          "占病",
+          2
+        ],
+        [
+          "功名",
+          1
+        ]
+      ]
+    },
+    "初遭夹克": {
+      "total": 16,
+      "ji": 4,
+      "xiong": 12,
+      "ji_rate": 0.25,
+      "xiong_rate": 0.75,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          10
+        ],
+        [
+          "家宅",
+          3
+        ],
+        [
+          "官讼",
+          1
+        ]
+      ]
+    },
+    "两蛇夹墓": {
+      "total": 5,
+      "ji": 1,
+      "xiong": 4,
+      "ji_rate": 0.2,
+      "xiong_rate": 0.8,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          2
+        ],
+        [
+          "婚姻",
+          1
+        ],
+        [
+          "失物",
+          1
+        ]
+      ]
+    },
+    "解离课": {
+      "total": 4,
+      "ji": 1,
+      "xiong": 3,
+      "ji_rate": 0.25,
+      "xiong_rate": 0.75,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          3
+        ],
+        [
+          "官讼",
+          1
+        ]
+      ]
+    },
+    "魁度天门": {
+      "total": 3,
+      "ji": 1,
+      "xiong": 2,
+      "ji_rate": 0.333,
+      "xiong_rate": 0.667,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "占病",
+          2
+        ],
+        [
+          "出行",
+          1
+        ]
+      ]
+    },
+    "破印损模": {
+      "total": 3,
+      "ji": 1,
+      "xiong": 2,
+      "ji_rate": 0.333,
+      "xiong_rate": 0.667,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "功名",
+          2
+        ],
+        [
+          "求财",
+          1
+        ]
+      ]
+    },
+    "蛇化龙": {
+      "total": 3,
+      "ji": 1,
+      "xiong": 2,
+      "ji_rate": 0.333,
+      "xiong_rate": 0.667,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "求财",
+          2
+        ],
+        [
+          "功名",
+          1
+        ]
+      ]
+    },
+    "朽木难雕": {
+      "total": 4,
+      "ji": 0,
+      "xiong": 4,
+      "ji_rate": 0.0,
+      "xiong_rate": 1.0,
+      "dominant": "凶",
+      "zhanshi_top": [
+        [
+          "家宅",
+          2
+        ],
+        [
+          "功名",
+          1
+        ],
+        [
+          "占病",
+          1
+        ]
+      ]
+    }
+  },
+  "calibrated_keti_weights": {
+    "铸印": {
+      "original_weight": 5,
+      "calibrated_weight": -2.5,
+      "ji_rate": 0.25,
+      "xiong_rate": 0.75,
+      "sample_count": 4,
+      "verdict": "凶",
+      "calibration_factor": -0.5
+    },
+    "三奇": {
+      "original_weight": 5,
+      "calibrated_weight": -2.5,
+      "ji_rate": 0.25,
+      "xiong_rate": 0.75,
+      "sample_count": 36,
+      "verdict": "凶",
+      "calibration_factor": -0.5
+    },
+    "元首": {
+      "original_weight": 4,
+      "calibrated_weight": 4,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "斫轮": {
+      "original_weight": 4,
+      "calibrated_weight": -4.0,
+      "ji_rate": 0.0,
+      "xiong_rate": 1.0,
+      "sample_count": 11,
+      "verdict": "凶",
+      "calibration_factor": -1.0
+    },
+    "金车": {
+      "original_weight": 4,
+      "calibrated_weight": 4,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "覆盂": {
+      "original_weight": 4,
+      "calibrated_weight": 4,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "德庆": {
+      "original_weight": 4,
+      "calibrated_weight": 1.34,
+      "ji_rate": 0.667,
+      "xiong_rate": 0.333,
+      "sample_count": 9,
+      "verdict": "吉",
+      "calibration_factor": 0.334
+    },
+    "六合": {
+      "original_weight": 4,
+      "calibrated_weight": 4,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "连珠": {
+      "original_weight": 3,
+      "calibrated_weight": -1.72,
+      "ji_rate": 0.214,
+      "xiong_rate": 0.786,
+      "sample_count": 14,
+      "verdict": "凶",
+      "calibration_factor": -0.572
+    },
+    "六龙": {
+      "original_weight": 3,
+      "calibrated_weight": 3,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "太常": {
+      "original_weight": 3,
+      "calibrated_weight": 3,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "重审": {
+      "original_weight": 2,
+      "calibrated_weight": 2,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "比用": {
+      "original_weight": 2,
+      "calibrated_weight": 2,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "玄胎": {
+      "original_weight": 2,
+      "calibrated_weight": -0.4,
+      "ji_rate": 0.4,
+      "xiong_rate": 0.6,
+      "sample_count": 25,
+      "verdict": "凶",
+      "calibration_factor": -0.2
+    },
+    "盘珠": {
+      "original_weight": 2,
+      "calibrated_weight": -0.67,
+      "ji_rate": 0.333,
+      "xiong_rate": 0.667,
+      "sample_count": 54,
+      "verdict": "凶",
+      "calibration_factor": -0.334
+    },
+    "合欢": {
+      "original_weight": 2,
+      "calibrated_weight": -0.57,
+      "ji_rate": 0.357,
+      "xiong_rate": 0.643,
+      "sample_count": 14,
+      "verdict": "凶",
+      "calibration_factor": -0.286
+    },
+    "时泰": {
+      "original_weight": 2,
+      "calibrated_weight": -2.0,
+      "ji_rate": 0.0,
+      "xiong_rate": 1.0,
+      "sample_count": 4,
+      "verdict": "凶",
+      "calibration_factor": -1.0
+    },
+    "朱雀": {
+      "original_weight": 2,
+      "calibrated_weight": 2,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "间传": {
+      "original_weight": 1,
+      "calibrated_weight": -0.65,
+      "ji_rate": 0.176,
+      "xiong_rate": 0.824,
+      "sample_count": 17,
+      "verdict": "凶",
+      "calibration_factor": -0.648
+    },
+    "励德": {
+      "original_weight": 1,
+      "calibrated_weight": -0.41,
+      "ji_rate": 0.293,
+      "xiong_rate": 0.707,
+      "sample_count": 41,
+      "verdict": "凶",
+      "calibration_factor": -0.414
+    },
+    "返吟": {
+      "original_weight": -1,
+      "calibrated_weight": -1,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "亨通": {
+      "original_weight": -1,
+      "calibrated_weight": 0.71,
+      "ji_rate": 0.143,
+      "xiong_rate": 0.857,
+      "sample_count": 21,
+      "verdict": "凶",
+      "calibration_factor": -0.714
+    },
+    "伏吟": {
+      "original_weight": -2,
+      "calibrated_weight": -2,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "斩关": {
+      "original_weight": -2,
+      "calibrated_weight": 0.36,
+      "ji_rate": 0.409,
+      "xiong_rate": 0.591,
+      "sample_count": 22,
+      "verdict": "凶",
+      "calibration_factor": -0.182
+    },
+    "闭口": {
+      "original_weight": -2,
+      "calibrated_weight": 0.75,
+      "ji_rate": 0.312,
+      "xiong_rate": 0.688,
+      "sample_count": 16,
+      "verdict": "凶",
+      "calibration_factor": -0.376
+    },
+    "淫佚": {
+      "original_weight": -2,
+      "calibrated_weight": 0.93,
+      "ji_rate": 0.267,
+      "xiong_rate": 0.733,
+      "sample_count": 30,
+      "verdict": "凶",
+      "calibration_factor": -0.466
+    },
+    "魄化": {
+      "original_weight": -2,
+      "calibrated_weight": 1.5,
+      "ji_rate": 0.125,
+      "xiong_rate": 0.875,
+      "sample_count": 16,
+      "verdict": "凶",
+      "calibration_factor": -0.75
+    },
+    "刑伤": {
+      "original_weight": -2,
+      "calibrated_weight": 1.33,
+      "ji_rate": 0.167,
+      "xiong_rate": 0.833,
+      "sample_count": 12,
+      "verdict": "凶",
+      "calibration_factor": -0.666
+    },
+    "冲破": {
+      "original_weight": -2,
+      "calibrated_weight": 1.08,
+      "ji_rate": 0.231,
+      "xiong_rate": 0.769,
+      "sample_count": 13,
+      "verdict": "凶",
+      "calibration_factor": -0.538
+    },
+    "解离课": {
+      "original_weight": -2,
+      "calibrated_weight": -2,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "六仪": {
+      "original_weight": -3,
+      "calibrated_weight": 1.7,
+      "ji_rate": 0.216,
+      "xiong_rate": 0.784,
+      "sample_count": 37,
+      "verdict": "凶",
+      "calibration_factor": -0.568
+    },
+    "全局": {
+      "original_weight": -3,
+      "calibrated_weight": 0.91,
+      "ji_rate": 0.348,
+      "xiong_rate": 0.652,
+      "sample_count": 23,
+      "verdict": "凶",
+      "calibration_factor": -0.304
+    },
+    "度厄": {
+      "original_weight": -3,
+      "calibrated_weight": 2.33,
+      "ji_rate": 0.111,
+      "xiong_rate": 0.889,
+      "sample_count": 9,
+      "verdict": "凶",
+      "calibration_factor": -0.778
+    },
+    "灾厄": {
+      "original_weight": -3,
+      "calibrated_weight": 1.64,
+      "ji_rate": 0.227,
+      "xiong_rate": 0.773,
+      "sample_count": 22,
+      "verdict": "凶",
+      "calibration_factor": -0.546
+    },
+    "殃咎": {
+      "original_weight": -3,
+      "calibrated_weight": 1.0,
+      "ji_rate": 0.333,
+      "xiong_rate": 0.667,
+      "sample_count": 3,
+      "verdict": "凶",
+      "calibration_factor": -0.334
+    },
+    "死奇": {
+      "original_weight": -4,
+      "calibrated_weight": 0.3,
+      "ji_rate": 0.462,
+      "xiong_rate": 0.538,
+      "sample_count": 13,
+      "verdict": "凶",
+      "calibration_factor": -0.076
+    }
+  },
+  "calibrated_special_weights": {
+    "贵登天门": {
+      "original_weight": 3,
+      "calibrated_weight": -2.4,
+      "ji_rate": 0.1,
+      "xiong_rate": 0.9,
+      "sample_count": 20,
+      "verdict": "凶",
+      "calibration_factor": -0.8
+    },
+    "罡塞鬼户": {
+      "original_weight": 3,
+      "calibrated_weight": -1.91,
+      "ji_rate": 0.182,
+      "xiong_rate": 0.818,
+      "sample_count": 11,
+      "verdict": "凶",
+      "calibration_factor": -0.636
+    },
+    "三传递生": {
+      "original_weight": 3,
+      "calibrated_weight": 3,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "贵塞鬼户": {
+      "original_weight": 2,
+      "calibrated_weight": -0.98,
+      "ji_rate": 0.254,
+      "xiong_rate": 0.746,
+      "sample_count": 114,
+      "verdict": "凶",
+      "calibration_factor": -0.492
+    },
+    "末助初生": {
+      "original_weight": 2,
+      "calibrated_weight": 2,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "干支三合": {
+      "original_weight": 2,
+      "calibrated_weight": 2,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "干支生合": {
+      "original_weight": 1,
+      "calibrated_weight": 1,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "干支比和": {
+      "original_weight": 0,
+      "calibrated_weight": 0,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "末助初克": {
+      "original_weight": -1,
+      "calibrated_weight": -1,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "劫煞": {
+      "original_weight": -1,
+      "calibrated_weight": -1,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "龙虎交驰": {
+      "original_weight": -1,
+      "calibrated_weight": 1.0,
+      "ji_rate": 0.0,
+      "xiong_rate": 1.0,
+      "sample_count": 7,
+      "verdict": "凶",
+      "calibration_factor": -1.0
+    },
+    "将逢内战": {
+      "original_weight": -2,
+      "calibrated_weight": 0.97,
+      "ji_rate": 0.257,
+      "xiong_rate": 0.743,
+      "sample_count": 70,
+      "verdict": "凶",
+      "calibration_factor": -0.486
+    },
+    "干支乘墓": {
+      "original_weight": -2,
+      "calibrated_weight": -2,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "人宅坐墓": {
+      "original_weight": -2,
+      "calibrated_weight": -2,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "三传互克": {
+      "original_weight": -2,
+      "calibrated_weight": -2,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "互相": {
+      "original_weight": -2,
+      "calibrated_weight": -2,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "闭口": {
+      "original_weight": -2,
+      "calibrated_weight": -2,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "死符": {
+      "original_weight": -2,
+      "calibrated_weight": -2,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "病符": {
+      "original_weight": -2,
+      "calibrated_weight": -2,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "丧门": {
+      "original_weight": -2,
+      "calibrated_weight": -2,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "吊客": {
+      "original_weight": -2,
+      "calibrated_weight": -2,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "龙化蛇": {
+      "original_weight": -2,
+      "calibrated_weight": 0.4,
+      "ji_rate": 0.4,
+      "xiong_rate": 0.6,
+      "sample_count": 5,
+      "verdict": "凶",
+      "calibration_factor": -0.2
+    },
+    "交车害": {
+      "original_weight": -2,
+      "calibrated_weight": 1.2,
+      "ji_rate": 0.2,
+      "xiong_rate": 0.8,
+      "sample_count": 15,
+      "verdict": "凶",
+      "calibration_factor": -0.6
+    },
+    "白虎临干": {
+      "original_weight": -3,
+      "calibrated_weight": -3,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "虎临干鬼": {
+      "original_weight": -3,
+      "calibrated_weight": 3.0,
+      "ji_rate": 0.0,
+      "xiong_rate": 1.0,
+      "sample_count": 7,
+      "verdict": "凶",
+      "calibration_factor": -1.0
+    },
+    "贵临鬼户": {
+      "original_weight": -3,
+      "calibrated_weight": -3,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "初遭夹克": {
+      "original_weight": -3,
+      "calibrated_weight": 1.5,
+      "ji_rate": 0.25,
+      "xiong_rate": 0.75,
+      "sample_count": 16,
+      "verdict": "凶",
+      "calibration_factor": -0.5
+    },
+    "干支皆败": {
+      "original_weight": -3,
+      "calibrated_weight": -3,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "干支皆空": {
+      "original_weight": -3,
+      "calibrated_weight": -3,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "三传递克": {
+      "original_weight": -3,
+      "calibrated_weight": -3,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "德丧禄绝": {
+      "original_weight": -3,
+      "calibrated_weight": -3,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "天罗地网": {
+      "original_weight": -3,
+      "calibrated_weight": -3,
+      "ji_rate": null,
+      "sample_count": 0,
+      "verdict": "未知"
+    },
+    "贵人作日鬼": {
+      "original_weight": -3,
+      "calibrated_weight": 1.15,
+      "ji_rate": 0.308,
+      "xiong_rate": 0.692,
+      "sample_count": 13,
+      "verdict": "凶",
+      "calibration_factor": -0.384
+    },
+    "破印损模": {
+      "original_weight": -3,
+      "calibrated_weight": 1.0,
+      "ji_rate": 0.333,
+      "xiong_rate": 0.667,
+      "sample_count": 3,
+      "verdict": "凶",
+      "calibration_factor": -0.334
+    },
+    "两蛇夹墓": {
+      "original_weight": -3,
+      "calibrated_weight": 1.8,
+      "ji_rate": 0.2,
+      "xiong_rate": 0.8,
+      "sample_count": 5,
+      "verdict": "凶",
+      "calibration_factor": -0.6
+    }
+  },
+  "jiuying_rules": [
+    {
+      "xiong_element": "将逢内战",
+      "jiuying_element": "引从",
+      "base_ji_rate": 0.257,
+      "combo_ji_rate": 1.0,
+      "lift": 0.743,
+      "combo_count": 3,
+      "rule": "当 将逢内战 出现时，若同时有 引从，则吉率从 26% 提升到 100%"
+    },
+    {
+      "xiong_element": "斩关",
+      "jiuying_element": "三奇",
+      "base_ji_rate": 0.409,
+      "combo_ji_rate": 1.0,
+      "lift": 0.591,
+      "combo_count": 3,
+      "rule": "当 斩关 出现时，若同时有 三奇，则吉率从 41% 提升到 100%"
+    },
+    {
+      "xiong_element": "将逢内战",
+      "jiuying_element": "鬼墓",
+      "base_ji_rate": 0.257,
+      "combo_ji_rate": 0.75,
+      "lift": 0.493,
+      "combo_count": 4,
+      "rule": "当 将逢内战 出现时，若同时有 鬼墓，则吉率从 26% 提升到 75%"
+    },
+    {
+      "xiong_element": "将逢内战",
+      "jiuying_element": "龙化蛇",
+      "base_ji_rate": 0.257,
+      "combo_ji_rate": 0.667,
+      "lift": 0.41,
+      "combo_count": 3,
+      "rule": "当 将逢内战 出现时，若同时有 龙化蛇，则吉率从 26% 提升到 67%"
+    },
+    {
+      "xiong_element": "淫佚",
+      "jiuying_element": "连珠",
+      "base_ji_rate": 0.267,
+      "combo_ji_rate": 0.667,
+      "lift": 0.4,
+      "combo_count": 3,
+      "rule": "当 淫佚 出现时，若同时有 连珠，则吉率从 27% 提升到 67%"
+    },
+    {
+      "xiong_element": "六仪",
+      "jiuying_element": "三奇",
+      "base_ji_rate": 0.216,
+      "combo_ji_rate": 0.6,
+      "lift": 0.384,
+      "combo_count": 5,
+      "rule": "当 六仪 出现时，若同时有 三奇，则吉率从 22% 提升到 60%"
+    },
+    {
+      "xiong_element": "六仪",
+      "jiuying_element": "死奇",
+      "base_ji_rate": 0.216,
+      "combo_ji_rate": 0.571,
+      "lift": 0.355,
+      "combo_count": 7,
+      "rule": "当 六仪 出现时，若同时有 死奇，则吉率从 22% 提升到 57%"
+    },
+    {
+      "xiong_element": "将逢内战",
+      "jiuying_element": "淫佚",
+      "base_ji_rate": 0.257,
+      "combo_ji_rate": 0.556,
+      "lift": 0.299,
+      "combo_count": 9,
+      "rule": "当 将逢内战 出现时，若同时有 淫佚，则吉率从 26% 提升到 56%"
+    },
+    {
+      "xiong_element": "淫佚",
+      "jiuying_element": "将逢内战",
+      "base_ji_rate": 0.267,
+      "combo_ji_rate": 0.556,
+      "lift": 0.289,
+      "combo_count": 9,
+      "rule": "当 淫佚 出现时，若同时有 将逢内战，则吉率从 27% 提升到 56%"
+    },
+    {
+      "xiong_element": "六仪",
+      "jiuying_element": "鬼墓",
+      "base_ji_rate": 0.216,
+      "combo_ji_rate": 0.5,
+      "lift": 0.284,
+      "combo_count": 4,
+      "rule": "当 六仪 出现时，若同时有 鬼墓，则吉率从 22% 提升到 50%"
+    },
+    {
+      "xiong_element": "六仪",
+      "jiuying_element": "玄胎",
+      "base_ji_rate": 0.216,
+      "combo_ji_rate": 0.5,
+      "lift": 0.284,
+      "combo_count": 4,
+      "rule": "当 六仪 出现时，若同时有 玄胎，则吉率从 22% 提升到 50%"
+    },
+    {
+      "xiong_element": "龙化蛇",
+      "jiuying_element": "励德",
+      "base_ji_rate": 0.4,
+      "combo_ji_rate": 0.667,
+      "lift": 0.267,
+      "combo_count": 3,
+      "rule": "当 龙化蛇 出现时，若同时有 励德，则吉率从 40% 提升到 67%"
+    },
+    {
+      "xiong_element": "龙化蛇",
+      "jiuying_element": "将逢内战",
+      "base_ji_rate": 0.4,
+      "combo_ji_rate": 0.667,
+      "lift": 0.267,
+      "combo_count": 3,
+      "rule": "当 龙化蛇 出现时，若同时有 将逢内战，则吉率从 40% 提升到 67%"
+    },
+    {
+      "xiong_element": "闭口",
+      "jiuying_element": "斩关",
+      "base_ji_rate": 0.312,
+      "combo_ji_rate": 0.571,
+      "lift": 0.259,
+      "combo_count": 7,
+      "rule": "当 闭口 出现时，若同时有 斩关，则吉率从 31% 提升到 57%"
+    },
+    {
+      "xiong_element": "斩关",
+      "jiuying_element": "连珠",
+      "base_ji_rate": 0.409,
+      "combo_ji_rate": 0.667,
+      "lift": 0.258,
+      "combo_count": 3,
+      "rule": "当 斩关 出现时，若同时有 连珠，则吉率从 41% 提升到 67%"
+    },
+    {
+      "xiong_element": "全局",
+      "jiuying_element": "三奇",
+      "base_ji_rate": 0.348,
+      "combo_ji_rate": 0.6,
+      "lift": 0.252,
+      "combo_count": 5,
+      "rule": "当 全局 出现时，若同时有 三奇，则吉率从 35% 提升到 60%"
+    },
+    {
+      "xiong_element": "初遭夹克",
+      "jiuying_element": "死奇",
+      "base_ji_rate": 0.25,
+      "combo_ji_rate": 0.5,
+      "lift": 0.25,
+      "combo_count": 4,
+      "rule": "当 初遭夹克 出现时，若同时有 死奇，则吉率从 25% 提升到 50%"
+    },
+    {
+      "xiong_element": "将逢内战",
+      "jiuying_element": "龙德",
+      "base_ji_rate": 0.257,
+      "combo_ji_rate": 0.5,
+      "lift": 0.243,
+      "combo_count": 6,
+      "rule": "当 将逢内战 出现时，若同时有 龙德，则吉率从 26% 提升到 50%"
+    },
+    {
+      "xiong_element": "将逢内战",
+      "jiuying_element": "死奇",
+      "base_ji_rate": 0.257,
+      "combo_ji_rate": 0.5,
+      "lift": 0.243,
+      "combo_count": 8,
+      "rule": "当 将逢内战 出现时，若同时有 死奇，则吉率从 26% 提升到 50%"
+    },
+    {
+      "xiong_element": "将逢内战",
+      "jiuying_element": "芜淫卦",
+      "base_ji_rate": 0.257,
+      "combo_ji_rate": 0.5,
+      "lift": 0.243,
+      "combo_count": 4,
+      "rule": "当 将逢内战 出现时，若同时有 芜淫卦，则吉率从 26% 提升到 50%"
+    },
+    {
+      "xiong_element": "将逢内战",
+      "jiuying_element": "德庆",
+      "base_ji_rate": 0.257,
+      "combo_ji_rate": 0.5,
+      "lift": 0.243,
+      "combo_count": 4,
+      "rule": "当 将逢内战 出现时，若同时有 德庆，则吉率从 26% 提升到 50%"
+    },
+    {
+      "xiong_element": "淫佚",
+      "jiuying_element": "斩关",
+      "base_ji_rate": 0.267,
+      "combo_ji_rate": 0.5,
+      "lift": 0.233,
+      "combo_count": 4,
+      "rule": "当 淫佚 出现时，若同时有 斩关，则吉率从 27% 提升到 50%"
+    }
+  ],
+  "improved_cases": [
+    {
+      "zhanshi": "失物",
+      "day_ganzhi": "甲子",
+      "true": "吉",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "全局",
+        "六纯",
+        "斩关",
+        "死奇"
+      ],
+      "specials": [
+        "贵塞鬼户"
+      ],
+      "jiuying": [
+        {
+          "rule": "当 六仪 出现时，若同时有 死奇，则吉率从 22% 提升到 57%",
+          "offset": 1.5
+        },
+        {
+          "rule": "当 闭口 出现时，若同时有 斩关，则吉率从 31% 提升到 57%",
+          "offset": 1.0
+        }
+      ]
+    },
+    {
+      "zhanshi": "官讼",
+      "day_ganzhi": "丁卯",
+      "true": "吉",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "龙战",
+        "三交",
+        "龙德",
+        "六仪"
+      ],
+      "specials": [
+        "贵塞鬼户"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "庚午",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "连珠",
+        "刑伤",
+        "盘珠"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "将逢内战"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "官讼",
+      "day_ganzhi": "辛未",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "玄胎",
+        "淫佚",
+        "盘珠"
+      ],
+      "specials": [
+        "贵塞鬼户"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "丙子",
+      "true": "吉",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "间传",
+        "斩关",
+        "死奇",
+        "励德"
+      ],
+      "specials": [
+        "罡塞鬼户",
+        "龙化蛇",
+        "初遭夹克",
+        "将逢内战"
+      ],
+      "jiuying": [
+        {
+          "rule": "当 将逢内战 出现时，若同时有 龙化蛇，则吉率从 26% 提升到 67%",
+          "offset": 1.0
+        },
+        {
+          "rule": "当 龙化蛇 出现时，若同时有 励德，则吉率从 40% 提升到 67%",
+          "offset": 1.0
+        },
+        {
+          "rule": "当 龙化蛇 出现时，若同时有 将逢内战，则吉率从 40% 提升到 67%",
+          "offset": 1.0
+        },
+        {
+          "rule": "当 初遭夹克 出现时，若同时有 死奇，则吉率从 25% 提升到 50%",
+          "offset": 1.5
+        },
+        {
+          "rule": "当 将逢内战 出现时，若同时有 死奇，则吉率从 26% 提升到 50%",
+          "offset": 1.0
+        }
+      ]
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "丁丑",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "间传",
+        "六纯",
+        "励德",
+        "三奇"
+      ],
+      "specials": [
+        "罡塞鬼户",
+        "将逢内战",
+        "贵人作日鬼"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "丁丑",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "间传",
+        "六纯",
+        "励德",
+        "三奇"
+      ],
+      "specials": [
+        "罡塞鬼户",
+        "将逢内战",
+        "贵人作日鬼"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "戊寅",
+      "true": "吉",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "连珠",
+        "斩关",
+        "死奇",
+        "鬼墓"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "初遭夹克",
+        "将逢内战"
+      ],
+      "jiuying": [
+        {
+          "rule": "当 将逢内战 出现时，若同时有 鬼墓，则吉率从 26% 提升到 75%",
+          "offset": 1.0
+        },
+        {
+          "rule": "当 斩关 出现时，若同时有 连珠，则吉率从 41% 提升到 67%",
+          "offset": 1.0
+        },
+        {
+          "rule": "当 初遭夹克 出现时，若同时有 死奇，则吉率从 25% 提升到 50%",
+          "offset": 1.5
+        },
+        {
+          "rule": "当 将逢内战 出现时，若同时有 死奇，则吉率从 26% 提升到 50%",
+          "offset": 1.0
+        }
+      ]
+    },
+    {
+      "zhanshi": "婚姻",
+      "day_ganzhi": "己卯",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "六纯",
+        "龙战",
+        "三交",
+        "闭口"
+      ],
+      "specials": [
+        "贵塞鬼户"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "辛巳",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "励德",
+        "三奇",
+        "斫轮",
+        "乱首"
+      ],
+      "specials": [
+        "贵塞鬼户"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "辛巳",
+      "true": "吉",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "玄胎",
+        "闭口",
+        "淫佚",
+        "盘珠"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "初遭夹克",
+        "将逢内战"
+      ],
+      "jiuying": [
+        {
+          "rule": "当 将逢内战 出现时，若同时有 淫佚，则吉率从 26% 提升到 56%",
+          "offset": 1.0
+        },
+        {
+          "rule": "当 淫佚 出现时，若同时有 将逢内战，则吉率从 27% 提升到 56%",
+          "offset": 1.0
+        }
+      ]
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "辛巳",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "励德",
+        "三奇",
+        "斫轮",
+        "乱首"
+      ],
+      "specials": [
+        "贵塞鬼户"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "辛巳",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "连珠",
+        "解离"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "将逢内战",
+        "解离课"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "癸未",
+      "true": "吉",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "斩关",
+        "死奇",
+        "鬼墓",
+        "六仪"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "将逢内战"
+      ],
+      "jiuying": [
+        {
+          "rule": "当 将逢内战 出现时，若同时有 引从，则吉率从 26% 提升到 100%",
+          "offset": 1.0
+        },
+        {
+          "rule": "当 将逢内战 出现时，若同时有 鬼墓，则吉率从 26% 提升到 75%",
+          "offset": 1.0
+        },
+        {
+          "rule": "当 六仪 出现时，若同时有 死奇，则吉率从 22% 提升到 57%",
+          "offset": 1.5
+        },
+        {
+          "rule": "当 六仪 出现时，若同时有 鬼墓，则吉率从 22% 提升到 50%",
+          "offset": 1.5
+        },
+        {
+          "rule": "当 将逢内战 出现时，若同时有 死奇，则吉率从 26% 提升到 50%",
+          "offset": 1.0
+        }
+      ]
+    },
+    {
+      "zhanshi": "求财",
+      "day_ganzhi": "癸未",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "六纯",
+        "励德",
+        "游子",
+        "三奇"
+      ],
+      "specials": [
+        "贵登天门",
+        "贵塞鬼户",
+        "游子课"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "官讼",
+      "day_ganzhi": "甲申",
+      "true": "吉",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "全局",
+        "六纯",
+        "斩关",
+        "死奇"
+      ],
+      "specials": [
+        "贵塞鬼户"
+      ],
+      "jiuying": [
+        {
+          "rule": "当 斩关 出现时，若同时有 三奇，则吉率从 41% 提升到 100%",
+          "offset": 1.0
+        },
+        {
+          "rule": "当 六仪 出现时，若同时有 三奇，则吉率从 22% 提升到 60%",
+          "offset": 1.5
+        },
+        {
+          "rule": "当 六仪 出现时，若同时有 死奇，则吉率从 22% 提升到 57%",
+          "offset": 1.5
+        },
+        {
+          "rule": "当 闭口 出现时，若同时有 斩关，则吉率从 31% 提升到 57%",
+          "offset": 1.0
+        },
+        {
+          "rule": "当 全局 出现时，若同时有 三奇，则吉率从 35% 提升到 60%",
+          "offset": 1.5
+        }
+      ]
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "甲申",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "三奇",
+        "亨通"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "将逢内战"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "丙戌",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "间传",
+        "刑伤"
+      ],
+      "specials": [
+        "贵登天门",
+        "贵塞鬼户"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "丙戌",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "连珠",
+        "亨通",
+        "斫轮"
+      ],
+      "specials": [
+        "贵塞鬼户"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "丁亥",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "间传",
+        "六纯",
+        "龙德",
+        "盘珠"
+      ],
+      "specials": [
+        "贵登天门",
+        "贵塞鬼户"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "占病",
+      "day_ganzhi": "戊子",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "轩盖",
+        "三交",
+        "三奇",
+        "亨通"
+      ],
+      "specials": [
+        "贵塞鬼户"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "戊子",
+      "true": "吉",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "全局",
+        "斩关",
+        "死奇",
+        "鬼墓"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "将逢内战"
+      ],
+      "jiuying": [
+        {
+          "rule": "当 斩关 出现时，若同时有 三奇，则吉率从 41% 提升到 100%",
+          "offset": 1.0
+        },
+        {
+          "rule": "当 将逢内战 出现时，若同时有 鬼墓，则吉率从 26% 提升到 75%",
+          "offset": 1.0
+        },
+        {
+          "rule": "当 六仪 出现时，若同时有 三奇，则吉率从 22% 提升到 60%",
+          "offset": 1.5
+        },
+        {
+          "rule": "当 六仪 出现时，若同时有 死奇，则吉率从 22% 提升到 57%",
+          "offset": 1.5
+        },
+        {
+          "rule": "当 六仪 出现时，若同时有 鬼墓，则吉率从 22% 提升到 50%",
+          "offset": 1.5
+        },
+        {
+          "rule": "当 闭口 出现时，若同时有 斩关，则吉率从 31% 提升到 57%",
+          "offset": 1.0
+        },
+        {
+          "rule": "当 全局 出现时，若同时有 三奇，则吉率从 35% 提升到 60%",
+          "offset": 1.5
+        },
+        {
+          "rule": "当 将逢内战 出现时，若同时有 死奇，则吉率从 26% 提升到 50%",
+          "offset": 1.0
+        }
+      ]
+    },
+    {
+      "zhanshi": "占病",
+      "day_ganzhi": "己丑",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "励德",
+        "龙德",
+        "三奇",
+        "淫佚"
+      ],
+      "specials": [
+        "贵登天门",
+        "贵塞鬼户",
+        "将逢内战"
+      ],
+      "jiuying": [
+        {
+          "rule": "当 将逢内战 出现时，若同时有 淫佚，则吉率从 26% 提升到 56%",
+          "offset": 1.0
+        },
+        {
+          "rule": "当 淫佚 出现时，若同时有 将逢内战，则吉率从 27% 提升到 56%",
+          "offset": 1.0
+        },
+        {
+          "rule": "当 将逢内战 出现时，若同时有 龙德，则吉率从 26% 提升到 50%",
+          "offset": 1.0
+        }
+      ]
+    },
+    {
+      "zhanshi": "胎产",
+      "day_ganzhi": "庚寅",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "连珠",
+        "三奇",
+        "魄化",
+        "灾厄"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "将逢内战"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "占病",
+      "day_ganzhi": "壬辰",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "连珠"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "将逢内战"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "官讼",
+      "day_ganzhi": "壬辰",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "三奇",
+        "乱首"
+      ],
+      "specials": [
+        "贵塞鬼户"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "婚姻",
+      "day_ganzhi": "癸巳",
+      "true": "吉",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "玄胎",
+        "六仪",
+        "亨通"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "两蛇夹墓",
+        "将逢内战"
+      ],
+      "jiuying": [
+        {
+          "rule": "当 六仪 出现时，若同时有 玄胎，则吉率从 22% 提升到 50%",
+          "offset": 1.5
+        }
+      ]
+    },
+    {
+      "zhanshi": "占病",
+      "day_ganzhi": "丙申",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "玄胎",
+        "励德",
+        "刑伤"
+      ],
+      "specials": [
+        "贵登天门",
+        "贵塞鬼户",
+        "将逢内战"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "丁酉",
+      "true": "吉",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "全局",
+        "六纯",
+        "龙德",
+        "德庆"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "初遭夹克",
+        "将逢内战",
+        "贵人作日鬼"
+      ],
+      "jiuying": [
+        {
+          "rule": "当 将逢内战 出现时，若同时有 龙德，则吉率从 26% 提升到 50%",
+          "offset": 1.0
+        },
+        {
+          "rule": "当 将逢内战 出现时，若同时有 德庆，则吉率从 26% 提升到 50%",
+          "offset": 1.0
+        }
+      ]
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "己亥",
+      "true": "吉",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "励德",
+        "铸印",
+        "亨通",
+        "魄化"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "破印损模"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "己亥",
+      "true": "吉",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "全局",
+        "六纯",
+        "刑伤",
+        "赘婿"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "蛇化龙",
+        "将逢内战"
+      ],
+      "jiuying": [
+        {
+          "rule": "当 将逢内战 出现时，若同时有 淫佚，则吉率从 26% 提升到 56%",
+          "offset": 1.0
+        },
+        {
+          "rule": "当 淫佚 出现时，若同时有 将逢内战，则吉率从 27% 提升到 56%",
+          "offset": 1.0
+        }
+      ]
+    },
+    {
+      "zhanshi": "求财",
+      "day_ganzhi": "辛丑",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "闭口",
+        "斫轮",
+        "淫佚"
+      ],
+      "specials": [
+        "贵登天门",
+        "贵塞鬼户",
+        "将逢内战",
+        "破印损模"
+      ],
+      "jiuying": [
+        {
+          "rule": "当 将逢内战 出现时，若同时有 淫佚，则吉率从 26% 提升到 56%",
+          "offset": 1.0
+        },
+        {
+          "rule": "当 淫佚 出现时，若同时有 将逢内战，则吉率从 27% 提升到 56%",
+          "offset": 1.0
+        }
+      ]
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "癸卯",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "六纯",
+        "龙战",
+        "励德",
+        "三交"
+      ],
+      "specials": [
+        "贵登天门",
+        "贵塞鬼户",
+        "初遭夹克",
+        "将逢内战"
+      ],
+      "jiuying": [
+        {
+          "rule": "当 将逢内战 出现时，若同时有 芜淫卦，则吉率从 26% 提升到 50%",
+          "offset": 1.0
+        }
+      ]
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "乙巳",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "连珠",
+        "励德",
+        "斫轮",
+        "淫佚"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "龙虎交驰",
+        "朽木难雕"
+      ],
+      "jiuying": [
+        {
+          "rule": "当 淫佚 出现时，若同时有 连珠，则吉率从 27% 提升到 67%",
+          "offset": 1.0
+        }
+      ]
+    },
+    {
+      "zhanshi": "占病",
+      "day_ganzhi": "丙午",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "连珠",
+        "官爵"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "将逢内战"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "丁未",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "六纯",
+        "励德",
+        "官爵"
+      ],
+      "specials": [
+        "贵塞鬼户"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "丁未",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "连珠"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "将逢内战"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "戊申",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "间传",
+        "六仪"
+      ],
+      "specials": [
+        "贵登天门",
+        "罡塞鬼户",
+        "将逢内战"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "己酉",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "龙战",
+        "励德",
+        "三交",
+        "斫轮"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "朽木难雕",
+        "交车害"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "占病",
+      "day_ganzhi": "庚戌",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "间传",
+        "六纯",
+        "六仪"
+      ],
+      "specials": [
+        "贵登天门",
+        "罡塞鬼户",
+        "将逢内战"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "壬子",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "励德",
+        "三奇",
+        "九丑"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "将逢内战",
+        "朽木难雕"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "占病",
+      "day_ganzhi": "癸丑",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "斫轮"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "虎临干鬼",
+        "朽木难雕"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "占病",
+      "day_ganzhi": "丁巳",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "铸印",
+        "盘珠"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "两蛇夹墓"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "丁巳",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "间传",
+        "六纯",
+        "三奇",
+        "合欢"
+      ],
+      "specials": [
+        "贵登天门",
+        "贵塞鬼户"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "求财",
+      "day_ganzhi": "己未",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "间传",
+        "六纯",
+        "三奇",
+        "闭口"
+      ],
+      "specials": [
+        "罡塞鬼户",
+        "龙虎交驰"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "胎产",
+      "day_ganzhi": "庚申",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "三奇",
+        "侵害"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "初遭夹克",
+        "将逢内战"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "出行",
+      "day_ganzhi": "庚申",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "间传",
+        "六纯",
+        "六仪"
+      ],
+      "specials": [
+        "贵登天门",
+        "罡塞鬼户",
+        "将逢内战"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "辛酉",
+      "true": "吉",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "全局",
+        "合欢",
+        "和美",
+        "淫佚"
+      ],
+      "specials": [
+        "将逢内战",
+        "解离课",
+        "贵人作日鬼",
+        "芜淫卦"
+      ],
+      "jiuying": [
+        {
+          "rule": "当 将逢内战 出现时，若同时有 淫佚，则吉率从 26% 提升到 56%",
+          "offset": 1.0
+        },
+        {
+          "rule": "当 淫佚 出现时，若同时有 将逢内战，则吉率从 27% 提升到 56%",
+          "offset": 1.0
+        },
+        {
+          "rule": "当 将逢内战 出现时，若同时有 芜淫卦，则吉率从 26% 提升到 50%",
+          "offset": 1.0
+        }
+      ]
+    },
+    {
+      "zhanshi": "官讼",
+      "day_ganzhi": "辛酉",
+      "true": "吉",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "龙战",
+        "三交",
+        "刑伤",
+        "魄化"
+      ],
+      "specials": [
+        "贵塞鬼户",
+        "交车害"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "壬戌",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "玄胎",
+        "励德",
+        "三奇",
+        "盘珠"
+      ],
+      "specials": [
+        "贵登天门",
+        "贵塞鬼户",
+        "将逢内战"
+      ],
+      "jiuying": []
+    },
+    {
+      "zhanshi": "出行",
+      "day_ganzhi": "癸亥",
+      "true": "凶",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "玄胎",
+        "六纯",
+        "励德",
+        "三奇"
+      ],
+      "specials": [
+        "贵登天门",
+        "贵塞鬼户",
+        "将逢内战"
+      ],
+      "jiuying": [
+        {
+          "rule": "当 将逢内战 出现时，若同时有 德庆，则吉率从 26% 提升到 50%",
+          "offset": 1.0
+        }
+      ]
+    }
+  ],
+  "regressed_cases": [
+    {
+      "zhanshi": "官讼",
+      "day_ganzhi": "丙寅",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "度厄",
+        "六仪",
+        "盘珠"
+      ]
+    },
+    {
+      "zhanshi": "占病",
+      "day_ganzhi": "丙寅",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "间传",
+        "斩关",
+        "死奇",
+        "励德"
+      ]
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "丙寅",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "玄胎",
+        "时泰",
+        "刑伤",
+        "冲破"
+      ]
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "丁卯",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "三交",
+        "六仪",
+        "刑伤"
+      ]
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "戊辰",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "间传",
+        "六仪",
+        "魄化",
+        "灾厄"
+      ]
+    },
+    {
+      "zhanshi": "占病",
+      "day_ganzhi": "辛未",
+      "true": "吉",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "玄胎",
+        "淫佚",
+        "盘珠"
+      ]
+    },
+    {
+      "zhanshi": "胎产",
+      "day_ganzhi": "癸酉",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "斩关",
+        "死奇",
+        "鬼墓",
+        "殃咎"
+      ]
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "癸酉",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "轩盖",
+        "三交",
+        "六仪"
+      ]
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "甲戌",
+      "true": "吉",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "玄胎",
+        "六纯",
+        "合欢",
+        "盘珠"
+      ]
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "戊寅",
+      "true": "吉",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "励德",
+        "龙德",
+        "三奇",
+        "和美"
+      ]
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "戊寅",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "度厄",
+        "玄胎",
+        "魄化",
+        "盘珠"
+      ]
+    },
+    {
+      "zhanshi": "胎产",
+      "day_ganzhi": "己卯",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "全局",
+        "六纯",
+        "和美",
+        "乱首"
+      ]
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "庚辰",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "全局",
+        "六纯",
+        "斩关",
+        "死奇"
+      ]
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "庚辰",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "绝嗣",
+        "三奇",
+        "魄化",
+        "灾厄"
+      ]
+    },
+    {
+      "zhanshi": "占病",
+      "day_ganzhi": "庚辰",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "绝嗣",
+        "三奇",
+        "魄化",
+        "灾厄"
+      ]
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "庚辰",
+      "true": "吉",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "玄胎"
+      ]
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "丁丑",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "六仪"
+      ]
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "壬午",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "全局",
+        "斩关",
+        "励德",
+        "六仪"
+      ]
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "丙戌",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "度厄",
+        "时泰",
+        "六仪"
+      ]
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "庚寅",
+      "true": "吉",
+      "orig_pred": "吉",
+      "cal_pred": "凶",
+      "ketis": [
+        "三奇"
+      ]
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "庚寅",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "间传",
+        "六纯",
+        "斩关",
+        "死奇"
+      ]
+    },
+    {
+      "zhanshi": "出行",
+      "day_ganzhi": "辛卯",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "全局",
+        "和美",
+        "亨通",
+        "淫佚"
+      ]
+    },
+    {
+      "zhanshi": "官讼",
+      "day_ganzhi": "辛卯",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "全局",
+        "和美",
+        "亨通",
+        "魄化"
+      ]
+    },
+    {
+      "zhanshi": "失物",
+      "day_ganzhi": "壬辰",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "全局"
+      ]
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "壬辰",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "度厄",
+        "六仪",
+        "乱首"
+      ]
+    },
+    {
+      "zhanshi": "官讼",
+      "day_ganzhi": "壬辰",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "度厄",
+        "六仪",
+        "乱首"
+      ]
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "癸巳",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "玄胎",
+        "六仪",
+        "亨通"
+      ]
+    },
+    {
+      "zhanshi": "出行",
+      "day_ganzhi": "甲午",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "连珠",
+        "三奇",
+        "亨通",
+        "魄化"
+      ]
+    },
+    {
+      "zhanshi": "出行",
+      "day_ganzhi": "乙未",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "斩关",
+        "励德",
+        "六仪",
+        "刑伤"
+      ]
+    },
+    {
+      "zhanshi": "占病",
+      "day_ganzhi": "乙未",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "全局",
+        "亨通",
+        "盘珠"
+      ]
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "乙未",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "度厄",
+        "励德",
+        "铸印",
+        "魄化"
+      ]
+    },
+    {
+      "zhanshi": "占病",
+      "day_ganzhi": "己亥",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "六仪",
+        "亨通",
+        "淫佚"
+      ]
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "壬寅",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "三奇",
+        "魄化",
+        "灾厄"
+      ]
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "壬寅",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "六仪",
+        "合欢",
+        "闭口"
+      ]
+    },
+    {
+      "zhanshi": "占病",
+      "day_ganzhi": "壬寅",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "全局",
+        "斩关",
+        "励德",
+        "六仪"
+      ]
+    },
+    {
+      "zhanshi": "失物",
+      "day_ganzhi": "癸卯",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "龙战",
+        "三交",
+        "三奇",
+        "亨通"
+      ]
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "戊申",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "全局",
+        "斩关",
+        "死奇",
+        "鬼墓"
+      ]
+    },
+    {
+      "zhanshi": "占病",
+      "day_ganzhi": "戊申",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "全局",
+        "斩关",
+        "死奇",
+        "鬼墓"
+      ]
+    },
+    {
+      "zhanshi": "占病",
+      "day_ganzhi": "己酉",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "斩关",
+        "励德",
+        "侵害",
+        "淫佚"
+      ]
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "庚戌",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "斩关",
+        "亨通",
+        "解离",
+        "盘珠"
+      ]
+    },
+    {
+      "zhanshi": "占病",
+      "day_ganzhi": "庚戌",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "玄胎",
+        "魄化",
+        "灾厄"
+      ]
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "辛亥",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "间传",
+        "龙德",
+        "六仪",
+        "淫佚"
+      ]
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "壬子",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "闭口",
+        "冲破",
+        "九丑"
+      ]
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "癸丑",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "三奇",
+        "六仪",
+        "侵害",
+        "闭口"
+      ]
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "甲寅",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "连珠",
+        "斩关",
+        "死奇",
+        "时泰"
+      ]
+    },
+    {
+      "zhanshi": "占病",
+      "day_ganzhi": "甲寅",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "全局",
+        "六纯",
+        "斩关",
+        "励德"
+      ]
+    },
+    {
+      "zhanshi": "家宅",
+      "day_ganzhi": "甲寅",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "绝嗣",
+        "亨通"
+      ]
+    },
+    {
+      "zhanshi": "功名",
+      "day_ganzhi": "甲寅",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "玄胎",
+        "六仪",
+        "刑伤",
+        "冲破"
+      ]
+    },
+    {
+      "zhanshi": "官讼",
+      "day_ganzhi": "乙卯",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "全局",
+        "鬼墓",
+        "三奇",
+        "和美"
+      ]
+    },
+    {
+      "zhanshi": "官讼",
+      "day_ganzhi": "戊午",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "六仪",
+        "九丑"
+      ]
+    },
+    {
+      "zhanshi": "求财",
+      "day_ganzhi": "戊午",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "六仪",
+        "九丑"
+      ]
+    },
+    {
+      "zhanshi": "占病",
+      "day_ganzhi": "戊午",
+      "true": "凶",
+      "orig_pred": "凶",
+      "cal_pred": "吉",
+      "ketis": [
+        "六仪",
+        "九丑"
+      ]
+    }
+  ]
+}

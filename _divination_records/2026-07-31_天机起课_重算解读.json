@@ -1,0 +1,42 @@
+{
+  "case_id": "tianji_casts_1048",
+  "cast_origin": "虚拟交易系统 · 天机起课",
+  "cast_timestamp": "2026-07-31T19:05:22",
+  "cast_date": "2026-07-31",
+  "source_record": "_memory/tianji_casts.json #1048",
+  "params": {
+    "ri_gan": "丙",
+    "ri_zhi": "午",
+    "yue_jiang": "午",
+    "shi_chen": "酉",
+    "tai_sui": "午",
+    "zhanlei": "求财"
+  },
+  "tianji_original": {
+    "tianji_trend": "看跌",
+    "tianji_updown": "down",
+    "tianji_conf": 0,
+    "period_start": "2026-08-03",
+    "period_end": "2026-08-07"
+  },
+  "engine_v2_recalculation": {
+    "sanchuan": ["子", "酉", "午"],
+    "keti": "遥克课",
+    "qifa": "遥克法",
+    "sanchuan_tianjiang": ["六合", "贵人", "玄武"],
+    "sanchuan_liuqin": ["鬼", "财", "兄"],
+    "sanchuan_ganzhi": ["壬子", "己酉", "丙午"],
+    "yingqi_zonglan": "邵彦和应期法：子数9、酉数6、午数9 → ★相加15=9+6；单支9=众数/独支 9；支位6=午至子6位；相乘54=9×6（求财占宜年断）\n月建应期：初传子=11月建、干上寅=1月建、时酉=8月建 → 应于该月",
+    "wushu": "壬占汇选物数法：相乘54=9×6；旺相×10→540=9×6=人十则言百；干支并22=9+6+遁干7；干支并旺×10→220=22 人十则言百",
+    "xunsha": {
+      "句奇": "亥", "六仪": "辰", "响动": "戌", "句丁": "未",
+      "闭口": "丑", "五亡神": "亥", "空亡": ["寅", "卯"], "旬首": "甲辰"
+    }
+  },
+  "verification": {
+    "sanchuan_match": true,
+    "keti_match": true,
+    "tianjiang_match": true,
+    "note": "更新引擎完整还原天机课象，全链路无异常（无 bug）。股票域按铁律不输出涨跌方向。"
+  }
+}

@@ -1,0 +1,11 @@
+# 仪度六壬择日 · 部署精简依赖（仅择日/批量择日/演禽/导出所需）
+# 不含 akshare / langchain / xgboost / pyautogui 等重型包（虚拟交易实时行情等可选后续再加）
+flask>=2.3
+flask-cors>=4.0
+waitress>=3.0
+sxtwl
+python-docx>=1.1
+python-pptx>=0.6
+requests>=2.31
+python-dotenv>=1.0
+tqdm>=4.65

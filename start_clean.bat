@@ -1,0 +1,9 @@
+@echo off
+chcp 65001 >nul
+cd /d "e:\仪度六壬择日\yiduluren"
+echo 杀所有5555端口进程...
+for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":5555.*LISTENING"') do taskkill /F /PID %%a 2>nul
+echo 清缓存...
+del /q liuren_20d_data\*.json 2>nul
+echo 启动Flask...
+.venv\Scripts\python -B stock_dashboard.py

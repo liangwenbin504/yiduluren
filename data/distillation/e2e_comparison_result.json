@@ -1,0 +1,682 @@
+{
+  "enhanced": {
+    "label": "增强后（97种毕法赋引用）",
+    "total_score": 100.0,
+    "match_rate": 100.0,
+    "unique_refs": 97,
+    "avg_match_score": 88.125,
+    "case_details": [
+      {
+        "case_id": "CASE-STOCK-002",
+        "zhanshi": "求财",
+        "keti": "弹射",
+        "jixiong": "凶",
+        "matched": true,
+        "best_score": 90,
+        "matched_keywords": [
+          "白虎",
+          "求财",
+          "玄武"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "CASE-STOCK-021",
+        "zhanshi": "求财",
+        "keti": "",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 65,
+        "matched_keywords": [
+          "吉",
+          "求财"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "CASE-STOCK-022",
+        "zhanshi": "求财",
+        "keti": "",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 65,
+        "matched_keywords": [
+          "吉",
+          "求财"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "CASE-STOCK-023",
+        "zhanshi": "求财",
+        "keti": "重审，铸印破模",
+        "jixiong": "凶",
+        "matched": true,
+        "best_score": 75,
+        "matched_keywords": [
+          "重审课",
+          "求财",
+          "重审"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-001",
+        "zhanshi": "求财",
+        "keti": "弹射",
+        "jixiong": "凶",
+        "matched": true,
+        "best_score": 90,
+        "matched_keywords": [
+          "白虎",
+          "求财",
+          "玄武"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-002",
+        "zhanshi": "求财",
+        "keti": "",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 65,
+        "matched_keywords": [
+          "吉",
+          "求财"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-003",
+        "zhanshi": "疾病",
+        "keti": "涉害",
+        "jixiong": "凶",
+        "matched": true,
+        "best_score": 65,
+        "matched_keywords": [
+          "朱雀",
+          "凶",
+          "朱雀主口"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-004",
+        "zhanshi": "婚姻",
+        "keti": "六合",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 135,
+        "matched_keywords": [
+          "六合主婚",
+          "青龙主喜",
+          "六合"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-005",
+        "zhanshi": "出行",
+        "keti": "元首",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 105,
+        "matched_keywords": [
+          "驿马",
+          "出行",
+          "青龙"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-006",
+        "zhanshi": "官讼",
+        "keti": "重审",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 65,
+        "matched_keywords": [
+          "白虎",
+          "官讼"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-007",
+        "zhanshi": "求财",
+        "keti": "元首课",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 90,
+        "matched_keywords": [
+          "吉",
+          "求财",
+          "青龙"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-008",
+        "zhanshi": "求财",
+        "keti": "重审课",
+        "jixiong": "凶",
+        "matched": true,
+        "best_score": 90,
+        "matched_keywords": [
+          "白虎",
+          "玄武",
+          "求财"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-009",
+        "zhanshi": "求财",
+        "keti": "六合课",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 120,
+        "matched_keywords": [
+          "太常",
+          "吉",
+          "求财"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-010",
+        "zhanshi": "求财",
+        "keti": "三阳课",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 90,
+        "matched_keywords": [
+          "朱雀",
+          "求财",
+          "贵人"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-011",
+        "zhanshi": "求财",
+        "keti": "伏吟课",
+        "jixiong": "平",
+        "matched": true,
+        "best_score": 80,
+        "matched_keywords": [
+          "滞不前",
+          "勾陈",
+          "玄武"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-012",
+        "zhanshi": "婚姻",
+        "keti": "比和课",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 135,
+        "matched_keywords": [
+          "六合主婚",
+          "青龙主喜",
+          "六合"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-013",
+        "zhanshi": "婚姻",
+        "keti": "涉害课",
+        "jixiong": "凶",
+        "matched": true,
+        "best_score": 105,
+        "matched_keywords": [
+          "朱雀",
+          "婚姻",
+          "朱雀主口"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-014",
+        "zhanshi": "疾病",
+        "keti": "知机课",
+        "jixiong": "凶",
+        "matched": true,
+        "best_score": 55,
+        "matched_keywords": [
+          "白虎",
+          "勾陈"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-015",
+        "zhanshi": "疾病",
+        "keti": "元首课",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 65,
+        "matched_keywords": [
+          "吉",
+          "贵人",
+          "青龙"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-016",
+        "zhanshi": "出行",
+        "keti": "重审课",
+        "jixiong": "凶",
+        "matched": true,
+        "best_score": 90,
+        "matched_keywords": [
+          "白虎",
+          "玄武",
+          "凶"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-017",
+        "zhanshi": "出行",
+        "keti": "三阳课",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 105,
+        "matched_keywords": [
+          "吉",
+          "出行",
+          "贵人"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-018",
+        "zhanshi": "功名",
+        "keti": "元首课",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 90,
+        "matched_keywords": [
+          "榜题名",
+          "贵人",
+          "功名"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-019",
+        "zhanshi": "功名",
+        "keti": "伏吟课",
+        "jixiong": "凶",
+        "matched": true,
+        "best_score": 90,
+        "matched_keywords": [
+          "玄武",
+          "伏吟",
+          "功名"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-020",
+        "zhanshi": "家宅",
+        "keti": "六合课",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 90,
+        "matched_keywords": [
+          "太常",
+          "家宅",
+          "六合"
+        ],
+        "best_rule_id": "?"
+      }
+    ]
+  },
+  "original": {
+    "label": "增强前（低多样性引用）",
+    "total_score": 70.9278350515464,
+    "match_rate": 100.0,
+    "unique_refs": 3,
+    "avg_match_score": 79.16666666666667,
+    "case_details": [
+      {
+        "case_id": "CASE-STOCK-002",
+        "zhanshi": "求财",
+        "keti": "弹射",
+        "jixiong": "凶",
+        "matched": true,
+        "best_score": 90,
+        "matched_keywords": [
+          "白虎",
+          "求财",
+          "玄武"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "CASE-STOCK-021",
+        "zhanshi": "求财",
+        "keti": "",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 50,
+        "matched_keywords": [
+          "吉",
+          "求财"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "CASE-STOCK-022",
+        "zhanshi": "求财",
+        "keti": "",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 50,
+        "matched_keywords": [
+          "吉",
+          "求财"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "CASE-STOCK-023",
+        "zhanshi": "求财",
+        "keti": "重审，铸印破模",
+        "jixiong": "凶",
+        "matched": true,
+        "best_score": 60,
+        "matched_keywords": [
+          "重审课",
+          "求财",
+          "重审"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-001",
+        "zhanshi": "求财",
+        "keti": "弹射",
+        "jixiong": "凶",
+        "matched": true,
+        "best_score": 90,
+        "matched_keywords": [
+          "白虎",
+          "求财",
+          "玄武"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-002",
+        "zhanshi": "求财",
+        "keti": "",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 50,
+        "matched_keywords": [
+          "吉",
+          "求财"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-003",
+        "zhanshi": "疾病",
+        "keti": "涉害",
+        "jixiong": "凶",
+        "matched": true,
+        "best_score": 65,
+        "matched_keywords": [
+          "太常",
+          "朱雀",
+          "疾病"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-004",
+        "zhanshi": "婚姻",
+        "keti": "六合",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 135,
+        "matched_keywords": [
+          "六合主婚",
+          "吉",
+          "六合"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-005",
+        "zhanshi": "出行",
+        "keti": "元首",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 75,
+        "matched_keywords": [
+          "吉",
+          "出行",
+          "青龙"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-006",
+        "zhanshi": "官讼",
+        "keti": "重审",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 65,
+        "matched_keywords": [
+          "白虎",
+          "官讼"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-007",
+        "zhanshi": "求财",
+        "keti": "元首课",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 75,
+        "matched_keywords": [
+          "吉",
+          "求财",
+          "青龙"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-008",
+        "zhanshi": "求财",
+        "keti": "重审课",
+        "jixiong": "凶",
+        "matched": true,
+        "best_score": 90,
+        "matched_keywords": [
+          "白虎",
+          "玄武",
+          "求财"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-009",
+        "zhanshi": "求财",
+        "keti": "六合课",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 105,
+        "matched_keywords": [
+          "太常",
+          "吉",
+          "求财"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-010",
+        "zhanshi": "求财",
+        "keti": "三阳课",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 75,
+        "matched_keywords": [
+          "朱雀",
+          "求财",
+          "青龙"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-011",
+        "zhanshi": "求财",
+        "keti": "伏吟课",
+        "jixiong": "平",
+        "matched": true,
+        "best_score": 65,
+        "matched_keywords": [
+          "求财",
+          "玄武"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-012",
+        "zhanshi": "婚姻",
+        "keti": "比和课",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 135,
+        "matched_keywords": [
+          "六合主婚",
+          "吉",
+          "六合"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-013",
+        "zhanshi": "婚姻",
+        "keti": "涉害课",
+        "jixiong": "凶",
+        "matched": true,
+        "best_score": 105,
+        "matched_keywords": [
+          "白虎",
+          "朱雀",
+          "婚姻"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-014",
+        "zhanshi": "疾病",
+        "keti": "知机课",
+        "jixiong": "凶",
+        "matched": true,
+        "best_score": 50,
+        "matched_keywords": [
+          "太常",
+          "白虎",
+          "疾病"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-015",
+        "zhanshi": "疾病",
+        "keti": "元首课",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 50,
+        "matched_keywords": [
+          "吉",
+          "疾病",
+          "青龙"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-016",
+        "zhanshi": "出行",
+        "keti": "重审课",
+        "jixiong": "凶",
+        "matched": true,
+        "best_score": 90,
+        "matched_keywords": [
+          "白虎",
+          "玄武",
+          "出行"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-017",
+        "zhanshi": "出行",
+        "keti": "三阳课",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 75,
+        "matched_keywords": [
+          "吉",
+          "出行",
+          "青龙"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-018",
+        "zhanshi": "功名",
+        "keti": "元首课",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 75,
+        "matched_keywords": [
+          "吉",
+          "贵人",
+          "功名"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-019",
+        "zhanshi": "功名",
+        "keti": "伏吟课",
+        "jixiong": "凶",
+        "matched": true,
+        "best_score": 90,
+        "matched_keywords": [
+          "白虎",
+          "玄武",
+          "功名"
+        ],
+        "best_rule_id": "?"
+      },
+      {
+        "case_id": "GOLDEN-020",
+        "zhanshi": "家宅",
+        "keti": "六合课",
+        "jixiong": "吉",
+        "matched": true,
+        "best_score": 90,
+        "matched_keywords": [
+          "太常",
+          "吉",
+          "家宅"
+        ],
+        "best_rule_id": "?"
+      }
+    ]
+  }
+}

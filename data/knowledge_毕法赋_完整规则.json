@@ -1,0 +1,264 @@
+{
+  "total": 37,
+  "rules": [
+    {
+      "rule_id": "BIFA_01",
+      "name": "前后引从升迁吉",
+      "stock_signal": "涨",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_02",
+      "name": "首尾相见始终宜",
+      "stock_signal": "涨",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_03",
+      "name": "帘幕贵人高甲第",
+      "stock_signal": "涨",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_04",
+      "name": "催官使者赴官期",
+      "stock_signal": "涨",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_05",
+      "name": "六阳数足须公用",
+      "stock_signal": "涨",
+      "confidence": "medium",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_06",
+      "name": "六阴相继尽昏迷",
+      "stock_signal": "跌",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_07",
+      "name": "旺禄临身徒妄作",
+      "stock_signal": "震荡",
+      "confidence": "medium",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_08",
+      "name": "权摄不正禄临支",
+      "stock_signal": "跌",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_09",
+      "name": "避难逃生须弃旧",
+      "stock_signal": "跌",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_10",
+      "name": "朽木难雕别作为",
+      "stock_signal": "跌",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_01",
+      "name": "众鬼虽彰全不畏",
+      "stock_signal": "涨",
+      "confidence": "medium",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_02",
+      "name": "虽忧狐假虎威仪",
+      "stock_signal": "涨",
+      "confidence": "medium",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_03",
+      "name": "鬼贼当时无畏忌",
+      "stock_signal": "涨",
+      "confidence": "low",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_04",
+      "name": "传财太旺反财亏",
+      "stock_signal": "跌",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_05",
+      "name": "脱上逢脱防虚诈",
+      "stock_signal": "跌",
+      "confidence": "medium",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_06",
+      "name": "空上逢空事莫追",
+      "stock_signal": "跌",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_07",
+      "name": "进茹空亡宜退步",
+      "stock_signal": "跌",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_08",
+      "name": "踏脚空亡进用谋",
+      "stock_signal": "涨",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_09",
+      "name": "胎财生气妻怀孕",
+      "stock_signal": "涨",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_10",
+      "name": "胎财死气损胎推",
+      "stock_signal": "跌",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_01",
+      "name": "交车相合交关利",
+      "stock_signal": "涨",
+      "confidence": "medium",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_02",
+      "name": "交车相害交关废",
+      "stock_signal": "跌",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_03",
+      "name": "上下皆合事可成",
+      "stock_signal": "涨",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_04",
+      "name": "彼己俱伤事可惊",
+      "stock_signal": "跌",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_05",
+      "name": "干墓并关人宅废",
+      "stock_signal": "跌",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_06",
+      "name": "支坟财并旅程稽",
+      "stock_signal": "跌",
+      "confidence": "medium",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_07",
+      "name": "受虎克神为病症",
+      "stock_signal": "跌",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_08",
+      "name": "制虎之神乃良医",
+      "stock_signal": "涨",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_09",
+      "name": "虎临干鬼凶速速",
+      "stock_signal": "跌",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_10",
+      "name": "龙加生气吉迟迟",
+      "stock_signal": "涨",
+      "confidence": "medium",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_01",
+      "name": "妄用三传灾祸侵",
+      "stock_signal": "跌",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_02",
+      "name": "所谋多拙逢罗网",
+      "stock_signal": "跌",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_03",
+      "name": "天网自裹己招非",
+      "stock_signal": "跌",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_04",
+      "name": "费有余而得不足",
+      "stock_signal": "跌",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_05",
+      "name": "用破身心无所归",
+      "stock_signal": "跌",
+      "confidence": "high",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_06",
+      "name": "华盖覆日人昏晦",
+      "stock_signal": "震荡",
+      "confidence": "medium",
+      "kb_verified": true
+    },
+    {
+      "rule_id": "BIFA_07",
+      "name": "太阳射宅屋光辉",
+      "stock_signal": "涨",
+      "confidence": "high",
+      "kb_verified": true
+    }
+  ]
+}

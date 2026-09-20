@@ -1,0 +1,116 @@
+{
+  "validated_at": "2026-08-28 20:19:47",
+  "summary": {
+    "diversity_improvement_pct": 300.0,
+    "coverage_improvement_pct": 0.0,
+    "quality_improvement_pct": 78.03617571059426,
+    "overall_score": 97.19736842105262,
+    "grade": "S (卓越)"
+  },
+  "low_diversity": {
+    "diversity_score": 0.25,
+    "coverage": 1.0,
+    "avg_quality": 0.5092105263157896,
+    "quality_distribution": {
+      "high": 7,
+      "medium": 297,
+      "low": 0
+    },
+    "refs_by_type": {
+      "占宅": 1,
+      "占病": 7,
+      "婚姻": 1,
+      "出行": 1,
+      "官讼": 1,
+      "功名": 1,
+      "家宅": 1,
+      "求财": 1
+    }
+  },
+  "high_diversity": {
+    "diversity_score": 1.0,
+    "coverage": 1.0,
+    "avg_quality": 0.9065789473684209,
+    "quality_distribution": {
+      "high": 304,
+      "medium": 0,
+      "low": 0
+    },
+    "refs_by_type": {
+      "占宅": 11,
+      "占病": 7,
+      "婚姻": 10,
+      "出行": 12,
+      "官讼": 10,
+      "功名": 5,
+      "家宅": 14,
+      "求财": 12
+    }
+  },
+  "golden_case_coverage": {
+    "golden_types": [
+      "疾病",
+      "官讼",
+      "求财",
+      "功名",
+      "家宅",
+      "出行",
+      "婚姻"
+    ],
+    "covered_types": [
+      "官讼",
+      "功名",
+      "求财",
+      "家宅",
+      "出行",
+      "婚姻"
+    ],
+    "uncovered_types": [
+      "疾病"
+    ],
+    "match_analysis": {
+      "疾病": {
+        "kb_ref_count": 0,
+        "article_count": 12,
+        "sample_matched": 0,
+        "match_rate": 0
+      },
+      "官讼": {
+        "kb_ref_count": 10,
+        "article_count": 12,
+        "sample_matched": 5,
+        "match_rate": 1.0
+      },
+      "求财": {
+        "kb_ref_count": 12,
+        "article_count": 12,
+        "sample_matched": 5,
+        "match_rate": 1.0
+      },
+      "功名": {
+        "kb_ref_count": 5,
+        "article_count": 12,
+        "sample_matched": 5,
+        "match_rate": 1.0
+      },
+      "家宅": {
+        "kb_ref_count": 14,
+        "article_count": 14,
+        "sample_matched": 5,
+        "match_rate": 1.0
+      },
+      "出行": {
+        "kb_ref_count": 12,
+        "article_count": 12,
+        "sample_matched": 5,
+        "match_rate": 1.0
+      },
+      "婚姻": {
+        "kb_ref_count": 10,
+        "article_count": 10,
+        "sample_matched": 5,
+        "match_rate": 1.0
+      }
+    }
+  }
+}

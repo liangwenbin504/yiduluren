@@ -1,0 +1,5771 @@
+{
+  "reliable": [
+    {
+      "id": "SZ-001",
+      "syn_zl": "家宅",
+      "real_case_id": "§宅墓02·004",
+      "real_name": "张九翁戊午生",
+      "real_age": 51,
+      "real_zhanlei": "家宅",
+      "real_day": "庚寅",
+      "real_sanchuan": [
+        "巳",
+        "寅",
+        "亥"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:凶,难,败,坏",
+      "score": 315,
+      "reasons": [
+        "年龄51",
+        "日干支庚寅",
+        "三传重叠3",
+        "姓名共翁张九"
+      ],
+      "old_label": "凶",
+      "old_conf": 0.95,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-003",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·139",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "求财",
+      "real_day": "壬寅",
+      "real_sanchuan": [
+        "寅",
+        "申",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 190,
+      "reasons": [
+        "日干支壬寅",
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.95,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-005",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·060",
+      "real_name": "谢省元乙丑生",
+      "real_age": 45,
+      "real_zhanlei": "功名",
+      "real_day": "甲子",
+      "real_sanchuan": [
+        "辰",
+        "巳",
+        "卯"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 185,
+      "reasons": [
+        "日干支甲子",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.95,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-006",
+      "syn_zl": "家宅",
+      "real_case_id": "§宅墓02·015",
+      "real_name": "徐八公甲寅生",
+      "real_age": 55,
+      "real_zhanlei": "家宅",
+      "real_day": "癸亥",
+      "real_sanchuan": [
+        "未",
+        "巳",
+        "卯"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 225,
+      "reasons": [
+        "年龄55",
+        "三传重叠3"
+      ],
+      "old_label": "未知",
+      "old_conf": 0.0,
+      "reliable": true,
+      "match_basis": "三传"
+    },
+    {
+      "id": "SZ-007",
+      "syn_zl": "征战",
+      "real_case_id": "§亡盗15·199",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "庚午",
+      "real_sanchuan": [
+        "酉",
+        "酉",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:败,狱,伤,失",
+      "score": 175,
+      "reasons": [
+        "日干支庚午",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-011",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·106",
+      "real_name": "",
+      "real_age": 68,
+      "real_zhanlei": "其他",
+      "real_day": "十八",
+      "real_sanchuan": [
+        "寅",
+        "酉",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 210,
+      "reasons": [
+        "年龄68",
+        "三传重叠2"
+      ],
+      "old_label": "未知",
+      "old_conf": 0.0,
+      "reliable": true,
+      "match_basis": "三传"
+    },
+    {
+      "id": "SZ-012",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·113",
+      "real_name": "姜子昭庚午生",
+      "real_age": 40,
+      "real_zhanlei": "其他",
+      "real_day": "己酉",
+      "real_sanchuan": [
+        "丑",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 160,
+      "reasons": [
+        "日干支己酉"
+      ],
+      "old_label": "未知",
+      "old_conf": 0.0,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-015",
+      "syn_zl": "胎产",
+      "real_case_id": "§胎产子息07·130",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "胎产",
+      "real_day": "丙辰",
+      "real_sanchuan": [
+        "巳",
+        "申",
+        "寅"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:喜,生",
+      "score": 145,
+      "reasons": [
+        "三传重叠3"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.7,
+      "reliable": true,
+      "match_basis": "三传"
+    },
+    {
+      "id": "SZ-017",
+      "syn_zl": "疾病",
+      "real_case_id": "§疾病13·163",
+      "real_name": "王县丞甲戌生",
+      "real_age": 35,
+      "real_zhanlei": "疾病",
+      "real_day": "甲寅",
+      "real_sanchuan": [
+        "申",
+        "午",
+        "午"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 160,
+      "reasons": [
+        "日干支甲寅"
+      ],
+      "old_label": "未知",
+      "old_conf": 0.0,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-019",
+      "syn_zl": "出行",
+      "real_case_id": "§出行访谒11·153",
+      "real_name": "",
+      "real_age": 64,
+      "real_zhanlei": "出行",
+      "real_day": "十八",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 145,
+      "reasons": [
+        "三传重叠3"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.7,
+      "reliable": true,
+      "match_basis": "三传"
+    },
+    {
+      "id": "SZ-022",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·133",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "求财",
+      "real_day": "己未",
+      "real_sanchuan": [
+        "酉",
+        "酉",
+        "酉"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.6,
+      "real_ev": "末句含凶词",
+      "score": 175,
+      "reasons": [
+        "日干支己未",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.95,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-023",
+      "syn_zl": "疾病",
+      "real_case_id": "§疾病13·166",
+      "real_name": "张逸士庚戌生",
+      "real_age": 59,
+      "real_zhanlei": "疾病",
+      "real_day": "庚寅",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:大凶",
+      "score": 175,
+      "reasons": [
+        "日干同庚",
+        "三传重叠3",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.95,
+      "reliable": true,
+      "match_basis": "三传"
+    },
+    {
+      "id": "SZ-026",
+      "syn_zl": "其他",
+      "real_case_id": "§一课二事各断式09·144",
+      "real_name": "王县丞丙寅生",
+      "real_age": 43,
+      "real_zhanlei": "其他",
+      "real_day": "甲申",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 155,
+      "reasons": [
+        "三传重叠3",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.7,
+      "reliable": true,
+      "match_basis": "三传"
+    },
+    {
+      "id": "SZ-029",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·104",
+      "real_name": "何三公丙午生",
+      "real_age": 63,
+      "real_zhanlei": "其他",
+      "real_day": "丙寅",
+      "real_sanchuan": [
+        "子",
+        "卯",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 175,
+      "reasons": [
+        "日干支丙寅",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.7,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-030",
+      "syn_zl": "其他",
+      "real_case_id": "§亡盗15·201",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "丁卯",
+      "real_sanchuan": [
+        "巳",
+        "卯"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:讼,废,盗,劫",
+      "score": 175,
+      "reasons": [
+        "日干支丁卯",
+        "三传重叠1"
+      ],
+      "old_label": "未知",
+      "old_conf": 0.0,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-036",
+      "syn_zl": "疾病",
+      "real_case_id": "§疾病13·166",
+      "real_name": "张逸士庚戌生",
+      "real_age": 59,
+      "real_zhanlei": "疾病",
+      "real_day": "庚寅",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:大凶",
+      "score": 140,
+      "reasons": [
+        "三传重叠2",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.95,
+      "reliable": true,
+      "match_basis": "三传"
+    },
+    {
+      "id": "SZ-040",
+      "syn_zl": "其他",
+      "real_case_id": "§一课二事各断式09·146",
+      "real_name": "何秀才丁亥生",
+      "real_age": 22,
+      "real_zhanlei": "其他",
+      "real_day": "丁酉",
+      "real_sanchuan": [
+        "亥",
+        "卯",
+        "未"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 165,
+      "reasons": [
+        "日干同丁",
+        "三传重叠3"
+      ],
+      "old_label": "未知",
+      "old_conf": 0.0,
+      "reliable": true,
+      "match_basis": "三传"
+    },
+    {
+      "id": "SZ-042",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·104",
+      "real_name": "何三公丙午生",
+      "real_age": 63,
+      "real_zhanlei": "其他",
+      "real_day": "丙寅",
+      "real_sanchuan": [
+        "子",
+        "卯",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 140,
+      "reasons": [
+        "三传重叠2",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "三传"
+    },
+    {
+      "id": "SZ-043",
+      "syn_zl": "其他",
+      "real_case_id": "§流年05·121",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "庚辰",
+      "real_sanchuan": [
+        "子",
+        "寅",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:讼,刑,丧",
+      "score": 175,
+      "reasons": [
+        "日干支庚辰",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-046",
+      "syn_zl": "其他",
+      "real_case_id": "§一课二事各断式09·145",
+      "real_name": "刘判官己未生",
+      "real_age": 50,
+      "real_zhanlei": "其他",
+      "real_day": "癸未",
+      "real_sanchuan": [
+        "未",
+        "辰",
+        "未"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 180,
+      "reasons": [
+        "日干支癸未",
+        "姓名共刘生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.95,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-047",
+      "syn_zl": "其他",
+      "real_case_id": "§一课二事各断式09·144",
+      "real_name": "王县丞丙寅生",
+      "real_age": 43,
+      "real_zhanlei": "其他",
+      "real_day": "甲申",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 190,
+      "reasons": [
+        "日干支甲申",
+        "三传重叠2"
+      ],
+      "old_label": "未知",
+      "old_conf": 0.0,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-049",
+      "syn_zl": "胎产",
+      "real_case_id": "§胎产子息07·130",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "胎产",
+      "real_day": "丙辰",
+      "real_sanchuan": [
+        "巳",
+        "申",
+        "寅"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:喜,生",
+      "score": 150,
+      "reasons": [
+        "日干同丙",
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.7,
+      "reliable": true,
+      "match_basis": "三传"
+    },
+    {
+      "id": "SZ-050",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·108",
+      "real_name": "傅清卿壬申年",
+      "real_age": 38,
+      "real_zhanlei": "其他",
+      "real_day": "丁亥",
+      "real_sanchuan": [
+        "戌",
+        "寅"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:利,生,贵",
+      "score": 240,
+      "reasons": [
+        "年龄38",
+        "日干支丁亥"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.7,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-051",
+      "syn_zl": "家宅",
+      "real_case_id": "§宅墓02·025",
+      "real_name": "何七秀才壬申生",
+      "real_age": 37,
+      "real_zhanlei": "家宅",
+      "real_day": "甲子",
+      "real_sanchuan": [
+        "子",
+        "巳",
+        "未"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 185,
+      "reasons": [
+        "日干支甲子",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-055",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·047",
+      "real_name": "徐将仕辛卯生",
+      "real_age": 18,
+      "real_zhanlei": "功名",
+      "real_day": "戊辰",
+      "real_sanchuan": [
+        "申",
+        "子"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 160,
+      "reasons": [
+        "日干支戊辰"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-057",
+      "syn_zl": "走失",
+      "real_case_id": "§亡盗15·198",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "庚午",
+      "real_sanchuan": [
+        "丑",
+        "午",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 175,
+      "reasons": [
+        "日干支庚午",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-067",
+      "syn_zl": "疾病",
+      "real_case_id": "§疾病13·175",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "疾病",
+      "real_day": "庚辰",
+      "real_sanchuan": [
+        "午",
+        "丑"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 160,
+      "reasons": [
+        "日干支庚辰"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-076",
+      "syn_zl": "其他",
+      "real_case_id": "§亡盗15·195",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "己丑",
+      "real_sanchuan": [
+        "酉",
+        "丑",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 175,
+      "reasons": [
+        "日干支己丑",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-078",
+      "syn_zl": "其他",
+      "real_case_id": "§亡盗15·189",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "辛卯",
+      "real_sanchuan": [
+        "子",
+        "辰",
+        "未"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 160,
+      "reasons": [
+        "日干支辛卯"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-089",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·066",
+      "real_name": "",
+      "real_age": 31,
+      "real_zhanlei": "功名",
+      "real_day": "壬寅",
+      "real_sanchuan": [
+        "午",
+        "丑",
+        "申"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 160,
+      "reasons": [
+        "日干支壬寅"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-095",
+      "syn_zl": "其他",
+      "real_case_id": "§天时01·002",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "戊申",
+      "real_sanchuan": [
+        "申",
+        "辰",
+        "丑"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:成,升,生,贵",
+      "score": 160,
+      "reasons": [
+        "日干支戊申"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-114",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·073",
+      "real_name": "童七秀才壬中生",
+      "real_age": 37,
+      "real_zhanlei": "功名",
+      "real_day": "丁巳",
+      "real_sanchuan": [
+        "巳",
+        "申",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 190,
+      "reasons": [
+        "日干支丁巳",
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-116",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·114",
+      "real_name": "顾孔目甲子生",
+      "real_age": 46,
+      "real_zhanlei": "其他",
+      "real_day": "己未",
+      "real_sanchuan": [
+        "未",
+        "申",
+        "申"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:成,遂,生,贵",
+      "score": 160,
+      "reasons": [
+        "日干支己未"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-121",
+      "syn_zl": "家宅",
+      "real_case_id": "§宅墓02·025",
+      "real_name": "何七秀才壬申生",
+      "real_age": 37,
+      "real_zhanlei": "家宅",
+      "real_day": "甲子",
+      "real_sanchuan": [
+        "子",
+        "巳",
+        "未"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 175,
+      "reasons": [
+        "日干支甲子",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-125",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·047",
+      "real_name": "徐将仕辛卯生",
+      "real_age": 18,
+      "real_zhanlei": "功名",
+      "real_day": "戊辰",
+      "real_sanchuan": [
+        "申",
+        "子"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 160,
+      "reasons": [
+        "日干支戊辰"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-127",
+      "syn_zl": "走失",
+      "real_case_id": "§亡盗15·198",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "庚午",
+      "real_sanchuan": [
+        "丑",
+        "午",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 175,
+      "reasons": [
+        "日干支庚午",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-137",
+      "syn_zl": "疾病",
+      "real_case_id": "§疾病13·175",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "疾病",
+      "real_day": "庚辰",
+      "real_sanchuan": [
+        "午",
+        "丑"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 160,
+      "reasons": [
+        "日干支庚辰"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-146",
+      "syn_zl": "其他",
+      "real_case_id": "§亡盗15·195",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "己丑",
+      "real_sanchuan": [
+        "酉",
+        "丑",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 175,
+      "reasons": [
+        "日干支己丑",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-148",
+      "syn_zl": "其他",
+      "real_case_id": "§亡盗15·189",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "辛卯",
+      "real_sanchuan": [
+        "子",
+        "辰",
+        "未"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 160,
+      "reasons": [
+        "日干支辛卯"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-159",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·066",
+      "real_name": "",
+      "real_age": 31,
+      "real_zhanlei": "功名",
+      "real_day": "壬寅",
+      "real_sanchuan": [
+        "午",
+        "丑",
+        "申"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 160,
+      "reasons": [
+        "日干支壬寅"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-165",
+      "syn_zl": "其他",
+      "real_case_id": "§天时01·002",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "戊申",
+      "real_sanchuan": [
+        "申",
+        "辰",
+        "丑"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:成,升,生,贵",
+      "score": 160,
+      "reasons": [
+        "日干支戊申"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-171",
+      "syn_zl": "征战",
+      "real_case_id": "§亡盗15·190",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "甲寅",
+      "real_sanchuan": [
+        "辰",
+        "午",
+        "申"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 160,
+      "reasons": [
+        "日干支甲寅"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-176",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·114",
+      "real_name": "顾孔目甲子生",
+      "real_age": 46,
+      "real_zhanlei": "其他",
+      "real_day": "己未",
+      "real_sanchuan": [
+        "未",
+        "申",
+        "申"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:成,遂,生,贵",
+      "score": 170,
+      "reasons": [
+        "日干支己未",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-201",
+      "syn_zl": "征战",
+      "real_case_id": "§一课二事各断式09·144",
+      "real_name": "王县丞丙寅生",
+      "real_age": 43,
+      "real_zhanlei": "其他",
+      "real_day": "甲申",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 190,
+      "reasons": [
+        "日干支甲申",
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-203",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·143",
+      "real_name": "钱三郎甲戌生",
+      "real_age": 36,
+      "real_zhanlei": "求财",
+      "real_day": "丙戌",
+      "real_sanchuan": [
+        "子",
+        "酉",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 175,
+      "reasons": [
+        "日干支丙戌",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    },
+    {
+      "id": "SZ-208",
+      "syn_zl": "其他",
+      "real_case_id": "§亡盗15·189",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "辛卯",
+      "real_sanchuan": [
+        "子",
+        "辰",
+        "未"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 160,
+      "reasons": [
+        "日干支辛卯"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": true,
+      "match_basis": "全干支"
+    }
+  ],
+  "needs_review": [
+    {
+      "id": "SZ-002",
+      "syn_zl": "疾病",
+      "real_case_id": "§疾病13·163",
+      "real_name": "王县丞甲戌生",
+      "real_age": 35,
+      "real_zhanlei": "疾病",
+      "real_day": "甲寅",
+      "real_sanchuan": [
+        "申",
+        "午",
+        "午"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 205,
+      "reasons": [
+        "年龄35",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.95,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-008",
+      "syn_zl": "走失",
+      "real_case_id": "§终身04·108",
+      "real_name": "傅清卿壬申年",
+      "real_age": 38,
+      "real_zhanlei": "其他",
+      "real_day": "丁亥",
+      "real_sanchuan": [
+        "戌",
+        "寅"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:利,生,贵",
+      "score": 195,
+      "reasons": [
+        "年龄38",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-009",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·134",
+      "real_name": "邵七丞务戊寅生",
+      "real_age": 32,
+      "real_zhanlei": "求财",
+      "real_day": "癸巳",
+      "real_sanchuan": [
+        "申",
+        "酉"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄32",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.95,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-010",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·056",
+      "real_name": "邹大官人庚辰生",
+      "real_age": 30,
+      "real_zhanlei": "功名",
+      "real_day": "戊申",
+      "real_sanchuan": [
+        "戌",
+        "酉",
+        "午"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.95,
+      "real_ev": "强吉:大吉",
+      "score": 190,
+      "reasons": [
+        "年龄30",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.7,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-013",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·105",
+      "real_name": "袁知镇癸酉命",
+      "real_age": 36,
+      "real_zhanlei": "其他",
+      "real_day": "戊戌",
+      "real_sanchuan": [
+        "丑",
+        "卯",
+        "丑"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 180,
+      "reasons": [
+        "年龄36"
+      ],
+      "old_label": "吉",
+      "old_conf": 1.0,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-014",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·115",
+      "real_name": "",
+      "real_age": 25,
+      "real_zhanlei": "其他",
+      "real_day": "十七",
+      "real_sanchuan": [
+        "申",
+        "酉",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄25",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.95,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-016",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·110",
+      "real_name": "傅大禄己巳生",
+      "real_age": 40,
+      "real_zhanlei": "其他",
+      "real_day": "甲午",
+      "real_sanchuan": [
+        "卯",
+        "申",
+        "申"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄40",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.95,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-018",
+      "syn_zl": "其他",
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "real_age": 48,
+      "real_zhanlei": "其他",
+      "real_day": "乙丑",
+      "real_sanchuan": [
+        "寅",
+        "未",
+        "子"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:败,狱,囚",
+      "score": 135,
+      "reasons": [
+        "日干同乙",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.95,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-020",
+      "syn_zl": "其他",
+      "real_case_id": "§一课二事各断式09·145",
+      "real_name": "刘判官己未生",
+      "real_age": 50,
+      "real_zhanlei": "其他",
+      "real_day": "癸未",
+      "real_sanchuan": [
+        "未",
+        "辰",
+        "未"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄50",
+        "三传重叠1"
+      ],
+      "old_label": "平",
+      "old_conf": 0.75,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-021",
+      "syn_zl": "其他",
+      "real_case_id": "§天时01·002",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "戊申",
+      "real_sanchuan": [
+        "申",
+        "辰",
+        "丑"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:成,升,生,贵",
+      "score": 135,
+      "reasons": [
+        "日干同戊",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-024",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·109",
+      "real_name": "叶七秀才丁卯生",
+      "real_age": 42,
+      "real_zhanlei": "其他",
+      "real_day": "",
+      "real_sanchuan": [
+        "丑",
+        "子",
+        "亥"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄42",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 1.0,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-025",
+      "syn_zl": "其他",
+      "real_case_id": "§杂占17·217",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "壬子",
+      "real_sanchuan": [
+        "午",
+        "申",
+        "子"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 135,
+      "reasons": [
+        "日干同壬",
+        "三传重叠1"
+      ],
+      "old_label": "未知",
+      "old_conf": 0.0,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-027",
+      "syn_zl": "其他",
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "real_age": 48,
+      "real_zhanlei": "其他",
+      "real_day": "乙丑",
+      "real_sanchuan": [
+        "寅",
+        "未",
+        "子"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:败,狱,囚",
+      "score": 195,
+      "reasons": [
+        "年龄48",
+        "三传重叠1"
+      ],
+      "old_label": "未知",
+      "old_conf": 0.0,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-028",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·105",
+      "real_name": "袁知镇癸酉命",
+      "real_age": 36,
+      "real_zhanlei": "其他",
+      "real_day": "戊戌",
+      "real_sanchuan": [
+        "丑",
+        "卯",
+        "丑"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 180,
+      "reasons": [
+        "年龄36"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.95,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-031",
+      "syn_zl": "疾病",
+      "real_case_id": "§疾病13·169",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "疾病",
+      "real_day": "戊午",
+      "real_sanchuan": [
+        "寅",
+        "午",
+        "午"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 135,
+      "reasons": [
+        "日干同戊",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.95,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-032",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·067",
+      "real_name": "",
+      "real_age": 26,
+      "real_zhanlei": "功名",
+      "real_day": "十一",
+      "real_sanchuan": [
+        "寅",
+        "亥",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 180,
+      "reasons": [
+        "年龄26"
+      ],
+      "old_label": "未知",
+      "old_conf": 0.0,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-033",
+      "syn_zl": "其他",
+      "real_case_id": "§流年05·120",
+      "real_name": "刘监仓庚午生",
+      "real_age": 40,
+      "real_zhanlei": "其他",
+      "real_day": "庚辰",
+      "real_sanchuan": [
+        "午",
+        "辰",
+        "辰"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 200,
+      "reasons": [
+        "年龄40",
+        "日干同庚"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-034",
+      "syn_zl": "家宅",
+      "real_case_id": "§宅墓02·021",
+      "real_name": "林丞务丙辰生",
+      "real_age": 54,
+      "real_zhanlei": "家宅",
+      "real_day": "辛卯",
+      "real_sanchuan": [
+        "巳",
+        "酉",
+        "子"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 135,
+      "reasons": [
+        "日干同辛",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-035",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·108",
+      "real_name": "傅清卿壬申年",
+      "real_age": 38,
+      "real_zhanlei": "其他",
+      "real_day": "丁亥",
+      "real_sanchuan": [
+        "戌",
+        "寅"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:利,生,贵",
+      "score": 195,
+      "reasons": [
+        "年龄38",
+        "三传重叠1"
+      ],
+      "old_label": "未知",
+      "old_conf": 0.0,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-038",
+      "syn_zl": "其他",
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "real_age": 48,
+      "real_zhanlei": "其他",
+      "real_day": "乙丑",
+      "real_sanchuan": [
+        "寅",
+        "未",
+        "子"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:败,狱,囚",
+      "score": 135,
+      "reasons": [
+        "日干同乙",
+        "三传重叠1"
+      ],
+      "old_label": "未知",
+      "old_conf": 0.0,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-039",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·105",
+      "real_name": "袁知镇癸酉命",
+      "real_age": 36,
+      "real_zhanlei": "其他",
+      "real_day": "戊戌",
+      "real_sanchuan": [
+        "丑",
+        "卯",
+        "丑"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 180,
+      "reasons": [
+        "年龄36"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-041",
+      "syn_zl": "其他",
+      "real_case_id": "§天时01·002",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "戊申",
+      "real_sanchuan": [
+        "申",
+        "辰",
+        "丑"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:成,升,生,贵",
+      "score": 135,
+      "reasons": [
+        "日干同戊",
+        "三传重叠1"
+      ],
+      "old_label": "未知",
+      "old_conf": 0.0,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-044",
+      "syn_zl": "疾病",
+      "real_case_id": "§疾病13·170",
+      "real_name": "尹邦达庚申",
+      "real_age": 50,
+      "real_zhanlei": "疾病",
+      "real_day": "丁亥",
+      "real_sanchuan": [
+        "巳",
+        "戌",
+        "卯"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.6,
+      "real_ev": "末句含吉词",
+      "score": 180,
+      "reasons": [
+        "年龄50"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.95,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-045",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·109",
+      "real_name": "叶七秀才丁卯生",
+      "real_age": 42,
+      "real_zhanlei": "其他",
+      "real_day": "",
+      "real_sanchuan": [
+        "丑",
+        "子",
+        "亥"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄42",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.95,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-048",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·110",
+      "real_name": "傅大禄己巳生",
+      "real_age": 40,
+      "real_zhanlei": "其他",
+      "real_day": "甲午",
+      "real_sanchuan": [
+        "卯",
+        "申",
+        "申"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄40",
+        "三传重叠1"
+      ],
+      "old_label": "未知",
+      "old_conf": 0.0,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-052",
+      "syn_zl": "疾病",
+      "real_case_id": "§疾病13·162",
+      "real_name": "",
+      "real_age": 21,
+      "real_zhanlei": "疾病",
+      "real_day": "壬午",
+      "real_sanchuan": [
+        "巳",
+        "巳",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 210,
+      "reasons": [
+        "年龄21",
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-053",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·143",
+      "real_name": "钱三郎甲戌生",
+      "real_age": 36,
+      "real_zhanlei": "求财",
+      "real_day": "丙戌",
+      "real_sanchuan": [
+        "子",
+        "酉",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 135,
+      "reasons": [
+        "日干同丙",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-054",
+      "syn_zl": "婚姻",
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "real_age": 52,
+      "real_zhanlei": "婚姻",
+      "real_day": "癸巳",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-056",
+      "syn_zl": "征战",
+      "real_case_id": "§终身04·115",
+      "real_name": "",
+      "real_age": 25,
+      "real_zhanlei": "其他",
+      "real_day": "十七",
+      "real_sanchuan": [
+        "申",
+        "酉",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄25",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-058",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·135",
+      "real_name": "",
+      "real_age": 27,
+      "real_zhanlei": "求财",
+      "real_day": "乙亥",
+      "real_sanchuan": [
+        "未",
+        "亥",
+        "卯"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄27",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-059",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·067",
+      "real_name": "",
+      "real_age": 26,
+      "real_zhanlei": "功名",
+      "real_day": "十一",
+      "real_sanchuan": [
+        "寅",
+        "亥",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 145,
+      "reasons": [
+        "三传重叠3"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-060",
+      "syn_zl": "其他",
+      "real_case_id": "§亡盗15·188",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "癸卯",
+      "real_sanchuan": [
+        "丑",
+        "亥",
+        "酉"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 135,
+      "reasons": [
+        "日干同癸",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-061",
+      "syn_zl": "其他",
+      "real_case_id": "§一课二事各断式09·144",
+      "real_name": "王县丞丙寅生",
+      "real_age": 43,
+      "real_zhanlei": "其他",
+      "real_day": "甲申",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 150,
+      "reasons": [
+        "日干同甲",
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-062",
+      "syn_zl": "其他",
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "real_age": 48,
+      "real_zhanlei": "其他",
+      "real_day": "乙丑",
+      "real_sanchuan": [
+        "寅",
+        "未",
+        "子"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:败,狱,囚",
+      "score": 135,
+      "reasons": [
+        "日干同乙",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-063",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·104",
+      "real_name": "何三公丙午生",
+      "real_age": 63,
+      "real_zhanlei": "其他",
+      "real_day": "丙寅",
+      "real_sanchuan": [
+        "子",
+        "卯",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 135,
+      "reasons": [
+        "日干同丙",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-064",
+      "syn_zl": "胎产",
+      "real_case_id": "§胎产子息07·129",
+      "real_name": "郭彦和壬午生",
+      "real_age": 28,
+      "real_zhanlei": "胎产",
+      "real_day": "丁酉",
+      "real_sanchuan": [
+        "酉",
+        "亥",
+        "丑"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:利,遂,生,贵",
+      "score": 135,
+      "reasons": [
+        "日干同丁",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-065",
+      "syn_zl": "其他",
+      "real_case_id": "§一课二事各断式09·144",
+      "real_name": "王县丞丙寅生",
+      "real_age": 43,
+      "real_zhanlei": "其他",
+      "real_day": "甲申",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 140,
+      "reasons": [
+        "三传重叠2",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-066",
+      "syn_zl": "家宅",
+      "real_case_id": "§宅墓02·004",
+      "real_name": "张九翁戊午生",
+      "real_age": 51,
+      "real_zhanlei": "家宅",
+      "real_day": "庚寅",
+      "real_sanchuan": [
+        "巳",
+        "寅",
+        "亥"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:凶,难,败,坏",
+      "score": 155,
+      "reasons": [
+        "三传重叠3",
+        "姓名共翁"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-068",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·138",
+      "real_name": "曹八秀才癸酉生",
+      "real_age": 37,
+      "real_zhanlei": "求财",
+      "real_day": "取比",
+      "real_sanchuan": [
+        "戌",
+        "巳",
+        "卯"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:成,遂,生",
+      "score": 195,
+      "reasons": [
+        "年龄37",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-069",
+      "syn_zl": "婚姻",
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "real_age": 52,
+      "real_zhanlei": "婚姻",
+      "real_day": "癸巳",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-070",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·049",
+      "real_name": "杨秀才辛未生",
+      "real_age": 39,
+      "real_zhanlei": "功名",
+      "real_day": "庚戌",
+      "real_sanchuan": [
+        "戌",
+        "戌",
+        "巳"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:利,成,遂,生",
+      "score": 195,
+      "reasons": [
+        "年龄39",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-071",
+      "syn_zl": "征战",
+      "real_case_id": "§终身04·110",
+      "real_name": "傅大禄己巳生",
+      "real_age": 40,
+      "real_zhanlei": "其他",
+      "real_day": "甲午",
+      "real_sanchuan": [
+        "卯",
+        "申",
+        "申"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 200,
+      "reasons": [
+        "年龄40",
+        "日干同甲"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-072",
+      "syn_zl": "走失",
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "real_age": 48,
+      "real_zhanlei": "其他",
+      "real_day": "乙丑",
+      "real_sanchuan": [
+        "寅",
+        "未",
+        "子"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:败,狱,囚",
+      "score": 145,
+      "reasons": [
+        "日干同乙",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-073",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·137",
+      "real_name": "曹八秀才戊辰生",
+      "real_age": 42,
+      "real_zhanlei": "求财",
+      "real_day": "己亥",
+      "real_sanchuan": [
+        "戌",
+        "卯"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:吉,利,成,安",
+      "score": 180,
+      "reasons": [
+        "年龄42"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-074",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·093",
+      "real_name": "童巡检丁卯生",
+      "real_age": 43,
+      "real_zhanlei": "功名",
+      "real_day": "丁未",
+      "real_sanchuan": [
+        "巳",
+        "丑",
+        "丑"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 215,
+      "reasons": [
+        "年龄43",
+        "日干同丁",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-075",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·107",
+      "real_name": "",
+      "real_age": 44,
+      "real_zhanlei": "其他",
+      "real_day": "月一",
+      "real_sanchuan": [
+        "辰",
+        "午",
+        "丑"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 180,
+      "reasons": [
+        "年龄44"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-077",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·114",
+      "real_name": "顾孔目甲子生",
+      "real_age": 46,
+      "real_zhanlei": "其他",
+      "real_day": "己未",
+      "real_sanchuan": [
+        "未",
+        "申",
+        "申"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:成,遂,生,贵",
+      "score": 180,
+      "reasons": [
+        "年龄46"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-079",
+      "syn_zl": "胎产",
+      "real_case_id": "§胎产子息07·130",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "胎产",
+      "real_day": "丙辰",
+      "real_sanchuan": [
+        "巳",
+        "申",
+        "寅"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:喜,生",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-080",
+      "syn_zl": "其他",
+      "real_case_id": "§亡盗15·188",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "癸卯",
+      "real_sanchuan": [
+        "丑",
+        "亥",
+        "酉"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 135,
+      "reasons": [
+        "日干同癸",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-081",
+      "syn_zl": "家宅",
+      "real_case_id": "§宅墓02·004",
+      "real_name": "张九翁戊午生",
+      "real_age": 51,
+      "real_zhanlei": "家宅",
+      "real_day": "庚寅",
+      "real_sanchuan": [
+        "巳",
+        "寅",
+        "亥"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:凶,难,败,坏",
+      "score": 145,
+      "reasons": [
+        "三传重叠3"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-082",
+      "syn_zl": "疾病",
+      "real_case_id": "§疾病13·162",
+      "real_name": "",
+      "real_age": 21,
+      "real_zhanlei": "疾病",
+      "real_day": "壬午",
+      "real_sanchuan": [
+        "巳",
+        "巳",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-083",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·143",
+      "real_name": "钱三郎甲戌生",
+      "real_age": 36,
+      "real_zhanlei": "求财",
+      "real_day": "丙戌",
+      "real_sanchuan": [
+        "子",
+        "酉",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 135,
+      "reasons": [
+        "日干同丙",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-084",
+      "syn_zl": "婚姻",
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "real_age": 52,
+      "real_zhanlei": "婚姻",
+      "real_day": "癸巳",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-085",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·085",
+      "real_name": "",
+      "real_age": 54,
+      "real_zhanlei": "功名",
+      "real_day": "戊寅",
+      "real_sanchuan": [
+        "丑",
+        "午",
+        "未"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 200,
+      "reasons": [
+        "年龄54",
+        "日干同戊"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-086",
+      "syn_zl": "征战",
+      "real_case_id": "§终身04·113",
+      "real_name": "姜子昭庚午生",
+      "real_age": 40,
+      "real_zhanlei": "其他",
+      "real_day": "己酉",
+      "real_sanchuan": [
+        "丑",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 145,
+      "reasons": [
+        "日干同己",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-087",
+      "syn_zl": "走失",
+      "real_case_id": "§流年05·121",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "庚辰",
+      "real_sanchuan": [
+        "子",
+        "寅",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:讼,刑,丧",
+      "score": 150,
+      "reasons": [
+        "日干同庚",
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-088",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·136",
+      "real_name": "",
+      "real_age": 66,
+      "real_zhanlei": "求财",
+      "real_day": "初九",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-090",
+      "syn_zl": "其他",
+      "real_case_id": "§杂占17·214",
+      "real_name": "",
+      "real_age": 59,
+      "real_zhanlei": "其他",
+      "real_day": "十八",
+      "real_sanchuan": [
+        "午",
+        "午",
+        "丑"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:利,遂,安,得财",
+      "score": 180,
+      "reasons": [
+        "年龄59"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-091",
+      "syn_zl": "其他",
+      "real_case_id": "§一课二事各断式09·144",
+      "real_name": "王县丞丙寅生",
+      "real_age": 43,
+      "real_zhanlei": "其他",
+      "real_day": "甲申",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 150,
+      "reasons": [
+        "日干同甲",
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-092",
+      "syn_zl": "其他",
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "real_age": 48,
+      "real_zhanlei": "其他",
+      "real_day": "乙丑",
+      "real_sanchuan": [
+        "寅",
+        "未",
+        "子"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:败,狱,囚",
+      "score": 135,
+      "reasons": [
+        "日干同乙",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-093",
+      "syn_zl": "其他",
+      "real_case_id": "§一课二事各断式09·146",
+      "real_name": "何秀才丁亥生",
+      "real_age": 22,
+      "real_zhanlei": "其他",
+      "real_day": "丁酉",
+      "real_sanchuan": [
+        "亥",
+        "卯",
+        "未"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 205,
+      "reasons": [
+        "年龄22",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-094",
+      "syn_zl": "胎产",
+      "real_case_id": "§胎产子息07·129",
+      "real_name": "郭彦和壬午生",
+      "real_age": 28,
+      "real_zhanlei": "胎产",
+      "real_day": "丁酉",
+      "real_sanchuan": [
+        "酉",
+        "亥",
+        "丑"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:利,遂,生,贵",
+      "score": 135,
+      "reasons": [
+        "日干同丁",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-096",
+      "syn_zl": "家宅",
+      "real_case_id": "§宅墓02·004",
+      "real_name": "张九翁戊午生",
+      "real_age": 51,
+      "real_zhanlei": "家宅",
+      "real_day": "庚寅",
+      "real_sanchuan": [
+        "巳",
+        "寅",
+        "亥"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:凶,难,败,坏",
+      "score": 145,
+      "reasons": [
+        "三传重叠3"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-097",
+      "syn_zl": "疾病",
+      "real_case_id": "§疾病13·166",
+      "real_name": "张逸士庚戌生",
+      "real_age": 59,
+      "real_zhanlei": "疾病",
+      "real_day": "庚寅",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:大凶",
+      "score": 150,
+      "reasons": [
+        "日干同庚",
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-098",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·135",
+      "real_name": "",
+      "real_age": 27,
+      "real_zhanlei": "求财",
+      "real_day": "乙亥",
+      "real_sanchuan": [
+        "未",
+        "亥",
+        "卯"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄27",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-099",
+      "syn_zl": "婚姻",
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "real_age": 52,
+      "real_zhanlei": "婚姻",
+      "real_day": "癸巳",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-100",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·057",
+      "real_name": "龚县尉辛巳生",
+      "real_age": 29,
+      "real_zhanlei": "功名",
+      "real_day": "壬午",
+      "real_sanchuan": [
+        "亥",
+        "午",
+        "子"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:坏,刑,疾",
+      "score": 205,
+      "reasons": [
+        "年龄29",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-101",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·110",
+      "real_name": "傅大禄己巳生",
+      "real_age": 40,
+      "real_zhanlei": "其他",
+      "real_day": "甲午",
+      "real_sanchuan": [
+        "卯",
+        "申",
+        "申"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 200,
+      "reasons": [
+        "年龄40",
+        "日干同甲"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-102",
+      "syn_zl": "其他",
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "real_age": 48,
+      "real_zhanlei": "其他",
+      "real_day": "乙丑",
+      "real_sanchuan": [
+        "寅",
+        "未",
+        "子"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:败,狱,囚",
+      "score": 135,
+      "reasons": [
+        "日干同乙",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-103",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·109",
+      "real_name": "叶七秀才丁卯生",
+      "real_age": 42,
+      "real_zhanlei": "其他",
+      "real_day": "",
+      "real_sanchuan": [
+        "丑",
+        "子",
+        "亥"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄42",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-104",
+      "syn_zl": "胎产",
+      "real_case_id": "§胎产子息07·125",
+      "real_name": "",
+      "real_age": 43,
+      "real_zhanlei": "胎产",
+      "real_day": "",
+      "real_sanchuan": [
+        "亥",
+        "酉",
+        "酉"
+      ],
+      "real_label": "平",
+      "real_conf": 0.7,
+      "real_ev": "平词:平常",
+      "score": 195,
+      "reasons": [
+        "年龄43",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-105",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·107",
+      "real_name": "",
+      "real_age": 44,
+      "real_zhanlei": "其他",
+      "real_day": "月一",
+      "real_sanchuan": [
+        "辰",
+        "午",
+        "丑"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 180,
+      "reasons": [
+        "年龄44"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-106",
+      "syn_zl": "家宅",
+      "real_case_id": "§宅墓02·004",
+      "real_name": "张九翁戊午生",
+      "real_age": 51,
+      "real_zhanlei": "家宅",
+      "real_day": "庚寅",
+      "real_sanchuan": [
+        "巳",
+        "寅",
+        "亥"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:凶,难,败,坏",
+      "score": 155,
+      "reasons": [
+        "三传重叠3",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-107",
+      "syn_zl": "疾病",
+      "real_case_id": "§疾病13·166",
+      "real_name": "张逸士庚戌生",
+      "real_age": 59,
+      "real_zhanlei": "疾病",
+      "real_day": "庚寅",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:大凶",
+      "score": 150,
+      "reasons": [
+        "日干同庚",
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-108",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·140",
+      "real_name": "刘五官己巳生",
+      "real_age": 47,
+      "real_zhanlei": "求财",
+      "real_day": "戊寅",
+      "real_sanchuan": [
+        "巳",
+        "辰",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄47",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-109",
+      "syn_zl": "婚姻",
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "real_age": 52,
+      "real_zhanlei": "婚姻",
+      "real_day": "癸巳",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-110",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·067",
+      "real_name": "",
+      "real_age": 26,
+      "real_zhanlei": "功名",
+      "real_day": "十一",
+      "real_sanchuan": [
+        "寅",
+        "亥",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 145,
+      "reasons": [
+        "三传重叠3"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-111",
+      "syn_zl": "征战",
+      "real_case_id": "§终身04·111",
+      "real_name": "王知县己末生",
+      "real_age": 50,
+      "real_zhanlei": "其他",
+      "real_day": "甲申",
+      "real_sanchuan": [
+        "戌",
+        "巳",
+        "子"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 215,
+      "reasons": [
+        "年龄50",
+        "日干同甲",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-112",
+      "syn_zl": "走失",
+      "real_case_id": "§一课二事各断式09·144",
+      "real_name": "王县丞丙寅生",
+      "real_age": 43,
+      "real_zhanlei": "其他",
+      "real_day": "甲申",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 140,
+      "reasons": [
+        "三传重叠2",
+        "姓名共王"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-113",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·143",
+      "real_name": "钱三郎甲戌生",
+      "real_age": 36,
+      "real_zhanlei": "求财",
+      "real_day": "丙戌",
+      "real_sanchuan": [
+        "子",
+        "酉",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 145,
+      "reasons": [
+        "日干同丙",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-115",
+      "syn_zl": "其他",
+      "real_case_id": "§杂占17·215",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "戊戌",
+      "real_sanchuan": [
+        "寅",
+        "戌",
+        "午"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.95,
+      "real_ev": "强吉:吉兆",
+      "score": 135,
+      "reasons": [
+        "日干同戊",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-117",
+      "syn_zl": "其他",
+      "real_case_id": "§流年05·121",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "庚辰",
+      "real_sanchuan": [
+        "子",
+        "寅",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:讼,刑,丧",
+      "score": 150,
+      "reasons": [
+        "日干同庚",
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-118",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·106",
+      "real_name": "",
+      "real_age": 68,
+      "real_zhanlei": "其他",
+      "real_day": "十八",
+      "real_sanchuan": [
+        "寅",
+        "酉",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-119",
+      "syn_zl": "胎产",
+      "real_case_id": "§胎产子息07·130",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "胎产",
+      "real_day": "丙辰",
+      "real_sanchuan": [
+        "巳",
+        "申",
+        "寅"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:喜,生",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-120",
+      "syn_zl": "其他",
+      "real_case_id": "§杂占17·214",
+      "real_name": "",
+      "real_age": 59,
+      "real_zhanlei": "其他",
+      "real_day": "十八",
+      "real_sanchuan": [
+        "午",
+        "午",
+        "丑"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:利,遂,安,得财",
+      "score": 180,
+      "reasons": [
+        "年龄59"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-122",
+      "syn_zl": "疾病",
+      "real_case_id": "§疾病13·162",
+      "real_name": "",
+      "real_age": 21,
+      "real_zhanlei": "疾病",
+      "real_day": "壬午",
+      "real_sanchuan": [
+        "巳",
+        "巳",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 210,
+      "reasons": [
+        "年龄21",
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-123",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·143",
+      "real_name": "钱三郎甲戌生",
+      "real_age": 36,
+      "real_zhanlei": "求财",
+      "real_day": "丙戌",
+      "real_sanchuan": [
+        "子",
+        "酉",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 135,
+      "reasons": [
+        "日干同丙",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-124",
+      "syn_zl": "婚姻",
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "real_age": 52,
+      "real_zhanlei": "婚姻",
+      "real_day": "癸巳",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-126",
+      "syn_zl": "征战",
+      "real_case_id": "§终身04·115",
+      "real_name": "",
+      "real_age": 25,
+      "real_zhanlei": "其他",
+      "real_day": "十七",
+      "real_sanchuan": [
+        "申",
+        "酉",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄25",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-128",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·135",
+      "real_name": "",
+      "real_age": 27,
+      "real_zhanlei": "求财",
+      "real_day": "乙亥",
+      "real_sanchuan": [
+        "未",
+        "亥",
+        "卯"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄27",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-129",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·067",
+      "real_name": "",
+      "real_age": 26,
+      "real_zhanlei": "功名",
+      "real_day": "十一",
+      "real_sanchuan": [
+        "寅",
+        "亥",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 145,
+      "reasons": [
+        "三传重叠3"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-130",
+      "syn_zl": "其他",
+      "real_case_id": "§亡盗15·188",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "癸卯",
+      "real_sanchuan": [
+        "丑",
+        "亥",
+        "酉"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 135,
+      "reasons": [
+        "日干同癸",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-131",
+      "syn_zl": "其他",
+      "real_case_id": "§一课二事各断式09·144",
+      "real_name": "王县丞丙寅生",
+      "real_age": 43,
+      "real_zhanlei": "其他",
+      "real_day": "甲申",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 150,
+      "reasons": [
+        "日干同甲",
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-132",
+      "syn_zl": "其他",
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "real_age": 48,
+      "real_zhanlei": "其他",
+      "real_day": "乙丑",
+      "real_sanchuan": [
+        "寅",
+        "未",
+        "子"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:败,狱,囚",
+      "score": 135,
+      "reasons": [
+        "日干同乙",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-133",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·104",
+      "real_name": "何三公丙午生",
+      "real_age": 63,
+      "real_zhanlei": "其他",
+      "real_day": "丙寅",
+      "real_sanchuan": [
+        "子",
+        "卯",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 135,
+      "reasons": [
+        "日干同丙",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-134",
+      "syn_zl": "胎产",
+      "real_case_id": "§胎产子息07·129",
+      "real_name": "郭彦和壬午生",
+      "real_age": 28,
+      "real_zhanlei": "胎产",
+      "real_day": "丁酉",
+      "real_sanchuan": [
+        "酉",
+        "亥",
+        "丑"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:利,遂,生,贵",
+      "score": 145,
+      "reasons": [
+        "日干同丁",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-135",
+      "syn_zl": "其他",
+      "real_case_id": "§杂占17·215",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "戊戌",
+      "real_sanchuan": [
+        "寅",
+        "戌",
+        "午"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.95,
+      "real_ev": "强吉:吉兆",
+      "score": 135,
+      "reasons": [
+        "日干同戊",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-136",
+      "syn_zl": "家宅",
+      "real_case_id": "§宅墓02·004",
+      "real_name": "张九翁戊午生",
+      "real_age": 51,
+      "real_zhanlei": "家宅",
+      "real_day": "庚寅",
+      "real_sanchuan": [
+        "巳",
+        "寅",
+        "亥"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:凶,难,败,坏",
+      "score": 145,
+      "reasons": [
+        "三传重叠3"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-138",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·138",
+      "real_name": "曹八秀才癸酉生",
+      "real_age": 37,
+      "real_zhanlei": "求财",
+      "real_day": "取比",
+      "real_sanchuan": [
+        "戌",
+        "巳",
+        "卯"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:成,遂,生",
+      "score": 195,
+      "reasons": [
+        "年龄37",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-139",
+      "syn_zl": "婚姻",
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "real_age": 52,
+      "real_zhanlei": "婚姻",
+      "real_day": "癸巳",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-140",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·049",
+      "real_name": "杨秀才辛未生",
+      "real_age": 39,
+      "real_zhanlei": "功名",
+      "real_day": "庚戌",
+      "real_sanchuan": [
+        "戌",
+        "戌",
+        "巳"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:利,成,遂,生",
+      "score": 195,
+      "reasons": [
+        "年龄39",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-141",
+      "syn_zl": "征战",
+      "real_case_id": "§终身04·110",
+      "real_name": "傅大禄己巳生",
+      "real_age": 40,
+      "real_zhanlei": "其他",
+      "real_day": "甲午",
+      "real_sanchuan": [
+        "卯",
+        "申",
+        "申"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 210,
+      "reasons": [
+        "年龄40",
+        "日干同甲",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-142",
+      "syn_zl": "走失",
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "real_age": 48,
+      "real_zhanlei": "其他",
+      "real_day": "乙丑",
+      "real_sanchuan": [
+        "寅",
+        "未",
+        "子"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:败,狱,囚",
+      "score": 135,
+      "reasons": [
+        "日干同乙",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-143",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·137",
+      "real_name": "曹八秀才戊辰生",
+      "real_age": 42,
+      "real_zhanlei": "求财",
+      "real_day": "己亥",
+      "real_sanchuan": [
+        "戌",
+        "卯"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:吉,利,成,安",
+      "score": 180,
+      "reasons": [
+        "年龄42"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-144",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·093",
+      "real_name": "童巡检丁卯生",
+      "real_age": 43,
+      "real_zhanlei": "功名",
+      "real_day": "丁未",
+      "real_sanchuan": [
+        "巳",
+        "丑",
+        "丑"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 215,
+      "reasons": [
+        "年龄43",
+        "日干同丁",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-145",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·107",
+      "real_name": "",
+      "real_age": 44,
+      "real_zhanlei": "其他",
+      "real_day": "月一",
+      "real_sanchuan": [
+        "辰",
+        "午",
+        "丑"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 180,
+      "reasons": [
+        "年龄44"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-147",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·114",
+      "real_name": "顾孔目甲子生",
+      "real_age": 46,
+      "real_zhanlei": "其他",
+      "real_day": "己未",
+      "real_sanchuan": [
+        "未",
+        "申",
+        "申"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:成,遂,生,贵",
+      "score": 180,
+      "reasons": [
+        "年龄46"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-149",
+      "syn_zl": "胎产",
+      "real_case_id": "§胎产子息07·130",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "胎产",
+      "real_day": "丙辰",
+      "real_sanchuan": [
+        "巳",
+        "申",
+        "寅"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:喜,生",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-150",
+      "syn_zl": "其他",
+      "real_case_id": "§亡盗15·188",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "癸卯",
+      "real_sanchuan": [
+        "丑",
+        "亥",
+        "酉"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 135,
+      "reasons": [
+        "日干同癸",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-151",
+      "syn_zl": "家宅",
+      "real_case_id": "§宅墓02·004",
+      "real_name": "张九翁戊午生",
+      "real_age": 51,
+      "real_zhanlei": "家宅",
+      "real_day": "庚寅",
+      "real_sanchuan": [
+        "巳",
+        "寅",
+        "亥"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:凶,难,败,坏",
+      "score": 145,
+      "reasons": [
+        "三传重叠3"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-152",
+      "syn_zl": "疾病",
+      "real_case_id": "§疾病13·162",
+      "real_name": "",
+      "real_age": 21,
+      "real_zhanlei": "疾病",
+      "real_day": "壬午",
+      "real_sanchuan": [
+        "巳",
+        "巳",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-153",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·143",
+      "real_name": "钱三郎甲戌生",
+      "real_age": 36,
+      "real_zhanlei": "求财",
+      "real_day": "丙戌",
+      "real_sanchuan": [
+        "子",
+        "酉",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 135,
+      "reasons": [
+        "日干同丙",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-154",
+      "syn_zl": "婚姻",
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "real_age": 52,
+      "real_zhanlei": "婚姻",
+      "real_day": "癸巳",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-155",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·085",
+      "real_name": "",
+      "real_age": 54,
+      "real_zhanlei": "功名",
+      "real_day": "戊寅",
+      "real_sanchuan": [
+        "丑",
+        "午",
+        "未"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 200,
+      "reasons": [
+        "年龄54",
+        "日干同戊"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-156",
+      "syn_zl": "征战",
+      "real_case_id": "§终身04·113",
+      "real_name": "姜子昭庚午生",
+      "real_age": 40,
+      "real_zhanlei": "其他",
+      "real_day": "己酉",
+      "real_sanchuan": [
+        "丑",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 135,
+      "reasons": [
+        "日干同己",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-157",
+      "syn_zl": "走失",
+      "real_case_id": "§流年05·121",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "庚辰",
+      "real_sanchuan": [
+        "子",
+        "寅",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:讼,刑,丧",
+      "score": 150,
+      "reasons": [
+        "日干同庚",
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-158",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·136",
+      "real_name": "",
+      "real_age": 66,
+      "real_zhanlei": "求财",
+      "real_day": "初九",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-160",
+      "syn_zl": "其他",
+      "real_case_id": "§杂占17·214",
+      "real_name": "",
+      "real_age": 59,
+      "real_zhanlei": "其他",
+      "real_day": "十八",
+      "real_sanchuan": [
+        "午",
+        "午",
+        "丑"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:利,遂,安,得财",
+      "score": 180,
+      "reasons": [
+        "年龄59"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-161",
+      "syn_zl": "其他",
+      "real_case_id": "§一课二事各断式09·144",
+      "real_name": "王县丞丙寅生",
+      "real_age": 43,
+      "real_zhanlei": "其他",
+      "real_day": "甲申",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 150,
+      "reasons": [
+        "日干同甲",
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-162",
+      "syn_zl": "其他",
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "real_age": 48,
+      "real_zhanlei": "其他",
+      "real_day": "乙丑",
+      "real_sanchuan": [
+        "寅",
+        "未",
+        "子"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:败,狱,囚",
+      "score": 145,
+      "reasons": [
+        "日干同乙",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-163",
+      "syn_zl": "其他",
+      "real_case_id": "§一课二事各断式09·146",
+      "real_name": "何秀才丁亥生",
+      "real_age": 22,
+      "real_zhanlei": "其他",
+      "real_day": "丁酉",
+      "real_sanchuan": [
+        "亥",
+        "卯",
+        "未"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄22",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-164",
+      "syn_zl": "胎产",
+      "real_case_id": "§胎产子息07·129",
+      "real_name": "郭彦和壬午生",
+      "real_age": 28,
+      "real_zhanlei": "胎产",
+      "real_day": "丁酉",
+      "real_sanchuan": [
+        "酉",
+        "亥",
+        "丑"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:利,遂,生,贵",
+      "score": 135,
+      "reasons": [
+        "日干同丁",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-166",
+      "syn_zl": "家宅",
+      "real_case_id": "§宅墓02·004",
+      "real_name": "张九翁戊午生",
+      "real_age": 51,
+      "real_zhanlei": "家宅",
+      "real_day": "庚寅",
+      "real_sanchuan": [
+        "巳",
+        "寅",
+        "亥"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:凶,难,败,坏",
+      "score": 145,
+      "reasons": [
+        "三传重叠3"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-167",
+      "syn_zl": "疾病",
+      "real_case_id": "§疾病13·166",
+      "real_name": "张逸士庚戌生",
+      "real_age": 59,
+      "real_zhanlei": "疾病",
+      "real_day": "庚寅",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:大凶",
+      "score": 150,
+      "reasons": [
+        "日干同庚",
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-168",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·135",
+      "real_name": "",
+      "real_age": 27,
+      "real_zhanlei": "求财",
+      "real_day": "乙亥",
+      "real_sanchuan": [
+        "未",
+        "亥",
+        "卯"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄27",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-169",
+      "syn_zl": "婚姻",
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "real_age": 52,
+      "real_zhanlei": "婚姻",
+      "real_day": "癸巳",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 140,
+      "reasons": [
+        "三传重叠2",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-170",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·057",
+      "real_name": "龚县尉辛巳生",
+      "real_age": 29,
+      "real_zhanlei": "功名",
+      "real_day": "壬午",
+      "real_sanchuan": [
+        "亥",
+        "午",
+        "子"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:坏,刑,疾",
+      "score": 195,
+      "reasons": [
+        "年龄29",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-172",
+      "syn_zl": "走失",
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "real_age": 48,
+      "real_zhanlei": "其他",
+      "real_day": "乙丑",
+      "real_sanchuan": [
+        "寅",
+        "未",
+        "子"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:败,狱,囚",
+      "score": 135,
+      "reasons": [
+        "日干同乙",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-173",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·134",
+      "real_name": "邵七丞务戊寅生",
+      "real_age": 32,
+      "real_zhanlei": "求财",
+      "real_day": "癸巳",
+      "real_sanchuan": [
+        "申",
+        "酉"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 180,
+      "reasons": [
+        "年龄32"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-174",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·079",
+      "real_name": "欧阳秘教戊寅生",
+      "real_age": 33,
+      "real_zhanlei": "功名",
+      "real_day": "己卯",
+      "real_sanchuan": [
+        "未",
+        "卯",
+        "亥"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:吉,利,成,喜",
+      "score": 195,
+      "reasons": [
+        "年龄33",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-175",
+      "syn_zl": "其他",
+      "real_case_id": "§杂占17·215",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "戊戌",
+      "real_sanchuan": [
+        "寅",
+        "戌",
+        "午"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.95,
+      "real_ev": "强吉:吉兆",
+      "score": 135,
+      "reasons": [
+        "日干同戊",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-177",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·105",
+      "real_name": "袁知镇癸酉命",
+      "real_age": 36,
+      "real_zhanlei": "其他",
+      "real_day": "戊戌",
+      "real_sanchuan": [
+        "丑",
+        "卯",
+        "丑"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 180,
+      "reasons": [
+        "年龄36"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-178",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·119",
+      "real_name": "韩监仓修职癸酉生",
+      "real_age": 37,
+      "real_zhanlei": "其他",
+      "real_day": "支刑",
+      "real_sanchuan": [
+        "卯",
+        "寅",
+        "丑"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄37",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-179",
+      "syn_zl": "胎产",
+      "real_case_id": "§胎产子息07·130",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "胎产",
+      "real_day": "丙辰",
+      "real_sanchuan": [
+        "巳",
+        "申",
+        "寅"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:喜,生",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-180",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·118",
+      "real_name": "",
+      "real_age": 39,
+      "real_zhanlei": "其他",
+      "real_day": "初一",
+      "real_sanchuan": [
+        "未",
+        "卯",
+        "亥"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄39",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-181",
+      "syn_zl": "家宅",
+      "real_case_id": "§宅墓02·016",
+      "real_name": "刘将仕庚午生",
+      "real_age": 40,
+      "real_zhanlei": "家宅",
+      "real_day": "戊申",
+      "real_sanchuan": [
+        "辰",
+        "丑",
+        "申"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 180,
+      "reasons": [
+        "年龄40"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-182",
+      "syn_zl": "疾病",
+      "real_case_id": "§疾病13·162",
+      "real_name": "",
+      "real_age": 21,
+      "real_zhanlei": "疾病",
+      "real_day": "壬午",
+      "real_sanchuan": [
+        "巳",
+        "巳",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-183",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·137",
+      "real_name": "曹八秀才戊辰生",
+      "real_age": 42,
+      "real_zhanlei": "求财",
+      "real_day": "己亥",
+      "real_sanchuan": [
+        "戌",
+        "卯"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:吉,利,成,安",
+      "score": 190,
+      "reasons": [
+        "年龄42",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-184",
+      "syn_zl": "婚姻",
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "real_age": 52,
+      "real_zhanlei": "婚姻",
+      "real_day": "癸巳",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-185",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·103",
+      "real_name": "刘干运丙寅生",
+      "real_age": 44,
+      "real_zhanlei": "功名",
+      "real_day": "戊申",
+      "real_sanchuan": [
+        "申",
+        "丑"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 200,
+      "reasons": [
+        "年龄44",
+        "日干同戊"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-186",
+      "syn_zl": "征战",
+      "real_case_id": "§终身04·113",
+      "real_name": "姜子昭庚午生",
+      "real_age": 40,
+      "real_zhanlei": "其他",
+      "real_day": "己酉",
+      "real_sanchuan": [
+        "丑",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 135,
+      "reasons": [
+        "日干同己",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-187",
+      "syn_zl": "走失",
+      "real_case_id": "§终身04·114",
+      "real_name": "顾孔目甲子生",
+      "real_age": 46,
+      "real_zhanlei": "其他",
+      "real_day": "己未",
+      "real_sanchuan": [
+        "未",
+        "申",
+        "申"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:成,遂,生,贵",
+      "score": 180,
+      "reasons": [
+        "年龄46"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-188",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·140",
+      "real_name": "刘五官己巳生",
+      "real_age": 47,
+      "real_zhanlei": "求财",
+      "real_day": "戊寅",
+      "real_sanchuan": [
+        "巳",
+        "辰",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 205,
+      "reasons": [
+        "年龄47",
+        "三传重叠1",
+        "姓名共官"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-189",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·067",
+      "real_name": "",
+      "real_age": 26,
+      "real_zhanlei": "功名",
+      "real_day": "十一",
+      "real_sanchuan": [
+        "寅",
+        "亥",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 145,
+      "reasons": [
+        "三传重叠3"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-190",
+      "syn_zl": "其他",
+      "real_case_id": "§一课二事各断式09·144",
+      "real_name": "王县丞丙寅生",
+      "real_age": 43,
+      "real_zhanlei": "其他",
+      "real_day": "甲申",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 140,
+      "reasons": [
+        "三传重叠2",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-191",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·111",
+      "real_name": "王知县己末生",
+      "real_age": 50,
+      "real_zhanlei": "其他",
+      "real_day": "甲申",
+      "real_sanchuan": [
+        "戌",
+        "巳",
+        "子"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 215,
+      "reasons": [
+        "年龄50",
+        "日干同甲",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-192",
+      "syn_zl": "其他",
+      "real_case_id": "§一课二事各断式09·144",
+      "real_name": "王县丞丙寅生",
+      "real_age": 43,
+      "real_zhanlei": "其他",
+      "real_day": "甲申",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 140,
+      "reasons": [
+        "三传重叠2",
+        "姓名共王"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-193",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·104",
+      "real_name": "何三公丙午生",
+      "real_age": 63,
+      "real_zhanlei": "其他",
+      "real_day": "丙寅",
+      "real_sanchuan": [
+        "子",
+        "卯",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 135,
+      "reasons": [
+        "日干同丙",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-194",
+      "syn_zl": "胎产",
+      "real_case_id": "§胎产子息07·129",
+      "real_name": "郭彦和壬午生",
+      "real_age": 28,
+      "real_zhanlei": "胎产",
+      "real_day": "丁酉",
+      "real_sanchuan": [
+        "酉",
+        "亥",
+        "丑"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:利,遂,生,贵",
+      "score": 135,
+      "reasons": [
+        "日干同丁",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-195",
+      "syn_zl": "其他",
+      "real_case_id": "§杂占17·215",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "戊戌",
+      "real_sanchuan": [
+        "寅",
+        "戌",
+        "午"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.95,
+      "real_ev": "强吉:吉兆",
+      "score": 135,
+      "reasons": [
+        "日干同戊",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-196",
+      "syn_zl": "家宅",
+      "real_case_id": "§宅墓02·015",
+      "real_name": "徐八公甲寅生",
+      "real_age": 55,
+      "real_zhanlei": "家宅",
+      "real_day": "癸亥",
+      "real_sanchuan": [
+        "未",
+        "巳",
+        "卯"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄55",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-197",
+      "syn_zl": "疾病",
+      "real_case_id": "§疾病13·166",
+      "real_name": "张逸士庚戌生",
+      "real_age": 59,
+      "real_zhanlei": "疾病",
+      "real_day": "庚寅",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:大凶",
+      "score": 160,
+      "reasons": [
+        "日干同庚",
+        "三传重叠2",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-198",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·136",
+      "real_name": "",
+      "real_age": 66,
+      "real_zhanlei": "求财",
+      "real_day": "初九",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-199",
+      "syn_zl": "婚姻",
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "real_age": 52,
+      "real_zhanlei": "婚姻",
+      "real_day": "癸巳",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-200",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·067",
+      "real_name": "",
+      "real_age": 26,
+      "real_zhanlei": "功名",
+      "real_day": "十一",
+      "real_sanchuan": [
+        "寅",
+        "亥",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 145,
+      "reasons": [
+        "三传重叠3"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-202",
+      "syn_zl": "走失",
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "real_age": 48,
+      "real_zhanlei": "其他",
+      "real_day": "乙丑",
+      "real_sanchuan": [
+        "寅",
+        "未",
+        "子"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:败,狱,囚",
+      "score": 135,
+      "reasons": [
+        "日干同乙",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-204",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·069",
+      "real_name": "冯机宜丁亥生",
+      "real_age": 23,
+      "real_zhanlei": "功名",
+      "real_day": "丙子",
+      "real_sanchuan": [
+        "巳",
+        "戌",
+        "戌"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 205,
+      "reasons": [
+        "年龄23",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-205",
+      "syn_zl": "其他",
+      "real_case_id": "§杂占17·215",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "戊戌",
+      "real_sanchuan": [
+        "寅",
+        "戌",
+        "午"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.95,
+      "real_ev": "强吉:吉兆",
+      "score": 135,
+      "reasons": [
+        "日干同戊",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-206",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·115",
+      "real_name": "",
+      "real_age": 25,
+      "real_zhanlei": "其他",
+      "real_day": "十七",
+      "real_sanchuan": [
+        "申",
+        "酉",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄25",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-207",
+      "syn_zl": "其他",
+      "real_case_id": "§流年05·121",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "庚辰",
+      "real_sanchuan": [
+        "子",
+        "寅",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:讼,刑,丧",
+      "score": 150,
+      "reasons": [
+        "日干同庚",
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-209",
+      "syn_zl": "胎产",
+      "real_case_id": "§胎产子息07·129",
+      "real_name": "郭彦和壬午生",
+      "real_age": 28,
+      "real_zhanlei": "胎产",
+      "real_day": "丁酉",
+      "real_sanchuan": [
+        "酉",
+        "亥",
+        "丑"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:利,遂,生,贵",
+      "score": 195,
+      "reasons": [
+        "年龄28",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-210",
+      "syn_zl": "其他",
+      "real_case_id": "§亡盗15·188",
+      "real_name": "",
+      "real_age": null,
+      "real_zhanlei": "其他",
+      "real_day": "癸卯",
+      "real_sanchuan": [
+        "丑",
+        "亥",
+        "酉"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 135,
+      "reasons": [
+        "日干同癸",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-211",
+      "syn_zl": "家宅",
+      "real_case_id": "§宅墓02·022",
+      "real_name": "冯修职己卯生",
+      "real_age": 30,
+      "real_zhanlei": "家宅",
+      "real_day": "乙酉",
+      "real_sanchuan": [
+        "子",
+        "巳"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:凶课",
+      "score": 205,
+      "reasons": [
+        "年龄30",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-212",
+      "syn_zl": "疾病",
+      "real_case_id": "§疾病13·162",
+      "real_name": "",
+      "real_age": 21,
+      "real_zhanlei": "疾病",
+      "real_day": "壬午",
+      "real_sanchuan": [
+        "巳",
+        "巳",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-213",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·134",
+      "real_name": "邵七丞务戊寅生",
+      "real_age": 32,
+      "real_zhanlei": "求财",
+      "real_day": "癸巳",
+      "real_sanchuan": [
+        "申",
+        "酉"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 180,
+      "reasons": [
+        "年龄32"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-214",
+      "syn_zl": "婚姻",
+      "real_case_id": "§婚姻06·123",
+      "real_name": "孔七公戊午生",
+      "real_age": 52,
+      "real_zhanlei": "婚姻",
+      "real_day": "癸巳",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:亡",
+      "score": 130,
+      "reasons": [
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-215",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·065",
+      "real_name": "",
+      "real_age": 34,
+      "real_zhanlei": "功名",
+      "real_day": "初二",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 210,
+      "reasons": [
+        "年龄34",
+        "三传重叠2"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-216",
+      "syn_zl": "征战",
+      "real_case_id": "§一课二事各断式09·144",
+      "real_name": "王县丞丙寅生",
+      "real_age": 43,
+      "real_zhanlei": "其他",
+      "real_day": "甲申",
+      "real_sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 140,
+      "reasons": [
+        "三传重叠2",
+        "姓名共王"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-217",
+      "syn_zl": "走失",
+      "real_case_id": "§终身04·105",
+      "real_name": "袁知镇癸酉命",
+      "real_age": 36,
+      "real_zhanlei": "其他",
+      "real_day": "戊戌",
+      "real_sanchuan": [
+        "丑",
+        "卯",
+        "丑"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 180,
+      "reasons": [
+        "年龄36"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-218",
+      "syn_zl": "求财",
+      "real_case_id": "§财产08·138",
+      "real_name": "曹八秀才癸酉生",
+      "real_age": 37,
+      "real_zhanlei": "求财",
+      "real_day": "取比",
+      "real_sanchuan": [
+        "戌",
+        "巳",
+        "卯"
+      ],
+      "real_label": "吉",
+      "real_conf": 0.85,
+      "real_ev": "吉词:成,遂,生",
+      "score": 205,
+      "reasons": [
+        "年龄37",
+        "三传重叠1",
+        "姓名共生"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-219",
+      "syn_zl": "功名",
+      "real_case_id": "§前程仕进03·064",
+      "real_name": "",
+      "real_age": 38,
+      "real_zhanlei": "功名",
+      "real_day": "十八",
+      "real_sanchuan": [
+        "子",
+        "巳",
+        "戌"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄38",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-220",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·118",
+      "real_name": "",
+      "real_age": 39,
+      "real_zhanlei": "其他",
+      "real_day": "初一",
+      "real_sanchuan": [
+        "未",
+        "卯",
+        "亥"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄39",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-221",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·110",
+      "real_name": "傅大禄己巳生",
+      "real_age": 40,
+      "real_zhanlei": "其他",
+      "real_day": "甲午",
+      "real_sanchuan": [
+        "卯",
+        "申",
+        "申"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 200,
+      "reasons": [
+        "年龄40",
+        "日干同甲"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-222",
+      "syn_zl": "其他",
+      "real_case_id": "§杂占17·213",
+      "real_name": "沈保正壬戌生",
+      "real_age": 48,
+      "real_zhanlei": "其他",
+      "real_day": "乙丑",
+      "real_sanchuan": [
+        "寅",
+        "未",
+        "子"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.85,
+      "real_ev": "凶词:败,狱,囚",
+      "score": 135,
+      "reasons": [
+        "日干同乙",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-223",
+      "syn_zl": "其他",
+      "real_case_id": "§终身04·109",
+      "real_name": "叶七秀才丁卯生",
+      "real_age": 42,
+      "real_zhanlei": "其他",
+      "real_day": "",
+      "real_sanchuan": [
+        "丑",
+        "子",
+        "亥"
+      ],
+      "real_label": "凶",
+      "real_conf": 0.95,
+      "real_ev": "强凶:死",
+      "score": 195,
+      "reasons": [
+        "年龄42",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    },
+    {
+      "id": "SZ-224",
+      "syn_zl": "胎产",
+      "real_case_id": "§胎产子息07·125",
+      "real_name": "",
+      "real_age": 43,
+      "real_zhanlei": "胎产",
+      "real_day": "",
+      "real_sanchuan": [
+        "亥",
+        "酉",
+        "酉"
+      ],
+      "real_label": "平",
+      "real_conf": 0.7,
+      "real_ev": "平词:平常",
+      "score": 195,
+      "reasons": [
+        "年龄43",
+        "三传重叠1"
+      ],
+      "old_label": "吉",
+      "old_conf": 0.55,
+      "reliable": false,
+      "match_basis": "弱"
+    }
+  ],
+  "ambiguous": [
+    {
+      "id": "SZ-004",
+      "syn_zl": "婚姻",
+      "age": 24,
+      "old_label": "吉",
+      "top_real": "§婚姻06·123",
+      "top_label": "凶",
+      "score": 115,
+      "reasons": [
+        "三传重叠1"
+      ],
+      "alt": [
+        {
+          "case_id": "§婚姻06·123",
+          "label": "凶",
+          "score": 115
+        },
+        {
+          "case_id": "§婚姻06·124",
+          "label": "凶",
+          "score": 115
+        },
+        {
+          "case_id": "§婚姻06·122",
+          "label": "凶",
+          "score": 100
+        }
+      ]
+    },
+    {
+      "id": "SZ-037",
+      "syn_zl": "官讼",
+      "age": 48,
+      "old_label": "未知",
+      "top_real": "§官讼16·202",
+      "top_label": "凶",
+      "score": 115,
+      "reasons": [
+        "三传重叠1"
+      ],
+      "alt": [
+        {
+          "case_id": "§官讼16·202",
+          "label": "凶",
+          "score": 115
+        },
+        {
+          "case_id": "§官讼16·204",
+          "label": "凶",
+          "score": 115
+        },
+        {
+          "case_id": "§官讼16·205",
+          "label": "凶",
+          "score": 115
+        }
+      ]
+    }
+  ],
+  "unmatched": []
+}

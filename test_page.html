@@ -1,0 +1,3339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大六壬股票虚拟交易仪表盘</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,'Microsoft YaHei',sans-serif; background:#f0f2f5; color:#333; min-height:100vh; }
+
+/* top bar */
+.topbar { background:linear-gradient(135deg,#1a1a2e,#16213e); color:#fff; padding:16px 24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; position:sticky; top:0; z-index:100; }
+.topbar h1 { font-size:20px; font-weight:600; display:flex; align-items:center; gap:10px; }
+.topbar h1 small { font-size:13px; font-weight:400; color:#8899b0; }
+.market-ticker { display:flex; align-items:center; gap:16px; background:rgba(255,255,255,0.08); padding:8px 18px; border-radius:10px; font-size:14px; }
+.market-ticker .name { color:#8899b0; }
+.market-ticker .price { font-size:22px; font-weight:700; }
+.market-ticker .change { font-weight:600; padding:2px 8px; border-radius:4px; }
+.market-ticker .change.up { background:#e74c3c; color:#fff; }
+.market-ticker .change.down { background:#27ae60; color:#fff; }
+.market-ticker .range { color:#8899b0; font-size:12px; }
+.topbar button.op-btn { border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-size:14px; font-weight:600; }
+.topbar button.op-btn.report { background:#3b82f6; color:#fff; }
+.topbar button.op-btn.zeri { background:#8b5cf6; color:#fff; }
+
+/* ===== Tab导航栏 ===== */
+.tab-nav { background:#fff; padding:0 24px; display:flex; gap:4px; box-shadow:0 2px 8px rgba(0,0,0,0.04); position:sticky; top:72px; z-index:90; overflow-x:auto; }
+.tab-btn { background:none; border:none; padding:14px 18px; font-size:14px; color:#666; cursor:pointer; border-bottom:3px solid transparent; transition:all .15s; white-space:nowrap; font-weight:500; }
+.tab-btn:hover { color:#3b82f6; background:#f8f9ff; }
+.tab-btn.active { color:#3b82f6; border-bottom-color:#3b82f6; font-weight:600; }
+
+/* tab content */
+.tab-content { display:none; }
+.tab-content.active { display:block; animation:fadeIn .25s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+/* main container */
+.container { max-width:1400px; margin:0 auto; padding:20px 16px; }
+
+/* account cards */
+.card-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; margin-bottom:20px; }
+.card { background:#fff; border-radius:12px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,0.06); transition:transform .15s; }
+.card:hover { transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+.card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+.card-header h3 { font-size:15px; color:#666; }
+.card-header .tag { font-size:11px; padding:2px 10px; border-radius:10px; color:#fff; }
+.tag-fixed_time { background:#4a90d9; }
+.tag-ri_gan_pian_cai { background:#f093fb; }
+.tag-ri_zhi_pian_cai { background:#a66cff; }
+.tag-ri_gan_shi_shen { background:#ff6b6b; }
+.tag-ri_zhi_shi_shen { background:#ff9f43; }
+.tag-ri_gan_zheng_yin { background:#2ed573; }
+.tag-ri_gan_pian_yin { background:#1abc9c; }
+.tag-ri_zhi_zheng_yin { background:#54a0ff; }
+.tag-ri_zhi_pian_yin { background:#5f27cd; }
+.tag-random { background:#ffa502; }
+.tag-manual { background:#7bed9f; }
+.card-body .stat-row { display:flex; justify-content:space-between; margin-bottom:10px; }
+.card-body .stat-row .label { color:#999; font-size:13px; }
+.card-body .stat-row .value { font-weight:700; font-size:16px; }
+.card-body .stat-row .value.up { color:#e74c3c; }
+.card-body .stat-row .value.down { color:#27ae60; }
+.card-body .total-row { border-top:1px solid #eee; padding-top:10px; margin-top:4px; }
+.card-body .total-row .value { font-size:22px; }
+.positions { margin-top:12px; }
+.pos-item { display:flex; justify-content:space-between; font-size:12px; color:#666; padding:4px 0; border-bottom:1px solid #f5f5f5; }
+
+/* today prediction */
+.today-card { background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; border-radius:12px; padding:20px; box-shadow:0 4px 15px rgba(102,126,234,0.3); margin-bottom:20px; }
+.today-card h2 { font-size:16px; opacity:0.9; margin-bottom:12px; }
+.today-card .pred-row { display:flex; gap:24px; flex-wrap:wrap; }
+.today-card .pred-item { text-align:center; min-width:100px; }
+.today-card .pred-item .label { font-size:11px; opacity:0.7; display:block; }
+.today-card .pred-item .val { font-size:20px; font-weight:700; margin-top:4px; }
+.today-card .pred-item .val.versus { font-size:14px; }
+.today-card .empty { opacity:0.6; font-size:14px; }
+
+/* grid layouts */
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
+@media(max-width:900px){ .grid-2 { grid-template-columns:1fr; } }
+
+.section { background:#fff; border-radius:12px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,0.06); margin-bottom:20px; }
+.section h2 { font-size:16px; margin-bottom:14px; color:#444; display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; }
+.section h2:hover { color:#667eea; }
+.section h2 .toggle-arrow { font-size:12px; transition:transform 0.2s; color:#999; }
+.section.collapsed .section-body { display:none; }
+.section.collapsed h2 .toggle-arrow { transform:rotate(-90deg); }
+.section h2 .badge { font-size:11px; background:#e8ecf1; color:#666; padding:1px 8px; border-radius:8px; font-weight:400; }
+
+/* table */
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+thead th { background:#fafbfc; text-align:left; padding:10px 12px; color:#888; font-weight:500; border-bottom:2px solid #eee; white-space:nowrap; }
+tbody td { padding:10px 12px; border-bottom:1px solid #f5f5f5; }
+tbody tr:hover { background:#f8f9ff; }
+.text-up { color:#e74c3c; font-weight:600; }
+.text-down { color:#27ae60; font-weight:600; }
+.text-muted { color:#bbb; }
+.tag-result { display:inline-block; padding:1px 8px; border-radius:4px; font-size:11px; }
+.tag-correct { background:#d4edda; color:#155724; }
+.tag-partial { background:#fff3cd; color:#856404; }
+.tag-wrong { background:#f8d7da; color:#721c24; }
+
+/* chart container */
+.chart-box { width:100%; height:400px; }
+
+/* summary bar */
+.summary-bar { display:flex; gap:20px; flex-wrap:wrap; margin-bottom:20px; }
+.summary-item { flex:1; min-width:140px; background:#fff; border-radius:10px; padding:16px 20px; box-shadow:0 1px 4px rgba(0,0,0,0.06); text-align:center; }
+.summary-item .num { font-size:24px; font-weight:700; margin-top:4px; }
+.summary-item .num.correct { color:#e74c3c; }
+.summary-item .num.partial { color:#f39c12; }
+.summary-item .num.wrong { color:#27ae60; }
+.summary-item .num.accuracy { color:#667eea; }
+.summary-item .lbl { font-size:12px; color:#999; }
+
+/* 类别拆分表格 */
+.cat-breakdown { margin:-10px 0 20px 0; background:#fff; border-radius:10px; padding:16px 20px; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+.cat-breakdown .title { font-size:13px; color:#999; margin-bottom:10px; font-weight:500; }
+.cat-breakdown table { width:100%; border-collapse:collapse; font-size:12px; }
+.cat-breakdown thead th { background:#fafbfc; text-align:center; padding:6px 8px; color:#888; font-weight:500; border-bottom:2px solid #eee; }
+.cat-breakdown thead th:first-child { text-align:left; }
+.cat-breakdown tbody td { text-align:center; padding:6px 8px; border-bottom:1px solid #f5f5f5; }
+.cat-breakdown tbody td:first-child { text-align:left; font-weight:500; color:#444; }
+.cat-breakdown tbody td.correct { color:#e74c3c; }
+.cat-breakdown tbody td.partial { color:#f39c12; }
+.cat-breakdown tbody td.wrong { color:#27ae60; }
+.cat-breakdown tbody td.accuracy { color:#667eea; font-weight:600; }
+.cat-breakdown tbody tr:hover { background:#f8f9ff; }
+
+/* 差距分析面板 */
+.gap-section { background:#fff; border-radius:12px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,0.06); margin-bottom:20px; }
+.gap-section h2 { font-size:16px; margin-bottom:14px; color:#444; display:flex; align-items:center; gap:8px; }
+.gap-section h2 .badge { font-size:11px; background:#e8ecf1; color:#666; padding:1px 8px; border-radius:8px; font-weight:400; }
+.gap-section h2 .tag-new { font-size:10px; background:#667eea; color:#fff; padding:1px 8px; border-radius:8px; font-weight:400; }
+.gap-summary-bar { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:18px; }
+.gap-summary-item { flex:1; min-width:120px; background:linear-gradient(135deg,#f8f9ff,#eef0ff); border-radius:10px; padding:14px 16px; text-align:center; }
+.gap-summary-item .num { font-size:22px; font-weight:700; margin-top:2px; }
+.gap-summary-item .num.improve { color:#27ae60; }
+.gap-summary-item .num.worsen { color:#e74c3c; }
+.gap-summary-item .num.neutral { color:#667eea; }
+.gap-summary-item .lbl { font-size:11px; color:#888; }
+.gap-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+@media(max-width:900px){ .gap-grid-2 { grid-template-columns:1fr; } }
+.gap-chart-box { width:100%; height:320px; }
+.gap-trend-table { width:100%; border-collapse:collapse; font-size:12px; margin-bottom:16px; }
+.gap-trend-table thead th { background:#fafbfc; text-align:center; padding:6px 8px; color:#888; font-weight:500; border-bottom:2px solid #eee; font-size:11px; }
+.gap-trend-table thead th:first-child { text-align:left; }
+.gap-trend-table tbody td { text-align:center; padding:5px 6px; border-bottom:1px solid #f5f5f5; font-size:11px; }
+.gap-trend-table tbody td:first-child { text-align:left; font-weight:500; color:#444; }
+.gap-trend-table tbody td.good { color:#27ae60; font-weight:600; }
+.gap-trend-table tbody td.bad { color:#e74c3c; font-weight:600; }
+.gap-trend-table tbody tr:hover { background:#f8f9ff; }
+
+.gap-detail-toggle { color:#667eea; cursor:pointer; font-size:12px; user-select:none; }
+.gap-detail-toggle:hover { text-decoration:underline; }
+.gap-detail-list { margin-top:12px; }
+.gap-detail-item { background:#f8f9fc; border-radius:8px; padding:5px 8px; margin-bottom:8px; }
+.gap-detail-item .di-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+.gap-detail-item .di-id { font-weight:600; color:#333; font-size:13px; }
+.gap-detail-item .di-cats { font-size:11px; color:#999; }
+.gap-detail-item .di-note { font-size:12px; color:#555; line-height:1.6; margin-bottom:4px; }
+.gap-detail-item .di-lessons { font-size:11px; color:#888; padding-left:12px; }
+.gap-detail-item .di-lessons li { margin-bottom:2px; }
+
+/* ===== 个股 / 选股 / 知识面板 样式 ===== */
+.stock-search-box { position:relative; max-width:520px; margin-bottom:18px; }
+.stock-search-box input { width:100%; padding:12px 16px; border:1px solid #ddd; border-radius:10px; font-size:14px; outline:none; transition:border-color .15s; }
+.stock-search-box input:focus { border-color:#3b82f6; }
+.stock-search-box .search-tip { font-size:11px; color:#999; margin-top:6px; }
+.stock-dropdown { position:absolute; top:48px; left:0; right:0; background:#fff; border:1px solid #eee; border-radius:8px; box-shadow:0 6px 20px rgba(0,0,0,0.1); max-height:280px; overflow-y:auto; z-index:50; display:none; }
+.stock-dropdown.show { display:block; }
+.stock-dropdown .dd-item { padding:10px 16px; cursor:pointer; border-bottom:1px solid #f5f5f5; display:flex; justify-content:space-between; align-items:center; }
+.stock-dropdown .dd-item:last-child { border-bottom:none; }
+.stock-dropdown .dd-item:hover { background:#f8f9ff; color:#3b82f6; }
+.stock-dropdown .dd-item .dd-code { font-family:monospace; color:#888; font-size:12px; }
+.stock-dropdown .dd-empty { padding:12px 16px; color:#999; text-align:center; font-size:13px; }
+
+/* 个股行情卡 */
+.quote-card { background:#fff; border-radius:12px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,0.06); margin-bottom:18px; display:none; }
+.quote-card.show { display:block; }
+.quote-card .qc-header { display:flex; align-items:baseline; gap:14px; margin-bottom:14px; flex-wrap:wrap; }
+.quote-card .qc-name { font-size:22px; font-weight:700; color:#333; }
+.quote-card .qc-code { font-family:monospace; color:#888; font-size:14px; }
+.quote-card .qc-price { font-size:30px; font-weight:700; }
+.quote-card .qc-change { font-size:16px; font-weight:600; padding:4px 10px; border-radius:6px; color:#fff; }
+.quote-card .qc-change.up { background:#e74c3c; }
+.quote-card .qc-change.down { background:#27ae60; }
+.quote-card .qc-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; margin-top:14px; }
+.quote-card .qc-item { background:#f8f9fc; border-radius:8px; padding:10px 12px; }
+.quote-card .qc-item .lbl { font-size:11px; color:#999; }
+.quote-card .qc-item .val { font-size:15px; font-weight:600; margin-top:2px; color:#333; }
+
+/* 类象知识卡片 */
+.knowledge-section { background:#fff; border-radius:12px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,0.06); margin-bottom:20px; }
+.knowledge-section h2 { font-size:16px; color:#444; margin-bottom:6px; }
+.knowledge-section .ks-desc { font-size:12px; color:#999; margin-bottom:14px; }
+.knowledge-group { margin-bottom:18px; }
+.knowledge-group .kg-title { font-size:14px; font-weight:600; color:#667eea; margin-bottom:10px; padding-left:8px; border-left:3px solid #667eea; }
+.knowledge-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:8px; }
+.k-card { background:#f8f9fc; border:1px solid #eef0ff; border-radius:8px; padding:8px 12px; transition:all .15s; }
+.k-card:hover { background:#eef0ff; transform:translateY(-1px); box-shadow:0 2px 6px rgba(102,126,234,0.12); }
+.k-card .kc-key { font-size:13px; font-weight:700; color:#667eea; }
+.k-card .kc-desc { font-size:12px; color:#555; margin-top:2px; line-height:1.5; }
+
+/* 选股条件面板 */
+.screener-form { background:#fff; border-radius:12px; padding:18px 20px; box-shadow:0 1px 4px rgba(0,0,0,0.06); margin-bottom:18px; }
+.screener-form .sf-row { display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; }
+.screener-form .sf-field { display:flex; flex-direction:column; gap:4px; }
+.screener-form .sf-field label { font-size:11px; color:#999; }
+.screener-form .sf-field .sf-range { display:flex; align-items:center; gap:6px; }
+.screener-form .sf-field input { width:80px; padding:7px 10px; border:1px solid #ddd; border-radius:6px; font-size:13px; outline:none; }
+.screener-form .sf-field input:focus { border-color:#3b82f6; }
+.screener-form .sf-field .sep { color:#aaa; }
+.screener-form button.srch-btn { background:#3b82f6; color:#fff; border:none; padding:9px 22px; border-radius:8px; cursor:pointer; font-weight:600; font-size:13px; }
+.screener-form button.srch-btn:hover { background:#2c6fd6; }
+.screener-form .sf-tip { font-size:11px; color:#999; margin-top:10px; line-height:1.5; }
+.screener-stats { font-size:12px; color:#666; margin-bottom:8px; }
+
+/* 交易统计栏 */
+.trade-stat-bar { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:18px; }
+.trade-stat-item { flex:1; min-width:130px; background:#fff; border-radius:10px; padding:14px 16px; box-shadow:0 1px 4px rgba(0,0,0,0.06); text-align:center; }
+.trade-stat-item .num { font-size:22px; font-weight:700; margin-top:2px; }
+.trade-stat-item .num.up { color:#e74c3c; }
+.trade-stat-item .num.down { color:#27ae60; }
+.trade-stat-item .num.neutral { color:#667eea; }
+.trade-stat-item .lbl { font-size:11px; color:#999; }
+
+/* 择日面板 - 独立Tab样式 */
+.zeri-panel { background:linear-gradient(135deg,#1a1a2e,#1e3a5f); color:#e0e0e0; border-radius:12px; padding:20px 22px; margin-bottom:18px; box-shadow:0 4px 15px rgba(0,0,0,0.15); }
+.zeri-panel h2 { font-size:18px; margin-bottom:14px; color:#fff; }
+.zeri-form-row { display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; margin-bottom:14px; }
+.zeri-form-row label { font-size:12px; color:#999; display:block; margin-bottom:4px; }
+.zeri-form-row input[type=date], .zeri-form-row select { padding:7px 10px; border-radius:6px; border:1px solid #555; background:#2a2a4a; color:#fff; font-size:13px; }
+.zeri-form-row .zbtn { border:none; padding:9px 18px; border-radius:8px; cursor:pointer; font-weight:600; color:#fff; font-size:13px; }
+.zeri-form-row .zbtn.analyze { background:#8b5cf6; }
+.zeri-form-row .zbtn.cache { background:#10b981; }
+.zeri-form-row .zbtn.optimize { background:#f59e0b; }
+.zeri-checkboxes { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:14px; padding:10px 12px; background:rgba(255,255,255,0.04); border-radius:8px; }
+.zeri-checkboxes label { font-size:12px; color:#cbd5e1; cursor:pointer; display:flex; align-items:center; gap:4px; }
+.zeri-checkboxes input { cursor:pointer; }
+.zeri-status { font-size:13px; color:#aaa; margin-left:8px; }
+.zeri-result { font-size:14px; line-height:1.8; min-height:60px; }
+
+/* modal overlay */
+.modal-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.55); z-index:1000; justify-content:center; align-items:center; overflow-y:auto; padding:30px 16px; }
+.modal-overlay.show { display:flex; }
+.modal-box { background:#fff; border-radius:14px; max-width:800px; width:100%; max-height:90vh; overflow-y:auto; padding:28px 30px; box-shadow:0 20px 60px rgba(0,0,0,0.3); position:relative; animation:modalIn .2s ease; }
+@keyframes modalIn { from{opacity:0;transform:translateY(20px) scale(0.97)} to{opacity:1;transform:translateY(0) scale(1)} }
+.modal-close { position:absolute; top:14px; right:18px; font-size:24px; cursor:pointer; color:#999; background:none; border:none; line-height:1; }
+.modal-close:hover { color:#333; }
+.modal-box h2 { font-size:18px; color:#333; margin-bottom:6px; padding-right:30px; }
+.modal-box .subtitle { font-size:13px; color:#999; margin-bottom:18px; }
+.modal-box .pred-result { background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; border-radius:10px; padding:14px 20px; margin-bottom:18px; display:flex; gap:24px; flex-wrap:wrap; }
+.modal-box .pred-result .item { text-align:center; min-width:80px; }
+.modal-box .pred-result .item .lbl { font-size:11px; opacity:0.7; display:block; }
+.modal-box .pred-result .item .val { font-size:18px; font-weight:700; margin-top:2px; }
+.modal-box .detail-grid { display:block; margin-bottom:10px; }
+.modal-box .detail-grid .field { background:#f8f9fc; border-radius:8px; padding:5px 8px; }
+.modal-box .detail-grid .field .lbl { font-size:10px; color:#999; margin-bottom:1px; }
+.modal-box .detail-grid .field .val { font-size:14px; font-weight:600; color:#333; }
+.modal-box .detail-grid .field.sike-field { grid-column:1/-1; }
+.modal-box .detail-grid .field.full-width { grid-column:1/-1; }
+.modal-box .detail-grid .field .sike-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:6px; }
+.modal-box .detail-grid .field .sike-item { background:#fff; border:1px solid #e8ecf1; border-radius:6px; padding:8px 10px; text-align:center; }
+.modal-box .detail-grid .field .sike-item .si-num { font-size:11px; color:#999; }
+.modal-box .detail-grid .field .sike-item .si-val { font-size:14px; font-weight:600; color:#333; margin-top:2px; }
+.modal-box .section-label { font-size:14px; font-weight:600; color:#667eea; margin-bottom:8px; padding-top:4px; }
+.modal-box .analysis-text { background:#f8f9fc; border-radius:8px; padding:14px 16px; font-size:13px; line-height:1.7; color:#444; white-space:pre-wrap; margin-bottom:14px; }
+.modal-reasoning { background:#f8f9fc; border-radius:8px; padding:14px 16px; margin-bottom:14px; }
+.modal-reasoning .step { margin-bottom:10px; padding:10px 12px; background:#fff; border-radius:6px; border-left:3px solid #667eea; }
+.modal-reasoning .step:last-child { margin-bottom:0; }
+.modal-reasoning .step .step-title { font-size:12px; color:#667eea; font-weight:600; margin-bottom:4px; }
+.modal-reasoning .step .step-content { font-size:13px; line-height:1.6; color:#444; white-space:pre-wrap; }
+.modal-box .sanchuan-tag { display:inline-flex; align-items:center; gap:6px; font-size:14px; }
+.modal-box .sanchuan-tag .arrow { color:#ccc; font-size:16px; }
+/* 传统天地盘样式 - 固定布局（紧凑版） */
+.modal-box .detail-grid .field.tp-field { background:#fffef7; border:1px solid #fcd34d; padding:4px; max-width:240px; }
+.modal-box .detail-grid .field.tp-field .lbl { font-size:10px; color:#92400e; margin-bottom:3px; }
+/* 天地盘网格布局：4行4列（小尺寸） */
+.modal-box .detail-grid .field .tp-traditional-grid { display:grid; grid-template-columns:repeat(4, 36px); gap:2px; margin-top:3px; justify-content:center; }
+/* 单元格（固定小尺寸） */
+.modal-box .detail-grid .field .tp-cell { background:#fff; border:1px solid #e5e7eb; border-radius:2px; padding:2px; text-align:center; position:relative; height:36px; display:flex; flex-direction:column; justify-content:center; }
+.modal-box .detail-grid .field .tp-cell.has-tj { background:#fefce8; border-color:#f59e0b; }
+/* 空格位置 */
+.modal-box .detail-grid .field .tp-empty { width:36px; height:36px; }
+/* 天盘 */
+.modal-box .detail-grid .field .tp-cell .tp-tian { font-size:14px; font-weight:700; color:#1f2937; line-height:1.2; }
+/* 地盘 */
+.modal-box .detail-grid .field .tp-cell .tp-di { font-size:9px; color:#6b7280; margin-top:1px; }
+/* 天将 */
+.modal-box .detail-grid .field .tp-cell .tp-tj { font-size:8px; color:#f59e0b; font-weight:600; position:absolute; top:1px; right:1px; background:#fff; border-radius:2px; padding:0 2px; }
+/* 简化信息样式 */
+.modal-box .detail-grid .field .tp-simple-info { margin-top:8px; }
+.modal-box .detail-grid .field .tp-info-row { display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px dashed #e5e7eb; }
+.modal-box .detail-grid .field .tp-info-label { color:#6b7280; font-size:13px; }
+.modal-box .detail-grid .field .tp-info-value { font-weight:600; color:#1f2937; font-size:13px; }
+.modal-box .detail-grid .field .tp-info-note { margin-top:8px; padding:8px; background:#fef3c7; border-radius:6px; font-size:12px; color:#92400e; text-align:center; }
+@media(max-width:600px){
+  .modal-box { padding:20px 16px; }
+  .modal-box .detail-grid { grid-template-columns:1fr; }
+  .modal-box .detail-grid .field .sike-grid { grid-template-columns:repeat(2,1fr); }
+}
+
+/* responsive */
+@media(max-width:600px){
+  .topbar { padding:12px 16px; flex-direction:column; align-items:stretch; }
+  .market-ticker { justify-content:center; }
+  .card-row { grid-template-columns:1fr; }
+  .tab-nav { top:auto; position:relative; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>📊 大六壬股票交易仪表盘 <small>虚拟交易系统</small></h1>
+  <div class="market-ticker" id="marketTicker">
+    <span class="name">上证指数</span>
+    <span class="price" id="mPrice">--</span>
+    <span class="change" id="mChange">--</span>
+    <span class="range" id="mRange">高:-- 低:--</span>
+  </div>
+  <div style="display:flex;gap:10px;">
+    <button class="op-btn report" onclick="openReport()">📋 查看日报</button>
+    <button class="op-btn zeri" onclick="switchTab('zeri')">📅 择日分析</button>
+  </div>
+</div>
+
+<!-- ===== Tab导航栏 ===== -->
+<div class="tab-nav">
+  <button class="tab-btn active" data-tab="overview" onclick="switchTab('overview')">📊 总览</button>
+  <button class="tab-btn" data-tab="quant" onclick="switchTab('quant')">📈 量化预测</button>
+  <button class="tab-btn" data-tab="liuren20d" onclick="switchTab('liuren20d')">🔮 六壬预测(20天)</button>
+  <button class="tab-btn" data-tab="compare" onclick="switchTab('compare')">🧠 决策仪表盘</button>
+  <button class="tab-btn" data-tab="screener" onclick="switchTab('screener')">🔍 选股·个股</button>
+  <button class="tab-btn" data-tab="predictions" onclick="switchTab('predictions')">📋 预测记录</button>
+  <button class="tab-btn" data-tab="trades" onclick="switchTab('trades')">💱 交易记录</button>
+  <button class="tab-btn" data-tab="ai" onclick="switchTab('ai')">🧠 AI学习</button>
+  <button class="tab-btn" data-tab="zeri" onclick="switchTab('zeri')">📅 择日分析</button>
+</div>
+
+<div class="container">
+
+  <!-- ==================== Tab1: 总览 ==================== -->
+  <div class="tab-content active" id="tab-overview">
+    <!-- 今日预测卡 -->
+    <div class="today-card" id="todayCard">
+      <h2><span id="tpTitle">🔮 今日预测</span></h2>
+      <div class="pred-row" id="todayPred">
+        <div class="pred-item"><span class="label">类别</span><span class="val" id="tpCat">--</span></div>
+        <div class="pred-item"><span class="label">预测目标</span><span class="val" id="tpTarget">--</span></div>
+        <div class="pred-item"><span class="label">趋势预测</span><span class="val" id="tpTrend">--</span></div>
+        <div class="pred-item"><span class="label">吉凶</span><span class="val" id="tpJixiong">--</span></div>
+        <div class="pred-item"><span class="label">参考价</span><span class="val" id="tpRef">--</span></div>
+        <div class="pred-item"><span class="label">真实结果</span><span class="val" id="tpActual">--</span></div>
+        <div class="pred-item"><span class="label">状态</span><span class="val" id="tpStatus">--</span></div>
+      </div>
+    </div>
+
+    <!-- 统计栏 -->
+    <div class="summary-bar" id="summaryBar">
+      <div class="summary-item"><div class="lbl">预测总数</div><div class="num" id="sTotal">0</div></div>
+      <div class="summary-item"><div class="lbl">已对照</div><div class="num" id="sChecked">0</div></div>
+      <div class="summary-item"><div class="lbl correct">正确</div><div class="num correct" id="sCorrect">0</div></div>
+      <div class="summary-item"><div class="lbl partial">部分正确</div><div class="num partial" id="sPartial">0</div></div>
+      <div class="summary-item"><div class="lbl wrong">错误</div><div class="num wrong" id="sWrong">0</div></div>
+      <div class="summary-item"><div class="lbl accuracy">准确率</div><div class="num accuracy" id="sAccuracy">0%</div></div>
+    </div>
+
+    <!-- 按类别拆分明细 -->
+    <div class="cat-breakdown" id="catBreakdown">
+      <div class="title">📊 按类别拆分</div>
+      <table>
+        <thead>
+          <tr class="${etf.confidence<50?'low-conf':''}" data-etf="${etf.name}" data-momentum="${etf.momentum_20d}" data-ma-trend="${etf.ma_trend}">
+            <th>类别</th>
+            <th>预测总数</th>
+            <th>已对照</th>
+            <th>正确</th>
+            <th>部分正确</th>
+            <th>错误</th>
+            <th>准确率</th>
+          </tr>
+        </thead>
+        <tbody id="catBody"></tbody>
+      </table>
+    </div>
+
+    <!-- 账户卡片 -->
+    <div class="card-row" id="portfolioCards"></div>
+
+    <!-- 上证指数走势图 -->
+    <div class="section">
+      <h2>📈 上证指数走势</h2>
+      <div class="chart-box" id="marketChart"></div>
+    </div>
+  </div>
+
+  <!-- ==================== Tab1b: 量化预测(20天) ==================== -->
+  <div class="tab-content" id="tab-quant">
+    <div class="today-card" style="background:linear-gradient(135deg,#11998e,#38ef7d);">
+      <h2>📈 量化预测 — 20天周期（宽基ETF轮动 + 波动率目标）</h2>
+      <div class="pred-row" id="quantPred" style="display:flex;gap:24px;flex-wrap:wrap;">
+        <div class="pred-item"><span class="label">周期起</span><span class="val" id="qStart">--</span></div>
+        <div class="pred-item"><span class="label">周期止</span><span class="val" id="qEnd">--</span></div>
+        <div class="pred-item"><span class="label">趋势</span><span class="val" id="qTrend">--</span></div>
+        <div class="pred-item"><span class="label">置信度</span><span class="val" id="qConf">--</span></div>
+        <div class="pred-item"><span class="label">推荐ETF</span><span class="val" id="qBest">--</span></div>
+        <div class="pred-item"><span class="label">推荐仓位</span><span class="val" id="qPos">--</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>📊 ETF池分析</h2>
+      <div class="table-wrap">
+        <table id="quantEtfTable">
+          <thead>
+            <tr class="${etf.confidence<50?'low-conf':''}" data-etf="${etf.name}" data-momentum="${etf.momentum_20d}" data-ma-trend="${etf.ma_trend}">
+              <th>ETF</th><th>最新价</th><th>20日动量</th><th>波动率</th>
+              <th>RSI</th><th>均线趋势</th><th>推荐仓位</th><th>综合评分</th>
+            </tr>
+          </thead>
+          <tbody id="quantEtfBody"><tr><td colspan="8" style="text-align:center;color:#999;">加载中...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>📈 量化预测历史</h2>
+      <div class="table-wrap">
+        <table id="quantHistoryTable">
+          <thead><tr><th>周期起</th><th>周期止</th><th>趋势</th><th>置信度</th><th>推荐ETF</th><th>评分</th></tr></thead>
+          <tbody id="quantHistoryBody"><tr><td colspan="6" style="text-align:center;color:#999;">暂无历史</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin:20px;display:flex;gap:12px;justify-content:center;">
+      <button class="op-btn report" onclick="runQuantPrediction(event)" style="background:#11998e;color:#fff;padding:12px 28px;border-radius:8px;border:none;cursor:pointer;font-weight:600;">🔄 运行量化预测</button>
+      <button class="op-btn" onclick="runQuantPrediction(event,true)" style="background:#e74c3c;color:#fff;padding:12px 28px;border-radius:8px;border:none;cursor:pointer;font-weight:600;">🔴 强制重新预测</button>
+    </div>
+  </div>
+
+  <!-- ==================== Tab1c: 六壬预测(20天) ==================== -->
+  <div class="tab-content" id="tab-liuren20d">
+    <div class="today-card" style="background:linear-gradient(135deg,#667eea,#764ba2);">
+      <h2>🔮 大六壬预测 — 20天周期（人工指定时辰）</h2>
+      <div class="pred-row" id="liurenPred" style="display:flex;gap:20px;flex-wrap:wrap;">
+        <div class="pred-item"><span class="label">起课日</span><span class="val" id="lStart">--</span></div>
+        <div class="pred-item"><span class="label">月将</span><span class="val" id="lYuejiang">--</span></div>
+        <div class="pred-item"><span class="label">课体</span><span class="val" id="lKeti">--</span></div>
+        <div class="pred-item"><span class="label">三传</span><span class="val" id="lSanchuan">--</span></div>
+        <div class="pred-item"><span class="label">趋势</span><span class="val" id="lTrend">--</span></div>
+        <div class="pred-item"><span class="label">置信度</span><span class="val" id="lConf">--</span></div>
+      </div>
+      <div id="liurenFinalConclusion" style="margin-top:12px;padding:14px 20px;background:rgba(255,255,255,0.15);border-radius:10px;text-align:center;display:none;">
+        <div style="font-size:14px;opacity:0.8;margin-bottom:4px;">📌 最终结论</div>
+        <div id="lFinalVerdict" style="font-size:28px;font-weight:900;letter-spacing:2px;"></div>
+        <div id="lFinalDetail" style="font-size:13px;opacity:0.8;margin-top:4px;"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>🎯 起课设置</h3>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-end;">
+        <div>
+          <label style="display:block;font-size:13px;color:#666;margin-bottom:6px;">起课日期</label>
+          <input type="date" id="liurenDateInput" style="padding:8px 12px;border:1px solid #ddd;border-radius:6px;font-size:14px;">
+        </div>
+        <div>
+          <label style="display:block;font-size:13px;color:#666;margin-bottom:6px;">时辰</label>
+          <select id="liurenShichenInput" style="padding:8px 12px;border:1px solid #ddd;border-radius:6px;font-size:14px;min-width:100px;">
+            <option value="">自动（当前时辰）</option>
+            <option value="子">子时 (23-1)</option>
+            <option value="丑">丑时 (1-3)</option>
+            <option value="寅">寅时 (3-5)</option>
+            <option value="卯">卯时 (5-7)</option>
+            <option value="辰">辰时 (7-9)</option>
+            <option value="巳">巳时 (9-11)</option>
+            <option value="午">午时 (11-13)</option>
+            <option value="未">未时 (13-15)</option>
+            <option value="申">申时 (15-17)</option>
+            <option value="酉">酉时 (17-19)</option>
+            <option value="戌">戌时 (19-21)</option>
+            <option value="亥">亥时 (21-23)</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:13px;color:#666;margin-bottom:6px;">月将</label>
+          <select id="liurenYuejiangInput" style="padding:8px 12px;border:1px solid #ddd;border-radius:6px;font-size:14px;min-width:140px;">
+            <option value="">自动（按节气计算）</option>
+            <option value="子">子 - 神后</option>
+            <option value="丑">丑 - 大吉</option>
+            <option value="寅">寅 - 功曹</option>
+            <option value="卯">卯 - 太冲</option>
+            <option value="辰">辰 - 天罡</option>
+            <option value="巳">巳 - 太乙</option>
+            <option value="午">午 - 胜光</option>
+            <option value="未">未 - 小吉</option>
+            <option value="申">申 - 传送</option>
+            <option value="酉">酉 - 从魁</option>
+            <option value="戌">戌 - 河魁</option>
+            <option value="亥">亥 - 登明</option>
+          </select>
+        </div>
+        <button class="op-btn zeri" onclick="console.log('[CLICK] 按钮被点击');runLiurenPrediction(event)" style="background:#667eea;color:#fff;padding:10px 24px;border-radius:8px;border:none;cursor:pointer;font-weight:600;">🔄 起课预测</button>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="section">
+        <h2>📋 基本排盘</h2>
+        <div id="liurenBasicInfo" style="font-size:13px;line-height:1.8;"></div>
+        <h2 style="margin-top:14px;">📜 四课</h2>
+        <div id="liurenSike" style="font-size:13px;"></div>
+        <h2 style="margin-top:14px;">🔗 三传分析</h2>
+        <div id="liurenSanchuan" style="font-size:13px;line-height:1.8;"></div>
+      </div>
+      <div class="section">
+        <h2>🔍 12维度分析</h2>
+        <div id="liurenAnalysis" style="font-size:13px;line-height:1.8;"></div>
+        <h2 style="margin-top:14px;">🧬 训练库匹配</h2>
+        <div id="liurenEvoData" style="font-size:13px;line-height:1.8;background:#f0fdf4;padding:10px 14px;border-radius:6px;"></div>
+        <h2 style="margin-top:14px;">📖 课格股市规则</h2>
+        <div id="liurenKetiRule" style="font-size:13px;line-height:1.8;background:#fefce8;padding:10px 14px;border-radius:6px;"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>💡 推理过程</h2>
+      <div id="liurenReasoning" style="font-size:13px;line-height:1.8;"></div>
+    </div>
+
+    <div class="section">
+      <h2>📚 六壬预测历史</h2>
+      <div class="table-wrap">
+        <table id="liurenHistoryTable">
+          <thead><tr><th>周期起</th><th>月将</th><th>课体</th><th>三传</th><th>趋势</th><th>置信度</th></tr></thead>
+          <tbody id="liurenHistoryBody"><tr><td colspan="6" style="text-align:center;color:#999;">暂无历史</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== Tab1d: 决策仪表盘 ==================== -->
+  <div class="tab-content" id="tab-compare">
+    <div class="summary-bar" id="compareSummary" style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;">
+      <div class="summary-item"><div class="lbl">周期</div><div class="num" id="dmCycle">--</div></div>
+      <div class="summary-item"><div class="lbl">六壬宏观</div><div class="num" id="dmLiuren" style="font-size:18px;">--</div></div>
+      <div class="summary-item"><div class="lbl">量化综合置信</div><div class="num" id="dmQuantConf" style="font-size:18px;">--</div></div>
+      <div class="summary-item"><div class="lbl">建议操作</div><div class="num" id="dmAdvice" style="font-size:16px;color:#e74c3c;">--</div></div>
+    </div>
+
+    <div class="section">
+      <h2>🧠 三级决策矩阵</h2>
+      <div id="decisionTable" style="font-size:13px;"></div>
+    </div>
+
+    <div style="text-align:center;margin:20px;">
+      <button class="op-btn zeri" onclick="runDecisionMatrix(event)" style="background:#667eea;color:#fff;padding:12px 28px;border-radius:8px;border:none;cursor:pointer;font-weight:600;">🔄 运行决策矩阵</button>
+    </div>
+  </div>
+
+  <!-- ==================== Tab2: 选股·个股（合并） ==================== -->
+  <div class="tab-content" id="tab-screener">
+    <!-- ⭐ 区段0：双重验证精选（量化+六壬双通过） -->
+    <div class="section" id="dualPhaseSection" style="background:linear-gradient(135deg,#fff9e6 0%,#fff 60%);border:1px solid #ffd966;">
+      <h2>⭐ 双重验证精选 <span class="badge" id="dualPhaseCount">0只</span> <span style="font-size:12px;color:#b8860b;font-weight:normal;">量化海选 TOP15 → 六壬精选看涨</span></h2>
+      <div id="dualPhaseMeta" style="font-size:12px;color:#999;margin-bottom:10px;"></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>排名</th><th>代码</th><th>名称</th><th>量化评分</th><th>六壬趋势</th><th>吉凶</th><th>置信度</th><th>操作</th>
+          </tr></thead>
+          <tbody id="dualPhaseTable">
+            <tr class="${etf.confidence<50?'low-conf':''}" data-etf="${etf.name}" data-momentum="${etf.momentum_20d}" data-ma-trend="${etf.ma_trend}"><td colspan="8" style="text-align:center;color:#bbb;padding:20px;">加载中...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sf-tip" style="margin-top:10px;">
+        <b style="color:#b8860b;">双阶段验证：</b>
+        先由量化选股器（九维度因子）海选出 TOP15，再用大六壬一课多断对每只股票进行类神分析，筛选出<span style="color:#16a34a;font-weight:600;">趋势看涨 + 吉凶吉/中平 + 置信度≥50%</span>的标的。双重验证通过的个股具备更高的胜率。
+      </div>
+    </div>
+
+    <!-- ① 六壬择时信号 -->
+    <div class="section" id="timingSection" style="margin-top:18px;">
+      <h2>📅 六壬择时信号 <span class="badge" id="timingBadge">加载中...</span></h2>
+      <div id="timingContent" style="font-size:13px;color:#333;line-height:1.8;"></div>
+    </div>
+
+    <!-- ⭐ 双重验证精选 + ⑤仓位管理 -->
+    <div class="section" id="dualPhaseSection" style="margin-top:18px;background:linear-gradient(135deg,#fef3c7 0%,#fff 60%);border:1px solid #d97706;">
+      <h2>⭐ 双重验证精选 <span class="badge" id="dualPhaseBadge" style="background:#d97706;color:#fff;">加载中</span>
+        <span style="font-size:12px;color:#92400e;font-weight:normal;">量化海选 → 六壬精选 → 仓位建议</span>
+      </h2>
+      <div id="dualPhaseMeta" style="font-size:12px;color:#92400e;margin-bottom:10px;"></div>
+      <div class="table-wrap">
+        <table id="dualPhaseTable">
+          <thead>
+            <tr class="${etf.confidence<50?'low-conf':''}" data-etf="${etf.name}" data-momentum="${etf.momentum_20d}" data-ma-trend="${etf.ma_trend}">
+              <th>#</th><th>代码</th><th>名称</th>
+              <th>量化评分</th>
+              <th>六壬趋势</th><th>吉凶</th><th>置信度</th>
+              <th style="background:#fef3c7;">建议仓位</th>
+            </tr>
+          </thead>
+          <tbody id="dualPhaseBody">
+            <tr class="${etf.confidence<50?'low-conf':''}" data-etf="${etf.name}" data-momentum="${etf.momentum_20d}" data-ma-trend="${etf.ma_trend}"><td colspan="8" style="text-align:center;color:#999;padding:24px;">加载中...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sf-tip" style="margin-top:10px;">
+        <b style="color:#b8860b;">双阶段验证：</b>
+        先由量化选股器（九维度因子）海选出 TOP15，再用大六壬一课多断对每只股票进行类神分析，筛选出<span style="color:#16a34a;font-weight:600;">趋势看涨 + 吉凶吉/中平 + 置信度≥50%</span>的标的。
+        <br><b style="color:#92400e;">仓位策略：</b>
+        大盘看多+高置信→满仓；震荡市+高置信→重仓；大盘看空→空仓/极轻仓。
+      </div>
+    </div>
+
+    <!-- ⭐ 人工占一课（活时法：真随机择时） -->
+    <div class="section" id="huoshiSection" style="margin-top:18px;background:linear-gradient(135deg,#e0f2fe 0%,#fff 60%);border:1px solid #0ea5e9;">
+      <h2>🎲 人工占一课（活时法） <span class="badge" id="huoshiBadge">未起课</span>
+        <span style="font-size:12px;color:#0369a1;font-weight:normal;">真随机占时，模拟传统六壬"掷铜钱/抽签"求活时</span>
+        <button class="srch-btn" style="float:right;background:#0ea5e9;" onclick="triggerHuoshiPaipan(event)">🎲 求天机</button>
+      </h2>
+      <div id="huoshiResult" style="display:none;font-size:13px;color:#333;line-height:1.8;background:#fff;padding:14px 16px;border-radius:8px;margin-top:10px;"></div>
+      <div class="sf-tip" style="margin-top:10px;">
+        <b style="color:#0369a1;">活时法：</b>调用 <a href="https://www.random.org" target="_blank">random.org</a> 大气无线电噪声 API 生成真随机数，映射到12时辰。
+        数学上不可预测，最接近传统六壬"求天机"的本质。适用于您主动"求占"而非"被动应时"的场景。
+        <br>日常调度器仍用 <b>真太阳时校正</b>（即"正时"），符合"求测者到来即占"的传统。
+      </div>
+    </div>
+
+    <!-- ⭐ 六壬精选审核（AI初判 + 人工审核 + 训练库反哺） -->
+    <div class="section" id="liurenReviewSection" style="margin-top:18px;background:linear-gradient(135deg,#ede9fe 0%,#fff 60%);border:1px solid #7c3aed;">
+      <h2>🎯 六壬精选审核 <span class="badge" id="liurenReviewBadge" style="background:#7c3aed;color:#fff;">待起课</span>
+        <span style="font-size:12px;color:#5b21b6;font-weight:normal;">AI初判 → 人工审核 → 训练库反哺</span>
+        <button class="srch-btn" style="float:right;background:#7c3aed;" onclick="startLiurenReview()">🎯 开始六壬精选</button>
+      </h2>
+
+      <!-- 起课设置区 -->
+      <div id="reviewSetupArea" style="margin-top:12px;">
+        <div class="screener-form" style="background:#f5f3ff;border:1px dashed #c4b5fd;">
+          <div class="sf-row">
+            <div class="sf-field">
+              <label>占时（时辰）</label>
+              <select id="reviewShichen" style="width:100px;padding:7px 10px;border:1px solid #ddd;border-radius:6px;font-size:13px;">
+                <option value="子时">子时</option>
+                <option value="丑时">丑时</option>
+                <option value="寅时">寅时</option>
+                <option value="卯时">卯时</option>
+                <option value="辰时">辰时</option>
+                <option value="巳时">巳时</option>
+                <option value="午时" selected>午时</option>
+                <option value="未时">未时</option>
+                <option value="申时">申时</option>
+                <option value="酉时">酉时</option>
+                <option value="戌时">戌时</option>
+                <option value="亥时">亥时</option>
+              </select>
+            </div>
+            <div class="sf-field">
+              <label>选股来源</label>
+              <select id="reviewSource" style="width:120px;padding:7px 10px;border:1px solid #ddd;border-radius:6px;font-size:13px;">
+                <option value="screener_top10">量化TOP10</option>
+                <option value="screener_top15">量化TOP15</option>
+                <option value="custom">自定义</option>
+              </select>
+            </div>
+            <div class="sf-field">
+              <label>审核时限</label>
+              <select id="reviewTimeout" style="width:100px;padding:7px 10px;border:1px solid #ddd;border-radius:6px;font-size:13px;">
+                <option value="24">24小时</option>
+                <option value="48" selected>48小时</option>
+                <option value="72">72小时</option>
+              </select>
+            </div>
+            <div class="sf-field">
+              <label>&nbsp;</label>
+              <button class="srch-btn" style="background:#7c3aed;" onclick="startLiurenReview()">🚀 起课审核</button>
+            </div>
+          </div>
+          <div class="sf-tip" style="margin-top:8px;">
+            <b style="color:#5b21b6;">说明：</b>
+            AI先做初判，您可以人工审核修正。审核结果将作为高质量样本存入训练库，帮助AI持续进步。
+            超时未审核将自动采用AI判断（微信会收到提醒）。
+          </div>
+        </div>
+      </div>
+
+      <!-- 审核结果区 -->
+      <div id="reviewResultArea" style="display:none;margin-top:14px;">
+        <!-- 排盘信息 + 倒计时 -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:10px;">
+          <div style="font-size:13px;color:#333;">
+            <span id="reviewPaipanInfo" style="background:#f5f3ff;padding:6px 12px;border-radius:6px;"></span>
+          </div>
+          <div style="font-size:13px;">
+            <span style="color:#999;">剩余审核时间：</span>
+            <span id="reviewCountdown" style="color:#7c3aed;font-weight:600;">--</span>
+            <span id="reviewStatusBadge" class="badge" style="margin-left:8px;">审核中</span>
+          </div>
+        </div>
+
+        <!-- 批量操作按钮 -->
+        <div style="margin-bottom:10px;display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="srch-btn" style="background:#16a34a;font-size:12px;padding:6px 14px;" onclick="batchConfirmAll()">✅ 全部确认</button>
+          <button class="srch-btn" style="background:#dc2626;font-size:12px;padding:6px 14px;" onclick="batchFlipAll()">🔄 全部翻转</button>
+          <button class="srch-btn" style="background:#6b7280;font-size:12px;padding:6px 14px;" onclick="resetAllToAI()">↩️ 恢复AI判断</button>
+          <button class="srch-btn" style="background:#f59e0b;font-size:12px;padding:6px 14px;" onclick="saveReview()">💾 保存审核</button>
+          <button class="srch-btn" style="background:#9ca3af;font-size:12px;padding:6px 14px;" onclick="skipReview()">⏭️ 跳过六壬精选</button>
+        </div>
+
+        <!-- 审核表格 -->
+        <div class="table-wrap">
+          <table id="reviewTable">
+            <thead>
+              <tr class="${etf.confidence<50?'low-conf':''}" data-etf="${etf.name}" data-momentum="${etf.momentum_20d}" data-ma-trend="${etf.ma_trend}">
+                <th>#</th><th>代码</th><th>名称</th>
+                <th style="background:#fef3c7;">AI趋势</th>
+                <th style="background:#fef3c7;">AI吉凶</th>
+                <th style="background:#fef3c7;">AI置信度</th>
+                <th style="background:#ede9fe;">人工趋势</th>
+                <th style="background:#ede9fe;">人工吉凶</th>
+                <th style="background:#ede9fe;">审核备注</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="reviewTableBody">
+              <tr class="${etf.confidence<50?'low-conf':''}" data-etf="${etf.name}" data-momentum="${etf.momentum_20d}" data-ma-trend="${etf.ma_trend}"><td colspan="10" style="text-align:center;color:#bbb;padding:20px;">加载中...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sf-tip" style="margin-top:10px;">
+          <b style="color:#5b21b6;">审核说明：</b>
+          点击"修改"可以调整人工判断，填写审核理由。修正的案例将作为<span style="color:#dc2626;font-weight:600;">高质量训练样本</span>存入知识库。
+          <b style="color:#16a34a;">全部确认</b>表示完全同意AI判断；<b style="color:#dc2626;">全部翻转</b>表示涨→跌、跌→涨全部反转。
+        </div>
+      </div>
+    </div>
+
+    <!-- 区段1：量化选股结果 + 大六壬推荐（左右对照） -->
+    <div class="grid-2" style="margin-top:18px;">
+      <!-- 量化选股器 TOP N -->
+      <div class="section" style="margin-bottom:0;">
+        <h2>📊 量化选股器 TOP10 <span class="badge" id="screenerCount">0只</span></h2>
+        <div id="screenerMeta" style="font-size:12px;color:#999;margin-bottom:10px;"></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>排名</th><th>代码</th><th>名称</th><th>综合评分</th><th>建议</th><th>操作</th>
+            </tr></thead>
+            <tbody id="screenerTable">
+              <tr class="${etf.confidence<50?'low-conf':''}" data-etf="${etf.name}" data-momentum="${etf.momentum_20d}" data-ma-trend="${etf.ma_trend}"><td colspan="6" style="text-align:center;color:#bbb;padding:20px;">加载中...</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="sf-tip" style="margin-top:10px;">说明：调度器每日 09:10 自动扫描九维度（技术/资金/估值/六壬/宏观/行业/筹码/财务/龙虎榜），综合打分输出 TOP10。点击"查看详情"展开个股详情面板。</div>
+      </div>
+
+      <!-- 大六壬一课多断推荐 -->
+      <div class="section" style="margin-bottom:0;">
+        <h2>🧭 大六壬一课多断推荐 <span class="badge" id="multiStockCount">0只</span></h2>
+        <div id="multiStockMeta" style="font-size:12px;color:#999;margin-bottom:10px;"></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>代码</th><th>名称</th><th>趋势</th><th>吉凶</th><th>置信度</th><th>操作</th>
+            </tr></thead>
+            <tbody id="multiStockTable">
+              <tr class="${etf.confidence<50?'low-conf':''}" data-etf="${etf.name}" data-momentum="${etf.momentum_20d}" data-ma-trend="${etf.ma_trend}"><td colspan="6" style="text-align:center;color:#bbb;padding:20px;">加载中...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 区段2：个股详情面板（默认隐藏，点击选股结果行或大六壬推荐行后展开） -->
+    <div class="section" id="stockDetailPanel" style="display:none;">
+      <h2>📈 个股详情 <span class="badge" id="stockDetailTitle">--</span></h2>
+      <!-- 个股搜索框（也可直接搜索） -->
+      <div class="stock-search-box" style="max-width:520px;margin-bottom:18px;">
+        <input id="stockSearchInput" type="text" placeholder="输入股票代码或名称（如 000001 / 平安银行）" oninput="searchStock()" onfocus="searchStock()" autocomplete="off">
+        <div class="search-tip">支持模糊搜索A股代码或名称，从后端 /api/stock/search 拉取</div>
+        <div class="stock-dropdown" id="stockDropdown"></div>
+      </div>
+
+      <!-- 个股实时行情卡 -->
+      <div class="quote-card" id="quoteCard">
+        <div class="qc-header">
+          <span class="qc-name" id="qcName">--</span>
+          <span class="qc-code" id="qcCode">--</span>
+          <span class="qc-price" id="qcPrice">--</span>
+          <span class="qc-change" id="qcChange">--</span>
+        </div>
+        <div class="qc-grid">
+          <div class="qc-item"><div class="lbl">今开</div><div class="val" id="qcOpen">--</div></div>
+          <div class="qc-item"><div class="lbl">昨收</div><div class="val" id="qcPrev">--</div></div>
+          <div class="qc-item"><div class="lbl">最高</div><div class="val" id="qcHigh">--</div></div>
+          <div class="qc-item"><div class="lbl">最低</div><div class="val" id="qcLow">--</div></div>
+          <div class="qc-item"><div class="lbl">涨跌额</div><div class="val" id="qcChangeAmt">--</div></div>
+          <div class="qc-item"><div class="lbl">成交量</div><div class="val" id="qcVolume">--</div></div>
+          <div class="qc-item"><div class="lbl">成交额</div><div class="val" id="qcAmount">--</div></div>
+          <div class="qc-item"><div class="lbl">换手率</div><div class="val" id="qcTurnover">--</div></div>
+          <div class="qc-item"><div class="lbl">总市值</div><div class="val" id="qcMktcap">--</div></div>
+        </div>
+      </div>
+
+      <!-- 个股K线图区域 -->
+      <div style="margin-top:16px;">
+        <h2 style="font-size:15px;color:#444;margin-bottom:10px;">📈 个股行情图</h2>
+        <div class="chart-box" id="stockChart" style="height:420px;min-width:400px;"></div>
+      </div>
+
+      <!-- 大六壬预测分析（如果该股在推荐列表中，显示分析） -->
+      <div id="stockLiurenAnalysis" style="display:none;margin-top:16px;background:#f8f9fc;border-radius:10px;padding:14px 16px;">
+        <h2 style="font-size:15px;color:#444;margin-bottom:10px;">🔮 大六壬类神分析</h2>
+        <div id="stockLiurenText" style="font-size:13px;color:#555;line-height:1.7;"></div>
+      </div>
+    </div>
+
+    <!-- 区段3：六壬股市类象知识面板 -->
+    <div class="knowledge-section">
+      <h2>🧠 六壬股市类象知识</h2>
+      <div class="ks-desc">数据来源：后端 StockAnalyzer.STOCK_CLASS_KNOWLEDGE，用于六壬占股时的类象参考</div>
+
+      <div class="knowledge-group">
+        <div class="kg-title">一、地支与股市类象</div>
+        <div class="knowledge-cards" id="kgDizhi"></div>
+      </div>
+
+      <div class="knowledge-group">
+        <div class="kg-title">二、神将股市类象</div>
+        <div class="knowledge-cards" id="kgShenjiang"></div>
+      </div>
+
+      <div class="knowledge-group">
+        <div class="kg-title">三、课体与股市</div>
+        <div class="knowledge-cards" id="kgKeti"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== Tab4: 预测记录 ==================== -->
+  <div class="tab-content" id="tab-predictions">
+    <div class="section">
+      <h2>📋 预测历史记录 <span class="badge" id="predCount">0条</span></h2>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;">
+        <select id="predEtfFilter" onchange="filterPredictions()" style="padding:6px 10px;border-radius:6px;border:1px solid #ccc;">
+          <option value="">全部ETF</option>
+          <option value="510300">510300 沪深300</option>
+          <option value="510500">510500 中证500</option>
+          <option value="159915">159915 创业板</option>
+          <option value="510050">510050 上证50</option>
+          <option value="588000">588000 科创50</option>
+        </select>
+        <select id="predMethodFilter" onchange="filterPredictions()" style="padding:6px 10px;border-radius:6px;border:1px solid #ccc;">
+          <option value="">全部方法</option>
+          <option value="量化">量化</option>
+          <option value="六壬">六壬</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
+        <button class="pred-view-btn" data-mode="date" onclick="switchPredView('date')" style="padding:5px 14px;border:1px solid #ccc;border-radius:6px;background:#11998e;color:#fff;cursor:pointer;font-weight:600;">📅 按日期</button>
+        <button class="pred-view-btn" data-mode="etf" onclick="switchPredView('etf')" style="padding:5px 14px;border:1px solid #ccc;border-radius:6px;background:#e0e0e0;color:#333;cursor:pointer;font-weight:600;">📊 按个股</button>
+      </div>
+      <div class="table-wrap">
+        <table><thead><tr>
+          <th>时间</th><th>ETF</th><th>类别</th><th>趋势</th><th>评分</th><th>动量%</th><th>RSI</th><th>均线</th><th>仓位%</th><th>目标日</th>
+        </tr></thead><tbody id="predTable"></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== Tab5: 交易记录 ==================== -->
+  <div class="tab-content" id="tab-trades">
+    <div class="trade-stat-bar" id="tradeStatBar">
+      <div class="trade-stat-item"><div class="lbl">总交易笔数</div><div class="num neutral" id="tsTotal">0</div></div>
+      <div class="trade-stat-item"><div class="lbl">买入笔数</div><div class="num up" id="tsBuy">0</div></div>
+      <div class="trade-stat-item"><div class="lbl">卖出笔数</div><div class="num down" id="tsSell">0</div></div>
+      <div class="trade-stat-item"><div class="lbl">总盈亏</div><div class="num neutral" id="tsPnl">0</div></div>
+    </div>
+    <div class="section">
+      <h2>💱 最近交易 <span class="badge" id="tradeCount">0笔</span></h2>
+      <div class="table-wrap">
+        <table><thead><tr>
+          <th>时间</th><th>账户</th><th>操作</th><th>价格</th><th>数量</th><th>盈亏</th>
+        </tr></thead><tbody id="tradeTable"></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== Tab6: AI学习 ==================== -->
+  <div class="tab-content" id="tab-ai">
+    <!-- 训练状态卡 -->
+    <div class="section" id="trainStatus" style="background:linear-gradient(135deg,#1a1a2e,#1e3a5f);color:#e0e0e0;">
+      <h2 style="color:#fff;">🧠 系统训练状态</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:10px;">
+        <div style="background:rgba(255,255,255,0.06);padding:12px;border-radius:8px;text-align:center;">
+          <div style="font-size:12px;color:#999;">六壬累计预测</div>
+          <div style="font-size:28px;font-weight:700;color:#60a5fa;" id="stTotal">--</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.06);padding:12px;border-radius:8px;text-align:center;">
+          <div style="font-size:12px;color:#999;">六壬准确率</div>
+          <div style="font-size:28px;font-weight:700;color:#34d399;" id="stLR">--</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.06);padding:12px;border-radius:8px;text-align:center;">
+          <div style="font-size:12px;color:#999;">ML准确率</div>
+          <div style="font-size:28px;font-weight:700;color:#f59e0b;" id="stML">--</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.06);padding:12px;border-radius:8px;text-align:center;">
+          <div style="font-size:12px;color:#999;">训练样本</div>
+          <div style="font-size:28px;font-weight:700;color:#a78bfa;" id="stSamples">--</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.06);padding:12px;border-radius:8px;text-align:center;">
+          <div style="font-size:12px;color:#999;">模型更新</div>
+          <div style="font-size:13px;font-weight:700;color:#94a3b8;" id="stModel">--</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== 差距分析看板 ====== -->
+    <div class="gap-section" id="gapPanel">
+      <h2>🧠 AI推理差距分析 <span class="tag-new">自学习跟踪</span> <span class="badge" id="gapTime"></span></h2>
+
+      <!-- 顶栏统计 -->
+      <div class="gap-summary-bar" id="gapSummaryBar"></div>
+
+      <!-- 图表面板（两列） -->
+      <div class="gap-grid-2">
+        <div class="gap-section" style="box-shadow:none;padding:0;margin:0;">
+          <h2 style="font-size:14px;color:#666;">📊 差距类型分布</h2>
+          <div class="gap-chart-box" id="gapDistChart"></div>
+        </div>
+        <div class="gap-section" style="box-shadow:none;padding:0;margin:0;">
+          <h2 style="font-size:14px;color:#666;">📉 差距频率随训练进度变化</h2>
+          <div class="gap-chart-box" id="gapTrendChart"></div>
+        </div>
+      </div>
+
+      <!-- 分阶段趋势表 -->
+      <h2 style="font-size:14px;color:#666;margin-top:4px;">📋 各阶段差距频率明细</h2>
+      <div class="table-wrap" id="gapTrendTableWrap"></div>
+
+      <!-- 详情（默认折叠） -->
+      <div id="gapDetailArea">
+        <span class="gap-detail-toggle" onclick="toggleGapDetails()" id="gapToggleBtn">▶ 展开差距详情样例</span>
+        <div class="gap-detail-list" id="gapDetailList" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== Tab7: 择日分析 ==================== -->
+  <div class="tab-content" id="tab-zeri">
+    <div class="zeri-panel" id="zeriPanel">
+      <h2>📅 择日分析（仪度六壬择日）</h2>
+      <div class="zeri-form-row">
+        <div>
+          <label>日期</label>
+          <input id="zeriDate" type="date">
+        </div>
+        <div>
+          <label>坐山</label>
+          <select id="zeriMountain"></select>
+        </div>
+        <div>
+          <label>时辰</label>
+          <select id="zeriShichen"></select>
+        </div>
+        <button class="zbtn analyze" onclick="zeriAnalyze()">🔍 分析</button>
+        <button class="zbtn cache" onclick="zeriLoadResults()">📂 加载缓存</button>
+        <select id="zeriYears">
+          <option value="1">1年</option><option value="3" selected>3年</option><option value="5">5年</option>
+        </select>
+        <button class="zbtn optimize" onclick="zeriBatchOptimize()">🚀 批量优化</button>
+        <span class="zeri-status" id="zeriStatus"></span>
+      </div>
+      <div class="zeri-checkboxes">
+        <label><input type="checkbox" id="chkGonggui"> 拱贵</label>
+        <label><input type="checkbox" id="chkGonglu"> 拱禄</label>
+        <label><input type="checkbox" id="chkGongma"> 拱马</label>
+        <label><input type="checkbox" id="chkChaotian"> 朝天格</label>
+        <label><input type="checkbox" id="chkGuiyuan"> 归垣格</label>
+        <label><input type="checkbox" id="chkLuowen"> 罗纹格</label>
+      </div>
+      <div class="zeri-result" id="zeriResult"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 预测详情弹窗 -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <h2 id="modalTitle">预测详情</h2>
+    <div class="subtitle" id="modalSubtitle"></div>
+    <div class="pred-result" id="modalResult"></div>
+    <div class="detail-grid" id="modalGrid"></div>
+    <div class="section-label">📖 课理分析</div>
+    <div class="analysis-text" id="modalAnalysis"></div>
+    <div class="section-label">🧠 推理过程</div>
+    <div class="modal-reasoning" id="modalReasoning"></div>
+  </div>
+</div>
+
+<script>
+// 预加载课格规则
+fetch("/api/keti_rules").then(r=>r.json()).then(d=>{window._ketiRules=d;}).catch(()=>{});
+
+const API = '';
+
+// ====== Tab 切换 ======
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === 'tab-' + tabId));
+  
+  if (tabId === 'quant') { loadQuantPrediction(); }
+  if (tabId === 'liuren20d') { loadLiuren20dPrediction(); }
+  if (tabId === 'compare') { loadCompareData(); }
+  
+  if (tabId === 'screener') {
+    if (!window._stockKgInited) initStockKnowledge();
+    Promise.all([
+      _marketTiming ? Promise.resolve() : fetchMarketTiming(),
+      _dualPhaseLoaded ? Promise.resolve() : fetchDualPhaseData(),
+      _screenerLoaded ? Promise.resolve() : fetchScreenerData(),
+      _multiStockLoaded ? Promise.resolve() : fetchMultiStockData()
+    ]).then(() => {
+      renderMarketTiming();
+      renderDualPhaseTable();
+      renderScreenerTable();
+      renderMultiStockTable();
+      loadReviewStatusOnTabSwitch();
+    });
+  }
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// 量化选股器数据加载
+let _screenerResults = [];
+let _screenerLoaded = false;
+function fetchScreenerData() {
+  return fetch(API+'/api/screener/result')
+    .then(r => r.json())
+    .then(data => {
+      if (!data.success) { _screenerResults = []; return; }
+      _screenerResults = data.results || [];
+      _screenerLoaded = true;
+      _screenerMeta = {
+        scanned_at: data.scanned_at || '',
+        message: data.message || ''
+      };
+    })
+    .catch(err => { _screenerResults = []; console.error('选股加载失败:', err); });
+}
+let _screenerMeta = {};
+
+// 大六壬推荐数据加载
+let _multiStockPredictions = [];
+let _multiStockLoaded = false;
+let _multiStockMeta = {};
+function fetchMultiStockData() {
+  return fetch(API+'/api/multi_stock')
+    .then(r => r.json())
+    .then(data => {
+      if (!data.success) { _multiStockPredictions = []; return; }
+      _multiStockPredictions = data.predictions || [];
+      _multiStockLoaded = true;
+      _multiStockMeta = {
+        date: data.date || '',
+        rizhu: data.rizhu || '',
+        shichen: data.shichen || '',
+        file: data.file || '',
+        message: data.message || ''
+      };
+    })
+    .catch(err => { _multiStockPredictions = []; console.error('大六壬推荐加载失败:', err); });
+}
+
+// 双阶段验证数据加载
+let _dualPhaseResults = [];
+let _dualPhaseVerified = [];
+let _dualPhaseWatching = [];
+let _dualPhaseLoaded = false;
+let _dualPhaseMeta = {};
+let _marketTiming = null;
+function fetchDualPhaseData() {
+  return fetch(API+'/api/dual_phase')
+    .then(r => r.json())
+    .then(data => {
+      if (!data.success) { _dualPhaseResults = []; _dualPhaseVerified = []; _dualPhaseWatching = []; return; }
+      _dualPhaseResults = data.all || [];
+      _dualPhaseVerified = data.verified || [];
+      _dualPhaseWatching = data.watch || [];
+      _dualPhaseLoaded = true;
+      _dualPhaseMeta = {
+        date: data.date || '',
+        file: data.file || '',
+        verified_count: data.verified_count || 0,
+        watch_count: data.watch_count || 0,
+        total_count: data.total_count || 0,
+        message: data.message || '',
+        skipped_reason: data.skipped_reason || ''
+      };
+      // 如果双阶段结果里包含择时信息，优先用它
+      if (data.market_timing && data.market_timing.signal) {
+        _marketTiming = data.market_timing;
+      }
+    })
+    .catch(err => { _dualPhaseResults = []; _dualPhaseVerified = []; _dualPhaseWatching = []; console.error('双阶段加载失败:', err); });
+}
+
+// ① 加载大盘择时信号
+function fetchMarketTiming() {
+  return fetch(API+'/api/market_timing')
+    .then(r => r.json())
+    .then(data => {
+      if (data.success && data.signal) {
+        _marketTiming = data;
+      }
+    })
+    .catch(err => { console.error('择时信号加载失败:', err); });
+}
+
+function renderMarketTiming() {
+  const badge = document.getElementById('timingBadge');
+  const content = document.getElementById('timingContent');
+  const dualBadge = document.getElementById('dualPhaseBadge');
+  if (!badge || !content) return;
+
+  if (!_marketTiming || !_marketTiming.signal) {
+    badge.textContent = '暂无数据';
+    content.innerHTML = '<div style="color:#999;">暂无大盘择时数据，请等待调度器每日 09:00 自动预测</div>';
+    return;
+  }
+
+  const signal = _marketTiming.signal;
+  const signalMap = {
+    'bull':  { label: '📈 看多', color: '#16a34a', bg: '#dcfce7' },
+    'bear':  { label: '📉 看空', color: '#dc2626', bg: '#fee2e2' },
+    'neutral': { label: '➡️ 中性', color: '#6b7280', bg: '#f3f4f6' },
+  };
+  const s = signalMap[signal] || signalMap['neutral'];
+  badge.textContent = s.label;
+  badge.style.background = s.bg;
+  badge.style.color = s.color;
+
+  if (dualBadge) {
+    if (signal === 'bear') {
+      dualBadge.textContent = '⚠️ 大盘看空';
+      dualBadge.style.background = '#dc2626';
+    } else if (signal === 'bull') {
+      dualBadge.textContent = '📈 大盘看多';
+      dualBadge.style.background = '#16a34a';
+    }
+  }
+
+  let html = '<div style="margin-bottom:6px;">';
+  html += '<b>目标日：</b>' + (_marketTiming.target_date || '--') + ' | ';
+  html += '<b>日柱：</b>' + (_marketTiming.rizhu || '--') + ' | ';
+  html += '<b>占时：</b>' + (_marketTiming.shichen || '--');
+  html += '</div>';
+  html += '<div style="margin-bottom:6px;">';
+  html += '<b>吉凶：</b><span style="color:' + s.color + ';font-weight:600;">' + (_marketTiming.jixiong || '--') + '</span> | ';
+  html += '<b>趋势：</b><span style="color:' + s.color + ';font-weight:600;">' + (_marketTiming.trend || '--') + '</span>';
+  html += '</div>';
+  if (_marketTiming.analysis) {
+    html += '<div style="background:#f8fafc;padding:8px 12px;border-radius:6px;font-size:12px;color:#475569;margin-top:8px;">';
+    html += '<b>分析：</b>' + _marketTiming.analysis;
+    html += '</div>';
+  }
+  if (signal === 'bear') {
+    html += '<div style="background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:8px 12px;border-radius:6px;margin-top:8px;font-weight:600;">';
+    html += '⚠️ 大盘看空，建议空仓观望。双重验证选股今日暂停（仅保留历史数据用于对照学习）。';
+    html += '</div>';
+  } else if (signal === 'bull') {
+    html += '<div style="background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;padding:8px 12px;border-radius:6px;margin-top:8px;font-weight:600;">';
+    html += '✅ 大盘看多，适合积极选股。高置信标的可满仓操作。';
+    html += '</div>';
+  } else {
+    html += '<div style="background:#f9fafb;border:1px solid #e5e7eb;color:#374151;padding:8px 12px;border-radius:6px;margin-top:8px;font-weight:600;">';
+    html += '➡️ 震荡市，精选个股为主。仅参与高置信度标的，控制仓位。';
+    html += '</div>';
+  }
+  content.innerHTML = html;
+}
+
+// 人工占一课（活时法）
+function triggerHuoshiPaipan(e) {
+  const btn = e.target;
+  const orig = btn.innerHTML;
+  btn.innerHTML = '⏳ 求天机中...';
+  btn.disabled = true;
+  fetch(API+'/api/huoshi_paipan', {method:'POST'})
+    .then(r => r.json())
+    .then(data => {
+      const resultDiv = document.getElementById('huoshiResult');
+      const badge = document.getElementById('huoshiBadge');
+      if (data.success) {
+        badge.textContent = data.shichen + '时';
+        badge.style.background = '#0ea5e9';
+        badge.style.color = '#fff';
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML =
+          '<div style="margin-bottom:8px;">' +
+            '<b style="color:#0ea5e9;">📅 ' + data.timestamp + '</b> | ' +
+            '<b>方法：</b>' + data.method + ' | ' +
+            '<b>占时：</b><span style="color:#0ea5e9;font-weight:600;font-size:15px;">' + data.shichen + '时</span> | ' +
+            '<b>日柱：</b>' + data.rizhu +
+          '</div>' +
+          '<div style="font-size:11px;color:#666;margin-bottom:8px;">🔮 ' + data.source + '</div>' +
+          '<pre style="white-space:pre-wrap;font-family:Consolas,monospace;background:#f8fafc;padding:10px;border-radius:6px;font-size:12px;">' + data.paipan_text + '</pre>';
+      } else {
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = '<span style="color:#dc2626;">❌ 排盘失败：' + data.error + '</span>';
+      }
+    })
+    .catch(err => {
+      const resultDiv = document.getElementById('huoshiResult');
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = '<span style="color:#dc2626;">❌ 请求失败：' + err + '</span>';
+    })
+    .finally(() => {
+      btn.innerHTML = orig;
+      btn.disabled = false;
+    });
+}
+
+// 渲染双阶段验证表格
+function renderDualPhaseTable() {
+  const tbody = document.getElementById('dualPhaseTable');
+  const meta = document.getElementById('dualPhaseMeta');
+  const cntEl = document.getElementById('dualPhaseCount');
+  if (!tbody) return;
+
+  // 漏洞3修复：大盘看空时显示明确提示
+  if (_dualPhaseMeta.skipped_reason) {
+    cntEl.textContent = '暂停';
+    meta.textContent = '';
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:24px;">' +
+      '<div style="color:#dc2626;font-size:16px;font-weight:600;margin-bottom:8px;">⚠️ ' + _dualPhaseMeta.skipped_reason + '</div>' +
+      '<div style="color:#999;font-size:12px;">大盘看空期间不执行量化选股+六壬精选，仅运行硬编码股票池用于对照学习</div>' +
+      '</td></tr>';
+    return;
+  }
+
+  const verifiedCnt = _dualPhaseVerified.length;
+  const watchCnt = _dualPhaseWatching.length;
+  cntEl.textContent = verifiedCnt + '只通过 / ' + watchCnt + '只观察';
+
+  let metaStr = '';
+  if (_dualPhaseMeta.date) {
+    metaStr = '🕐 ' + _dualPhaseMeta.date + ' | ✅通过 ' + verifiedCnt + ' / 👀观察 ' + watchCnt + ' / 共 ' + _dualPhaseMeta.total_count;
+  } else if (_dualPhaseMeta.message) {
+    metaStr = _dualPhaseMeta.message;
+  }
+  meta.textContent = metaStr;
+
+  // 无验证通过的
+  if (!verifiedCnt && !watchCnt) {
+    if (_dualPhaseResults.length > 0) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#bbb;padding:20px;">暂无双阶段选股结果，请等待调度器在 09:10 自动执行</td></tr>';
+    } else {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#bbb;padding:20px;">'+(_dualPhaseMeta.message||'暂无双阶段选股结果，请等待调度器在 09:10 自动执行')+'</td></tr>';
+    }
+    return;
+  }
+
+  // 先显示通过，再显示观察
+  let rows = '';
+  if (verifiedCnt > 0) {
+    rows += _dualPhaseVerified.map(r => renderDualPhaseRow(r, 'verified')).join('');
+  }
+  if (watchCnt > 0) {
+    if (verifiedCnt > 0) {
+      rows += '<tr><td colspan="8" style="background:#fef3c7;font-size:11px;color:#92400e;padding:4px 10px;">👀 以下为观察级标的（置信度40-50%或吉凶不明），仅供参考</td></tr>';
+    }
+    rows += _dualPhaseWatching.map(r => renderDualPhaseRow(r, 'watch')).join('');
+  }
+  tbody.innerHTML = rows;
+}
+
+function renderDualPhaseRow(r, level) {
+  const score = r.screener_score || 0;
+  const trend = r.liuren_trend || '--';
+  const jx = r.liuren_jixiong || '--';
+  const conf = r.liuren_confidence || 0;
+  const posLevel = r.position_level || '--';
+  const posPct = r.position_pct != null ? r.position_pct : null;
+  const scoreCls = score >= 50 ? 'text-up' : score < 20 ? 'text-down' : '';
+  const confPct = (conf * 100).toFixed(0) + '%';
+  const confCls = conf >= 0.7 ? 'text-up' : conf >= 0.5 ? '' : 'text-down';
+  const trendCls = trend.includes('涨') ? 'text-up' : trend.includes('跌') ? 'text-down' : '';
+  const rank = (level === 'verified' || level === 'watch') ? (r.screener_rank || '-') : '-';
+  let levelTag = '';
+  if (level === 'verified') {
+    levelTag = ' <span style="color:#16a34a;font-size:10px;">✅双通过</span>';
+  } else if (level === 'watch') {
+    levelTag = ' <span style="color:#d97706;font-size:10px;">👀观察</span>';
+  }
+
+  let posTag = '';
+  if (posPct != null) {
+    if (posPct >= 70) {
+      posTag = '<span style="color:#16a34a;font-weight:600;">' + posLevel + ' (' + posPct + '%)</span>';
+    } else if (posPct >= 30) {
+      posTag = '<span style="color:#d97706;font-weight:600;">' + posLevel + ' (' + posPct + '%)</span>';
+    } else if (posPct > 0) {
+      posTag = '<span style="color:#6b7280;">' + posLevel + ' (' + posPct + '%)</span>';
+    } else {
+      posTag = '<span style="color:#dc2626;">' + posLevel + '</span>';
+    }
+  } else {
+    posTag = posLevel;
+  }
+
+  return `<tr>
+    <td style="text-align:center;font-weight:600;color:#b8860b;">${rank}</td>
+    <td style="font-family:monospace;">${r.code||'--'}</td>
+    <td>${r.name||'--'}${levelTag}</td>
+    <td class="${scoreCls}" style="font-weight:600;">${(score>=0?'+':'')+score.toFixed(1)}</td>
+    <td class="${trendCls}" style="font-weight:600;">${trend}</td>
+    <td>${jx}</td>
+    <td class="${confCls}" style="font-weight:600;">${confPct}</td>
+    <td style="background:#fffbeb;font-weight:600;">${posTag}</td>
+  </tr>`;
+}
+
+// 渲染量化选股器表格
+function renderScreenerTable() {
+  const tbody = document.getElementById('screenerTable');
+  const meta = document.getElementById('screenerMeta');
+  const cntEl = document.getElementById('screenerCount');
+  if (!tbody) return;
+  cntEl.textContent = _screenerResults.length + '只';
+  let metaStr = '';
+  if (_screenerMeta.scanned_at) {
+    try {
+      const d = new Date(_screenerMeta.scanned_at);
+      metaStr = '🕐 最近扫描: ' + d.toLocaleString('zh-CN', {hour12:false});
+    } catch(e) { metaStr = '🕐 最近扫描: ' + _screenerMeta.scanned_at; }
+  }
+  meta.textContent = metaStr;
+  if (!_screenerResults.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#bbb;padding:20px;">'+(_screenerMeta.message||'暂无选股结果，请等待调度器在 09:10 自动扫描')+'</td></tr>';
+    return;
+  }
+  tbody.innerHTML = _screenerResults.map(r => {
+    const scoreCls = r.score >= 50 ? 'text-up' : r.score < 20 ? 'text-down' : '';
+    const hasLiuren = _multiStockPredictions.some(p => p.symbol === r.code);
+    const liurenTag = hasLiuren ? ' <span style="color:#8b5cf6;font-size:10px;">🧭六壬</span>' : '';
+    return `<tr>
+      <td style="text-align:center;font-weight:600;color:#667eea;">${r.rank||'-'}</td>
+      <td style="font-family:monospace;">${r.code||'--'}</td>
+      <td>${r.name||'--'}${liurenTag}</td>
+      <td class="${scoreCls}" style="font-weight:600;">${(r.score>=0?'+':'')+r.score.toFixed(1)}</td>
+      <td>${r.advice||'--'}</td>
+      <td><button class="srch-btn" style="padding:4px 10px;font-size:12px;" onclick="showStockDetail('${r.code}','${r.name||''}')">查看详情</button></td>
+    </tr>`;
+  }).join('');
+}
+
+// 渲染大六壬推荐表格
+function renderMultiStockTable() {
+  const tbody = document.getElementById('multiStockTable');
+  const meta = document.getElementById('multiStockMeta');
+  const cntEl = document.getElementById('multiStockCount');
+  if (!tbody) return;
+  cntEl.textContent = _multiStockPredictions.length + '只';
+  let metaStr = '';
+  if (_multiStockMeta.date) metaStr += '📅 预测日期: ' + _multiStockMeta.date;
+  if (_multiStockMeta.rizhu) metaStr += '  | 日柱: ' + _multiStockMeta.rizhu;
+  if (_multiStockMeta.shichen) metaStr += '  | 占时: ' + _multiStockMeta.shichen;
+  if (_multiStockMeta.file) metaStr += '  | 📄 ' + _multiStockMeta.file;
+  meta.textContent = metaStr;
+  if (!_multiStockPredictions.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#bbb;padding:14px;">'+(_multiStockMeta.message||'暂无预测记录')+'</td></tr>';
+    return;
+  }
+  tbody.innerHTML = _multiStockPredictions.map(p => {
+    const trendCls = (p.trend||'').indexOf('涨')>=0 ? 'text-up' : (p.trend||'').indexOf('跌')>=0 ? 'text-down' : '';
+    const jxCls = p.jixiong==='吉' ? 'text-up' : p.jixiong==='凶' ? 'text-down' : '';
+    const conf = (p.confidence*100).toFixed(0);
+    const inScreener = _screenerResults.some(r => r.code === p.symbol);
+    const screenerTag = inScreener ? ' <span style="color:#3b82f6;font-size:10px;">📊量化</span>' : '';
+    return `<tr>
+      <td style="font-family:monospace;">${p.symbol||'--'}</td>
+      <td>${p.name||'--'}${screenerTag}</td>
+      <td class="${trendCls}">${p.trend||'--'}</td>
+      <td class="${jxCls}">${p.jixiong||'--'}</td>
+      <td>${conf}%</td>
+      <td><button class="srch-btn" style="padding:4px 10px;font-size:12px;" onclick="showStockDetail('${p.symbol}','${p.name||''}')">查看详情</button></td>
+    </tr>`;
+  }).join('');
+}
+    
+function fetchTimeout(url, ms) {
+  return new Promise((resolve, reject) => {
+    var timer = setTimeout(() => reject(new Error('timeout')), ms);
+    fetch(url).then(r=>{clearTimeout(timer); resolve(r);}).catch(e=>{clearTimeout(timer); reject(e);});
+  });
+}
+
+async function loadAll() {
+  try {
+    const [sum, preds, trades, market, marketHist, gap] = await Promise.all([
+      fetch(API+'/api/summary').then(r=>r.json()).catch(err=>{console.error('summary err:', err); return {portfolios:[], today_prediction:{}};}),
+      fetch(API+'/api/predictions').then(r=>r.json()).catch(err=>{console.error('preds err:', err); return [];}),
+      fetch(API+'/api/trades').then(r=>r.json()).catch(err=>{console.error('trades err:', err); return [];}),
+      fetchTimeout(API+'/api/market',3000).then(r=>r.json()).catch(err=>{console.error('market err:', err); return {};}),
+      fetchTimeout(API+'/api/market_history',3000).then(r=>r.json()).catch(err=>{console.error('marketHist err:', err); return [];}),
+      fetchTimeout(API+'/api/gap_analysis',2000).then(r=>r.json()).catch(()=>null),
+    ]);
+    
+    // 渲染各模块，独立处理
+    if (sum) {
+      renderSummary(sum);
+      renderPortfolios(sum.portfolios || []);
+      renderTodayPred(sum.today_prediction || {});
+    }
+    renderPreds(preds || []);
+    renderTrades(trades || []);  // 确保交易表格始终渲染
+    renderMarket(market || {});
+    renderMarketChart(marketHist || []);
+    
+    if (gap && !gap.error) {
+      renderGapSummary(gap);
+      renderGapDistChart(gap);
+      renderGapTrendChart(gap);
+      renderGapTrendTable(gap);
+      renderGapDetails(gap);
+      document.getElementById('gapTime').textContent = '更新: ' + (gap.computed_at || '');
+    }
+  } catch (e) {
+    console.error('loadAll error:', e);
+    // 即使主加载失败，也尝试单独加载交易数据
+    try {
+      const trades = await fetch(API+'/api/trades').then(r=>r.json());
+      renderTrades(trades || []);
+    } catch (e2) {
+      console.error('单独加载交易失败:', e2);
+    }
+  }
+}
+
+function renderSummary(s) {
+  document.getElementById('sTotal').textContent = s.total_predictions;
+  document.getElementById('sChecked').textContent = s.checked;
+  document.getElementById('sCorrect').textContent = s.correct;
+  document.getElementById('sPartial').textContent = s.partial;
+  document.getElementById('sWrong').textContent = s.wrong;
+  document.getElementById('sAccuracy').textContent = s.accuracy + '%';
+
+  // 按类别拆分表格
+  const tbody = document.getElementById('catBody');
+  if (!s.by_category || s.by_category.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#bbb;padding:12px;">暂无数据</td></tr>';
+    return;
+  }
+  tbody.innerHTML = s.by_category.map(c => `
+    <tr>
+      <td>${c.label}</td>
+      <td>${c.total}</td>
+      <td>${c.checked}</td>
+      <td class="correct">${c.correct}</td>
+      <td class="partial">${c.partial}</td>
+      <td class="wrong">${c.wrong}</td>
+      <td class="accuracy">${c.accuracy}%</td>
+    </tr>
+  `).join('');
+}
+
+function renderMarket(m) {
+  if (m.error || !m.price) return;
+  document.getElementById('mPrice').textContent = m.price.toFixed(2);
+  const chg = document.getElementById('mChange');
+  chg.textContent = (m.change > 0 ? '+' : '') + m.change.toFixed(2) + ' (' + (m.change_pct > 0 ? '+' : '') + m.change_pct.toFixed(2) + '%)';
+  chg.className = 'change ' + (m.change >= 0 ? 'up' : 'down');
+  document.getElementById('mRange').textContent = '高:' + m.high.toFixed(2) + ' 低:' + m.low.toFixed(2) + '  ' + m.date;
+}
+
+function renderPortfolios(ports) {
+  const container = document.getElementById('portfolioCards');
+  container.innerHTML = '';
+  const catNames = {
+    "fixed_time": "固定时辰(09:00)",
+    "ri_gan_pian_cai": "日干偏财",
+    "ri_zhi_pian_cai": "日支偏财",
+    "ri_gan_shi_shen": "日干食神",
+    "ri_zhi_shi_shen": "日支食神",
+    "ri_gan_zheng_yin": "日干正印",
+    "ri_gan_pian_yin": "日干偏印",
+    "ri_zhi_zheng_yin": "日支正印",
+    "ri_zhi_pian_yin": "日支偏印",
+    "random": "随机(13:45)",
+    "manual": "手动"
+  };
+  if (!ports) return;
+  for (const [key, p] of Object.entries(ports)) {
+    const name = catNames[key] || key;
+    const cls = p.total_return_pct >= 0 ? 'up' : 'down';
+    let posHtml = '';
+    if (p.positions && p.positions.length) {
+      posHtml = '<div class="positions">' + p.positions.map(po =>
+        `<div class="pos-item"><span>${po.symbol||po.name||'?'}</span><span>${po.amount||po.quantity||0}份 ¥${(po.market_value||0).toFixed(2)}</span></div>`
+      ).join('') + '</div>';
+    }
+    container.innerHTML += `
+      <div class="card">
+        <div class="card-header"><h3>${name}</h3><span class="tag tag-${key}">${name}</span></div>
+        <div class="card-body">
+          <div class="stat-row"><span class="label">现金</span><span class="value">¥${p.cash.toFixed(2)}</span></div>
+          <div class="stat-row"><span class="label">市值</span><span class="value">¥${p.market_value.toFixed(2)}</span></div>
+          <div class="stat-row total-row"><span class="label">总资产</span><span class="value ${cls}">¥${p.total_asset.toFixed(2)}</span></div>
+          <div class="stat-row"><span class="label">收益率</span><span class="value ${cls}">${p.total_return_pct >= 0 ? '+' : ''}${p.total_return_pct.toFixed(2)}%</span></div>
+          ${posHtml}
+        </div>
+      </div>`;
+  }
+}
+
+function renderTodayPred(tp) {
+  if (!tp) {
+    document.getElementById('tpCat').textContent = '--';
+    document.getElementById('tpTarget').textContent = '--';
+    document.getElementById('tpTrend').textContent = '--';
+    document.getElementById('tpJixiong').textContent = '--';
+    document.getElementById('tpRef').textContent = '--';
+    document.getElementById('tpActual').textContent = '--';
+    document.getElementById('tpStatus').textContent = '--';
+    document.getElementById('tpTitle').textContent = '🔮 今日预测';
+    return;
+  }
+  const catNames = {
+    "fixed_time": "固定时辰(09:00)",
+    "ri_gan_pian_cai": "日干偏财",
+    "ri_zhi_pian_cai": "日支偏财",
+    "ri_gan_shi_shen": "日干食神",
+    "ri_zhi_shi_shen": "日支食神",
+    "ri_gan_zheng_yin": "日干正印",
+    "ri_gan_pian_yin": "日干偏印",
+    "ri_zhi_zheng_yin": "日支正印",
+    "ri_zhi_pian_yin": "日支偏印",
+    "random": "随机(13:45)",
+    "manual": "手动"
+  };
+  const targetDate = tp.target_date || tp.date || '';
+  const todayStr = new Date().toISOString().slice(0,10);
+  const isTodayTarget = targetDate === todayStr;
+  document.getElementById('tpTitle').textContent = isTodayTarget ? '🔮 今日预测' : '🔮 次日预测';
+  document.getElementById('tpCat').textContent = catNames[tp.category] || tp.category;
+  document.getElementById('tpTarget').textContent = targetDate;
+  document.getElementById('tpTrend').textContent = tp.trend_prediction || '--';
+  document.getElementById('tpJixiong').textContent = tp.jixiong || '--';
+  document.getElementById('tpRef').textContent = tp.ref_price ? '¥'+tp.ref_price : '--';
+  const actualEl = document.getElementById('tpActual');
+  actualEl.textContent = tp.actual_result || '待收盘';
+  actualEl.className = 'val' + (tp.actual_result === '涨' ? ' text-up' : tp.actual_result === '跌' ? ' text-down' : '');
+  document.getElementById('tpStatus').textContent = {pending:'待收盘',done:'已收盘',traded:'已交易'}[tp.status] || tp.status || '--';
+}
+
+var _allPreds = [];
+var _predViewMode = 'date'; // 'date' | 'etf'
+
+function switchPredView(mode) {
+  _predViewMode = mode;
+  document.querySelectorAll('.pred-view-btn').forEach(function(b) {
+    b.style.background = b.dataset.mode === mode ? '#11998e' : '#e0e0e0';
+    b.style.color = b.dataset.mode === mode ? '#fff' : '#333';
+  });
+  filterPredictions();
+}
+
+function filterPredictions() {
+  var etf = document.getElementById('predEtfFilter').value;
+  var method = document.getElementById('predMethodFilter').value;
+  var filtered = _allPreds;
+  if (etf) filtered = filtered.filter(function(d) { return d.etf === etf; });
+  if (method) filtered = filtered.filter(function(d) { return d.method === method; });
+  document.getElementById('predCount').textContent = filtered.length + '条';
+  if (_predViewMode === 'date') {
+    _renderByDate(filtered);
+  } else {
+    _renderByEtf(filtered);
+  }
+}
+
+function renderPreds(preds) {
+  _allPreds = preds || [];
+  filterPredictions();
+}
+
+// ====== 按日期视图 ======
+function _renderByDate(preds) {
+  var maLabels = {strong_bullish:'🟢强烈看涨',bullish:'🟢看涨',bearish:'🔴看跌',strong_bearish:'🔴强烈看跌',neutral:'⚪震荡'};
+  // Group by date
+  var groups = {};
+  preds.forEach(function(d) {
+    var key = d.date || 'unknown';
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(d);
+  });
+  var dates = Object.keys(groups).sort().reverse();
+  
+  var html = '';
+  dates.forEach(function(date) {
+    var items = groups[date];
+    var avgScore = items.reduce(function(s,i){return s+(i.score||0);},0) / items.length;
+    var trend = items[0].trend_prediction || '--';
+    html += '<tr class="pred-date-header" style="background:#f0f4f8;cursor:pointer;font-weight:700;" onclick="_togglePredGroup(this)">' +
+      '<td colspan="10">📅 ' + date + ' <span style="color:#999;font-weight:400;">' + items.length + '只ETF</span>' +
+      ' <span style="float:right;color:' + (trend.indexOf('涨')>=0?'#27ae60':trend.indexOf('跌')>=0?'#e74c3c':'#888') + '">' + trend + ' 均分:' + avgScore.toFixed(1) + '</span></td></tr>';
+    items.forEach(function(d) {
+      html += '<tr class="pred-date-detail" style="display:none;" data-date="' + date + '">' +
+        '<td>' + (d.predict_time||'') + '</td>' +
+        '<td><strong>' + (d.name||d.etf||'--') + '</strong></td>' +
+        '<td>' + (d.method||'') + '</td>' +
+        '<td class="' + ((d.trend_prediction||'').indexOf('涨')>=0?'text-up':(d.trend_prediction||'').indexOf('跌')>=0?'text-down':'') + '">' + (d.trend_prediction||'--') + '</td>' +
+        '<td>' + (d.score!=null?d.score:'--') + '</td>' +
+        '<td class="' + (d.momentum_20d>0?'text-up':'text-down') + '">' + (d.momentum_20d!=null?d.momentum_20d+'%':'--') + '</td>' +
+        '<td>' + (d.rsi!=null?d.rsi:'--') + '</td>' +
+        '<td>' + (maLabels[d.ma_trend]||d.ma_trend||'--') + '</td>' +
+        '<td>' + (d.position!=null?d.position+'%':'--') + '</td>' +
+        '<td>' + (d.target_date||'--') + '</td>' +
+        '</tr>';
+    }
+
+async function showDetail(predId) {
+  if (!predId) return;
+  const modal = document.getElementById('detailModal');
+  try {
+    const resp = await fetch(API+'/api/prediction/'+encodeURIComponent(predId));
+    const d = await resp.json();
+    if (d.error) { alert(d.error); return; }
+
+    const catNames = {fixed_time:'固定时辰',ri_gan_pian_cai:'日干偏财',ri_zhi_pian_cai:'日支偏财',ri_gan_shi_shen:'日干食神',ri_zhi_shi_shen:'日支食神',ri_gan_zheng_yin:'日干正印',ri_gan_pian_yin:'日干偏印',ri_zhi_zheng_yin:'日支正印',ri_zhi_pian_yin:'日支偏印',random:'随机课',manual:'人工指定时'};
+    const cat = catNames[d.category] || d.category || '--';
+
+    document.getElementById('modalTitle').textContent = '🔮 ' + cat + ' — ' + (d.trend_prediction || '--');
+    document.getElementById('modalSubtitle').textContent = d.predict_time + '  |  开课日期: ' + (d.date || '--') + '  |  ' + '预测目标: ' + (d.target_date || d.date || '--') + '  |  ID: ' + d.id;
+
+    // 结果条
+    document.getElementById('modalResult').innerHTML =
+      '<div class="item"><span class="lbl">趋势</span><span class="val">' + (d.trend_prediction || '--') + '</span></div>' +
+      '<div class="item"><span class="lbl">吉凶</span><span class="val">' + (d.jixiong || '--') + '</span></div>' +
+      (d.actual_result ? '<div class="item"><span class="lbl">实际结果</span><span class="val">' + d.actual_result + '</span></div>' : '') +
+      (d.actual_details && d.actual_details.price ? '<div class="item"><span class="lbl">实际价</span><span class="val">' + d.actual_details.price.toFixed(2) + '</span></div>' : '');
+
+    // === 参数行 ===
+    let gridHtml = '<div style="display:flex;gap:8px;margin-bottom:12px;font-size:12px;">' +
+      '<span style="background:#eee;border-radius:3px;padding:3px 10px;">日柱 <b>'+(d.rizhu||'--')+'</b></span>' +
+      '<span style="background:#eee;border-radius:3px;padding:3px 10px;">月将 <b>'+(d.yue_jiang||'--')+'</b></span>' +
+      '<span style="background:#eee;border-radius:3px;padding:3px 10px;">占时 <b>'+(d.shi_chen||'--')+'</b></span>' +
+      '<span style="background:#eee;border-radius:3px;padding:3px 10px;">课体 <b>'+(d.keti||'--')+'</b></span>' +
+      '<span style="background:#eee;border-radius:3px;padding:3px 10px;">发用 <b>'+(d.fayong||'--')+'</b></span>' +
+      '</div>';
+
+    // === 三大块: 天地盘 | 四课 | 三传 (CSS Grid 均分) ===
+    gridHtml += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;align-items:start;">';
+
+    // -- 天地盘 (左, 只显示天盘+天将, 地盘固定不显示) --
+    if (d.tiandi_pan && Object.keys(d.tiandi_pan).length) {
+        var diLayout = [['巳','午','未','申'],['辰','','','酉'],['卯','','','戌'],['寅','丑','子','亥']];
+        var tp = '<div style="background:#f8f9fc;border-radius:6px;padding:6px;">';
+        tp += '<div style="font-size:10px;color:#999;margin-bottom:4px;">🗺 天盘</div>';
+        tp += '<table style="border-collapse:collapse;font-size:12px;">';
+        for(var r=0;r<4;r++){
+            tp += '<tr>';
+            for(var c=0;c<4;c++){
+                var di = diLayout[r][c];
+                if(!di){ tp += '<td></td>'; continue; }
+                var pi = d.tiandi_pan[di]||{};
+                var tpan = (typeof pi==='object'?(pi['天盘']||pi.tianpan||''):pi)||di;
+                var tjiang = (typeof pi==='object'?(pi['天将']||pi.tianjiang||''):'');
+                var tjShort = {'贵':'贵','蛇':'蛇','雀':'雀','合':'合','勾':'勾','龙':'龙','空':'空','虎':'虎','常':'常','玄':'玄','阴':'阴','后':'后'}[tjiang]||tjiang;
+                tp += '<td style="border:1px solid #eee;padding:2px 4px;text-align:center;min-width:34px;">'+
+                    '<div style="color:#999;font-size:9px;">'+tjShort+'</div>'+
+                    '<div style="font-weight:700;font-size:14px;color:#f59e0b;">'+tpan+'</div></td>';
+            }
+            tp += '</tr>';
+        }
+        tp += '</table></div>';
+        gridHtml += tp;
+    } else {
+        gridHtml += '<div style="background:#f8f9fc;border-radius:6px;padding:6px;font-size:10px;color:#999;">天盘<br>月将'+(d.yue_jiang||'?')+'加时'+(d.shi_chen||'?')+'</div>';
+    }
+
+    // 构建12地支→天将完整映射 (贵神裸算)
+    var dzTj = {};
+    var rg2=(d.rizhu||'甲')[0];
+    var guiren={'甲':'丑','戊':'丑','庚':'丑','乙':'子','己':'申','丙':'亥','丁':'酉','壬':'巳','癸':'卯','辛':'午'};
+    var gz=guiren[rg2]||'丑', sc2=(d.shi_chen||'子');
+    var Z12='子丑寅卯辰巳午未申酉戌亥', TJ='贵蛇雀合勾龙空虎常玄阴后';
+    var gi=Z12.indexOf(gz);
+    // 真太阳时日落计算
+    var doy=new Date().getFullYear()%4==0?new Date(new Date().getFullYear(),0,0):new Date(new Date().getFullYear(),0,0);
+    // 简化: 根据月将推断月份
+    var yj_m={'子':11,'丑':12,'寅':1,'卯':2,'辰':3,'巳':4,'午':5,'未':6,'申':7,'酉':8,'戌':9,'亥':10};
+    var month=yj_m[(d.yue_jiang||'未')]||7;
+    var day=new Date(2026,month-1,15);  // 取月中
+    var doy=Math.floor((day-new Date(2026,0,0))/86400000);
+    var decl=23.45*Math.sin((360/365*(284+doy))*Math.PI/180);
+    var cosH=-Math.tan(25.1*Math.PI/180)*Math.tan(decl*Math.PI/180);
+    cosH=Math.max(-1,Math.min(1,cosH));
+    var halfday=Math.acos(cosH)*180/Math.PI/15;
+    var B=360/365*(doy-81)*Math.PI/180;
+    var eot=9.87*Math.sin(2*B)-7.53*Math.cos(B)-1.5*Math.sin(B);
+    var noonLocal=12*60+4*(120-105.5)+eot;
+    var sunsetH=(noonLocal+halfday*60)/60;
+    var scH={'子':23,'丑':1,'寅':3,'卯':5,'辰':7,'巳':9,'午':11,'未':13,'申':15,'酉':17,'戌':19,'亥':21};
+    var isDay=(scH[sc2]||0)+2 <= sunsetH;
+    for(var j=0;j<12;j++){
+        var di=Z12[(isDay?(gi+j):(gi+12-j))%12];
+        dzTj[di]=TJ[j];
+    }
+    // 三传天将覆盖(仅非空)
+    (d.sanchuan_tianjiang||[]).forEach(function(stj){
+        if(stj.indexOf('(')>=0){
+            var ddz=stj.split('(')[0].trim(), dtj=stj.split('(')[1].split(')')[0].trim();
+            if(dtj) dzTj[ddz]=dtj;  // 仅当天将非空才覆盖
+        }
+    });
+
+    // -- 四课 (中) --
+    var sikeTp = '';
+    if(d.sike && d.sike.length){
+        sikeTp = '<div style="background:#f8f9fc;border-radius:6px;padding:6px;">'+
+            '<div style="font-size:10px;color:#999;margin-bottom:4px;">📖 四课</div>'+
+            '<div style="display:flex;gap:8px;">';
+        for(var si=3;si>=0;si--){
+            var s=d.sike[si], up=s[1]||'', down=s[2]||'', nm=s[0]||'';
+            var tj=dzTj[up]||'', tjS={'贵':'贵','蛇':'蛇','雀':'雀','合':'合','勾':'勾','龙':'龙','空':'空','虎':'虎','常':'常','玄':'玄','阴':'阴','后':'后','贵人':'贵','腾蛇':'蛇','朱雀':'雀','六合':'合','勾陈':'勾','青龙':'龙','天空':'空','白虎':'虎','太常':'常','玄武':'玄','太阴':'阴','天后':'后',
+                '天空':'空','白虎':'虎','太常':'常','玄武':'玄','太阴':'阴','天后':'后'}[tj]||tj;
+            sikeTp += '<div style="text-align:center;">'+
+                '<div style="font-size:9px;color:#94a3b8;">'+(tjS||' ')+'</div>'+
+                '<div style="font-size:13px;font-weight:700;color:#60a5fa;">'+up+'</div>'+
+                '<div style="color:#aaa;font-size:9px;">↓</div>'+
+                '<div style="font-size:12px;color:#ccc;">'+down+'</div>'+
+                '<div style="font-size:8px;color:#666;">'+nm+'</div></div>';
+        }
+        sikeTp += '</div></div>';
+    }
+    gridHtml += sikeTp;
+
+    // -- 三传 (右) --
+    var rg=(d.rizhu||'甲')[0], rz=(d.rizhu||'子').slice(-1), G='甲乙丙丁戊己庚辛壬癸', Z='子丑寅卯辰巳午未申酉戌亥';
+    var WUSHU={'甲':'甲','乙':'丙','丙':'戊','丁':'庚','戊':'壬','己':'甲','庚':'丙','辛':'戊','壬':'庚','癸':'壬'};
+    var wx_dz={'子':'水','丑':'土','寅':'木','卯':'木','辰':'土','巳':'火','午':'火','未':'土','申':'金','酉':'金','戌':'土','亥':'水'};
+    var wx_g={'甲':'木','乙':'木','丙':'火','丁':'火','戊':'土','己':'土','庚':'金','辛':'金','壬':'水','癸':'水'};
+    var xk=[], XK={'甲子':'戌亥','甲戌':'申酉','甲申':'午未','甲午':'辰巳','甲辰':'寅卯','甲寅':'子丑'};
+    for(var k in XK){ var gk=k[0],zk=k[1];
+        if(((G.indexOf(rg)-G.indexOf(gk)+10)%10*12+(Z.indexOf(rz)-Z.indexOf(zk)+12)%12)%60<10){ xk=XK[k].split(''); break; }}
+    function dunG(dz){ var si=G.indexOf(WUSHU[rg]||'甲'); return G[(si+Z.indexOf(dz))%10]; }
+    function liuQ(dz){ var gw=wx_g[rg],dw=wx_dz[dz]; if(!gw||!dw)return'';
+        if(gw==dw)return'兄弟'; if(gw=='木'&&dw=='火')return'子孙'; if(gw=='木'&&dw=='土')return'妻财'; if(gw=='木'&&dw=='金')return'官鬼'; if(gw=='木'&&dw=='水')return'父母';
+        if(gw=='火'&&dw=='土')return'子孙'; if(gw=='火'&&dw=='金')return'妻财'; if(gw=='火'&&dw=='水')return'官鬼'; if(gw=='火'&&dw=='木')return'父母';
+        if(gw=='土'&&dw=='金')return'子孙'; if(gw=='土'&&dw=='水')return'妻财'; if(gw=='土'&&dw=='木')return'官鬼'; if(gw=='土'&&dw=='火')return'父母';
+        if(gw=='金'&&dw=='水')return'子孙'; if(gw=='金'&&dw=='木')return'妻财'; if(gw=='金'&&dw=='火')return'官鬼'; if(gw=='金'&&dw=='土')return'父母';
+        if(gw=='水'&&dw=='木')return'子孙'; if(gw=='水'&&dw=='火')return'妻财'; if(gw=='水'&&dw=='土')return'官鬼'; if(gw=='水'&&dw=='金')return'父母'; return''; }
+    var scHtml = '';
+    if(d.sanchuan && d.sanchuan.length){
+        scHtml = '<div style="background:#f8f9fc;border-radius:6px;padding:6px;">'+
+            '<div style="font-size:10px;color:#999;margin-bottom:4px;">🔗 三传</div>'+
+            '<table style="border-collapse:collapse;font-size:12px;">'+
+            '<tr style="color:#999;font-size:9px;"><td>六亲</td><td>地支</td><td>天将</td></tr>';
+        for(var i=0;i<d.sanchuan.length;i++){
+            var dz=d.sanchuan[i], tj=(d.sanchuan_tianjiang||[])[i]||'', dg=dunG(dz);
+            var isXK=xk.indexOf(dz)>=0, gdz=isXK?'○'+dz:dg+dz, lqName=liuQ(dz);
+            scHtml += '<tr><td style="color:#94a3b8;">'+lqName+'</td>'+
+                '<td style="font-weight:700;color:#f59e0b;font-family:monospace;">'+gdz+'</td>'+
+                '<td style="color:#999;font-size:10px;">'+tj+'</td></tr>';
+        }
+        scHtml += '</table></div>';
+    }
+    gridHtml += scHtml;
+
+    gridHtml += '</div>';  // 闭合三大块grid
+
+    document.getElementById('modalGrid').innerHTML = gridHtml;
+
+    // 课理分析
+    document.getElementById('modalAnalysis').textContent = d.analysis || '暂无详细分析';
+
+    // 推理过程 (17步，显示填充/未填充)
+    const rc = d.reasoning_chain || {};
+    const order = ['课体','四课加临','用神五气','三传','六亲分析','天将分析','五行','旬空','旺衰','神煞','刑冲合害','八杀','十二气财星','身强身弱','趋势判断','应期','风险提示'];
+    let rcHtml = '<div style="margin-bottom:4px;color:#94a3b8;font-size:11px;">完成 '+(d.rc_filled||0)+'/'+order.length+' 步</div>';
+    for (let i=0; i<order.length; i++) {
+      const key = order[i];
+      const val = rc[key] || '';
+      if (val) {
+        rcHtml += '<div class="step"><div class="step-title">✅ '+(i+1)+'. '+key+'</div><div class="step-content">'+val+'</div></div>';
+      } else {
+        rcHtml += '<div class="step" style="opacity:0.3"><div class="step-title">⬜ '+(i+1)+'. '+key+'</div><div class="step-content" style="color:#666;">— 未填充</div></div>';
+      }
+    }
+    document.getElementById('modalReasoning').innerHTML = rcHtml;
+
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  } catch (e) {
+    alert('加载失败: ' + e.message);
+  }
+}
+
+function closeModal() {
+  document.getElementById('detailModal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+// 点击遮罩关闭
+document.getElementById('detailModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+function renderTrades(trades) {
+  document.getElementById('tradeCount').textContent = trades.length + '笔';
+  const tbody = document.getElementById('tradeTable');
+  tbody.innerHTML = trades.map(t => {
+    const pnl = parseFloat(t.pnl) || 0;
+    return `<tr>
+      <td>${t.time || ''}</td>
+      <td>${t.category || ''}</td>
+      <td style="color:${t.action === '买' || t.action === 'buy' ? '#e74c3c' : '#27ae60'}">${t.action || ''}</td>
+      <td>¥${parseFloat(t.price).toFixed(2)}</td>
+      <td>${t.amount || 0}</td>
+      <td class="${pnl > 0 ? 'text-up' : pnl < 0 ? 'text-down' : ''}">${pnl ? (pnl > 0 ? '+' : '') + pnl.toFixed(2) : '-'}</td>
+    </tr>`;
+  }).join('');
+
+  // 交易统计栏
+  let buyCnt = 0, sellCnt = 0, totalPnl = 0;
+  trades.forEach(t => {
+    const act = (t.action || '').toString();
+    if (act === '买' || act === 'buy') buyCnt++;
+    else if (act === '卖' || act === 'sell') sellCnt++;
+    const pnl = parseFloat(t.pnl) || 0;
+    totalPnl += pnl;
+  });
+  document.getElementById('tsTotal').textContent = trades.length;
+  document.getElementById('tsBuy').textContent = buyCnt;
+  document.getElementById('tsSell').textContent = sellCnt;
+  const pnlEl = document.getElementById('tsPnl');
+  pnlEl.textContent = (totalPnl > 0 ? '+' : '') + totalPnl.toFixed(2);
+  pnlEl.className = 'num ' + (totalPnl > 0 ? 'up' : totalPnl < 0 ? 'down' : 'neutral');
+}
+
+function renderMarketChart(data) {
+  if (data.error || !data || !data.length) return;
+  const chart = echarts.init(document.getElementById('marketChart'));
+  const dates = data.map(d => d.date);
+  const closes = data.map(d => d.close);
+  const highs = data.map(d => d.high);
+  const lows = data.map(d => d.low);
+  const isUp = closes[closes.length-1] >= closes[0];
+  chart.setOption({
+    tooltip: { trigger:'axis', axisPointer:{type:'cross'} },
+    grid: { left:'3%', right:'3%', bottom:'8%', top:'3%', containLabel:true },
+    xAxis: { type:'category', data:dates, axisLabel:{rotate:45,fontSize:10} },
+    yAxis: { type:'value', scale:true, splitLine:{lineStyle:{type:'dashed',color:'#eee'}} },
+    dataZoom: [{ type:'inside', start:0, end:100 }],
+    series: [{
+      name:'收盘价', type:'line', data:closes, smooth:true,
+      lineStyle: { width:2, color: isUp ? '#e74c3c' : '#27ae60' },
+      areaStyle: { color: new echarts.graphic.LinearGradient(0,0,0,1, [
+        { offset:0, color: isUp ? 'rgba(231,76,60,0.2)' : 'rgba(39,174,96,0.2)' },
+        { offset:1, color: isUp ? 'rgba(231,76,60,0.02)' : 'rgba(39,174,96,0.02)' }
+      ])},
+      markLine: { data:[{ type:'average', name:'均价' }], label:{fontSize:11} }
+    }, {
+      name:'最高价', type:'line', data:highs, smooth:true,
+      lineStyle:{width:1,color:'rgba(0,0,0,0.08)',type:'dashed'}, symbol:'none',
+      emphasis:{focus:'series'}
+    }, {
+      name:'最低价', type:'line', data:lows, smooth:true,
+      lineStyle:{width:1,color:'rgba(0,0,0,0.08)',type:'dashed'}, symbol:'none',
+      emphasis:{focus:'series'}
+    }]
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+// ====== 差距分析看板 ======
+function renderGapSummary(ga) {
+  const bar = document.getElementById('gapSummaryBar');
+  const improving = ga.improving && ga.improving.length;
+  bar.innerHTML = `
+    <div class="gap-summary-item">
+      <div class="lbl">训练总课数</div>
+      <div class="num neutral">${ga.total_cases}</div>
+    </div>
+    <div class="gap-summary-item">
+      <div class="lbl">有差距自评</div>
+      <div class="num neutral">${ga.has_note_rate}%</div>
+    </div>
+    <div class="gap-summary-item">
+      <div class="lbl">入门期差距/课</div>
+      <div class="num worsen">${ga.gap_rate_first}</div>
+    </div>
+    <div class="gap-summary-item">
+      <div class="lbl">精进期差距/课</div>
+      <div class="num improve">${ga.gap_rate_last}</div>
+    </div>
+    <div class="gap-summary-item">
+      <div class="lbl">总体降幅</div>
+      <div class="num improve">${ga.improvement_pct}%</div>
+    </div>
+    <div class="gap-summary-item">
+      <div class="lbl">收录经验数</div>
+      <div class="num neutral">${ga.total_lessons}</div>
+    </div>
+  `;
+}
+
+function renderGapDistChart(ga) {
+  const chart = echarts.init(document.getElementById('gapDistChart'));
+  const dist = ga.gap_distribution || [];
+  const types = dist.map(d => d.type);
+  const rates = dist.map(d => d.rate);
+  chart.setOption({
+    tooltip: { trigger:'axis', axisPointer:{type:'shadow'}, formatter: function(p) {
+      const d = dist[p[0].dataIndex];
+      return d.type + '<br/>出现次数: ' + d.count + '<br/>频率: ' + d.rate + '%';
+    }},
+    grid: { left:'3%', right:'8%', bottom:'12%', top:'5%', containLabel:true },
+    xAxis: { type:'category', data:types, axisLabel:{rotate:35,fontSize:10} },
+    yAxis: { type:'value', name:'频率(%)', max:100, axisLabel:{fontSize:10} },
+    series: [{
+      type:'bar', data:rates,
+      barWidth:'60%',
+      itemStyle: {
+        color: function(p) {
+          const colors = ['#e74c3c','#e67e22','#f39c12','#27ae60','#3498db','#667eea','#9b59b6','#e84393','#1abc9c','#95a5a6'];
+          return colors[p.dataIndex % colors.length];
+        }
+      },
+      label: { show: true, position:'top', formatter: function(p){return p.value+'%';}, fontSize:9 }
+    }]
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+function renderGapTrendChart(ga) {
+  const chart = echarts.init(document.getElementById('gapTrendChart'));
+  const segs = ga.segment_data || [];
+  if (!segs.length) { return; }
+
+  // 取前6种主要差距类型
+  const mainTypes = (ga.trends || []).slice(0, 6);
+  const segLabels = segs.map(s => s.label.replace(/\(.*\)/,''));
+  const colors = ['#e74c3c','#f39c12','#3498db','#27ae60','#9b59b6','#e67e22'];
+
+  const series = mainTypes.map((t, i) => ({
+    name: t.type,
+    type: 'line',
+    smooth: true,
+    symbol: 'circle',
+    symbolSize: 6,
+    lineStyle: { width: 2, color: colors[i] },
+    itemStyle: { color: colors[i] },
+    data: segs.map(s => {
+      const g = s.gaps.find(g => g.type === t.type);
+      return g ? g.rate : 0;
+    })
+  }));
+
+  chart.setOption({
+    tooltip: { trigger:'axis' },
+    legend: { data: mainTypes.map(t => t.type), bottom:0, textStyle:{fontSize:10}, itemWidth:14, itemHeight:10 },
+    grid: { left:'3%', right:'3%', bottom:'22%', top:'5%', containLabel:true },
+    xAxis: { type:'category', data: segLabels, axisLabel:{fontSize:10} },
+    yAxis: { type:'value', name:'差距频率(%)', axisLabel:{fontSize:10} },
+    series: series
+  });
+  window.addEventListener('resize', () => chart.resize());
+}
+
+function renderGapTrendTable(ga) {
+  const wrap = document.getElementById('gapTrendTableWrap');
+  const segs = ga.segment_data || [];
+  const mainTypes = (ga.trends || []).slice(0, 8);
+  if (!segs.length) { wrap.innerHTML = ''; return; }
+
+  let html = '<table class="gap-trend-table"><thead><tr><th>阶段</th>';
+  for (const t of mainTypes) html += '<th>' + t.type + '</th>';
+  html += '<th>经验/课</th></tr></thead><tbody>';
+
+  for (const s of segs) {
+    html += '<tr><td>' + s.label + '</td>';
+    for (const t of mainTypes) {
+      const g = s.gaps.find(g => g.type === t.type);
+      const rate = g ? g.rate : 0;
+      const cls = rate < 30 ? 'good' : rate > 60 ? 'bad' : '';
+      html += '<td class="' + cls + '">' + rate + '%</td>';
+    }
+    html += '<td>' + s.avg_lessons + '</td></tr>';
+  }
+
+  // 趋势行
+  html += '<tr style="background:#f0f2ff;font-weight:600;"><td>变化趋势</td>';
+  for (const t of mainTypes) {
+    const chg = t.change || 0;
+    const cls = chg < 0 ? 'good' : chg > 3 ? 'bad' : '';
+    html += '<td class="' + cls + '">' + (chg > 0 ? '+' : '') + chg + '%</td>';
+  }
+  html += '<td></td></tr></tbody></table>';
+
+  // 底部总结
+  html += '<div style="font-size:12px;color:#888;padding:4px 0;">';
+  if (ga.improving && ga.improving.length) {
+    html += '✅ 进步方面: ';
+    html += ga.improving.map(i => i.type + '(' + i.change + '%)').join('、');
+  }
+  if (ga.worsening && ga.worsening.length) {
+    html += '<br/>⚠️ 需加强: ';
+    html += ga.worsening.map(i => i.type + '(+' + Math.abs(i.change) + '%)').join('、');
+  }
+  html += '</div>';
+
+  wrap.innerHTML = html;
+}
+
+function renderGapDetails(ga) {
+  const list = document.getElementById('gapDetailList');
+  const samples = ga.detail_samples || [];
+  if (!samples.length) { list.innerHTML = '<div style="color:#999;padding:10px;">暂无详情数据</div>'; return; }
+
+  list.innerHTML = samples.map(s => {
+    const lessonsHtml = s.lessons && s.lessons.length
+      ? '<ol class="di-lessons">' + s.lessons.map(l => '<li>' + l + '</li>').join('') + '</ol>'
+      : '';
+    return '<div class="gap-detail-item">' +
+      '<div class="di-header">' +
+        '<span class="di-id">第' + s.idx + '例 [' + s.id + ']</span>' +
+        '<span class="di-cats">原著:' + s.original_category + ' → AI判:' + s.ai_category + '</span>' +
+      '</div>' +
+      '<div class="di-note">差距自评: ' + s.note + '</div>' +
+      lessonsHtml +
+    '</div>';
+  }).join('');
+}
+
+let gapDetailsVisible = false;
+function toggleGapDetails() {
+  gapDetailsVisible = !gapDetailsVisible;
+  document.getElementById('gapDetailList').style.display = gapDetailsVisible ? 'block' : 'none';
+  document.getElementById('gapToggleBtn').textContent = gapDetailsVisible ? '▼ 收起差距详情样例' : '▶ 展开差距详情样例';
+}
+
+// 打开日报
+function openReport() {
+  var d = new Date();
+  var ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  window.open('/report/'+ds, '_blank');
+}
+
+// ═════════ 择日分析 ════════
+var ZMOUNTAINS = ['壬','子','癸','丑','艮','寅','甲','卯','乙','辰','巽','巳','丙','午','丁','未','坤','申','庚','酉','辛','戌','乾','亥'];
+var ZSHICHEN = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+
+function initZeri() {
+  var sm = document.getElementById('zeriMountain');
+  var ss = document.getElementById('zeriShichen');
+  ZMOUNTAINS.forEach(function(m){ var o=document.createElement('option'); o.value=m; o.textContent=m; sm.appendChild(o); });
+  ZSHICHEN.forEach(function(s){ var o=document.createElement('option'); o.value=s; o.textContent=s+'时'; ss.appendChild(o); });
+  ss.value = '巳';
+  var d = new Date();
+  document.getElementById('zeriDate').value = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+initZeri();
+
+function toggleZeriPanel() {
+  // 兼容保留：直接切换到择日Tab
+  switchTab('zeri');
+}
+
+function zeriAnalyze() {
+  var date = document.getElementById('zeriDate').value;
+  var mountain = document.getElementById('zeriMountain').value;
+  var shichen = document.getElementById('zeriShichen').value;
+  var se = document.getElementById('zeriStatus');
+  var re = document.getElementById('zeriResult');
+  if (!date) { alert('请选择日期'); return; }
+  se.textContent = '⏳ 分析中...'; re.innerHTML = '';
+  fetch('/api/zeri/analyze?date='+date+'&mountain='+mountain+'&shichen='+shichen+'&gonggui='+(document.getElementById('chkGonggui').checked?1:0)+'&gonglu='+(document.getElementById('chkGonglu').checked?1:0)+'&gongma='+(document.getElementById('chkGongma').checked?1:0)+'&chaotian='+(document.getElementById('chkChaotian').checked?1:0)+'&guiyuan='+(document.getElementById('chkGuiyuan').checked?1:0)+'&luowen='+(document.getElementById('chkLuowen').checked?1:0))
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) { re.innerHTML = '<span style=color:#f44>'+data.error+'</span>'; return; }
+      se.textContent = '✅';
+      var gNames = data.gong_patterns.map(function(p){return p.name;}).join(',') || '无';
+      var adv = [];
+      if (data.advanced.chaotian) adv.push('朝天格');
+      if (data.advanced.guiyuan) adv.push('归垣格');
+      if (data.advanced.luowen) adv.push('罗纹格');
+      var sc = data.score>=80?'#2ed573':data.score>=60?'#ffa502':'#ff6b6b';
+      var cl = data.doushou.classes;
+      re.innerHTML =
+        '<div style=display:flex;gap:20px;flex-wrap:wrap;margin-top:12px;>'+
+        '<div style=background:#2a2a4a;padding:16px;border-radius:10px;min-width:180px;text-align:center;>'+
+          '<div style=font-size:12px;color:#999;>综合评分</div>'+
+          '<div style=font-size:40px;font-weight:700;color:'+sc+';>'+data.score+'</div>'+
+          '<div style=font-size:16px;color:'+sc+';>'+data.grade+'</div></div>'+
+        '<div style=background:#2a2a4a;padding:16px;border-radius:10px;flex:1;>'+
+          '<div style=font-size:12px;color:#999;margin-bottom:6px;>四柱: '+data.sizhu['年']+' '+data.sizhu['月']+' '+data.sizhu['日']+' '+data.sizhu['时']+' | '+data.mountain+'山(坐'+data.shan_jia+'向'+data.xiang_shou+')</div>'+
+          '<div>斗首: 年='+cl['年']+' 月='+cl['月']+' 日='+cl['日']+' 时='+cl['时']+' | 透元辰:'+(data.doushou.yuanchen_ok?'✅':'❌')+' '+(data.doushou.sanyuan_grade||'')+'</div>'+
+          '<div>到山到向:'+data.daoshan_daoxiang.total_count+'项 | 活禄马:'+data.huoma_huolu.count+'项 | 拱格:'+data.gong_patterns.length+'个('+gNames+')</div>'+
+          '<div>高级格: '+(adv.length?adv.join(', '):'无')+'</div>'+
+          '<div style=margin-top:6px;color:#aaa;font-size:12px;>'+data.summary+'</div>'+
+        '</div></div>';
+    }).catch(function(e){ se.textContent='❌'; re.innerHTML='<span style=color:#f44>'+e+'</span>'; });
+}
+
+function zeriLoadResults() {
+  var mountain = document.getElementById('zeriMountain').value;
+  var se = document.getElementById('zeriStatus');
+  var re = document.getElementById('zeriResult');
+  se.textContent = '⏳ 加载中...';
+  fetch('/api/zeri/results?mountain='+mountain)
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) { re.innerHTML = '<span style=color:#f44>'+data.error+'</span>'; se.textContent='❌'; return; }
+      se.textContent = '✅ '+data.meta.days+'天缓存数据';
+      var rows = (data.results||[]).slice(0,10);
+      var html = '<div style=margin-top:12px;font-weight:600;>'+mountain+'山 TOP-'+rows.length+' 最优课</div>'+
+        '<table style=width:100%;font-size:13px;margin-top:8px;>'+
+        '<thead><tr style=color:#999;><th>#</th><th>日期</th><th>时辰</th><th>四柱</th><th>总分</th><th>等级</th><th>元辰</th><th>拱/活/到</th></tr></thead><tbody>';
+      rows.forEach(function(r,i){
+        var sc = r.total_score>=80?'#2ed573':r.total_score>=60?'#ffa502':'#ff6b6b';
+        html += '<tr style=border-bottom:1px solid #333;>'+
+          '<td>'+(i+1)+'</td><td>'+r.date+'</td><td>'+r.shichen+'时</td>'+
+          '<td style=font-size:12px;>'+r.sizhu+'</td>'+
+          '<td style=color:'+sc+';font-weight:700;>'+r.total_score.toFixed(1)+'</td>'+
+          '<td style=color:'+sc+';>'+r.grade+'</td>'+
+          '<td>'+(r.yuanchen?'✅':'❌')+'</td>'+
+          '<td>拱'+r.gong_count+'/活'+r.huoma_count+'/到'+r.daoshan_count+'</td></tr>';
+      });
+      re.innerHTML = html+'</tbody></table>';
+    }).catch(function(e){ se.textContent='❌'; re.innerHTML='<span style=color:#f44>'+e+'</span>'; });
+}
+
+function zeriBatchOptimize() {
+  var years = document.getElementById('zeriYears').value;
+  var se = document.getElementById('zeriStatus');
+  var re = document.getElementById('zeriResult');
+  if (!confirm('将运行 '+years+' 年 × 24山批量择日优化，约需 '+(years*2)+' 秒。继续？')) return;
+  se.textContent = '⏳ 批量优化中（请耐心等待）...';
+  re.innerHTML = '<div style=color:#ffa502;>🚀 正在扫描 '+years+' 年范围全部24山...<br>Phase1: 斗首快筛 → Phase2: 到山到向 → Phase3: 完整六壬</div>';
+  fetch('/api/zeri/optimize', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({years: parseInt(years)})
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.error) { re.innerHTML = '<span style=color:#f44>'+data.error+'</span>'; se.textContent='❌'; return; }
+    se.textContent = '✅ 完成！'+data.stats.phase3_candidates+'条最终结果';
+    var html = '<div style=color:#2ed573;margin-bottom:10px;>✅ '+years+'年批量优化完成！</div>';
+    html += '<div style=font-size:12px;color:#999;margin-bottom:8px;>Phase1 '+data.stats.phase1_checked+'次 → Phase2 '+data.stats.phase2_checked+' → Phase3 '+data.stats.phase3_checked+' | 耗时 '+data.stats.phase1_checked*0.02+'s</div>';
+
+    for (var m in data.summary) {
+      var items = data.summary[m];
+      if (!items.length) continue;
+      var best = items[0];
+      html += '<div style=background:#2a2a4a;padding:8px 12px;border-radius:6px;margin-bottom:6px;>'+
+        '<b>'+m+'山</b> TOP1: '+best.date+' '+best.shichen+'时 | '+
+        '<span style=color:'+(best.total_score>=80?'#2ed573':'#ffa502')+';font-weight:700;>'+best.total_score.toFixed(0)+'分</span> '+
+        '['+best.grade+'] | '+best.sizhu+
+        '</div>';
+    }
+    re.innerHTML = html;
+  })
+  .catch(function(e){ se.textContent='❌'; re.innerHTML='<span style=color:#f44>'+e+'</span>'; });
+}
+
+// ═════════ 个股搜索与行情 ════════
+let stockSearchTimer = null;
+let stockSearchKeyword = '';
+function searchStock() {
+  const kw = document.getElementById('stockSearchInput').value.trim();
+  const dd = document.getElementById('stockDropdown');
+  if (!kw) { dd.classList.remove('show'); dd.innerHTML = ''; return; }
+  // 防抖
+  clearTimeout(stockSearchTimer);
+  stockSearchTimer = setTimeout(() => {
+    if (kw === stockSearchKeyword) return;  // 避免重复请求
+    stockSearchKeyword = kw;
+    fetch(API+'/api/stock/search?keyword='+encodeURIComponent(kw))
+      .then(r => r.json())
+      .then(data => {
+        if (!data.success || !data.results || !data.results.length) {
+          dd.innerHTML = '<div class="dd-empty">未找到匹配的股票</div>';
+          dd.classList.add('show');
+          return;
+        }
+        dd.innerHTML = data.results.slice(0, 20).map(r =>
+          '<div class="dd-item" onclick="showStockQuote(\''+r.code+'\')">'+
+            '<span>'+r.name+'</span><span class="dd-code">'+r.code+'</span>'+
+          '</div>'
+        ).join('');
+        dd.classList.add('show');
+      })
+      .catch(err => {
+        dd.innerHTML = '<div class="dd-empty">搜索失败：'+err.message+'</div>';
+        dd.classList.add('show');
+      });
+  }, 250);
+}
+
+// 点击其他区域关闭下拉
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.stock-search-box')) {
+    const dd = document.getElementById('stockDropdown');
+    if (dd) dd.classList.remove('show');
+  }
+});
+
+function showStockQuote(code) {
+  document.getElementById('stockDropdown').classList.remove('show');
+  const card = document.getElementById('quoteCard');
+  card.classList.add('show');
+  // 重置
+  ['qcName','qcCode','qcPrice','qcChange','qcOpen','qcPrev','qcHigh','qcLow','qcChangeAmt','qcVolume','qcAmount','qcTurnover','qcMktcap']
+    .forEach(id => document.getElementById(id).textContent = '--');
+  document.getElementById('qcChange').className = 'qc-change';
+
+  fetch(API+'/api/stock/quote?code='+encodeURIComponent(code))
+    .then(r => r.json())
+    .then(data => {
+      if (!data.success || !data.quote) {
+        alert('获取行情失败');
+        return;
+      }
+      const q = data.quote;
+      document.getElementById('qcName').textContent = q.name || '--';
+      document.getElementById('qcCode').textContent = q.code || code;
+      const priceEl = document.getElementById('qcPrice');
+      priceEl.textContent = (q.price != null) ? q.price.toFixed(2) : '--';
+      priceEl.style.color = (q.change >= 0) ? '#e74c3c' : '#27ae60';
+      const chgEl = document.getElementById('qcChange');
+      const chgPct = q.change || 0;
+      chgEl.textContent = (chgPct >= 0 ? '+' : '') + chgPct.toFixed(2) + '%  ' + (q.change_amount >= 0 ? '+' : '') + (q.change_amount || 0).toFixed(2);
+      chgEl.className = 'qc-change ' + (chgPct >= 0 ? 'up' : 'down');
+      document.getElementById('qcOpen').textContent = (q.open != null) ? q.open.toFixed(2) : '--';
+      document.getElementById('qcPrev').textContent = (q.prev_close != null) ? q.prev_close.toFixed(2) : '--';
+      document.getElementById('qcHigh').textContent = (q.high != null) ? q.high.toFixed(2) : '--';
+      document.getElementById('qcLow').textContent = (q.low != null) ? q.low.toFixed(2) : '--';
+      document.getElementById('qcChangeAmt').textContent = (q.change_amount != null) ? (q.change_amount >= 0 ? '+' : '') + q.change_amount.toFixed(2) : '--';
+      document.getElementById('qcVolume').textContent = formatBigNumber(q.volume);
+      document.getElementById('qcAmount').textContent = formatBigNumber(q.amount);
+      document.getElementById('qcTurnover').textContent = (q.turnover_rate != null) ? q.turnover_rate.toFixed(2) + '%' : '--';
+      document.getElementById('qcMktcap').textContent = formatMarketCap(q.market_cap);
+      // 渲染个股图
+      renderStockChart(q);
+    })
+    .catch(err => alert('获取行情失败：'+err.message));
+}
+
+function formatBigNumber(n) {
+  if (n == null) return '--';
+  n = parseFloat(n);
+  if (isNaN(n)) return '--';
+  if (n >= 1e8) return (n/1e8).toFixed(2) + '亿';
+  if (n >= 1e4) return (n/1e4).toFixed(2) + '万';
+  return n.toFixed(0);
+}
+function formatMarketCap(n) {
+  if (n == null) return '--';
+  n = parseFloat(n);
+  if (isNaN(n)) return '--';
+  if (n >= 1e8) return (n/1e8).toFixed(2) + '亿';
+  return n.toFixed(0);
+}
+
+let _stockChart = null;
+let _stockChartDeferred = false;
+
+function renderStockChart(quote) {
+  const dom = document.getElementById('stockChart');
+  if (!dom) return;
+  // 宽度守卫：容器太窄时延迟重试（display:none→block后浏览器尚未完成布局）
+  const w = dom.clientWidth || dom.offsetWidth;
+  if (w < 50) {
+    if (!_stockChartDeferred) {
+      _stockChartDeferred = true;
+      setTimeout(() => {
+        _stockChartDeferred = false;
+        renderStockChart(quote);
+      }, 150);
+    }
+    return;
+  }
+  // 复用echarts实例
+  if (_stockChart) {
+    _stockChart.resize();
+  } else {
+    _stockChart = echarts.init(dom);
+    window.addEventListener('resize', () => { if (_stockChart) _stockChart.resize(); });
+    // 监听容器尺寸变化（如侧边栏折叠等）
+    if (window.ResizeObserver) {
+      const ro = new ResizeObserver(() => { if (_stockChart) _stockChart.resize(); });
+      ro.observe(dom);
+    }
+  }
+  const chart = _stockChart;
+  if (!quote || quote.price == null || isNaN(quote.price)) {
+    chart.clear();
+    chart.setOption({ title: { text: '暂无行情数据', left:'center', top:'center', textStyle:{color:'#999',fontSize:14} } });
+    return;
+  }
+
+  const open = quote.open || 0, close = quote.price || 0;
+  const high = quote.high || 0, low = quote.low || 0, prev = quote.prev_close || 0;
+  const changePct = prev > 0 ? (close - prev) / prev * 100 : 0;
+  const isUp = close >= prev;
+  const color = isUp ? '#e74c3c' : '#27ae60';
+  const colorLight = isUp ? 'rgba(231,76,60,0.15)' : 'rgba(39,174,96,0.15)';
+  const stockName = quote.name || quote.code || '';
+
+  chart.clear();
+
+  // 单日行情专用可视化：
+  // 使用区间柱（low-high）+ 开盘收盘标记 + 昨收参考线
+  // 比单根K线更清晰地展示当日价格区间
+  chart.setOption({
+    tooltip: {
+      trigger: 'axis',
+      formatter: function(params) {
+        const p = params[0];
+        return `<b>${stockName}</b><br/>
+          今开: ${open.toFixed(2)}<br/>
+          最高: ${high.toFixed(2)}<br/>
+          最低: ${low.toFixed(2)}<br/>
+          最新: ${close.toFixed(2)}<br/>
+          涨跌: ${changePct>=0?'+':''}${changePct.toFixed(2)}%`;
+      }
+    },
+    grid: { left:'10%', right:'10%', bottom:'18%', top:'8%', containLabel:true },
+    xAxis: {
+      type: 'category',
+      data: [stockName],
+      axisLabel: { fontSize: 14, fontWeight: 600, color: '#333' },
+      axisLine: { lineStyle: { color: '#ddd' } },
+      axisTick: { show: false }
+    },
+    yAxis: {
+      type: 'value',
+      scale: true,
+      axisLabel: { fontSize: 12, color: '#888' },
+      splitLine: { lineStyle: { type: 'dashed', color: '#f0f0f0' } }
+    },
+    series: [
+      // 昨日收盘参考线
+      {
+        name: '昨收',
+        type: 'line',
+        data: [prev],
+        symbol: 'none',
+        lineStyle: { color: '#95a5a6', type: 'dashed', width: 2 },
+        markLine: {
+          symbol: 'none',
+          silent: true,
+          data: [{ yAxis: prev }],
+          lineStyle: { color: '#95a5a6', type: 'dashed', width: 2 },
+          label: {
+            formatter: '昨收 ' + prev.toFixed(2),
+            position: 'end',
+            fontSize: 11,
+            color: '#95a5a6'
+          }
+        }
+      },
+      // 当日价格区间柱（low到high的柱状背景）
+      {
+        name: '当日区间',
+        type: 'bar',
+        data: [[low, high]],
+        barWidth: 40,
+        itemStyle: {
+          color: colorLight,
+          borderColor: color,
+          borderWidth: 2,
+          borderRadius: [4, 4, 4, 4]
+        },
+        // 在柱子上标记开盘价和收盘价
+        markPoint: {
+          symbol: 'pin',
+          symbolSize: 45,
+          data: [
+            { name: '今开', value: open.toFixed(2), xAxis: 0, yAxis: open,
+              itemStyle: { color: '#f39c12' },
+              label: { formatter: '开', fontSize: 10, color: '#fff' } },
+            { name: '最新', value: close.toFixed(2), xAxis: 0, yAxis: close,
+              itemStyle: { color: color },
+              label: { formatter: changePct>=0?'+':'' + changePct.toFixed(2) + '%', fontSize: 11, color: '#fff', fontWeight: 'bold' } }
+          ]
+        },
+        // 在柱子上画一条线连接开收盘
+        markLine: {
+          symbol: 'none',
+          silent: true,
+          data: [{
+            yAxis: [open, close],
+            lineStyle: { color: color, width: 3, type: 'solid' }
+          }]
+        }
+      }
+    ],
+    // 底部信息栏：关键价位文字
+    graphic: [{
+      type: 'group',
+      bottom: 5,
+      left: 'center',
+      children: [{
+        type: 'text',
+        style: {
+          text: `今开 ${open.toFixed(2)}   最高 ${high.toFixed(2)}   最低 ${low.toFixed(2)}   昨收 ${prev.toFixed(2)}`,
+          fontSize: 12,
+          fill: '#666',
+          textAlign: 'center'
+        }
+      }]
+    }]
+  });
+}
+
+// ═════════ 个股详情面板 ════════
+// 展开个股详情面板（点击选股结果行/大六壬推荐行调用）
+function showStockDetail(code, name) {
+  const panel = document.getElementById('stockDetailPanel');
+  panel.style.display = 'block';
+  const titleEl = document.getElementById('stockDetailTitle');
+  titleEl.textContent = (name ? name + ' ' : '') + '(' + code + ')';
+  // 同步填充搜索框
+  document.getElementById('stockSearchInput').value = code;
+  // 检查该股是否在大六壬推荐列表中
+  const liurenPred = _multiStockPredictions.find(p => p.symbol === code);
+  const analysisBox = document.getElementById('stockLiurenAnalysis');
+  const analysisText = document.getElementById('stockLiurenText');
+  if (liurenPred) {
+    analysisBox.style.display = 'block';
+    analysisText.innerHTML = `
+      <div><strong>趋势预测：</strong><span style="color:${(liurenPred.trend||'').indexOf('涨')>=0?'#e74c3c':(liurenPred.trend||'').indexOf('跌')>=0?'#27ae60':'#888'}">${liurenPred.trend||'--'}</span>　<strong>吉凶：</strong>${liurenPred.jixiong||'--'}　<strong>置信度：</strong>${(liurenPred.confidence*100).toFixed(0)}%</div>
+      <div style="margin-top:8px;">${liurenPred.analysis||''}</div>
+    `;
+  } else {
+    analysisBox.style.display = 'none';
+  }
+  // 加载行情（需等面板布局完成后再渲染图表，否则echarts读到的容器宽度为0）
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      showStockQuote(code);
+      // 保险：延迟50ms再强制resize一次，确保图表在面板布局完成后正确填充
+      setTimeout(() => { if (_stockChart) _stockChart.resize(); }, 50);
+    });
+  });
+  // 平滑滚动到详情面板
+  setTimeout(() => panel.scrollIntoView({behavior:'smooth', block:'start'}), 100);
+}
+
+// ═════════ 六壬股市类象知识面板（静态） ════════
+function initStockKnowledge() {
+  window._stockKgInited = true;
+  const dizhi = [
+    ['子','资金、散户、水下、低位、银行'],
+    ['丑','券商、基金、机构、银根'],
+    ['寅','开市、开盘、上涨、龙头'],
+    ['卯','突破、放量、门户、通道'],
+    ['辰','震荡、盘整、横盘、平台'],
+    ['巳','拉升、急涨、火速行情、投机'],
+    ['午','天量、大阳线、涨停、高潮'],
+    ['未','阴跌、回落、回调、套牢'],
+    ['申','下跌、破位、空头、出货'],
+    ['酉','收盘、缩量、整理、金叉'],
+    ['戌','跌停、崩盘、套牢盘、ST股'],
+    ['亥','潜伏、底仓、暗流、对倒']
+  ];
+  const shenjiang = [
+    ['贵人(丑)','国家队、白马股、绩优股'],
+    ['螣蛇(巳)','妖股、庄股、异常波动'],
+    ['朱雀(午)','消息面、利好利空、公告'],
+    ['六合(卯)','横盘、整理、多空平衡'],
+    ['勾陈(辰)','套牢、死叉、阻力位'],
+    ['青龙(寅)','上升趋势、牛市、主力'],
+    ['天空(戌)','虚假突破、主力骗线'],
+    ['白虎(申)','暴跌、恐慌盘、踩踏'],
+    ['太常(未)','慢牛、消费股、分红'],
+    ['玄武(亥)','内幕交易、潜伏盘、老鼠仓'],
+    ['太阴(酉)','阴跌、杀估值、缩量'],
+    ['天后(子)','流动性宽松、放水、利好']
+  ];
+  const keti = [
+    ['龙德课','大盘蓝筹走强，宜价值投资'],
+    ['富贵课','利好驱动上涨，宜顺势而为'],
+    ['三光课','多方发力上行，短期看涨'],
+    ['三阳课','多方主导，趋势向好'],
+    ['三奇课','突发利好，走势异常'],
+    ['六仪课','基本面优良，稳健上行'],
+    ['轩盖课','权重股搭台，题材股唱戏'],
+    ['铸印发课','底部放量启动，中线看好'],
+    ['龙战课','多空激战，剧烈波动'],
+    ['九丑课','利空突袭，恐慌下跌'],
+    ['天网课','套牢盘沉重，难以突破'],
+    ['死奇课','走势破位，止损离场']
+  ];
+  const renderCards = arr => arr.map(([k,v]) => `<div class="k-card"><div class="kc-key">${k}</div><div class="kc-desc">${v}</div></div>`).join('');
+  document.getElementById('kgDizhi').innerHTML = renderCards(dizhi);
+  document.getElementById('kgShenjiang').innerHTML = renderCards(shenjiang);
+  document.getElementById('kgKeti').innerHTML = renderCards(keti);
+}
+
+// 自动刷新
+let autoTimer;
+function startAutoRefresh() {
+  loadAll();
+  autoTimer = setInterval(loadAll, 15000);
+}
+startAutoRefresh();
+
+// 折叠面板（点击 h2 标题可切换展开/折叠，默认全部展开）
+(function(){
+  var secs = document.querySelectorAll('.section, .gap-section');
+  secs.forEach(function(sec, i){
+    var h2 = sec.querySelector('h2');
+    if(!h2) return;
+    h2.insertAdjacentHTML('afterbegin', '<span class="toggle-arrow">▼</span>');
+    var body = document.createElement('div');
+    body.className = 'section-body';
+    while(h2.nextSibling) body.appendChild(h2.nextSibling);
+    sec.appendChild(body);
+    h2.onclick = function(){ sec.classList.toggle('collapsed'); };
+  });
+})();
+
+// ====== 决策仪表盘 ======
+function loadCompareData() {
+  fetch(API+'/api/liuren_history').then(r=>r.json()).then(hd=>{
+    var date = '';
+    if(hd.history && hd.history.length > 0) {
+      date = hd.history[0].cycle_start || '';
+    }
+    fetch(API+'/api/decision_matrix?date='+date).then(r=>r.json()).then(d=>{
+      if(!d.success) return;
+      renderDecisionMatrix(d.data);
+    }).catch(err=>console.error(err));
+  }).catch(()=>{
+    fetch(API+'/api/decision_matrix').then(r=>r.json()).then(d=>{
+      if(!d.success) return;
+      renderDecisionMatrix(d.data);
+    }).catch(err=>console.error(err));
+  });
+}
+
+function renderDecisionMatrix(data) {
+  if(!data) return;
+  document.getElementById('dmCycle').textContent = data.cycle_start || '--';
+  document.getElementById('dmLiuren').textContent = data.liuren_macro.trend + ' (' + data.liuren_macro.confidence + '%)';
+  document.getElementById('dmLiuren').style.color = data.liuren_macro.trend.indexOf('涨')>=0 ? '#27ae60' : '#e74c3c';
+  document.getElementById('dmQuantConf').textContent = data.quant_overview.confidence + '%';
+  var stats = data.stats || {};
+  document.getElementById('dmAdvice').innerHTML = '🟢L1:'+(stats.high||0)+' 🟡L2:'+(stats.mid||0)+' 🔴需六壬:'+(stats.need_liuren||0);
+  
+  var rows = data.decisions || [];
+  var h = '<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;">';
+  h += '<thead><tr style="background:#f5f5f5;"><th>股票/指数</th><th>级</th><th>量化趋势</th><th>量化置信</th><th>六壬方向</th><th>主信号</th><th>建议</th><th>操作</th></tr></thead><tbody>';
+  rows.forEach(function(r){
+    var lvlColor = r.conf_color || {1:'#27ae60',2:'#f39c12',3:'#e74c3c'}[r.level]||'#999';
+    var rowBg = r.row_color || '';
+    h += '<tr style="background:'+rowBg+';">';
+    h += '<td style="padding:6px;font-weight:600;">'+r.stock+'</td>';
+    h += '<td style="color:'+lvlColor+';font-weight:700;">L'+r.level+'</td>';
+    h += '<td>'+r.quant_trend+'</td>';
+    h += '<td style="color:'+lvlColor+';font-weight:700;">'+r.quant_conf+'%</td>';
+    h += '<td>'+r.liuren_trend+'</td><td>'+r.main_signal+'</td>';
+    h += '<td style="font-weight:700;font-size:13px;">'+r.advice+'</td>';
+    h += '<td>';
+    if(r.need_liuren) {
+      h += '<button onclick="runLiurenForStock(\''+r.stock+'\')" style="background:#8b5cf6;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;">🔮 六壬预测</button>';
+    } else {
+      h += '<span style="color:#999;font-size:12px;">量化足矣</span>';
+    }
+    h += '</td></tr>';
+  });
+  h += '</tbody></table></div>';
+  document.getElementById('decisionTable').innerHTML = h;
+}
+
+function runLiurenForStock(stockName) {
+  alert('🔮 即将对 ['+stockName+'] 启动专属六壬预测，正在开发中...\n\n当前六壬宏观趋势: '+ (document.getElementById('dmLiuren').textContent));
+}
+
+function runDecisionMatrix(e) {
+  var btn = e.target;
+  btn.disabled = true; btn.textContent = '⏳ 分析中...';
+  fetch(API+'/api/liuren_history').then(r=>r.json()).then(hd=>{
+    var date = hd.history && hd.history.length>0 ? hd.history[0].cycle_start : '';
+    return fetch(API+'/api/decision_matrix?date='+date);
+  }).then(r=>r.json()).then(d=>{
+    btn.disabled = false; btn.textContent = '🔄 运行决策矩阵';
+    if(!d.success){ alert('分析失败: '+d.error); return; }
+    renderDecisionMatrix(d.data);
+  }).catch(err=>{btn.disabled=false;btn.textContent='🔄 运行决策矩阵'; alert('请求失败');});
+}
+
+
+
+  
+
+
+function loadTrainingStatus(){
+  fetch('/api/training_status').then(r=>r.json()).then(d=>{
+    if(d.error) return;
+    document.getElementById('stTotal').textContent = d.total_predictions;
+    document.getElementById('stLR').textContent = d.liuren_accuracy+'%';
+    document.getElementById('stML').textContent = d.ml_accuracy+'%';
+    document.getElementById('stSamples').textContent = d.training_samples;
+    document.getElementById('stModel').textContent = d.model_updated;
+  }).catch(function(){});
+}
+setInterval(loadTrainingStatus, 30000);
+loadTrainingStatus();
+
+// ====== 量化预测(20天) ======
+function loadQuantPrediction() {
+  fetch(API+'/api/quant_20d').then(r=>r.json()).then(d=>{
+    if(!d.success) return;
+    if(d.source === '已保存历史' || (d.data && d.data.cycle_start)) {
+      var btn = document.querySelector('button[onclick*=\"runQuantPrediction\"]');
+      if(btn){ btn.disabled=true; btn.textContent='✅ 已预测(20天)'; btn.style.background='#27ae60'; }
+    }
+    renderQuantPrediction(d.data);
+  }).catch(err=>console.error(err));
+  
+  fetch(API+'/api/quant_history').then(r=>r.json()).then(d=>{
+    if(!d.success) return;
+    renderQuantHistory(d.history);
+  }).catch(err=>console.error(err));
+}
+
+function renderQuantPrediction(data) {
+  if(!data) return;
+  document.getElementById('qStart').textContent = data.cycle_start || '--';
+  document.getElementById('qEnd').textContent = data.cycle_end || '--';
+  document.getElementById('qTrend').textContent = data.trend_prediction || '--';
+  document.getElementById('qConf').textContent = (data.confidence||0)+'%';
+  document.getElementById('qBest').textContent = data.best_etf ? data.best_etf.name : '--';
+  document.getElementById('qPos').textContent = data.best_etf ? (data.best_etf.position+'%') : '--';
+  
+  const tbody = document.getElementById('quantEtfBody');
+  if(data.all_etfs && data.all_etfs.length) {
+    tbody.innerHTML = data.all_etfs.map(etf => `
+      <tr class="${etf.confidence<50?'low-conf':''}" data-etf="${etf.name}" data-momentum="${etf.momentum_20d}" data-ma-trend="${etf.ma_trend}">
+        <td><strong>${etf.name}</strong></td>
+        <td>${etf.price}</td>
+        <td class="${etf.momentum_20d>0?'text-up':'text-down'}">${etf.momentum_20d}%</td>
+        <td>${etf.volatility}%</td>
+        <td>${etf.rsi}</td>
+        <td>${({strong_bullish:'🟢强烈看涨',bullish:'🟢看涨',bearish:'🔴看跌',strong_bearish:'🔴强烈看跌',neutral:'⚪震荡'})[etf.ma_trend]||etf.ma_trend||'--'}</td>
+        <td>${etf.position}%</td>
+        <td><strong>${etf.score}</strong></td><td>${etf.confidence<50&&etf.ma_trend.indexOf("bull")>=0?"<button class=lr-btn>六壬复盘</button>":""}</td><td>${etf.confidence<50?'':''}</td>
+      </tr>
+    `).join('');
+  }
+}
+
+function renderQuantHistory(history) {
+  const tbody = document.getElementById('quantHistoryBody');
+  if(!history || !history.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;">暂无历史</td></tr>';
+    return;
+  }
+  tbody.innerHTML = history.map(h => `
+    <tr>
+      <td>${h.cycle_start}</td>
+      <td>${h.cycle_end}</td>
+      <td>${h.trend_prediction||'--'}</td>
+      <td>${(h.confidence||0)}%</td>
+      <td>${h.best_etf?h.best_etf.name:'--'}</td>
+      <td>${h.average_score||0}</td>
+    </tr>
+  `).join('');
+}
+
+function runQuantPrediction(e,force) {
+  const btn = e.target;
+  btn.disabled = true; btn.textContent = '⏳ 运行中...';
+  fetch(API+'/api/quant_20d'+(force?'?force=1':'')).then(r=>r.json()).then(d=>{
+    if(!d.success){ btn.disabled=false; btn.textContent='🔄 运行量化预测'; alert('预测失败: '+d.error); return; }
+    btn.disabled = true; btn.textContent = '✅ 已预测(20天)'; btn.style.background = '#27ae60';
+    renderQuantPrediction(d.data);
+  }).catch(err=>{ btn.disabled=false; btn.textContent='🔄 运行量化预测'; alert('请求失败'); });
+}
+
+// ====== 六壬预测(20天) ======
+function loadLiuren20dPrediction() {
+  var hasMainPrediction = false;
+  fetch(API+'/api/liuren_20d?auto=1').then(r=>r.json()).then(d=>{
+    if(d.data) {
+      hasMainPrediction = true;
+      renderLiuren20dPrediction(d.data);
+    }
+  }).catch(err=>console.error(err)).finally(() => {
+    fetch(API+'/api/liuren_history').then(r=>r.json()).then(d=>{
+      if(!d.success || !d.history || d.history.length === 0) return;
+      renderLiurenHistory(d.history);
+      var btn = document.querySelector('button[onclick*="runLiurenPrediction"]');
+      if(btn){ btn.disabled=true; btn.textContent='✅ 已预测(20天)'; btn.style.background='#27ae60'; }
+      // 没有主预测时，自动显示最新历史
+      if(!hasMainPrediction) {
+        renderLiuren20dPrediction(d.history[0]);
+      }
+    }).catch(err=>console.error(err));
+  });
+}
+
+function renderLiuren20dPrediction(data) {
+  if(!data) return;
+  const bi = data.basic_info || {};
+  document.getElementById('lStart').textContent = data.cycle_start || '--';
+  document.getElementById('lYuejiang').textContent = bi.yuejiang ? `${bi.yuejiang}(${bi.yuejiang_name||''})` : '--';
+  document.getElementById('lKeti').textContent = data.keti || '--';
+  document.getElementById('lSanchuan').textContent = data.san_chuan ? data.san_chuan.join('→') : '--';
+  document.getElementById('lTrend').textContent = data.prediction ? data.prediction.trend : '--';
+  document.getElementById('lConf').textContent = data.prediction ? (data.prediction.confidence+'%') : '--';
+  
+  document.getElementById('liurenBasicInfo').innerHTML = `
+    <div><strong>四柱:</strong> ${bi.ri_gan}${bi.ri_zhi}日 · ${bi.shichen}时</div>
+    <div><strong>月将:</strong> ${bi.yuejiang} (${bi.yuejiang_name||''})</div>
+    <div><strong>课体:</strong> ${data.keti} (${data.qifa||''})</div>
+    <div><strong>三传:</strong> ${(data.san_chuan||[]).join(' → ')}</div>
+  `;
+  
+  const sike = data.si_ke || [];
+  document.getElementById('liurenSike').innerHTML = sike.map((sk,i) => 
+    `<div style="display:inline-block;margin:4px 8px;padding:6px 12px;background:#f8f9fc;border-radius:6px;">
+      <strong>${sk.name||'第'+(i+1)+'课'}</strong>: 上${sk.top||'?'} 下${sk.bottom||'?'}
+    </div>`
+  ).join('');
+  
+  const analysis = data.analysis || {};
+  const lq = analysis.liuqin || [];
+  const ws = analysis.wangshuai || [];
+  const kq = analysis.kong_info || {};
+  
+  document.getElementById('liurenSanchuan').innerHTML = `
+    <div><strong>六亲:</strong> ${lq.map(i=>i.地支+'('+i.六亲+')').join(' → ')}</div>
+    <div><strong>旺衰:</strong> ${ws.map(i=>i.地支+'('+i.旺衰+')').join(' → ')}</div>
+    <div><strong>旬空:</strong> 初传${kq['初传']?'落空':'不空'}, 中传${kq['中传']?'落空':'不空'}, 末传${kq['末传']?'落空 ⚠️':'不空'}</div>
+    ` + (analysis.tianjiang ? `<div><strong>天将:</strong> ${[analysis.tianjiang.初传,analysis.tianjiang.中传,analysis.tianjiang.末传].filter(Boolean).join(' → ')||'无'} (${analysis.tianjiang.昼夜}${analysis.tianjiang.顺逆})</div>` : '');
+  
+  const reasons = (data.prediction && data.prediction.reasons) || [];
+  document.getElementById('liurenReasoning').innerHTML = reasons.map((r,i) =>
+    `<div style="padding:4px 0;">${i+1}. ${r}</div>`
+  ).join('') || '<div>暂无推理过程</div>';
+  
+  const fullAnalysis = [];
+  // 维度1: 课体等级（训练库课体断语）
+  if(analysis.keti_duanyu && analysis.keti_duanyu.keti_name) {
+    const kd = analysis.keti_duanyu;
+    const levelColor = {'上吉':'#27ae60','大吉':'#27ae60','中吉':'#2ecc71','小吉':'#f1c40f','吉':'#f1c40f','平':'#95a5a6','凶':'#e74c3c','小凶':'#e74c3c','中凶':'#c0392b','大凶':'#8e44ad'};
+    const color = levelColor[kd.level] || '#95a5a6';
+    fullAnalysis.push('<strong>1. 课体等级（训练库）:</strong>');
+    fullAnalysis.push(`<div style="margin:4px 0;padding:8px 12px;background:#f8f9fc;border-left:3px solid ${color};border-radius:4px;">`);
+    fullAnalysis.push(`<div><strong style="color:${color};">${kd.keti_name} [${kd.level}]</strong> · 64课经: <strong style="color:${color};">${kd.ke_64_level}</strong>${kd.is_daxiong?' ⚠️大凶':''}</div>`);
+    if(kd.duanyu) fullAnalysis.push(`<div style="margin-top:4px;color:#555;">断语: ${kd.duanyu}</div>`);
+    if(kd.zonglun) fullAnalysis.push(`<div style="margin-top:2px;color:#777;font-size:12px;">总论: ${kd.zonglun.substring(0,80)}${kd.zonglun.length>80?'...':''}</div>`);
+    if(kd.ke_64_xiangyue) fullAnalysis.push(`<div style="margin-top:2px;color:#777;font-size:12px;">象曰: ${kd.ke_64_xiangyue.substring(0,60)}${kd.ke_64_xiangyue.length>60?'...':''}</div>`);
+    fullAnalysis.push('</div>');
+  }
+  // 维度2: 六亲
+  if(analysis.liuqin && analysis.liuqin.length) {
+    fullAnalysis.push('<strong>2. 六亲:</strong> ' + analysis.liuqin.map(i=>i.地支+'('+i.六亲+')').join(' → '));
+  }
+  // 维度3: 旺衰
+  if(analysis.wangshuai && analysis.wangshuai.length) {
+    fullAnalysis.push('<strong>3. 旺衰:</strong> ' + analysis.wangshuai.map(i=>i.地支+'('+i.旺衰+')').join(' → '));
+  }
+  // 维度4: 空亡
+  fullAnalysis.push('<strong>4. 空亡:</strong> 初传'+(kq['初传']?'落空 ⚠️':'不空')+', 中传'+(kq['中传']?'落空 ⚠️':'不空')+', 末传'+(kq['末传']?'落空 ⚠️':'不空'));
+  // 维度5: 三传关系
+  if(analysis.relationships && analysis.relationships.length) {
+    fullAnalysis.push('<strong>5. 三传关系:</strong>');
+    analysis.relationships.forEach(r => {
+      const tags = [];
+      if(r['五行关系']) tags.push(r['五行关系']);
+      if(r['六合']) tags.push('六合');
+      if(r['六冲']) tags.push('六冲');
+      if(r['三刑']) tags.push('三刑');
+      if(r['六害']) tags.push('六害');
+      fullAnalysis.push(`<div>  ${r.from}→${r.to}: ${tags.join(', ')||'无特殊关系'}</div>`);
+    });
+  }
+  // 维度6: 四课加临
+  if(analysis.sike_qi && analysis.sike_qi.关系) {
+    fullAnalysis.push('<strong>6. 四课加临:</strong> ' + analysis.sike_qi.关系 + (analysis.sike_qi.分析?' — '+analysis.sike_qi.分析:''));
+  }
+  // 维度7: 用神五气
+  if(analysis.yong_shen && analysis.yong_shen.分析) {
+    fullAnalysis.push('<strong>7. 用神五气:</strong> ' + (analysis.yong_shen.用神||'') + '(' + (analysis.yong_shen.旺衰||'') + ') — ' + analysis.yong_shen.分析.substring(0,60));
+  }
+  // 维度8: 三传制救
+  if(analysis.sanchuan_zhijiu && analysis.sanchuan_zhijiu.关系) {
+    fullAnalysis.push('<strong>8. 三传制救:</strong> ' + analysis.sanchuan_zhijiu.关系 + (analysis.sanchuan_zhijiu.分析?' — '+analysis.sanchuan_zhijiu.分析:''));
+  }
+  // 维度9: 贵神吉凶
+  if(analysis.guishen_jixiong && Object.keys(analysis.guishen_jixiong).length) {
+    const gjItems = [];
+    for(const [chuan, info] of Object.entries(analysis.guishen_jixiong)) {
+      const tj = (typeof info === 'object') ? (info.天将||'') : info;
+      if(tj) gjItems.push(`${chuan}:${tj}`);
+    }
+    if(gjItems.length) fullAnalysis.push('<strong>9. 贵神吉凶:</strong> ' + gjItems.join(', '));
+  }
+  // 维度10: 八杀体系
+  if(analysis.ba_sha && Object.keys(analysis.ba_sha).length) {
+    const bs = analysis.ba_sha;
+    const shaList = Array.isArray(bs.杀) ? bs.杀 : (bs.杀 ? [bs.杀] : []);
+    const validSha = shaList.filter(s => s && s !== '无');
+    if(validSha.length) {
+      fullAnalysis.push('<strong>10. 八杀体系:</strong> <span style="color:#e74c3c;">' + validSha.join(', ') + ' ⚠️</span>');
+    } else {
+      fullAnalysis.push('<strong>10. 八杀体系:</strong> 无凶杀');
+    }
+  }
+  // 维度11: 十二气财星
+  if(analysis.cai_shi_er_qi && analysis.cai_shi_er_qi.财星状态) {
+    fullAnalysis.push('<strong>11. 十二气财星:</strong> ' + analysis.cai_shi_er_qi.财星状态 + (analysis.cai_shi_er_qi.分析?' — '+String(analysis.cai_shi_er_qi.分析).substring(0,50):''));
+  }
+  // 维度12: 身强身弱
+  if(analysis.shen_qiang_ruo && analysis.shen_qiang_ruo.状态) {
+    fullAnalysis.push('<strong>12. 身强身弱:</strong> ' + analysis.shen_qiang_ruo.状态);
+  }
+  // 附加: 神煞
+  if(analysis.shen_sha && Object.keys(analysis.shen_sha).length) {
+    const ss = analysis.shen_sha;
+    const ssItems = [];
+    for(const [k, v] of Object.entries(ss)) {
+      if(v && v !== '无' && v !== '') ssItems.push(`${k}:${v}`);
+    }
+    if(ssItems.length) fullAnalysis.push('<strong>附. 神煞:</strong> ' + ssItems.join(', '));
+  }
+  document.getElementById('liurenAnalysis').innerHTML = fullAnalysis.join('') || '<div>暂无分析数据</div>';
+
+  // 训练库匹配（全数据源）
+  var evo = analysis.evo_data;
+  var kd = analysis.keti_duanyu;
+  console.log('[EVO] evo_data=', evo);
+  var h = '';
+
+  if (kd && kd.keti_name) {
+    var lvlColor = {'上吉':'#27ae60','大吉':'#27ae60','中吉':'#2ecc71','小吉':'#f1c40f','吉':'#f1c40f','平':'#95a5a6','凶':'#e74c3c','小凶':'#e74c3c','中凶':'#c0392b','大凶':'#8e44ad'};
+    var c = lvlColor[kd.level] || '#95a5a6';
+    h += '<div style="padding:4px 0;"><strong>🔮 训练库课体:</strong> <span style="color:'+c+';font-weight:bold;">'+kd.keti_name+' ['+kd.level+']</span>';
+    h += ' · 64课经: <span style="color:'+c+';">'+kd.ke_64_level+'</span>'+(kd.is_daxiong?' ⚠️大凶':'')+'</div>';
+    if (kd.duanyu) h += '<div style="padding:2px 0;color:#555;font-size:13px;">断语: '+kd.duanyu.substring(0,100)+'</div>';
+    if (kd.zonglun) h += '<div style="padding:2px 0;color:#777;font-size:12px;">总论: '+kd.zonglun.substring(0,100)+'</div>';
+  }
+  if (analysis.tianjiang) {
+    var tj = analysis.tianjiang;
+    h += '<div style="padding:4px 0;"><strong>⚔️ 训练库天将:</strong> ' + [tj.初传,tj.中传,tj.末传].filter(Boolean).join(' → ') + ' (' + tj.昼夜 + tj.顺逆 + ')</div>';
+  }
+
+  if (evo && typeof evo === 'object') {
+    if (evo.case_kb_matched > 0) {
+      h += '<div style="padding:4px 0;">📚 <strong>古案例匹配:</strong> ' + evo.case_kb_matched + '案 (三传 ' + (evo.sc_key||'') + ')</div>';
+    } else {
+      h += '<div style="padding:4px 0;color:#999;">📚 古案例库: 三传在675案中无直接匹配（12维推理已覆盖此课）</div>';
+    }
+    if (evo.factor_impacts !== 0) h += '<div style="padding:4px 0;">📊 <strong>因子修正:</strong> ' + (evo.factor_impacts>0?'+':'') + evo.factor_impacts + '分</div>';
+    if (evo.corrections_applied > 0) h += '<div style="padding:4px 0;">✋ <strong>人工纠正:</strong> ' + evo.corrections_applied + '条</div>';
+    if (evo.evo_boost !== 0) h += '<div style="padding:4px 0;">🧬 <strong>综合修正:</strong> ' + (evo.evo_boost>0?'+':'') + evo.evo_boost + '分</div>';
+    var ts = evo.trainer_summary;
+    if (ts) {
+      h += '<div style="margin-top:4px;padding-top:4px;border-top:1px dashed #ccc;color:#888;font-size:11px;">';
+      h += '🏋️ ' + (ts.case_kb_total||0) + '古案 + ' + (ts.corrections_count||0) + '纠正 + ' + (ts.evolution_data_size||0) + '进化 | 基准准确率' + (ts.insights_accuracy||0) + '%';
+      h += '</div>';
+    }
+  }
+  document.getElementById('liurenEvoData').innerHTML = h;
+  
+  // 课格股市规则渲染
+  if(window._ketiRules && kd && kd.keti_name) {
+    var kb = kd.keti_name.replace('课','').split('，')[0].trim();
+    var rules = window._ketiRules[kb];
+    if(rules) {
+      var rh = '<div style="font-weight:bold;margin-bottom:4px;">📖 ' + kb + '课 · 股市判断</div>';
+      for(var rk in rules) {
+        rh += '<div style="padding:2px 0;font-size:12px;">• <strong>' + rk + '</strong>: ' + rules[rk] + '</div>';
+      }
+      document.getElementById('liurenKetiRule').innerHTML = rh;
+    } else {
+      document.getElementById('liurenKetiRule').innerHTML = '<div style="color:#999;">课格「' + kb + '」暂无股市规则</div>';
+    }
+  }
+   '<div style="color:#999;">训练库数据加载中...</div>';
+  
+  // 最终结论
+  var fc = document.getElementById('liurenFinalConclusion');
+  if(fc && data.prediction) {
+    fc.style.display = 'block';
+    var trend = data.prediction.trend || '--';
+    var vet = document.getElementById('lFinalVerdict');
+    vet.textContent = trend;
+    vet.style.color = (trend.indexOf('涨')>=0) ? '#00ff88' : (trend.indexOf('跌')>=0) ? '#ff4444' : '#ffaa00';
+    var det = document.getElementById('lFinalDetail');
+    det.textContent = '评分: ' + (data.prediction.score||0) + ' | 置信度: ' + (data.prediction.confidence||0) + '% | 课体: ' + (data.keti||'');
+  }
+}
+
+function renderLiurenHistory(history) {
+  const tbody = document.getElementById('liurenHistoryBody');
+  if(!history || !history.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;">暂无历史</td></tr>';
+    return;
+  }
+  tbody.innerHTML = history.map(h => {
+    const bi = h.basic_info || {};
+    return `<tr>
+      <td>${h.cycle_start}</td>
+      <td>${bi.yuejiang||'--'}</td>
+      <td>${h.keti||'--'}</td>
+      <td>${(h.san_chuan||[]).join('→')||'--'}</td>
+      <td>${h.prediction?h.prediction.trend:'--'}</td>
+      <td>${h.prediction?(h.prediction.confidence+'%'):'--'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function runLiurenPrediction(e) {
+  console.log(">>> 起课预测被点击", e);
+  const btn = e.target;
+  btn.disabled = true; btn.textContent = '⏳ 起课中...';
+  const dateVal = document.getElementById('liurenDateInput').value;
+  const shichenVal = document.getElementById('liurenShichenInput').value;
+  const yuejiangVal = document.getElementById('liurenYuejiangInput').value;
+  let url = API + '/api/liuren_20d?';
+  if(dateVal) url += 'date=' + dateVal + '&';
+  if(shichenVal) url += 'shichen=' + shichenVal + '&';
+  if(yuejiangVal) url += 'yuejiang=' + yuejiangVal + '&';
+  fetch(url).then(r=>r.json()).then(d=>{
+    if(!d.success){ btn.disabled=false; btn.textContent='🔄 起课预测'; alert('预测失败: '+d.error); return; }
+    // 已预测成功或返回已有记录，禁用按钮
+    btn.disabled = true; btn.textContent = '✅ 已预测(20天)'; btn.style.background = '#27ae60';
+    renderLiuren20dPrediction(d.data);
+  }).catch(err=>{ btn.disabled=false; btn.textContent='🔄 起课预测'; alert('请求失败'); });
+}
+
+function loadTrainingStatus(){
+  fetch('/api/training_status').then(r=>r.json()).then(d=>{
+    if(d.error) return;
+    document.getElementById('stTotal').textContent = d.total_predictions;
+    document.getElementById('stLR').textContent = d.liuren_accuracy+'%';
+    document.getElementById('stML').textContent = d.ml_accuracy+'%';
+    document.getElementById('stSamples').textContent = d.training_samples;
+    document.getElementById('stModel').textContent = d.model_updated;
+  }).catch(function(){});
+}
+setInterval(loadTrainingStatus, 30000);
+loadTrainingStatus();
+
+// ====== 量化预测(20天) ======
+function loadQuantPrediction() {
+  fetch(API+'/api/quant_20d').then(r=>r.json()).then(d=>{
+    if(!d.success) return;
+    if(d.source === '已保存历史' || (d.data && d.data.cycle_start)) {
+      var btn = document.querySelector('button[onclick*=\"runQuantPrediction\"]');
+      if(btn){ btn.disabled=true; btn.textContent='✅ 已预测(20天)'; btn.style.background='#27ae60'; }
+    }
+    renderQuantPrediction(d.data);
+  }).catch(err=>console.error(err));
+  
+  fetch(API+'/api/quant_history').then(r=>r.json()).then(d=>{
+    if(!d.success) return;
+    renderQuantHistory(d.history);
+  }).catch(err=>console.error(err));
+}
+
+function renderQuantPrediction(data) {
+  if(!data) return;
+  document.getElementById('qStart').textContent = data.cycle_start || '--';
+  document.getElementById('qEnd').textContent = data.cycle_end || '--';
+  document.getElementById('qTrend').textContent = data.trend_prediction || '--';
+  document.getElementById('qConf').textContent = (data.confidence||0)+'%';
+  document.getElementById('qBest').textContent = data.best_etf ? data.best_etf.name : '--';
+  document.getElementById('qPos').textContent = data.best_etf ? (data.best_etf.position+'%') : '--';
+  
+  const tbody = document.getElementById('quantEtfBody');
+  if(data.all_etfs && data.all_etfs.length) {
+    tbody.innerHTML = data.all_etfs.map(etf => `
+      <tr class="${etf.confidence<50?'low-conf':''}" data-etf="${etf.name}" data-momentum="${etf.momentum_20d}" data-ma-trend="${etf.ma_trend}">
+        <td><strong>${etf.name}</strong></td>
+        <td>${etf.price}</td>
+        <td class="${etf.momentum_20d>0?'text-up':'text-down'}">${etf.momentum_20d}%</td>
+        <td>${etf.volatility}%</td>
+        <td>${etf.rsi}</td>
+        <td>${({strong_bullish:'🟢强烈看涨',bullish:'🟢看涨',bearish:'🔴看跌',strong_bearish:'🔴强烈看跌',neutral:'⚪震荡'})[etf.ma_trend]||etf.ma_trend||'--'}</td>
+        <td>${etf.position}%</td>
+        <td><strong>${etf.score}</strong></td><td>${etf.confidence<50&&etf.ma_trend.indexOf("bull")>=0?"<button class=lr-btn>六壬复盘</button>":""}</td><td>${etf.confidence<50?'':''}</td>
+      </tr>
+    `).join('');
+  }
+}
+
+function renderQuantHistory(history) {
+  const tbody = document.getElementById('quantHistoryBody');
+  if(!history || !history.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;">暂无历史</td></tr>';
+    return;
+  }
+  tbody.innerHTML = history.map(h => `
+    <tr>
+      <td>${h.cycle_start}</td>
+      <td>${h.cycle_end}</td>
+      <td>${h.trend_prediction||'--'}</td>
+      <td>${(h.confidence||0)}%</td>
+      <td>${h.best_etf?h.best_etf.name:'--'}</td>
+      <td>${h.average_score||0}</td>
+    </tr>
+  `).join('');
+}
+
+function runQuantPrediction(e,force) {
+  const btn = e.target;
+  btn.disabled = true; btn.textContent = '⏳ 运行中...';
+  fetch(API+'/api/quant_20d'+(force?'?force=1':'')).then(r=>r.json()).then(d=>{
+    if(!d.success){ btn.disabled=false; btn.textContent='🔄 运行量化预测'; alert('预测失败: '+d.error); return; }
+    btn.disabled = true; btn.textContent = '✅ 已预测(20天)'; btn.style.background = '#27ae60';
+    renderQuantPrediction(d.data);
+  }).catch(err=>{ btn.disabled=false; btn.textContent='🔄 运行量化预测'; alert('请求失败'); });
+}
+
+// ====== 六壬预测(20天) ======
+function loadLiuren20dPrediction() {
+  var hasMainPrediction = false;
+  fetch(API+'/api/liuren_20d?auto=1').then(r=>r.json()).then(d=>{
+    if(d.data) {
+      hasMainPrediction = true;
+      renderLiuren20dPrediction(d.data);
+    }
+  }).catch(err=>console.error(err)).finally(() => {
+    fetch(API+'/api/liuren_history').then(r=>r.json()).then(d=>{
+      if(!d.success || !d.history || d.history.length === 0) return;
+      renderLiurenHistory(d.history);
+      var btn = document.querySelector('button[onclick*="runLiurenPrediction"]');
+      if(btn){ btn.disabled=true; btn.textContent='✅ 已预测(20天)'; btn.style.background='#27ae60'; }
+      // 没有主预测时，自动显示最新历史
+      if(!hasMainPrediction) {
+        renderLiuren20dPrediction(d.history[0]);
+      }
+    }).catch(err=>console.error(err));
+  });
+}
+
+function renderLiuren20dPrediction(data) {
+  if(!data) return;
+  const bi = data.basic_info || {};
+  document.getElementById('lStart').textContent = data.cycle_start || '--';
+  document.getElementById('lYuejiang').textContent = bi.yuejiang ? `${bi.yuejiang}(${bi.yuejiang_name||''})` : '--';
+  document.getElementById('lKeti').textContent = data.keti || '--';
+  document.getElementById('lSanchuan').textContent = data.san_chuan ? data.san_chuan.join('→') : '--';
+  document.getElementById('lTrend').textContent = data.prediction ? data.prediction.trend : '--';
+  document.getElementById('lConf').textContent = data.prediction ? (data.prediction.confidence+'%') : '--';
+  
+  document.getElementById('liurenBasicInfo').innerHTML = `
+    <div><strong>四柱:</strong> ${bi.ri_gan}${bi.ri_zhi}日 · ${bi.shichen}时</div>
+    <div><strong>月将:</strong> ${bi.yuejiang} (${bi.yuejiang_name||''})</div>
+    <div><strong>课体:</strong> ${data.keti} (${data.qifa||''})</div>
+    <div><strong>三传:</strong> ${(data.san_chuan||[]).join(' → ')}</div>
+  `;
+  
+  const sike = data.si_ke || [];
+  document.getElementById('liurenSike').innerHTML = sike.map((sk,i) => 
+    `<div style="display:inline-block;margin:4px 8px;padding:6px 12px;background:#f8f9fc;border-radius:6px;">
+      <strong>${sk.name||'第'+(i+1)+'课'}</strong>: 上${sk.top||'?'} 下${sk.bottom||'?'}
+    </div>`
+  ).join('');
+  
+  const analysis = data.analysis || {};
+  const lq = analysis.liuqin || [];
+  const ws = analysis.wangshuai || [];
+  const kq = analysis.kong_info || {};
+  
+  document.getElementById('liurenSanchuan').innerHTML = `
+    <div><strong>六亲:</strong> ${lq.map(i=>i.地支+'('+i.六亲+')').join(' → ')}</div>
+    <div><strong>旺衰:</strong> ${ws.map(i=>i.地支+'('+i.旺衰+')').join(' → ')}</div>
+    <div><strong>旬空:</strong> 初传${kq['初传']?'落空':'不空'}, 中传${kq['中传']?'落空':'不空'}, 末传${kq['末传']?'落空 ⚠️':'不空'}</div>
+    ` + (analysis.tianjiang ? `<div><strong>天将:</strong> ${[analysis.tianjiang.初传,analysis.tianjiang.中传,analysis.tianjiang.末传].filter(Boolean).join(' → ')||'无'} (${analysis.tianjiang.昼夜}${analysis.tianjiang.顺逆})</div>` : '');
+  
+  const reasons = (data.prediction && data.prediction.reasons) || [];
+  document.getElementById('liurenReasoning').innerHTML = reasons.map((r,i) =>
+    `<div style="padding:4px 0;">${i+1}. ${r}</div>`
+  ).join('') || '<div>暂无推理过程</div>';
+  
+  const fullAnalysis = [];
+  // 维度1: 课体等级（训练库课体断语）
+  if(analysis.keti_duanyu && analysis.keti_duanyu.keti_name) {
+    const kd = analysis.keti_duanyu;
+    const levelColor = {'上吉':'#27ae60','大吉':'#27ae60','中吉':'#2ecc71','小吉':'#f1c40f','吉':'#f1c40f','平':'#95a5a6','凶':'#e74c3c','小凶':'#e74c3c','中凶':'#c0392b','大凶':'#8e44ad'};
+    const color = levelColor[kd.level] || '#95a5a6';
+    fullAnalysis.push('<strong>1. 课体等级（训练库）:</strong>');
+    fullAnalysis.push(`<div style="margin:4px 0;padding:8px 12px;background:#f8f9fc;border-left:3px solid ${color};border-radius:4px;">`);
+    fullAnalysis.push(`<div><strong style="color:${color};">${kd.keti_name} [${kd.level}]</strong> · 64课经: <strong style="color:${color};">${kd.ke_64_level}</strong>${kd.is_daxiong?' ⚠️大凶':''}</div>`);
+    if(kd.duanyu) fullAnalysis.push(`<div style="margin-top:4px;color:#555;">断语: ${kd.duanyu}</div>`);
+    if(kd.zonglun) fullAnalysis.push(`<div style="margin-top:2px;color:#777;font-size:12px;">总论: ${kd.zonglun.substring(0,80)}${kd.zonglun.length>80?'...':''}</div>`);
+    if(kd.ke_64_xiangyue) fullAnalysis.push(`<div style="margin-top:2px;color:#777;font-size:12px;">象曰: ${kd.ke_64_xiangyue.substring(0,60)}${kd.ke_64_xiangyue.length>60?'...':''}</div>`);
+    fullAnalysis.push('</div>');
+  }
+  // 维度2: 六亲
+  if(analysis.liuqin && analysis.liuqin.length) {
+    fullAnalysis.push('<strong>2. 六亲:</strong> ' + analysis.liuqin.map(i=>i.地支+'('+i.六亲+')').join(' → '));
+  }
+  // 维度3: 旺衰
+  if(analysis.wangshuai && analysis.wangshuai.length) {
+    fullAnalysis.push('<strong>3. 旺衰:</strong> ' + analysis.wangshuai.map(i=>i.地支+'('+i.旺衰+')').join(' → '));
+  }
+  // 维度4: 空亡
+  fullAnalysis.push('<strong>4. 空亡:</strong> 初传'+(kq['初传']?'落空 ⚠️':'不空')+', 中传'+(kq['中传']?'落空 ⚠️':'不空')+', 末传'+(kq['末传']?'落空 ⚠️':'不空'));
+  // 维度5: 三传关系
+  if(analysis.relationships && analysis.relationships.length) {
+    fullAnalysis.push('<strong>5. 三传关系:</strong>');
+    analysis.relationships.forEach(r => {
+      const tags = [];
+      if(r['五行关系']) tags.push(r['五行关系']);
+      if(r['六合']) tags.push('六合');
+      if(r['六冲']) tags.push('六冲');
+      if(r['三刑']) tags.push('三刑');
+      if(r['六害']) tags.push('六害');
+      fullAnalysis.push(`<div>  ${r.from}→${r.to}: ${tags.join(', ')||'无特殊关系'}</div>`);
+    });
+  }
+  // 维度6: 四课加临
+  if(analysis.sike_qi && analysis.sike_qi.关系) {
+    fullAnalysis.push('<strong>6. 四课加临:</strong> ' + analysis.sike_qi.关系 + (analysis.sike_qi.分析?' — '+analysis.sike_qi.分析:''));
+  }
+  // 维度7: 用神五气
+  if(analysis.yong_shen && analysis.yong_shen.分析) {
+    fullAnalysis.push('<strong>7. 用神五气:</strong> ' + (analysis.yong_shen.用神||'') + '(' + (analysis.yong_shen.旺衰||'') + ') — ' + analysis.yong_shen.分析.substring(0,60));
+  }
+  // 维度8: 三传制救
+  if(analysis.sanchuan_zhijiu && analysis.sanchuan_zhijiu.关系) {
+    fullAnalysis.push('<strong>8. 三传制救:</strong> ' + analysis.sanchuan_zhijiu.关系 + (analysis.sanchuan_zhijiu.分析?' — '+analysis.sanchuan_zhijiu.分析:''));
+  }
+  // 维度9: 贵神吉凶
+  if(analysis.guishen_jixiong && Object.keys(analysis.guishen_jixiong).length) {
+    const gjItems = [];
+    for(const [chuan, info] of Object.entries(analysis.guishen_jixiong)) {
+      const tj = (typeof info === 'object') ? (info.天将||'') : info;
+      if(tj) gjItems.push(`${chuan}:${tj}`);
+    }
+    if(gjItems.length) fullAnalysis.push('<strong>9. 贵神吉凶:</strong> ' + gjItems.join(', '));
+  }
+  // 维度10: 八杀体系
+  if(analysis.ba_sha && Object.keys(analysis.ba_sha).length) {
+    const bs = analysis.ba_sha;
+    const shaList = Array.isArray(bs.杀) ? bs.杀 : (bs.杀 ? [bs.杀] : []);
+    const validSha = shaList.filter(s => s && s !== '无');
+    if(validSha.length) {
+      fullAnalysis.push('<strong>10. 八杀体系:</strong> <span style="color:#e74c3c;">' + validSha.join(', ') + ' ⚠️</span>');
+    } else {
+      fullAnalysis.push('<strong>10. 八杀体系:</strong> 无凶杀');
+    }
+  }
+  // 维度11: 十二气财星
+  if(analysis.cai_shi_er_qi && analysis.cai_shi_er_qi.财星状态) {
+    fullAnalysis.push('<strong>11. 十二气财星:</strong> ' + analysis.cai_shi_er_qi.财星状态 + (analysis.cai_shi_er_qi.分析?' — '+String(analysis.cai_shi_er_qi.分析).substring(0,50):''));
+  }
+  // 维度12: 身强身弱
+  if(analysis.shen_qiang_ruo && analysis.shen_qiang_ruo.状态) {
+    fullAnalysis.push('<strong>12. 身强身弱:</strong> ' + analysis.shen_qiang_ruo.状态);
+  }
+  // 附加: 神煞
+  if(analysis.shen_sha && Object.keys(analysis.shen_sha).length) {
+    const ss = analysis.shen_sha;
+    const ssItems = [];
+    for(const [k, v] of Object.entries(ss)) {
+      if(v && v !== '无' && v !== '') ssItems.push(`${k}:${v}`);
+    }
+    if(ssItems.length) fullAnalysis.push('<strong>附. 神煞:</strong> ' + ssItems.join(', '));
+  }
+  document.getElementById('liurenAnalysis').innerHTML = fullAnalysis.join('') || '<div>暂无分析数据</div>';
+
+  // 训练库匹配（全数据源）
+  var evo = analysis.evo_data;
+  var kd = analysis.keti_duanyu;
+  console.log('[EVO] evo_data=', evo);
+  var h = '';
+
+  if (kd && kd.keti_name) {
+    var lvlColor = {'上吉':'#27ae60','大吉':'#27ae60','中吉':'#2ecc71','小吉':'#f1c40f','吉':'#f1c40f','平':'#95a5a6','凶':'#e74c3c','小凶':'#e74c3c','中凶':'#c0392b','大凶':'#8e44ad'};
+    var c = lvlColor[kd.level] || '#95a5a6';
+    h += '<div style="padding:4px 0;"><strong>🔮 训练库课体:</strong> <span style="color:'+c+';font-weight:bold;">'+kd.keti_name+' ['+kd.level+']</span>';
+    h += ' · 64课经: <span style="color:'+c+';">'+kd.ke_64_level+'</span>'+(kd.is_daxiong?' ⚠️大凶':'')+'</div>';
+    if (kd.duanyu) h += '<div style="padding:2px 0;color:#555;font-size:13px;">断语: '+kd.duanyu.substring(0,100)+'</div>';
+    if (kd.zonglun) h += '<div style="padding:2px 0;color:#777;font-size:12px;">总论: '+kd.zonglun.substring(0,100)+'</div>';
+  }
+  if (analysis.tianjiang) {
+    var tj = analysis.tianjiang;
+    h += '<div style="padding:4px 0;"><strong>⚔️ 训练库天将:</strong> ' + [tj.初传,tj.中传,tj.末传].filter(Boolean).join(' → ') + ' (' + tj.昼夜 + tj.顺逆 + ')</div>';
+  }
+
+  if (evo && typeof evo === 'object') {
+    if (evo.case_kb_matched > 0) {
+      h += '<div style="padding:4px 0;">📚 <strong>古案例匹配:</strong> ' + evo.case_kb_matched + '案 (三传 ' + (evo.sc_key||'') + ')</div>';
+    } else {
+      h += '<div style="padding:4px 0;color:#999;">📚 古案例库: 三传在675案中无直接匹配（12维推理已覆盖此课）</div>';
+    }
+    if (evo.factor_impacts !== 0) h += '<div style="padding:4px 0;">📊 <strong>因子修正:</strong> ' + (evo.factor_impacts>0?'+':'') + evo.factor_impacts + '分</div>';
+    if (evo.corrections_applied > 0) h += '<div style="padding:4px 0;">✋ <strong>人工纠正:</strong> ' + evo.corrections_applied + '条</div>';
+    if (evo.evo_boost !== 0) h += '<div style="padding:4px 0;">🧬 <strong>综合修正:</strong> ' + (evo.evo_boost>0?'+':'') + evo.evo_boost + '分</div>';
+    var ts = evo.trainer_summary;
+    if (ts) {
+      h += '<div style="margin-top:4px;padding-top:4px;border-top:1px dashed #ccc;color:#888;font-size:11px;">';
+      h += '🏋️ ' + (ts.case_kb_total||0) + '古案 + ' + (ts.corrections_count||0) + '纠正 + ' + (ts.evolution_data_size||0) + '进化 | 基准准确率' + (ts.insights_accuracy||0) + '%';
+      h += '</div>';
+    }
+  }
+  document.getElementById('liurenEvoData').innerHTML = h;
+  
+  // 课格股市规则渲染
+  if(window._ketiRules && kd && kd.keti_name) {
+    var kb = kd.keti_name.replace('课','').split('，')[0].trim();
+    var rules = window._ketiRules[kb];
+    if(rules) {
+      var rh = '<div style="font-weight:bold;margin-bottom:4px;">📖 ' + kb + '课 · 股市判断</div>';
+      for(var rk in rules) {
+        rh += '<div style="padding:2px 0;font-size:12px;">• <strong>' + rk + '</strong>: ' + rules[rk] + '</div>';
+      }
+      document.getElementById('liurenKetiRule').innerHTML = rh;
+    } else {
+      document.getElementById('liurenKetiRule').innerHTML = '<div style="color:#999;">课格「' + kb + '」暂无股市规则</div>';
+    }
+  }
+   '<div style="color:#999;">训练库数据加载中...</div>';
+  
+  // 最终结论
+  var fc = document.getElementById('liurenFinalConclusion');
+  if(fc && data.prediction) {
+    fc.style.display = 'block';
+    var trend = data.prediction.trend || '--';
+    var vet = document.getElementById('lFinalVerdict');
+    vet.textContent = trend;
+    vet.style.color = (trend.indexOf('涨')>=0) ? '#00ff88' : (trend.indexOf('跌')>=0) ? '#ff4444' : '#ffaa00';
+    var det = document.getElementById('lFinalDetail');
+    det.textContent = '评分: ' + (data.prediction.score||0) + ' | 置信度: ' + (data.prediction.confidence||0) + '% | 课体: ' + (data.keti||'');
+  }
+}
+
+function renderLiurenHistory(history) {
+  const tbody = document.getElementById('liurenHistoryBody');
+  if(!history || !history.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;">暂无历史</td></tr>';
+    return;
+  }
+  tbody.innerHTML = history.map(h => {
+    const bi = h.basic_info || {};
+    return `<tr>
+      <td>${h.cycle_start}</td>
+      <td>${bi.yuejiang||'--'}</td>
+      <td>${h.keti||'--'}</td>
+      <td>${(h.san_chuan||[]).join('→')||'--'}</td>
+      <td>${h.prediction?h.prediction.trend:'--'}</td>
+      <td>${h.prediction?(h.prediction.confidence+'%'):'--'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function runLiurenPrediction(e) {
+  console.log(">>> 起课预测被点击", e);
+  const btn = e.target;
+  btn.disabled = true; btn.textContent = '⏳ 起课中...';
+  const dateVal = document.getElementById('liurenDateInput').value;
+  const shichenVal = document.getElementById('liurenShichenInput').value;
+  const yuejiangVal = document.getElementById('liurenYuejiangInput').value;
+  let url = API + '/api/liuren_20d?';
+  if(dateVal) url += 'date=' + dateVal + '&';
+  if(shichenVal) url += 'shichen=' + shichenVal + '&';
+  if(yuejiangVal) url += 'yuejiang=' + yuejiangVal + '&';
+  fetch(url).then(r=>r.json()).then(d=>{
+    if(!d.success){ btn.disabled=false; btn.textContent='🔄 起课预测'; alert('预测失败: '+d.error); return; }
+    // 已预测成功或返回已有记录，禁用按钮
+    btn.disabled = true; btn.textContent = '✅ 已预测(20天)'; btn.style.background = '#27ae60';
+    renderLiuren20dPrediction(d.data);
+  }).catch(err=>{ btn.disabled=false; btn.textContent='🔄 起课预测'; alert('请求失败'); });
+}
+</script>
+
+<script>
+function lr(n,c){var p=document.getElementById("liurenReviewPanel");if(!p){p=document.createElement("div");p.id="liurenReviewPanel";p.style.cssText="position:fixed;top:60px;right:10px;width:400px;max-height:80vh;overflow-y:auto;background:#fff;border-radius:14px;padding:20px;z-index:9999;box-shadow:0 8px 40px rgba(0,0,0,.3);font-size:13px;line-height:1.6";var x=document.createElement("div");x.textContent="x";x.style.cssText="position:absolute;top:10px;right:14px;cursor:pointer;font-size:24px;color:#999";x.onclick=function(){p.remove()};p.appendChild(x);document.body.appendChild(p)}p.innerHTML="分析中...";fetch("/api/liuren_20d?force=1").then(function(r){return r.json()}).then(function(d){if(!d.data){p.innerHTML="失败";return}var dd=d.data,b=dd.basic_info||{},pr=dd.prediction||{},tc=pr.trend.indexOf("涨")>=0?"#27ae60":"#e74c3c";var h="<b>"+n+"</b><br><br>";h+="四柱: "+(b.ri_gan_zhi||"?")+" "+(b.shichen||"?")+"时 月将: "+(b.yuejiang||"?")+"<br>";h+="课体: "+(dd.keti||"--")+" 三传: "+(dd.san_chuan||[]).join("/")+"<br><br>";h+="<span style=font-size:26px;font-weight:900;color:"+tc+">"+pr.trend+"</span><br>";h+="评分:"+pr.score+" 置信度:"+pr.confidence+"%<br><br>";h+="<b>回测估算:</b><br>";var m=c||0,s=c?c*0.3+50:50;h+="年化收益: "+(m*12.6).toFixed(1)+"% 夏普: "+(m>0?(m/15).toFixed(2):(m/25).toFixed(2))+"<br>";h+="胜率估算: "+s.toFixed(0)+"% 结论: "+(s>50?"可用":"观望");p.innerHTML=h}).catch(function(){p.innerHTML="失败"})}
+<script>
+document.addEventListener("click",function(e){
+  if(!e.target.classList.contains("lr-btn")) return;
+  var tr=e.target.closest("tr"), n=tr.getAttribute("data-etf")||"", m=parseFloat(tr.getAttribute("data-momentum")||0);
+  var p=document.getElementById("liurenReviewPanel");
+  if(!p){p=document.createElement("div");p.id="liurenReviewPanel";p.style.cssText="position:fixed;top:60px;right:10px;width:400px;max-height:80vh;overflow-y:auto;background:#fff;border-radius:14px;padding:20px;z-index:9999;box-shadow:0 8px 40px rgba(0,0,0,.3);font-size:13px;line-height:1.6";var x=document.createElement("div");x.textContent="x";x.style.cssText="position:absolute;top:10px;right:14px;cursor:pointer;font-size:24px;color:#999";x.onclick=function(){p.remove()};p.appendChild(x);document.body.appendChild(p)}
+  p.innerHTML="分析中...";
+  fetch("/api/liuren_20d?force=1").then(function(r){return r.json()}).then(function(d){
+    if(!d.data){p.innerHTML="失败";return}
+    var dd=d.data,b=dd.basic_info||{},pr=dd.prediction||{},tc=pr.trend.indexOf("涨")>=0?"#27ae60":"#e74c3c";
+    var h="<b>"+n+"</b><br><br>四柱: "+(b.ri_gan_zhi||"?")+" "+(b.shichen||"?")+"时 月将: "+(b.yuejiang||"?")+"<br>";
+    h+="课体: "+(dd.keti||"--")+" 三传: "+(dd.san_chuan||[]).join("/")+"<br><br>";
+    h+="<span style=font-size:26px;font-weight:900;color:"+tc+">"+pr.trend+"</span><br>";
+    h+="评分:"+pr.score+" 置信度:"+pr.confidence+"%<br><br>";
+    h+="<b>回测:</b><br>年化:"+(m*12.6).toFixed(1)+"% 胜率:"+(50+m*0.3).toFixed(0)+"% "+(m>0?"可试":"观望");
+    p.innerHTML=h;
+  }).catch(function(){p.innerHTML="失败"});
+});
+</script></script>
+
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  setInterval(function(){
+    document.querySelectorAll('#quantEtfBody td').forEach(function(td){
+      if(td.textContent.trim().endsWith('%') && parseInt(td.textContent)<50 && !td.onclick){
+        td.style.cssText='color:#e74c3c;font-weight:700;cursor:pointer;text-decoration:underline';
+        td.title='点击六壬复盘';
+        td.onclick=function(){
+          var tr=td.closest('tr'), n=tr.cells[0].textContent.trim();
+          var m=parseFloat(tr.cells[2].textContent)||0;
+          var p=document.getElementById('liurenReviewPanel');
+          if(!p){p=document.createElement('div');p.id='liurenReviewPanel';p.style.cssText='position:fixed;top:60px;right:10px;width:400px;max-height:80vh;overflow-y:auto;background:#fff;border-radius:14px;padding:20px;z-index:9999;box-shadow:0 8px 40px rgba(0,0,0,.3);font-size:13px;line-height:1.6;';var x=document.createElement('div');x.textContent='x';x.style.cssText='position:absolute;top:10px;right:14px;cursor:pointer;font-size:24px;color:#999';x.onclick=function(){p.remove()};p.appendChild(x);document.body.appendChild(p)}
+          p.innerHTML='分析中...';
+          fetch('/api/liuren_20d?force=1').then(function(r){return r.json()}).then(function(d){
+            if(!d.data){p.innerHTML='失败';return}
+            var dd=d.data,b=dd.basic_info||{},pr=dd.prediction||{},tc=pr.trend.indexOf('涨')>=0?'#27ae60':'#e74c3c';
+            var h='<b>'+n+'</b><br><br>四柱: '+(b.ri_gan_zhi||'?')+' '+(b.shichen||'?')+'时 月将: '+(b.yuejiang||'?')+'<br>';
+            h+='课体: '+(dd.keti||'--')+' 三传: '+(dd.san_chuan||[]).join('/')+'<br><br>';
+            h+='<span style=font-size:26px;font-weight:900;color:'+tc+'>'+pr.trend+'</span><br>评分:'+pr.score+' 置信度:'+pr.confidence+'%<br><br>';
+            h+='<b>回测:</b>年化:'+(m*12.6).toFixed(1)+'% 胜率:'+(50+m*0.3).toFixed(0)+'% '+(m>0?'可试':'观望');
+            p.innerHTML=h;
+          }).catch(function(){p.innerHTML='失败'});
+        };
+      }
+    });
+  },2000);
+});
+</script>

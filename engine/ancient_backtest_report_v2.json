@@ -1,0 +1,438 @@
+{
+  "_meta": {
+    "version": "2.0.0",
+    "description": "古例回测报告(v2: Corpus B 46例高置信重标)"
+  },
+  "summary": {
+    "M1": {
+      "total": 515,
+      "correct": 166,
+      "errors": 0,
+      "accuracy": 0.32233009708737864,
+      "avg_confidence": 0.5198349514563106,
+      "confusion_matrix": {
+        "凶->吉": 35,
+        "吉->吉": 163,
+        "凶->凶": 2,
+        "凶->平": 218,
+        "吉->平": 95,
+        "平->吉": 1,
+        "平->平": 1
+      },
+      "by_category": {
+        "家宅": {
+          "total": 58,
+          "correct": 23,
+          "errors": 0,
+          "accuracy": 0.39655172413793105
+        },
+        "疾病": {
+          "total": 41,
+          "correct": 13,
+          "errors": 0,
+          "accuracy": 0.3170731707317073
+        },
+        "求财": {
+          "total": 48,
+          "correct": 35,
+          "errors": 0,
+          "accuracy": 0.7291666666666666
+        },
+        "婚姻": {
+          "total": 18,
+          "correct": 13,
+          "errors": 0,
+          "accuracy": 0.7222222222222222
+        },
+        "功名": {
+          "total": 83,
+          "correct": 27,
+          "errors": 0,
+          "accuracy": 0.3253012048192771
+        },
+        "征战": {
+          "total": 12,
+          "correct": 3,
+          "errors": 0,
+          "accuracy": 0.25
+        },
+        "走失": {
+          "total": 15,
+          "correct": 10,
+          "errors": 0,
+          "accuracy": 0.6666666666666666
+        },
+        "寿元": {
+          "total": 12,
+          "correct": 11,
+          "errors": 0,
+          "accuracy": 0.9166666666666666
+        },
+        "蚕桑": {
+          "total": 13,
+          "correct": 10,
+          "errors": 0,
+          "accuracy": 0.7692307692307693
+        },
+        "胎产": {
+          "total": 21,
+          "correct": 14,
+          "errors": 0,
+          "accuracy": 0.6666666666666666
+        },
+        "出行": {
+          "total": 7,
+          "correct": 1,
+          "errors": 0,
+          "accuracy": 0.14285714285714285
+        },
+        "其他": {
+          "total": 168,
+          "correct": 5,
+          "errors": 0,
+          "accuracy": 0.02976190476190476
+        },
+        "学业": {
+          "total": 3,
+          "correct": 1,
+          "errors": 0,
+          "accuracy": 0.3333333333333333
+        },
+        "官讼": {
+          "total": 16,
+          "correct": 0,
+          "errors": 0,
+          "accuracy": 0.0
+        }
+      },
+      "wealth": {
+        "total": 48,
+        "correct": 35,
+        "accuracy": 0.7291666666666666
+      }
+    },
+    "M2": {
+      "total": 515,
+      "correct": 288,
+      "errors": 0,
+      "accuracy": 0.5592233009708738,
+      "avg_confidence": 0.5564135922330097,
+      "confusion_matrix": {
+        "凶->吉": 35,
+        "吉->吉": 166,
+        "凶->凶": 122,
+        "凶->平": 98,
+        "吉->平": 43,
+        "平->吉": 1,
+        "吉->凶": 49,
+        "平->凶": 1
+      },
+      "by_category": {
+        "家宅": {
+          "total": 58,
+          "correct": 38,
+          "errors": 0,
+          "accuracy": 0.6551724137931034
+        },
+        "疾病": {
+          "total": 41,
+          "correct": 28,
+          "errors": 0,
+          "accuracy": 0.6829268292682927
+        },
+        "求财": {
+          "total": 48,
+          "correct": 39,
+          "errors": 0,
+          "accuracy": 0.8125
+        },
+        "婚姻": {
+          "total": 18,
+          "correct": 13,
+          "errors": 0,
+          "accuracy": 0.7222222222222222
+        },
+        "功名": {
+          "total": 83,
+          "correct": 41,
+          "errors": 0,
+          "accuracy": 0.4939759036144578
+        },
+        "征战": {
+          "total": 12,
+          "correct": 6,
+          "errors": 0,
+          "accuracy": 0.5
+        },
+        "走失": {
+          "total": 15,
+          "correct": 11,
+          "errors": 0,
+          "accuracy": 0.7333333333333333
+        },
+        "寿元": {
+          "total": 12,
+          "correct": 11,
+          "errors": 0,
+          "accuracy": 0.9166666666666666
+        },
+        "蚕桑": {
+          "total": 13,
+          "correct": 10,
+          "errors": 0,
+          "accuracy": 0.7692307692307693
+        },
+        "胎产": {
+          "total": 21,
+          "correct": 18,
+          "errors": 0,
+          "accuracy": 0.8571428571428571
+        },
+        "出行": {
+          "total": 7,
+          "correct": 4,
+          "errors": 0,
+          "accuracy": 0.5714285714285714
+        },
+        "其他": {
+          "total": 168,
+          "correct": 62,
+          "errors": 0,
+          "accuracy": 0.36904761904761907
+        },
+        "学业": {
+          "total": 3,
+          "correct": 1,
+          "errors": 0,
+          "accuracy": 0.3333333333333333
+        },
+        "官讼": {
+          "total": 16,
+          "correct": 6,
+          "errors": 0,
+          "accuracy": 0.375
+        }
+      },
+      "wealth": {
+        "total": 48,
+        "correct": 39,
+        "accuracy": 0.8125
+      }
+    },
+    "M3": {
+      "total": 515,
+      "correct": 288,
+      "errors": 0,
+      "accuracy": 0.5592233009708738,
+      "avg_confidence": 0.5564135922330097,
+      "confusion_matrix": {
+        "凶->吉": 35,
+        "吉->吉": 166,
+        "凶->凶": 122,
+        "凶->平": 98,
+        "吉->平": 43,
+        "平->吉": 1,
+        "吉->凶": 49,
+        "平->凶": 1
+      },
+      "by_category": {
+        "家宅": {
+          "total": 58,
+          "correct": 38,
+          "errors": 0,
+          "accuracy": 0.6551724137931034
+        },
+        "疾病": {
+          "total": 41,
+          "correct": 28,
+          "errors": 0,
+          "accuracy": 0.6829268292682927
+        },
+        "求财": {
+          "total": 48,
+          "correct": 39,
+          "errors": 0,
+          "accuracy": 0.8125
+        },
+        "婚姻": {
+          "total": 18,
+          "correct": 13,
+          "errors": 0,
+          "accuracy": 0.7222222222222222
+        },
+        "功名": {
+          "total": 83,
+          "correct": 41,
+          "errors": 0,
+          "accuracy": 0.4939759036144578
+        },
+        "征战": {
+          "total": 12,
+          "correct": 6,
+          "errors": 0,
+          "accuracy": 0.5
+        },
+        "走失": {
+          "total": 15,
+          "correct": 11,
+          "errors": 0,
+          "accuracy": 0.7333333333333333
+        },
+        "寿元": {
+          "total": 12,
+          "correct": 11,
+          "errors": 0,
+          "accuracy": 0.9166666666666666
+        },
+        "蚕桑": {
+          "total": 13,
+          "correct": 10,
+          "errors": 0,
+          "accuracy": 0.7692307692307693
+        },
+        "胎产": {
+          "total": 21,
+          "correct": 18,
+          "errors": 0,
+          "accuracy": 0.8571428571428571
+        },
+        "出行": {
+          "total": 7,
+          "correct": 4,
+          "errors": 0,
+          "accuracy": 0.5714285714285714
+        },
+        "其他": {
+          "total": 168,
+          "correct": 62,
+          "errors": 0,
+          "accuracy": 0.36904761904761907
+        },
+        "学业": {
+          "total": 3,
+          "correct": 1,
+          "errors": 0,
+          "accuracy": 0.3333333333333333
+        },
+        "官讼": {
+          "total": 16,
+          "correct": 6,
+          "errors": 0,
+          "accuracy": 0.375
+        }
+      },
+      "wealth": {
+        "total": 48,
+        "correct": 39,
+        "accuracy": 0.8125
+      }
+    },
+    "M4": {
+      "total": 515,
+      "correct": 173,
+      "errors": 0,
+      "accuracy": 0.3359223300970874,
+      "avg_confidence": 0.1839368932038835,
+      "confusion_matrix": {
+        "凶->吉": 36,
+        "吉->吉": 172,
+        "凶->平": 219,
+        "吉->平": 86,
+        "平->吉": 1,
+        "平->平": 1
+      },
+      "by_category": {
+        "家宅": {
+          "total": 58,
+          "correct": 23,
+          "errors": 0,
+          "accuracy": 0.39655172413793105
+        },
+        "疾病": {
+          "total": 41,
+          "correct": 13,
+          "errors": 0,
+          "accuracy": 0.3170731707317073
+        },
+        "求财": {
+          "total": 48,
+          "correct": 38,
+          "errors": 0,
+          "accuracy": 0.7916666666666666
+        },
+        "婚姻": {
+          "total": 18,
+          "correct": 13,
+          "errors": 0,
+          "accuracy": 0.7222222222222222
+        },
+        "功名": {
+          "total": 83,
+          "correct": 26,
+          "errors": 0,
+          "accuracy": 0.3132530120481928
+        },
+        "征战": {
+          "total": 12,
+          "correct": 9,
+          "errors": 0,
+          "accuracy": 0.75
+        },
+        "走失": {
+          "total": 15,
+          "correct": 10,
+          "errors": 0,
+          "accuracy": 0.6666666666666666
+        },
+        "寿元": {
+          "total": 12,
+          "correct": 11,
+          "errors": 0,
+          "accuracy": 0.9166666666666666
+        },
+        "蚕桑": {
+          "total": 13,
+          "correct": 10,
+          "errors": 0,
+          "accuracy": 0.7692307692307693
+        },
+        "胎产": {
+          "total": 21,
+          "correct": 14,
+          "errors": 0,
+          "accuracy": 0.6666666666666666
+        },
+        "出行": {
+          "total": 7,
+          "correct": 1,
+          "errors": 0,
+          "accuracy": 0.14285714285714285
+        },
+        "其他": {
+          "total": 168,
+          "correct": 5,
+          "errors": 0,
+          "accuracy": 0.02976190476190476
+        },
+        "学业": {
+          "total": 3,
+          "correct": 0,
+          "errors": 0,
+          "accuracy": 0.0
+        },
+        "官讼": {
+          "total": 16,
+          "correct": 0,
+          "errors": 0,
+          "accuracy": 0.0
+        }
+      },
+      "wealth": {
+        "total": 48,
+        "correct": 38,
+        "accuracy": 0.7916666666666666
+      }
+    }
+  },
+  "total_cases": 564
+}

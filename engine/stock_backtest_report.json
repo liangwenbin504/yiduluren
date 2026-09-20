@@ -1,0 +1,353 @@
+{
+  "summary": {
+    "shichen": "午",
+    "total_cases": 21,
+    "runnable": 21,
+    "fails": 0,
+    "M1_pred": {
+      "n": 21,
+      "calls": 15,
+      "hits": 8,
+      "acc_call": 0.533,
+      "acc_all": 0.381,
+      "brier": null
+    },
+    "M2_fused_no_cbr": {
+      "n": 21,
+      "calls": 21,
+      "hits": 11,
+      "acc_call": 0.524,
+      "acc_all": 0.524,
+      "brier": 0.788
+    },
+    "M3_integrated": {
+      "n": 21,
+      "calls": 21,
+      "hits": 11,
+      "acc_call": 0.524,
+      "acc_all": 0.524,
+      "brier": 0.783
+    },
+    "M4_holistic": {
+      "n": 21,
+      "calls": 10,
+      "hits": 5,
+      "acc_call": 0.5,
+      "acc_all": 0.238,
+      "brier": null
+    },
+    "majority_baseline": {
+      "label": "跌",
+      "acc": 0.524
+    },
+    "cbr_effect": {
+      "abstain_to_call": 0,
+      "wrong_to_right": 0,
+      "right_to_wrong": 0,
+      "both_right": 11,
+      "both_wrong": 10
+    },
+    "holistic_agreement": {
+      "calls": 10,
+      "agree": 5,
+      "rate": 0.5,
+      "suggested_mult": 1.0
+    }
+  },
+  "per_case": [
+    {
+      "date": "2026-06-22",
+      "actual": "涨",
+      "actual_label": 1,
+      "M1_pred": "看跌",
+      "M2_fused_no_cbr": "看跌",
+      "M3_integrated": "看跌",
+      "M4_holistic": "跌",
+      "M3_p": {
+        "prob_up": 0.009,
+        "prob_flat": 0.009,
+        "prob_down": 0.983
+      }
+    },
+    {
+      "date": "2026-06-23",
+      "actual": "跌",
+      "actual_label": -1,
+      "M1_pred": "看跌",
+      "M2_fused_no_cbr": "看跌",
+      "M3_integrated": "看跌",
+      "M4_holistic": "震荡",
+      "M3_p": {
+        "prob_up": 0.025,
+        "prob_flat": 0.029,
+        "prob_down": 0.945
+      }
+    },
+    {
+      "date": "2026-06-24",
+      "actual": "涨",
+      "actual_label": 1,
+      "M1_pred": "看跌",
+      "M2_fused_no_cbr": "看跌",
+      "M3_integrated": "看跌",
+      "M4_holistic": "震荡",
+      "M3_p": {
+        "prob_up": 0.008,
+        "prob_flat": 0.035,
+        "prob_down": 0.957
+      }
+    },
+    {
+      "date": "2026-06-25",
+      "actual": "涨",
+      "actual_label": 1,
+      "M1_pred": "看跌",
+      "M2_fused_no_cbr": "看跌",
+      "M3_integrated": "看跌",
+      "M4_holistic": "跌",
+      "M3_p": {
+        "prob_up": 0.007,
+        "prob_flat": 0.017,
+        "prob_down": 0.976
+      }
+    },
+    {
+      "date": "2026-06-26",
+      "actual": "跌",
+      "actual_label": -1,
+      "M1_pred": "看跌",
+      "M2_fused_no_cbr": "看跌",
+      "M3_integrated": "看跌",
+      "M4_holistic": "跌",
+      "M3_p": {
+        "prob_up": 0.005,
+        "prob_flat": 0.007,
+        "prob_down": 0.988
+      }
+    },
+    {
+      "date": "2026-06-29",
+      "actual": "涨",
+      "actual_label": 1,
+      "M1_pred": "看涨",
+      "M2_fused_no_cbr": "看跌",
+      "M3_integrated": "看跌",
+      "M4_holistic": "震荡",
+      "M3_p": {
+        "prob_up": 0.115,
+        "prob_flat": 0.004,
+        "prob_down": 0.881
+      }
+    },
+    {
+      "date": "2026-06-30",
+      "actual": "涨",
+      "actual_label": 1,
+      "M1_pred": "看涨",
+      "M2_fused_no_cbr": "看跌",
+      "M3_integrated": "看跌",
+      "M4_holistic": "震荡",
+      "M3_p": {
+        "prob_up": 0.155,
+        "prob_flat": 0.011,
+        "prob_down": 0.834
+      }
+    },
+    {
+      "date": "2026-07-01",
+      "actual": "涨",
+      "actual_label": 1,
+      "M1_pred": "看涨",
+      "M2_fused_no_cbr": "看跌",
+      "M3_integrated": "看跌",
+      "M4_holistic": "震荡",
+      "M3_p": {
+        "prob_up": 0.161,
+        "prob_flat": 0.029,
+        "prob_down": 0.811
+      }
+    },
+    {
+      "date": "2026-07-02",
+      "actual": "跌",
+      "actual_label": -1,
+      "M1_pred": "看跌",
+      "M2_fused_no_cbr": "看跌",
+      "M3_integrated": "看跌",
+      "M4_holistic": "震荡",
+      "M3_p": {
+        "prob_up": 0.014,
+        "prob_flat": 0.003,
+        "prob_down": 0.984
+      }
+    },
+    {
+      "date": "2026-07-03",
+      "actual": "涨",
+      "actual_label": 1,
+      "M1_pred": "震荡",
+      "M2_fused_no_cbr": "看跌",
+      "M3_integrated": "看跌",
+      "M4_holistic": "涨",
+      "M3_p": {
+        "prob_up": 0.073,
+        "prob_flat": 0.018,
+        "prob_down": 0.908
+      }
+    },
+    {
+      "date": "2026-07-06",
+      "actual": "跌",
+      "actual_label": -1,
+      "M1_pred": "震荡",
+      "M2_fused_no_cbr": "看跌",
+      "M3_integrated": "看跌",
+      "M4_holistic": "震荡",
+      "M3_p": {
+        "prob_up": 0.051,
+        "prob_flat": 0.019,
+        "prob_down": 0.93
+      }
+    },
+    {
+      "date": "2026-07-07",
+      "actual": "跌",
+      "actual_label": -1,
+      "M1_pred": "震荡",
+      "M2_fused_no_cbr": "看跌",
+      "M3_integrated": "看跌",
+      "M4_holistic": "跌",
+      "M3_p": {
+        "prob_up": 0.056,
+        "prob_flat": 0.001,
+        "prob_down": 0.944
+      }
+    },
+    {
+      "date": "2026-07-08",
+      "actual": "跌",
+      "actual_label": -1,
+      "M1_pred": "看跌",
+      "M2_fused_no_cbr": "看跌",
+      "M3_integrated": "看跌",
+      "M4_holistic": "震荡",
+      "M3_p": {
+        "prob_up": 0.015,
+        "prob_flat": 0.018,
+        "prob_down": 0.967
+      }
+    },
+    {
+      "date": "2026-07-09",
+      "actual": "涨",
+      "actual_label": 1,
+      "M1_pred": "震荡",
+      "M2_fused_no_cbr": "看跌",
+      "M3_integrated": "看跌",
+      "M4_holistic": "震荡",
+      "M3_p": {
+        "prob_up": 0.045,
+        "prob_flat": 0.007,
+        "prob_down": 0.948
+      }
+    },
+    {
+      "date": "2026-07-10",
+      "actual": "跌",
+      "actual_label": -1,
+      "M1_pred": "震荡",
+      "M2_fused_no_cbr": "看跌",
+      "M3_integrated": "看跌",
+      "M4_holistic": "涨",
+      "M3_p": {
+        "prob_up": 0.067,
+        "prob_flat": 0.024,
+        "prob_down": 0.91
+      }
+    },
+    {
+      "date": "2026-07-13",
+      "actual": "跌",
+      "actual_label": -1,
+      "M1_pred": "看涨",
+      "M2_fused_no_cbr": "看跌",
+      "M3_integrated": "看跌",
+      "M4_holistic": "跌",
+      "M3_p": {
+        "prob_up": 0.073,
+        "prob_flat": 0.001,
+        "prob_down": 0.926
+      }
+    },
+    {
+      "date": "2026-07-14",
+      "actual": "涨",
+      "actual_label": 1,
+      "M1_pred": "看涨",
+      "M2_fused_no_cbr": "看跌",
+      "M3_integrated": "看跌",
+      "M4_holistic": "跌",
+      "M3_p": {
+        "prob_up": 0.054,
+        "prob_flat": 0.001,
+        "prob_down": 0.945
+      }
+    },
+    {
+      "date": "2026-07-15",
+      "actual": "跌",
+      "actual_label": -1,
+      "M1_pred": "看涨",
+      "M2_fused_no_cbr": "看跌",
+      "M3_integrated": "看跌",
+      "M4_holistic": "震荡",
+      "M3_p": {
+        "prob_up": 0.088,
+        "prob_flat": 0.01,
+        "prob_down": 0.902
+      }
+    },
+    {
+      "date": "2026-07-16",
+      "actual": "跌",
+      "actual_label": -1,
+      "M1_pred": "震荡",
+      "M2_fused_no_cbr": "看跌",
+      "M3_integrated": "看跌",
+      "M4_holistic": "震荡",
+      "M3_p": {
+        "prob_up": 0.073,
+        "prob_flat": 0.009,
+        "prob_down": 0.918
+      }
+    },
+    {
+      "date": "2026-07-17",
+      "actual": "跌",
+      "actual_label": -1,
+      "M1_pred": "看涨",
+      "M2_fused_no_cbr": "看跌",
+      "M3_integrated": "看跌",
+      "M4_holistic": "跌",
+      "M3_p": {
+        "prob_up": 0.047,
+        "prob_flat": 0.001,
+        "prob_down": 0.952
+      }
+    },
+    {
+      "date": "2026-07-20",
+      "actual": "涨",
+      "actual_label": 1,
+      "M1_pred": "看跌",
+      "M2_fused_no_cbr": "看跌",
+      "M3_integrated": "看跌",
+      "M4_holistic": "跌",
+      "M3_p": {
+        "prob_up": 0.225,
+        "prob_flat": 0.219,
+        "prob_down": 0.556
+      }
+    }
+  ]
+}

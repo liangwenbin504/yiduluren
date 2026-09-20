@@ -1,0 +1,292 @@
+[
+ {
+  "case_id": "§疾病13·162",
+  "name": "",
+  "day_ganzhi": "壬午",
+  "yue_jiang": "戌",
+  "shichen": "丑",
+  "month": 3,
+  "match_how": "课式",
+  "hit_title": "己酉年三月月壬午日戌将丑时。孟承务，占子病，已亥生，十一岁。"
+ },
+ {
+  "case_id": "§疾病13·163",
+  "name": "王县丞甲戌生",
+  "day_ganzhi": "甲寅",
+  "yue_jiang": "未",
+  "shichen": "",
+  "month": 6,
+  "match_how": "姓名",
+  "hit_title": "戊申年六月甲寅日未将卯时。王县丞，甲戌生，三十五岁，占病。"
+ },
+ {
+  "case_id": "§疾病13·164",
+  "name": "徐孺人己卯生",
+  "day_ganzhi": "癸巳",
+  "yue_jiang": "申",
+  "shichen": "卯",
+  "month": 5,
+  "match_how": "姓名",
+  "hit_title": "戊申年五月癸巳日申将卯时。徐孺人，己卯生，三十岁，占病。"
+ },
+ {
+  "case_id": "§疾病13·165",
+  "name": "",
+  "day_ganzhi": "丙申",
+  "yue_jiang": "寅",
+  "shichen": "寅",
+  "month": 10,
+  "match_how": "课式",
+  "hit_title": "建炎已酉年十月丙申日寅将寅时。伊秀才，占父病，父丙午生，六十四岁。"
+ },
+ {
+  "case_id": "§疾病13·166",
+  "name": "张逸士庚戌生",
+  "day_ganzhi": "庚寅",
+  "yue_jiang": "辰",
+  "shichen": "",
+  "month": 9,
+  "match_how": "姓名",
+  "hit_title": "戊申年九月初九庚寅日辰将五时。张逸士，庚戌生，五十九岁，占病。"
+ },
+ {
+  "case_id": "§疾病13·167",
+  "name": "",
+  "day_ganzhi": "辛卯",
+  "yue_jiang": "丑",
+  "shichen": "巳",
+  "month": 12,
+  "match_how": "课式",
+  "hit_title": "戊申年十二月辛卯日丑将巳时。叶八郎，癸亥生，四十六岁，即行医求占生意。"
+ },
+ {
+  "case_id": "§疾病13·168",
+  "name": "",
+  "day_ganzhi": "甲子",
+  "yue_jiang": "卯",
+  "shichen": "申",
+  "month": 9,
+  "match_how": "课式",
+  "hit_title": "己酉年九月甲子日卯将申时。樊郎中，往治项秀才病，来占。"
+ },
+ {
+  "case_id": "§疾病13·169",
+  "name": "",
+  "day_ganzhi": "戊午",
+  "yue_jiang": "亥",
+  "shichen": "戌",
+  "month": 2,
+  "match_how": "课式",
+  "hit_title": "戊申年二月初四戊午日亥将戊时。某占病。"
+ },
+ {
+  "case_id": "§疾病13·170",
+  "name": "尹邦达庚申",
+  "day_ganzhi": "丁亥",
+  "yue_jiang": "辰",
+  "shichen": "亥",
+  "month": 8,
+  "match_how": "姓名",
+  "hit_title": "建炎己酉年闰八月丁亥日辰将亥时。尹邦达，庚申生，五十岁，占妻病。妻同庚。"
+ },
+ {
+  "case_id": "§疾病13·171",
+  "name": "叶解元丁丑生",
+  "day_ganzhi": "壬辰",
+  "yue_jiang": "午",
+  "shichen": "喜",
+  "month": 6,
+  "match_how": "姓名",
+  "hit_title": "建炎庚戌年六月壬辰日子将巳时。叶解元，丁丑生，三十四岁，占病。"
+ },
+ {
+  "case_id": "§疾病13·172",
+  "name": "韩省干戊寅生",
+  "day_ganzhi": "己亥",
+  "yue_jiang": "午",
+  "shichen": "未",
+  "month": 7,
+  "match_how": "姓名",
+  "hit_title": "庚戌年七月己亥日午将未时。韩省干，戊寅生，三十三岁占子病，子五岁，丙午生。"
+ },
+ {
+  "case_id": "§疾病13·173",
+  "name": "蒋六公乙巳生",
+  "day_ganzhi": "辛酉",
+  "yue_jiang": "巳",
+  "shichen": "寅",
+  "month": 8,
+  "match_how": "姓名",
+  "hit_title": "建炎己酉年八月辛酉日巳将寅时。蒋六公，乙巳生，六十五岁，占自身不安。"
+ },
+ {
+  "case_id": "§疾病13·174",
+  "name": "蒋七婆戊申生",
+  "day_ganzhi": "辛酉",
+  "yue_jiang": "巳",
+  "shichen": "申",
+  "month": 8,
+  "match_how": "姓名",
+  "hit_title": "己酉年八月辛酉日巳将申时。蒋七婆，戊申生，六十二岁，占子病。子辛未生，三十九岁。"
+ },
+ {
+  "case_id": "§疾病13·175",
+  "name": "",
+  "day_ganzhi": "庚辰",
+  "yue_jiang": "亥",
+  "shichen": "辰",
+  "month": 2,
+  "match_how": "课式",
+  "hit_title": "二月庚辰日亥将辰时。某占男人病。"
+ },
+ {
+  "case_id": "§疾病13·176",
+  "name": "",
+  "day_ganzhi": "丁巳",
+  "yue_jiang": "未",
+  "shichen": "寅",
+  "month": 5,
+  "match_how": "课式",
+  "hit_title": "五月丁巳日未将寅时。某占病。"
+ },
+ {
+  "case_id": "§疾病13·177",
+  "name": "",
+  "day_ganzhi": "丙午",
+  "yue_jiang": "子",
+  "shichen": "亥",
+  "month": 12,
+  "match_how": "课式",
+  "hit_title": "十二月丙午日子将亥时。某占病。"
+ },
+ {
+  "case_id": "§疾病13·178",
+  "name": "",
+  "day_ganzhi": "己丑",
+  "yue_jiang": "丑",
+  "shichen": "辰",
+  "month": null,
+  "match_how": "",
+  "hit_title": ""
+ },
+ {
+  "case_id": "§官讼16·202",
+  "name": "童秀才壬戌生",
+  "day_ganzhi": "丁酉",
+  "yue_jiang": "午",
+  "shichen": "辰",
+  "month": null,
+  "match_how": "",
+  "hit_title": ""
+ },
+ {
+  "case_id": "§官讼16·203",
+  "name": "",
+  "day_ganzhi": "辛丑",
+  "yue_jiang": "戌",
+  "shichen": "巳",
+  "month": 3,
+  "match_how": "课式",
+  "hit_title": "建炎戊申年三月辛丑日戊将巳时。汪淑仪，壬戌生，四十七岁占讼。"
+ },
+ {
+  "case_id": "§官讼16·204",
+  "name": "陆孔目癸亥生",
+  "day_ganzhi": "庚申",
+  "yue_jiang": "卯",
+  "shichen": "巳",
+  "month": 9,
+  "match_how": "姓名",
+  "hit_title": "己酉年九月庚申日卯将巳时。陆孔目，癸亥生四十七岁，占讼。"
+ },
+ {
+  "case_id": "§官讼16·205",
+  "name": "林文丙辰生",
+  "day_ganzhi": "辛卯",
+  "yue_jiang": "午",
+  "shichen": "戌",
+  "month": 7,
+  "match_how": "姓名",
+  "hit_title": "戊申年七月辛卯日午将戌时。林文丙辰生，五十三岁占讼。"
+ },
+ {
+  "case_id": "§官讼16·206",
+  "name": "祝秀才壬申牛",
+  "day_ganzhi": "乙酉",
+  "yue_jiang": "辰",
+  "shichen": "卯",
+  "month": 8,
+  "match_how": "课式",
+  "hit_title": "建炎己酉年闰八月乙酉日辰将卯时。祝秀才壬申生，三十八岁占讼。"
+ },
+ {
+  "case_id": "§官讼16·207",
+  "name": "陆孔目己巳生",
+  "day_ganzhi": "己末",
+  "yue_jiang": "卯",
+  "shichen": "丑",
+  "month": null,
+  "match_how": "",
+  "hit_title": ""
+ },
+ {
+  "case_id": "§官讼16·208",
+  "name": "",
+  "day_ganzhi": "庚午",
+  "yue_jiang": "午",
+  "shichen": "未",
+  "month": 7,
+  "match_how": "课式",
+  "hit_title": "七月庚午日午将未时。某占讼。 合 勾 青 空 辰 巳 午 未 合 勾 青 空 官 庚午 青 朱卯 申虎 辰 巳 午 未 官 己巳 勾 蛇寅 西常 巳 午 未 庚"
+ },
+ {
+  "case_id": "§官讼16·209",
+  "name": "",
+  "day_ganzhi": "乙末",
+  "yue_jiang": "未",
+  "shichen": "卯",
+  "month": 5,
+  "match_how": "课式",
+  "hit_title": "五月乙未日未将卯时。某占讼。"
+ },
+ {
+  "case_id": "§官讼16·210",
+  "name": "",
+  "day_ganzhi": "辛丑",
+  "yue_jiang": "子",
+  "shichen": "未",
+  "month": 12,
+  "match_how": "课式",
+  "hit_title": "十二月辛丑日子将未时，某占因人力打死欠米钱人，解官。"
+ },
+ {
+  "case_id": "§官讼16·211",
+  "name": "",
+  "day_ganzhi": "壬辰",
+  "yue_jiang": "酉",
+  "shichen": "寅",
+  "month": 3,
+  "match_how": "课式",
+  "hit_title": "三月壬辰日酉将寅时。或占杀死二人能遇赦否。"
+ },
+ {
+  "case_id": "§官讼16·212",
+  "name": "",
+  "day_ganzhi": "辛酉",
+  "yue_jiang": "丑",
+  "shichen": "丑",
+  "month": 12,
+  "match_how": "课式",
+  "hit_title": "丙戊年十二月辛酉日丑将丑时。张大郎占官事。"
+ },
+ {
+  "case_id": "§疾病13·1",
+  "name": "",
+  "day_ganzhi": "",
+  "yue_jiang": "",
+  "shichen": "",
+  "month": null,
+  "match_how": "",
+  "hit_title": ""
+ }
+]

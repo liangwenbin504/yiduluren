@@ -1,0 +1,2033 @@
+{
+  "test_time": "2026-08-28T09:21:42.034969",
+  "batch_type": "家宅类型批量蒸馏",
+  "batch_result": {
+    "total": 8,
+    "successful": 8,
+    "failed": 0,
+    "results": [
+      {
+        "case_id": "jiazhai_001",
+        "success": true,
+        "rules_count": 5,
+        "quality_score": 0.9,
+        "error": null
+      },
+      {
+        "case_id": "jiazhai_002",
+        "success": true,
+        "rules_count": 5,
+        "quality_score": 0.9,
+        "error": null
+      },
+      {
+        "case_id": "jiazhai_003",
+        "success": true,
+        "rules_count": 7,
+        "quality_score": 0.9,
+        "error": null
+      },
+      {
+        "case_id": "jiazhai_004",
+        "success": true,
+        "rules_count": 5,
+        "quality_score": 0.9,
+        "error": null
+      },
+      {
+        "case_id": "jiazhai_005",
+        "success": true,
+        "rules_count": 5,
+        "quality_score": 0.9,
+        "error": null
+      },
+      {
+        "case_id": "jiazhai_006",
+        "success": true,
+        "rules_count": 8,
+        "quality_score": 0.9,
+        "error": null
+      },
+      {
+        "case_id": "jiazhai_007",
+        "success": true,
+        "rules_count": 5,
+        "quality_score": 0.9,
+        "error": null
+      },
+      {
+        "case_id": "jiazhai_008",
+        "success": true,
+        "rules_count": 5,
+        "quality_score": 0.9,
+        "error": null
+      }
+    ]
+  },
+  "final_stats": {
+    "total_distillations": 33,
+    "successful_distillations": 33,
+    "knowledge_rules_extracted": 185,
+    "template_updates": 33
+  },
+  "rules_count": 182,
+  "templates_count": 7,
+  "zhanshi_distribution": {
+    "占宅": 11,
+    "占病": 7,
+    "婚姻": 22,
+    "出行": 17,
+    "官讼": 10,
+    "功名": 5,
+    "家宅": 110
+  },
+  "quality_report": {
+    "generated_at": "2026-08-28T09:21:42.031970",
+    "current_state": {
+      "total_rules": 182,
+      "total_templates": 7,
+      "total_chains": 33,
+      "total_distillations": 33
+    },
+    "quality_distribution": {
+      "high": 55,
+      "medium": 117,
+      "low": 10
+    },
+    "template_coverage": {
+      "known_types": 9,
+      "covered_types": 6,
+      "coverage_rate": 66.7
+    },
+    "low_quality_rules": [
+      {
+        "rule": "中传戌 → 中",
+        "zhanshi": "出行",
+        "quality_score": 0.2
+      },
+      {
+        "rule": "初传申 → 无克",
+        "zhanshi": "官讼",
+        "quality_score": 0.2
+      },
+      {
+        "rule": "中传子 → 无克",
+        "zhanshi": "官讼",
+        "quality_score": 0.2
+      },
+      {
+        "rule": "末传辰 → 上克下",
+        "zhanshi": "官讼",
+        "quality_score": 0.2
+      },
+      {
+        "rule": "中传申 → 变动",
+        "zhanshi": "家宅",
+        "quality_score": 0.2
+      },
+      {
+        "rule": "末传辰 → 不宁",
+        "zhanshi": "家宅",
+        "quality_score": 0.2
+      }
+    ],
+    "suggestions": [
+      "建议优化 10 条低质量规则"
+    ],
+    "score_details": [
+      {
+        "rule": "元首格 → 利于宅不利人",
+        "zhanshi": "占宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "闭口格 → 官府衙门之人事、服役费用",
+        "zhanshi": "占宅",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "回环格 → 三传循环相生或四课中干支上神互换",
+        "zhanshi": "占宅",
+        "quality_score": 0.8
+      },
+      {
+        "rule": "毕法赋: 干支皆受上神来长生",
+        "zhanshi": "占宅",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "毕法赋: 玄和谐，祸散消；玄不和，非横扰",
+        "zhanshi": "占宅",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "毕法赋: 闭口挂体格",
+        "zhanshi": "占宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "毕法赋: 阴有所伏，理宜闭口",
+        "zhanshi": "占宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 旬尾为发用",
+        "zhanshi": "占宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "初传巳 → 吉",
+        "zhanshi": "占宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传寅 → 吉",
+        "zhanshi": "占宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传亥 → 吉",
+        "zhanshi": "占宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "元首 → 上克下，取克者为初传",
+        "zhanshi": "占病",
+        "quality_score": 0.4
+      },
+      {
+        "rule": "毕法赋: 贼克法：先取下贼上，如无下贼上，再取上克下",
+        "zhanshi": "占病",
+        "quality_score": 0.8
+      },
+      {
+        "rule": "毕法赋: 元首课：四课中只有一课上克下",
+        "zhanshi": "占病",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "毕法赋: 月将加时：天盘将地盘子加于用时之上，然后天位随天盘旋转",
+        "zhanshi": "占病",
+        "quality_score": 0.8
+      },
+      {
+        "rule": "初传午火 → 鬼动，病势甚重",
+        "zhanshi": "占病",
+        "quality_score": 0.4
+      },
+      {
+        "rule": "中传寅木 → 生鬼，病由情志所致",
+        "zhanshi": "占病",
+        "quality_score": 0.4
+      },
+      {
+        "rule": "末传子水 → 制鬼，可愈",
+        "zhanshi": "占病",
+        "quality_score": 0.4
+      },
+      {
+        "rule": "六合课 → 吉祥，适用于婚姻、合事、和合之事",
+        "zhanshi": "婚姻",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 甲戊庚牛羊 → 贵人在丑和未",
+        "zhanshi": "婚姻",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "毕法赋: 甲日昼贵未，夜贵丑",
+        "zhanshi": "婚姻",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "毕法赋: 三合木局 → 和谐美满",
+        "zhanshi": "婚姻",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "初传天乙贵人 → 吉",
+        "zhanshi": "婚姻",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传天德贵人 → 吉",
+        "zhanshi": "婚姻",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传天乙贵人 → 吉",
+        "zhanshi": "婚姻",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "太常课 → 吉事，适用于婚姻、喜庆等",
+        "zhanshi": "婚姻",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 无明确引用条文，但符合三合金局吉象",
+        "zhanshi": "婚姻",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "初传传送 → 吉",
+        "zhanshi": "婚姻",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传小吉 → 吉",
+        "zhanshi": "婚姻",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传胜光 → 吉",
+        "zhanshi": "婚姻",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "六合课 → 吉凶属性：吉，适用于婚姻、合作等和谐关系",
+        "zhanshi": "婚姻",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 三合木局 → 生扶日干，吉；六合课 → 和谐关系，吉",
+        "zhanshi": "婚姻",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "初传卯将 → 吉",
+        "zhanshi": "婚姻",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传亥将 → 吉",
+        "zhanshi": "婚姻",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传未将 → 吉",
+        "zhanshi": "婚姻",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "太常课 → 吉祥，适用于婚姻、喜庆之事",
+        "zhanshi": "婚姻",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 无明确引用条文，但符合太常课吉祥属性",
+        "zhanshi": "婚姻",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "初传太常 → 吉祥",
+        "zhanshi": "婚姻",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传传送 → 吉祥",
+        "zhanshi": "婚姻",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传小吉 → 吉祥",
+        "zhanshi": "婚姻",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "驿马课 → 适用于出行、旅行等事宜，吉凶取决于三传和天将",
+        "zhanshi": "出行",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 无具体引用条文，但遵循大六壬排盘和推理规则",
+        "zhanshi": "出行",
+        "quality_score": 0.6
+      },
+      {
+        "rule": "初传寅将 → 根据月将和时辰确定吉凶",
+        "zhanshi": "出行",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "中传戌将 → 根据月将和时辰确定吉凶",
+        "zhanshi": "出行",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "末传申将 → 根据月将和时辰确定吉凶",
+        "zhanshi": "出行",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "天马课 → 适用于出行、远行等事宜，吉凶取决于三传和天将",
+        "zhanshi": "出行",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 无具体引用条文，但涉及干支相加、天盘地盘关系、三合局等六壬规则",
+        "zhanshi": "出行",
+        "quality_score": 0.6
+      },
+      {
+        "rule": "初传子 → 吉",
+        "zhanshi": "出行",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传申 → 吉",
+        "zhanshi": "出行",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传辰 → 吉",
+        "zhanshi": "出行",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "驿马课 → 吉事出行，宜远行，有贵人相助",
+        "zhanshi": "出行",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 无明确引用条文，但符合驿马课出行顺利的象意",
+        "zhanshi": "出行",
+        "quality_score": 0.8
+      },
+      {
+        "rule": "初传寅 → 吉",
+        "zhanshi": "出行",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传戌 → 中",
+        "zhanshi": "出行",
+        "quality_score": 0.2
+      },
+      {
+        "rule": "末传申 → 吉",
+        "zhanshi": "出行",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "天马课 → 吉凶属性：根据出行占卜，天马课通常表示出行顺利，有利于远行和远距离的交流",
+        "zhanshi": "出行",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 引用的毕法赋条文",
+        "zhanshi": "出行",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "白虎课 → 不利出行，主有阻，宜静不宜动，多主口舌官非，宜和解，有破财之象",
+        "zhanshi": "官讼",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 无明确引用条文",
+        "zhanshi": "官讼",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "初传白虎 → 凶",
+        "zhanshi": "官讼",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传青龙 → 吉",
+        "zhanshi": "官讼",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传朱雀 → 吉",
+        "zhanshi": "官讼",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "白虎课 → 白虎乘神入传或专以白虎论，通常指三传中白虎临申，代表官司缠讼，可能涉及诉讼或纠纷",
+        "zhanshi": "官讼",
+        "quality_score": 0.8
+      },
+      {
+        "rule": "毕法赋: 贼克法：下贼上或上克下，此处无下贼上，只有一个上克下",
+        "zhanshi": "官讼",
+        "quality_score": 0.8
+      },
+      {
+        "rule": "初传申 → 无克",
+        "zhanshi": "官讼",
+        "quality_score": 0.2
+      },
+      {
+        "rule": "中传子 → 无克",
+        "zhanshi": "官讼",
+        "quality_score": 0.2
+      },
+      {
+        "rule": "末传辰 → 上克下",
+        "zhanshi": "官讼",
+        "quality_score": 0.2
+      },
+      {
+        "rule": "朱雀课 → 吉凶属性：朱雀课通常代表喜庆、成就，适用于功名、考试等事宜",
+        "zhanshi": "功名",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 无明确的毕法赋条文引用，但推理过程中涉及了月将、时辰、天盘、地盘等六壬基本规则",
+        "zhanshi": "功名",
+        "quality_score": 0.8
+      },
+      {
+        "rule": "初传午加干 → 吉",
+        "zhanshi": "功名",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传酉加午 → 吉",
+        "zhanshi": "功名",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传亥加酉 → 吉",
+        "zhanshi": "功名",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "六合课 → 吉祥，适用于家宅、婚姻、出行等",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 无明确引用条文，但符合六合课吉凶规则",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "初传登明 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传河魁 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传功曹 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "元首课 → 吉凶属性：元首课通常表示事情的开始，吉凶取决于四课上克下的情况，上克下为吉，下克上为凶",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 引用了元首课的规则，四课上克下为初传，中传初传之上神，末传中传之上神",
+        "zhanshi": "家宅",
+        "quality_score": 0.8
+      },
+      {
+        "rule": "初传子 → 根据天将的吉凶属性判断",
+        "zhanshi": "家宅",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "中传申 → 根据天将的吉凶属性判断",
+        "zhanshi": "家宅",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "末传辰 → 根据天将的吉凶属性判断",
+        "zhanshi": "家宅",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "临官课 → 吉凶属性：吉，适用于家宅、事业等",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 无明确的毕法赋条文引用，但符合中气换将规则",
+        "zhanshi": "家宅",
+        "quality_score": 0.8
+      },
+      {
+        "rule": "初传午 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传酉 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传亥 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "重审课 → 不吉，适用于家宅不安、口舌是非、破财等情况",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 寅加申 → 家宅不安",
+        "zhanshi": "家宅",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "毕法赋: 戌加寅 → 口舌是非",
+        "zhanshi": "家宅",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "毕法赋: 申加戌 → 破财",
+        "zhanshi": "家宅",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "初传寅 → 不吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传戌 → 不吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传申 → 不吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "贵人课 → 吉祥，适用于求贵、求名、求利、求事顺利等",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 甲戊庚牛羊，乙己鼠猴乡，丙丁猪鸡位，壬癸兔蛇藏",
+        "zhanshi": "家宅",
+        "quality_score": 0.8
+      },
+      {
+        "rule": "毕法赋: 上克下为克，下贼上为贼",
+        "zhanshi": "家宅",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "毕法赋: 天地盘推导法",
+        "zhanshi": "家宅",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "毕法赋: 三合局法",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "初传亥 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传卯 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传未 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "玄武课 → 不吉，适用于家宅、出行等不利之事",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 无明确引用条文，但涉及月将加时、天盘地盘关系等六壬规则",
+        "zhanshi": "家宅",
+        "quality_score": 0.8
+      },
+      {
+        "rule": "初传子 → 不吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传申 → 变动",
+        "zhanshi": "家宅",
+        "quality_score": 0.2
+      },
+      {
+        "rule": "末传辰 → 不宁",
+        "zhanshi": "家宅",
+        "quality_score": 0.2
+      },
+      {
+        "rule": "六合课 → 吉凶属性：吉，适用于家宅、婚姻、出行等",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 无明确引用规则，但符合三合木局吉象",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "初传登明 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传从魁 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传小吉 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "六合课 → 吉祥，适用于家宅、婚姻、合作等和谐场景",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 无具体引用条文，但符合六合课的一般规则",
+        "zhanshi": "家宅",
+        "quality_score": 0.6
+      },
+      {
+        "rule": "初传亥 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传卯 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传未 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "元首课 → 吉凶属性：吉，适用于家宅、财运等吉事预测",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 无明确引用条文，但符合元首课规则，即上克下为用",
+        "zhanshi": "家宅",
+        "quality_score": 0.8
+      },
+      {
+        "rule": "初传子 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传申 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传辰 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "临官课 → 宅运兴旺，人丁旺盛，事业有成",
+        "zhanshi": "家宅",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "毕法赋: ",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "初传午 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传酉 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传亥 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "重审课 → 不吉，适用于家宅不安、口舌是非、防破财等不利情况",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 无具体引用条文，但根据日干寄宫和月将规则进行推理",
+        "zhanshi": "家宅",
+        "quality_score": 0.6
+      },
+      {
+        "rule": "初传寅 → 不吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传戌 → 不吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传申 → 不吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "贵人课 → 吉祥，适用于求贵、求名、求利、求事顺利等",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 无明确引用条文，但遵循六壬天盘地盘相生相克原则",
+        "zhanshi": "家宅",
+        "quality_score": 0.8
+      },
+      {
+        "rule": "初传亥将（登明） → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "中传卯将（河魁） → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "末传未将（传送） → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "六合课 → 吉祥，适用于家宅、婚姻、出行等",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 无具体引用条文，但符合大六壬三合局规则",
+        "zhanshi": "家宅",
+        "quality_score": 0.6
+      },
+      {
+        "rule": "初传登明 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传河魁 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传小吉 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "元首课 → 吉凶属性：根据元首课的特点，通常代表事情的开端，吉凶取决于四课的配置和三传的变化",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 引用的毕法赋条文",
+        "zhanshi": "家宅",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "初传子 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传申 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传辰 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "临官课 → 吉事临身，事业有成，人丁兴旺",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 贼克取法",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "毕法赋: 下贼上取上神为用",
+        "zhanshi": "家宅",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "毕法赋: 上克下取下神为用",
+        "zhanshi": "家宅",
+        "quality_score": 0.7
+      },
+      {
+        "rule": "初传午 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传酉 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传亥 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "重审课 → 不确定吉凶，需结合具体情况进行判断",
+        "zhanshi": "家宅",
+        "quality_score": 0.9
+      },
+      {
+        "rule": "毕法赋: 无具体引用规则，但可能涉及贼克法、干支寄宫等",
+        "zhanshi": "家宅",
+        "quality_score": 0.6
+      },
+      {
+        "rule": "初传无具体天将 → 根据地支寅的吉凶判断",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传无具体天将 → 根据地支戌的吉凶判断",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传无具体天将 → 根据地支申的吉凶判断",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "贵人课 → 吉祥，适用于求贵、求名、求利、求事成",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 无具体引用条文，但遵循月将换将规则和四课格式",
+        "zhanshi": "家宅",
+        "quality_score": 0.6
+      },
+      {
+        "rule": "初传亥将 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传卯将 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传未将 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "玄武课 → 不吉，主有盗贼之忧，家宅不安",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 子加干 → 主盗贼",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 申加子 → 主盗贼",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 辰加申 → 主盗贼",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 戌加辰 → 主盗贼",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "初传子 → 不吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传申 → 不吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传辰 → 不吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "太常课 → 吉凶属性：吉，适用于家宅、安宁、稳定之事",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 无特别引用的毕法赋条文，但符合金局三合之理",
+        "zhanshi": "家宅",
+        "quality_score": 0.8
+      },
+      {
+        "rule": "初传酉 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传丑 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传巳 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "朱雀课 → 吉事，婚嫁，家宅昌盛",
+        "zhanshi": "家宅",
+        "quality_score": 1.0
+      },
+      {
+        "rule": "毕法赋: 卯加干 → 喜事临门，亥加卯 → 家宅安宁，未加亥 → 家宅昌盛，丑加未 → 家宅兴旺",
+        "zhanshi": "家宅",
+        "quality_score": 0.8
+      },
+      {
+        "rule": "初传卯 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "中传亥 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      },
+      {
+        "rule": "末传未 → 吉",
+        "zhanshi": "家宅",
+        "quality_score": 0.5
+      }
+    ]
+  },
+  "cost_estimate": {
+    "case_count": 8,
+    "teacher_tokens": 16000,
+    "student_tokens": 8000,
+    "teacher_cost_cny": 0.032,
+    "student_cost_cny": 0.0,
+    "estimated_cost_cny": 0.032,
+    "cost_breakdown": {
+      "teacher_model": {
+        "model": "glm-5.3-flash",
+        "tokens": 16000,
+        "cost_per_1k": 0.002,
+        "total_cost": 0.032
+      },
+      "student_model": {
+        "model": "glm-4-flash",
+        "tokens": 8000,
+        "cost_per_1k": 0.0,
+        "total_cost": 0.0
+      }
+    }
+  },
+  "dedup_result": {
+    "duplicates_found": 23,
+    "rules_before": 182,
+    "rules_after": 159,
+    "merged_rules": [
+      {
+        "rule": "元首格 → 利于宅不利人",
+        "source": "distillation",
+        "zhanshi": "占宅",
+        "created_at": "2026-08-27T18:27:00.962447"
+      },
+      {
+        "rule": "闭口格 → 官府衙门之人事、服役费用",
+        "source": "distillation",
+        "zhanshi": "占宅",
+        "created_at": "2026-08-27T18:27:00.962447"
+      },
+      {
+        "rule": "回环格 → 三传循环相生或四课中干支上神互换",
+        "source": "distillation",
+        "zhanshi": "占宅",
+        "created_at": "2026-08-27T18:27:00.962447"
+      },
+      {
+        "rule": "毕法赋: 干支皆受上神来长生",
+        "source": "distillation",
+        "zhanshi": "占宅",
+        "created_at": "2026-08-27T18:27:00.962447"
+      },
+      {
+        "rule": "毕法赋: 玄和谐，祸散消；玄不和，非横扰",
+        "source": "distillation",
+        "zhanshi": "占宅",
+        "created_at": "2026-08-27T18:27:00.962447"
+      },
+      {
+        "rule": "毕法赋: 闭口挂体格",
+        "source": "distillation",
+        "zhanshi": "占宅",
+        "created_at": "2026-08-27T18:27:00.962447"
+      },
+      {
+        "rule": "毕法赋: 阴有所伏，理宜闭口",
+        "source": "distillation",
+        "zhanshi": "占宅",
+        "created_at": "2026-08-27T18:27:00.962447"
+      },
+      {
+        "rule": "毕法赋: 旬尾为发用",
+        "source": "distillation",
+        "zhanshi": "占宅",
+        "created_at": "2026-08-27T18:27:00.962447"
+      },
+      {
+        "rule": "初传巳 → 吉",
+        "source": "distillation",
+        "zhanshi": "占宅",
+        "created_at": "2026-08-27T18:27:00.962447"
+      },
+      {
+        "rule": "中传寅 → 吉",
+        "source": "distillation",
+        "zhanshi": "占宅",
+        "created_at": "2026-08-27T18:27:00.962447"
+      },
+      {
+        "rule": "末传亥 → 吉",
+        "source": "distillation",
+        "zhanshi": "占宅",
+        "created_at": "2026-08-27T18:27:00.962447"
+      },
+      {
+        "rule": "元首 → 上克下，取克者为初传",
+        "source": "distillation",
+        "zhanshi": "占病",
+        "created_at": "2026-08-27T18:28:19.624415"
+      },
+      {
+        "rule": "毕法赋: 贼克法：先取下贼上，如无下贼上，再取上克下",
+        "source": "distillation",
+        "zhanshi": "占病",
+        "created_at": "2026-08-27T18:28:19.624415"
+      },
+      {
+        "rule": "毕法赋: 元首课：四课中只有一课上克下",
+        "source": "distillation",
+        "zhanshi": "占病",
+        "created_at": "2026-08-27T18:28:19.624415"
+      },
+      {
+        "rule": "毕法赋: 月将加时：天盘将地盘子加于用时之上，然后天位随天盘旋转",
+        "source": "distillation",
+        "zhanshi": "占病",
+        "created_at": "2026-08-27T18:28:19.624415"
+      },
+      {
+        "rule": "初传午火 → 鬼动，病势甚重",
+        "source": "distillation",
+        "zhanshi": "占病",
+        "created_at": "2026-08-27T18:28:19.624415"
+      },
+      {
+        "rule": "中传寅木 → 生鬼，病由情志所致",
+        "source": "distillation",
+        "zhanshi": "占病",
+        "created_at": "2026-08-27T18:28:19.624415"
+      },
+      {
+        "rule": "末传子水 → 制鬼，可愈",
+        "source": "distillation",
+        "zhanshi": "占病",
+        "created_at": "2026-08-27T18:28:19.624415"
+      },
+      {
+        "rule": "六合课 → 吉祥，适用于婚姻、合事、和合之事",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:42:58.689020"
+      },
+      {
+        "rule": "毕法赋: 甲戊庚牛羊 → 贵人在丑和未",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:42:58.689020"
+      },
+      {
+        "rule": "毕法赋: 甲日昼贵未，夜贵丑",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:42:58.689020"
+      },
+      {
+        "rule": "毕法赋: 三合木局 → 和谐美满",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:42:58.689020"
+      },
+      {
+        "rule": "初传天乙贵人 → 吉",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:42:58.689020"
+      },
+      {
+        "rule": "中传天德贵人 → 吉",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:42:58.689020"
+      },
+      {
+        "rule": "末传天乙贵人 → 吉",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:42:58.689020"
+      },
+      {
+        "rule": "太常课 → 吉事，适用于婚姻、喜庆等",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:44:10.947939"
+      },
+      {
+        "rule": "毕法赋: 无明确引用条文，但符合三合金局吉象",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:44:10.947939"
+      },
+      {
+        "rule": "初传传送 → 吉",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:44:10.947939"
+      },
+      {
+        "rule": "中传小吉 → 吉",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:44:10.947939"
+      },
+      {
+        "rule": "末传胜光 → 吉",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:44:10.947939"
+      },
+      {
+        "rule": "六合课 → 吉凶属性：吉，适用于婚姻、合作等和谐关系",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:49:32.789631"
+      },
+      {
+        "rule": "毕法赋: 三合木局 → 生扶日干，吉；六合课 → 和谐关系，吉",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:49:32.789631"
+      },
+      {
+        "rule": "初传卯将 → 吉",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:49:32.789631"
+      },
+      {
+        "rule": "中传亥将 → 吉",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:49:32.789631"
+      },
+      {
+        "rule": "末传未将 → 吉",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:49:32.789631"
+      },
+      {
+        "rule": "太常课 → 吉祥，适用于婚姻、喜庆之事",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:50:41.872741"
+      },
+      {
+        "rule": "毕法赋: 无明确引用条文，但符合太常课吉祥属性",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:50:41.872741"
+      },
+      {
+        "rule": "初传太常 → 吉祥",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:50:41.872741"
+      },
+      {
+        "rule": "中传传送 → 吉祥",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:50:41.872741"
+      },
+      {
+        "rule": "末传小吉 → 吉祥",
+        "source": "distillation",
+        "zhanshi": "婚姻",
+        "created_at": "2026-08-27T18:50:41.872741"
+      },
+      {
+        "rule": "驿马课 → 适用于出行、旅行等事宜，吉凶取决于三传和天将",
+        "source": "distillation",
+        "zhanshi": "出行",
+        "created_at": "2026-08-27T18:45:10.602152"
+      },
+      {
+        "rule": "毕法赋: 无具体引用条文，但遵循大六壬排盘和推理规则",
+        "source": "distillation",
+        "zhanshi": "出行",
+        "created_at": "2026-08-27T18:45:10.602152"
+      },
+      {
+        "rule": "初传寅将 → 根据月将和时辰确定吉凶",
+        "source": "distillation",
+        "zhanshi": "出行",
+        "created_at": "2026-08-27T18:45:10.602152"
+      },
+      {
+        "rule": "中传戌将 → 根据月将和时辰确定吉凶",
+        "source": "distillation",
+        "zhanshi": "出行",
+        "created_at": "2026-08-27T18:45:10.602152"
+      },
+      {
+        "rule": "末传申将 → 根据月将和时辰确定吉凶",
+        "source": "distillation",
+        "zhanshi": "出行",
+        "created_at": "2026-08-27T18:45:10.602152"
+      },
+      {
+        "rule": "天马课 → 适用于出行、远行等事宜，吉凶取决于三传和天将",
+        "source": "distillation",
+        "zhanshi": "出行",
+        "created_at": "2026-08-27T18:46:23.181739"
+      },
+      {
+        "rule": "毕法赋: 无具体引用条文，但涉及干支相加、天盘地盘关系、三合局等六壬规则",
+        "source": "distillation",
+        "zhanshi": "出行",
+        "created_at": "2026-08-27T18:46:23.181739"
+      },
+      {
+        "rule": "初传子 → 吉",
+        "source": "distillation",
+        "zhanshi": "出行",
+        "created_at": "2026-08-27T18:46:23.181739"
+      },
+      {
+        "rule": "中传申 → 吉",
+        "source": "distillation",
+        "zhanshi": "出行",
+        "created_at": "2026-08-27T18:46:23.181739"
+      },
+      {
+        "rule": "末传辰 → 吉",
+        "source": "distillation",
+        "zhanshi": "出行",
+        "created_at": "2026-08-27T18:46:23.181739"
+      },
+      {
+        "rule": "驿马课 → 吉事出行，宜远行，有贵人相助",
+        "source": "distillation",
+        "zhanshi": "出行",
+        "created_at": "2026-08-27T18:52:06.445796"
+      },
+      {
+        "rule": "毕法赋: 无明确引用条文，但符合驿马课出行顺利的象意",
+        "source": "distillation",
+        "zhanshi": "出行",
+        "created_at": "2026-08-27T18:52:06.445796"
+      },
+      {
+        "rule": "初传寅 → 吉",
+        "source": "distillation",
+        "zhanshi": "出行",
+        "created_at": "2026-08-27T18:52:06.445796"
+      },
+      {
+        "rule": "中传戌 → 中",
+        "source": "distillation",
+        "zhanshi": "出行",
+        "created_at": "2026-08-27T18:52:06.445796"
+      },
+      {
+        "rule": "末传申 → 吉",
+        "source": "distillation",
+        "zhanshi": "出行",
+        "created_at": "2026-08-27T18:52:06.445796"
+      },
+      {
+        "rule": "天马课 → 吉凶属性：根据出行占卜，天马课通常表示出行顺利，有利于远行和远距离的交流",
+        "source": "distillation",
+        "zhanshi": "出行",
+        "created_at": "2026-08-27T18:53:18.527517"
+      },
+      {
+        "rule": "毕法赋: 引用的毕法赋条文",
+        "source": "distillation",
+        "zhanshi": "出行",
+        "created_at": "2026-08-27T18:53:18.527517"
+      },
+      {
+        "rule": "白虎课 → 不利出行，主有阻，宜静不宜动，多主口舌官非，宜和解，有破财之象",
+        "source": "distillation",
+        "zhanshi": "官讼",
+        "created_at": "2026-08-27T18:47:44.490332"
+      },
+      {
+        "rule": "毕法赋: 无明确引用条文",
+        "source": "distillation",
+        "zhanshi": "官讼",
+        "created_at": "2026-08-27T18:47:44.490332"
+      },
+      {
+        "rule": "初传白虎 → 凶",
+        "source": "distillation",
+        "zhanshi": "官讼",
+        "created_at": "2026-08-27T18:47:44.490332"
+      },
+      {
+        "rule": "中传青龙 → 吉",
+        "source": "distillation",
+        "zhanshi": "官讼",
+        "created_at": "2026-08-27T18:47:44.490332"
+      },
+      {
+        "rule": "末传朱雀 → 吉",
+        "source": "distillation",
+        "zhanshi": "官讼",
+        "created_at": "2026-08-27T18:47:44.490332"
+      },
+      {
+        "rule": "白虎课 → 白虎乘神入传或专以白虎论，通常指三传中白虎临申，代表官司缠讼，可能涉及诉讼或纠纷",
+        "source": "distillation",
+        "zhanshi": "官讼",
+        "created_at": "2026-08-27T18:54:36.389500"
+      },
+      {
+        "rule": "毕法赋: 贼克法：下贼上或上克下，此处无下贼上，只有一个上克下",
+        "source": "distillation",
+        "zhanshi": "官讼",
+        "created_at": "2026-08-27T18:54:36.389500"
+      },
+      {
+        "rule": "初传申 → 无克",
+        "source": "distillation",
+        "zhanshi": "官讼",
+        "created_at": "2026-08-27T18:54:36.389500"
+      },
+      {
+        "rule": "中传子 → 无克",
+        "source": "distillation",
+        "zhanshi": "官讼",
+        "created_at": "2026-08-27T18:54:36.389500"
+      },
+      {
+        "rule": "末传辰 → 上克下",
+        "source": "distillation",
+        "zhanshi": "官讼",
+        "created_at": "2026-08-27T18:54:36.389500"
+      },
+      {
+        "rule": "朱雀课 → 吉凶属性：朱雀课通常代表喜庆、成就，适用于功名、考试等事宜",
+        "source": "distillation",
+        "zhanshi": "功名",
+        "created_at": "2026-08-27T18:55:34.787543"
+      },
+      {
+        "rule": "毕法赋: 无明确的毕法赋条文引用，但推理过程中涉及了月将、时辰、天盘、地盘等六壬基本规则",
+        "source": "distillation",
+        "zhanshi": "功名",
+        "created_at": "2026-08-27T18:55:34.787543"
+      },
+      {
+        "rule": "初传午加干 → 吉",
+        "source": "distillation",
+        "zhanshi": "功名",
+        "created_at": "2026-08-27T18:55:34.787543"
+      },
+      {
+        "rule": "中传酉加午 → 吉",
+        "source": "distillation",
+        "zhanshi": "功名",
+        "created_at": "2026-08-27T18:55:34.787543"
+      },
+      {
+        "rule": "末传亥加酉 → 吉",
+        "source": "distillation",
+        "zhanshi": "功名",
+        "created_at": "2026-08-27T18:55:34.787543"
+      },
+      {
+        "rule": "六合课 → 吉祥，适用于家宅、婚姻、出行等",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T08:57:09.527916"
+      },
+      {
+        "rule": "毕法赋: 无明确引用条文，但符合六合课吉凶规则",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T08:57:09.527916"
+      },
+      {
+        "rule": "初传登明 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T08:57:09.527916"
+      },
+      {
+        "rule": "中传河魁 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T08:57:09.527916"
+      },
+      {
+        "rule": "末传功曹 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T08:57:09.527916"
+      },
+      {
+        "rule": "元首课 → 吉凶属性：元首课通常表示事情的开始，吉凶取决于四课上克下的情况，上克下为吉，下克上为凶",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T08:58:33.458112"
+      },
+      {
+        "rule": "毕法赋: 引用了元首课的规则，四课上克下为初传，中传初传之上神，末传中传之上神",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T08:58:33.458112"
+      },
+      {
+        "rule": "初传子 → 根据天将的吉凶属性判断",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T08:58:33.458112"
+      },
+      {
+        "rule": "中传申 → 根据天将的吉凶属性判断",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T08:58:33.458112"
+      },
+      {
+        "rule": "末传辰 → 根据天将的吉凶属性判断",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T08:58:33.458112"
+      },
+      {
+        "rule": "临官课 → 吉凶属性：吉，适用于家宅、事业等",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T08:59:40.960222"
+      },
+      {
+        "rule": "毕法赋: 无明确的毕法赋条文引用，但符合中气换将规则",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T08:59:40.960222"
+      },
+      {
+        "rule": "初传午 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T08:59:40.960222"
+      },
+      {
+        "rule": "中传酉 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T08:59:40.960222"
+      },
+      {
+        "rule": "末传亥 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T08:59:40.960222"
+      },
+      {
+        "rule": "重审课 → 不吉，适用于家宅不安、口舌是非、破财等情况",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:00:34.048092"
+      },
+      {
+        "rule": "毕法赋: 寅加申 → 家宅不安",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:00:34.048092"
+      },
+      {
+        "rule": "毕法赋: 戌加寅 → 口舌是非",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:00:34.048092"
+      },
+      {
+        "rule": "毕法赋: 申加戌 → 破财",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:00:34.048092"
+      },
+      {
+        "rule": "初传寅 → 不吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:00:34.048092"
+      },
+      {
+        "rule": "中传戌 → 不吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:00:34.048092"
+      },
+      {
+        "rule": "末传申 → 不吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:00:34.048092"
+      },
+      {
+        "rule": "贵人课 → 吉祥，适用于求贵、求名、求利、求事顺利等",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:01:45.562938"
+      },
+      {
+        "rule": "毕法赋: 甲戊庚牛羊，乙己鼠猴乡，丙丁猪鸡位，壬癸兔蛇藏",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:01:45.562938"
+      },
+      {
+        "rule": "毕法赋: 上克下为克，下贼上为贼",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:01:45.562938"
+      },
+      {
+        "rule": "毕法赋: 天地盘推导法",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:01:45.562938"
+      },
+      {
+        "rule": "毕法赋: 三合局法",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:01:45.562938"
+      },
+      {
+        "rule": "初传亥 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:01:45.562938"
+      },
+      {
+        "rule": "中传卯 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:01:45.562938"
+      },
+      {
+        "rule": "末传未 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:01:45.562938"
+      },
+      {
+        "rule": "玄武课 → 不吉，适用于家宅、出行等不利之事",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:02:53.762221"
+      },
+      {
+        "rule": "毕法赋: 无明确引用条文，但涉及月将加时、天盘地盘关系等六壬规则",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:02:53.762221"
+      },
+      {
+        "rule": "初传子 → 不吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:02:53.762221"
+      },
+      {
+        "rule": "中传申 → 变动",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:02:53.762221"
+      },
+      {
+        "rule": "末传辰 → 不宁",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:02:53.762221"
+      },
+      {
+        "rule": "六合课 → 吉凶属性：吉，适用于家宅、婚姻、出行等",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:04:51.234322"
+      },
+      {
+        "rule": "毕法赋: 无明确引用规则，但符合三合木局吉象",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:04:51.234322"
+      },
+      {
+        "rule": "中传从魁 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:04:51.234322"
+      },
+      {
+        "rule": "末传小吉 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:04:51.234322"
+      },
+      {
+        "rule": "六合课 → 吉祥，适用于家宅、婚姻、合作等和谐场景",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:06:00.863821"
+      },
+      {
+        "rule": "毕法赋: 无具体引用条文，但符合六合课的一般规则",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:06:00.863821"
+      },
+      {
+        "rule": "元首课 → 吉凶属性：吉，适用于家宅、财运等吉事预测",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:07:16.207546"
+      },
+      {
+        "rule": "毕法赋: 无明确引用条文，但符合元首课规则，即上克下为用",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:07:16.207546"
+      },
+      {
+        "rule": "初传子 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:07:16.207546"
+      },
+      {
+        "rule": "中传申 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:07:16.207546"
+      },
+      {
+        "rule": "末传辰 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:07:16.207546"
+      },
+      {
+        "rule": "临官课 → 宅运兴旺，人丁旺盛，事业有成",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:08:32.564050"
+      },
+      {
+        "rule": "毕法赋: ",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:08:32.564050"
+      },
+      {
+        "rule": "重审课 → 不吉，适用于家宅不安、口舌是非、防破财等不利情况",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:09:36.958348"
+      },
+      {
+        "rule": "毕法赋: 无具体引用条文，但根据日干寄宫和月将规则进行推理",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:09:36.958348"
+      },
+      {
+        "rule": "毕法赋: 无明确引用条文，但遵循六壬天盘地盘相生相克原则",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:10:47.949853"
+      },
+      {
+        "rule": "初传亥将（登明） → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:10:47.949853"
+      },
+      {
+        "rule": "中传卯将（河魁） → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:10:47.949853"
+      },
+      {
+        "rule": "末传未将（传送） → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:10:47.949853"
+      },
+      {
+        "rule": "毕法赋: 无具体引用条文，但符合大六壬三合局规则",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:13:05.915326"
+      },
+      {
+        "rule": "元首课 → 吉凶属性：根据元首课的特点，通常代表事情的开端，吉凶取决于四课的配置和三传的变化",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:14:19.731539"
+      },
+      {
+        "rule": "毕法赋: 引用的毕法赋条文",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:14:19.731539"
+      },
+      {
+        "rule": "临官课 → 吉事临身，事业有成，人丁兴旺",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:15:42.664903"
+      },
+      {
+        "rule": "毕法赋: 贼克取法",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:15:42.664903"
+      },
+      {
+        "rule": "毕法赋: 下贼上取上神为用",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:15:42.664903"
+      },
+      {
+        "rule": "毕法赋: 上克下取下神为用",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:15:42.664903"
+      },
+      {
+        "rule": "重审课 → 不确定吉凶，需结合具体情况进行判断",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:16:44.043149"
+      },
+      {
+        "rule": "毕法赋: 无具体引用规则，但可能涉及贼克法、干支寄宫等",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:16:44.043149"
+      },
+      {
+        "rule": "初传无具体天将 → 根据地支寅的吉凶判断",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:16:44.043149"
+      },
+      {
+        "rule": "中传无具体天将 → 根据地支戌的吉凶判断",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:16:44.043149"
+      },
+      {
+        "rule": "末传无具体天将 → 根据地支申的吉凶判断",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:16:44.043149"
+      },
+      {
+        "rule": "贵人课 → 吉祥，适用于求贵、求名、求利、求事成",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:17:54.404039"
+      },
+      {
+        "rule": "毕法赋: 无具体引用条文，但遵循月将换将规则和四课格式",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:17:54.404039"
+      },
+      {
+        "rule": "初传亥将 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:17:54.404039"
+      },
+      {
+        "rule": "中传卯将 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:17:54.404039"
+      },
+      {
+        "rule": "末传未将 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:17:54.404039"
+      },
+      {
+        "rule": "玄武课 → 不吉，主有盗贼之忧，家宅不安",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:19:24.874296"
+      },
+      {
+        "rule": "毕法赋: 子加干 → 主盗贼",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:19:24.874296"
+      },
+      {
+        "rule": "毕法赋: 申加子 → 主盗贼",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:19:24.874296"
+      },
+      {
+        "rule": "毕法赋: 辰加申 → 主盗贼",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:19:24.874296"
+      },
+      {
+        "rule": "毕法赋: 戌加辰 → 主盗贼",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:19:24.874296"
+      },
+      {
+        "rule": "中传申 → 不吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:19:24.874296"
+      },
+      {
+        "rule": "末传辰 → 不吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:19:24.874296"
+      },
+      {
+        "rule": "太常课 → 吉凶属性：吉，适用于家宅、安宁、稳定之事",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:20:23.108279"
+      },
+      {
+        "rule": "毕法赋: 无特别引用的毕法赋条文，但符合金局三合之理",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:20:23.108279"
+      },
+      {
+        "rule": "初传酉 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:20:23.108279"
+      },
+      {
+        "rule": "中传丑 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:20:23.108279"
+      },
+      {
+        "rule": "末传巳 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:20:23.108279"
+      },
+      {
+        "rule": "朱雀课 → 吉事，婚嫁，家宅昌盛",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:21:42.028970"
+      },
+      {
+        "rule": "毕法赋: 卯加干 → 喜事临门，亥加卯 → 家宅安宁，未加亥 → 家宅昌盛，丑加未 → 家宅兴旺",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:21:42.028970"
+      },
+      {
+        "rule": "初传卯 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:21:42.028970"
+      },
+      {
+        "rule": "中传亥 → 吉",
+        "source": "distillation",
+        "zhanshi": "家宅",
+        "created_at": "2026-08-28T09:21:42.028970"
+      }
+    ]
+  }
+}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>仪度六壬择日 - 简化版</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            margin: 20px;
+            background: linear-gradient(180deg, #e0f7fa 0%, #b2ebf2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #00695c;
+            margin-bottom: 30px;
+        }
+        .status {
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+        }
+        .success { background: #c8e6c9; color: #2e7d32; }
+        .error { background: #ffcdd2; color: #c62828; }
+        .loading { background: #fff9c4; color: #f57f17; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 仪度六壬择日系统</h1>
+        <div id="status" class="status loading">正在检查系统状态...</div>
+        <div id="details" style="margin-top: 20px;"></div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+        
+        async function checkSystem() {
+            const statusDiv = document.getElementById('status');
+            const detailsDiv = document.getElementById('details');
+            
+            try {
+                statusDiv.textContent = '正在连接API服务器...';
+                
+                const response = await fetch(API_BASE_URL + '/api/health');
+                
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+                
+                const data = await response.json();
+                
+                statusDiv.textContent = '✅ 系统正常运行';
+                statusDiv.className = 'status success';
+                
+                detailsDiv.innerHTML = 
+                    '<h3>服务器信息:</h3>' +
+                    '<pre>' + JSON.stringify(data, null, 2) + '</pre>' +
+                    '<p style="margin-top: 20px;"><a href="stock_dashboard.html" style="padding: 10px 20px; background: #00695c; color: white; text-decoration: none; border-radius: 5px;">进入完整系统</a></p>';
+                
+            } catch (error) {
+                statusDiv.textContent = '❌ 无法连接到API服务器';
+                statusDiv.className = 'status error';
+                
+                detailsDiv.innerHTML = 
+                    '<h3>错误信息:</h3>' +
+                    '<p>' + error.message + '</p>' +
+                    '<h3>解决方案:</h3>' +
+                    '<ol>' +
+                    '<li>确认API服务器正在运行</li>' +
+                    '<li>检查端口8000是否被占用</li>' +
+                    '<li>尝试运行: python api_server.py</li>' +
+                    '</ol>';
+            }
+        }
+        
+        checkSystem();
+    </script>
+</body>
+</html>

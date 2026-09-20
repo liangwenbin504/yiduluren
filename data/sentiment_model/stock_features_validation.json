@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-08-28 04:26:55",
+  "results": {
+    "stock_features": "✅",
+    "stock_leaders": "✅",
+    "training_with_stock": "✅",
+    "avg_r2_with_stock": 0.7036,
+    "comparison": "✅",
+    "improvement": 0.006060000000000065,
+    "prediction": "✅"
+  },
+  "all_passed": true,
+  "feature_columns": 49,
+  "stock_feature_columns": 28,
+  "stock_leaders_count": 50
+}

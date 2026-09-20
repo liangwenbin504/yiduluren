@@ -1,0 +1,17 @@
+[Unit]
+Description=仪度六壬择日 Dashboard (waitress)
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/liuren
+ExecStart=/opt/liuren/venv/bin/python /opt/liuren/start_with_waitress.py
+Restart=always
+RestartSec=5
+Environment=PORT=5555
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

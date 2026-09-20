@@ -1,0 +1,497 @@
+{
+  "generated_at": "2026-08-28T20:00:00",
+  "total_rules": 284,
+  "upgraded_count": 55,
+  "skipped_count": 0,
+  "upgraded_rules": [
+    {
+      "index": 12,
+      "zhanshi": "占病",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "疾病以官鬼为用，子孙为忌，父母为辅，此为治病之法",
+      "new_bifa": "疾病以官鬼为用，子孙为忌，父母为辅，此为治病之法"
+    },
+    {
+      "index": 14,
+      "zhanshi": "占病",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "疾病以官鬼为用，子孙为忌，父母为辅，此为治病之法",
+      "new_bifa": "疾病以官鬼为用，子孙为忌，父母为辅，此为治病之法"
+    },
+    {
+      "index": 15,
+      "zhanshi": "占病",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "疾病以官鬼为用，子孙为忌，父母为辅，此为治病之法",
+      "new_bifa": "疾病以官鬼为用，子孙为忌，父母为辅，此为治病之法"
+    },
+    {
+      "index": 16,
+      "zhanshi": "占病",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "疾病以官鬼为用，子孙为忌，父母为辅，此为治病之法",
+      "new_bifa": "疾病以官鬼为用，子孙为忌，父母为辅，此为治病之法"
+    },
+    {
+      "index": 18,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "婚姻以合为主，六合为上婚，其次三合为良配",
+      "new_bifa": "婚姻以合为主，六合为上婚，其次三合为良配"
+    },
+    {
+      "index": 19,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "婚姻以合为主，六合为上婚，其次三合为良配",
+      "new_bifa": "婚姻以合为主，六合为上婚，其次三合为良配"
+    },
+    {
+      "index": 20,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "婚姻以合为主，六合为上婚，其次三合为良配",
+      "new_bifa": "婚姻以合为主，六合为上婚，其次三合为良配"
+    },
+    {
+      "index": 21,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "婚姻以合为主，六合为上婚，其次三合为良配",
+      "new_bifa": "婚姻以合为主，六合为上婚，其次三合为良配"
+    },
+    {
+      "index": 22,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "婚姻以合为主，六合为上婚，其次三合为良配",
+      "new_bifa": "婚姻以合为主，六合为上婚，其次三合为良配"
+    },
+    {
+      "index": 23,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "婚姻以合为主，六合为上婚，其次三合为良配",
+      "new_bifa": "婚姻以合为主，六合为上婚，其次三合为良配"
+    },
+    {
+      "index": 24,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "婚姻以合为主，六合为上婚，其次三合为良配",
+      "new_bifa": "婚姻以合为主，六合为上婚，其次三合为良配"
+    },
+    {
+      "index": 25,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "婚姻以合为主，六合为上婚，其次三合为良配",
+      "new_bifa": "婚姻以合为主，六合为上婚，其次三合为良配"
+    },
+    {
+      "index": 26,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "干为夫，支为妇，干支相合，夫妇和睦如胶漆",
+      "new_bifa": "夫妇芜淫各有私，干支互被上神克，既无夫妇好合之情"
+    },
+    {
+      "index": 27,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "婚姻以合为主，六合为上婚，其次三合为良配",
+      "new_bifa": "婚姻以合为主，六合为上婚，其次三合为良配"
+    },
+    {
+      "index": 28,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "婚姻以合为主，六合为上婚，其次三合为良配",
+      "new_bifa": "婚姻以合为主，六合为上婚，其次三合为良配"
+    },
+    {
+      "index": 29,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "婚姻以合为主，六合为上婚，其次三合为良配",
+      "new_bifa": "婚姻以合为主，六合为上婚，其次三合为良配"
+    },
+    {
+      "index": 30,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "婚姻以合为主，六合为上婚，其次三合为良配",
+      "new_bifa": "婚姻以合为主，六合为上婚，其次三合为良配"
+    },
+    {
+      "index": 31,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "干为夫，支为妇，干支相合，夫妇和睦如胶漆",
+      "new_bifa": "夫妇芜淫各有私，干支互被上神克，既无夫妇好合之情"
+    },
+    {
+      "index": 32,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "婚姻以合为主，六合为上婚，其次三合为良配",
+      "new_bifa": "婚姻以合为主，六合为上婚，其次三合为良配"
+    },
+    {
+      "index": 33,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "婚姻以合为主，六合为上婚，其次三合为良配",
+      "new_bifa": "婚姻以合为主，六合为上婚，其次三合为良配"
+    },
+    {
+      "index": 34,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "婚姻以合为主，六合为上婚，其次三合为良配",
+      "new_bifa": "婚姻以合为主，六合为上婚，其次三合为良配"
+    },
+    {
+      "index": 35,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "婚姻以合为主，六合为上婚，其次三合为良配",
+      "new_bifa": "婚姻以合为主，六合为上婚，其次三合为良配"
+    },
+    {
+      "index": 36,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "干为夫，支为妇，干支相合，夫妇和睦如胶漆",
+      "new_bifa": "夫妇芜淫各有私，干支互被上神克，既无夫妇好合之情"
+    },
+    {
+      "index": 37,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "婚姻以合为主，六合为上婚，其次三合为良配",
+      "new_bifa": "婚姻以合为主，六合为上婚，其次三合为良配"
+    },
+    {
+      "index": 38,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "婚姻以合为主，六合为上婚，其次三合为良配",
+      "new_bifa": "婚姻以合为主，六合为上婚，其次三合为良配"
+    },
+    {
+      "index": 39,
+      "zhanshi": "婚姻",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "婚姻以合为主，六合为上婚，其次三合为良配",
+      "new_bifa": "婚姻以合为主，六合为上婚，其次三合为良配"
+    },
+    {
+      "index": 41,
+      "zhanshi": "出行",
+      "old_quality": 0.75,
+      "new_quality": 0.8,
+      "old_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则",
+      "new_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则"
+    },
+    {
+      "index": 42,
+      "zhanshi": "出行",
+      "old_quality": 0.75,
+      "new_quality": 0.8,
+      "old_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则",
+      "new_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则"
+    },
+    {
+      "index": 43,
+      "zhanshi": "出行",
+      "old_quality": 0.75,
+      "new_quality": 0.8,
+      "old_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则",
+      "new_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则"
+    },
+    {
+      "index": 44,
+      "zhanshi": "出行",
+      "old_quality": 0.75,
+      "new_quality": 0.8,
+      "old_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则",
+      "new_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则"
+    },
+    {
+      "index": 45,
+      "zhanshi": "出行",
+      "old_quality": 0.75,
+      "new_quality": 0.8,
+      "old_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则",
+      "new_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则"
+    },
+    {
+      "index": 46,
+      "zhanshi": "出行",
+      "old_quality": 0.75,
+      "new_quality": 0.8,
+      "old_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则",
+      "new_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则"
+    },
+    {
+      "index": 47,
+      "zhanshi": "出行",
+      "old_quality": 0.75,
+      "new_quality": 0.8,
+      "old_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则",
+      "new_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则"
+    },
+    {
+      "index": 48,
+      "zhanshi": "出行",
+      "old_quality": 0.75,
+      "new_quality": 0.8,
+      "old_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则",
+      "new_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则"
+    },
+    {
+      "index": 49,
+      "zhanshi": "出行",
+      "old_quality": 0.75,
+      "new_quality": 0.8,
+      "old_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则",
+      "new_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则"
+    },
+    {
+      "index": 50,
+      "zhanshi": "出行",
+      "old_quality": 0.75,
+      "new_quality": 0.8,
+      "old_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则",
+      "new_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则"
+    },
+    {
+      "index": 51,
+      "zhanshi": "出行",
+      "old_quality": 0.75,
+      "new_quality": 0.8,
+      "old_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则",
+      "new_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则"
+    },
+    {
+      "index": 52,
+      "zhanshi": "出行",
+      "old_quality": 0.75,
+      "new_quality": 0.8,
+      "old_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则",
+      "new_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则"
+    },
+    {
+      "index": 53,
+      "zhanshi": "出行",
+      "old_quality": 0.75,
+      "new_quality": 0.8,
+      "old_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则",
+      "new_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则"
+    },
+    {
+      "index": 54,
+      "zhanshi": "出行",
+      "old_quality": 0.75,
+      "new_quality": 0.8,
+      "old_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则",
+      "new_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则"
+    },
+    {
+      "index": 55,
+      "zhanshi": "出行",
+      "old_quality": 0.75,
+      "new_quality": 0.8,
+      "old_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则",
+      "new_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则"
+    },
+    {
+      "index": 56,
+      "zhanshi": "出行",
+      "old_quality": 0.75,
+      "new_quality": 0.8,
+      "old_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则",
+      "new_bifa": "出行以财为用，官鬼为忌，子孙为辅，此为远行之准则"
+    },
+    {
+      "index": 57,
+      "zhanshi": "官讼",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "官讼以官鬼为用，子孙为忌，财爻为辅，此为断讼之法",
+      "new_bifa": "官讼以官鬼为用，子孙为忌，财爻为辅，此为断讼之法"
+    },
+    {
+      "index": 58,
+      "zhanshi": "官讼",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "官讼以官鬼为用，子孙为忌，财爻为辅，此为断讼之法",
+      "new_bifa": "官讼以官鬼为用，子孙为忌，财爻为辅，此为断讼之法"
+    },
+    {
+      "index": 59,
+      "zhanshi": "官讼",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "官讼以官鬼为用，子孙为忌，财爻为辅，此为断讼之法",
+      "new_bifa": "官讼以官鬼为用，子孙为忌，财爻为辅，此为断讼之法"
+    },
+    {
+      "index": 60,
+      "zhanshi": "官讼",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "官讼以官鬼为用，子孙为忌，财爻为辅，此为断讼之法",
+      "new_bifa": "官讼以官鬼为用，子孙为忌，财爻为辅，此为断讼之法"
+    },
+    {
+      "index": 61,
+      "zhanshi": "官讼",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "官讼以官鬼为用，子孙为忌，财爻为辅，此为断讼之法",
+      "new_bifa": "官讼以官鬼为用，子孙为忌，财爻为辅，此为断讼之法"
+    },
+    {
+      "index": 62,
+      "zhanshi": "官讼",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "官讼以官鬼为用，子孙为忌，财爻为辅，此为断讼之法",
+      "new_bifa": "官讼以官鬼为用，子孙为忌，财爻为辅，此为断讼之法"
+    },
+    {
+      "index": 63,
+      "zhanshi": "官讼",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "官讼以官鬼为用，子孙为忌，财爻为辅，此为断讼之法",
+      "new_bifa": "官讼以官鬼为用，子孙为忌，财爻为辅，此为断讼之法"
+    },
+    {
+      "index": 64,
+      "zhanshi": "官讼",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "官讼以官鬼为用，子孙为忌，财爻为辅，此为断讼之法",
+      "new_bifa": "官讼以官鬼为用，子孙为忌，财爻为辅，此为断讼之法"
+    },
+    {
+      "index": 65,
+      "zhanshi": "官讼",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "官讼以官鬼为用，子孙为忌，财爻为辅，此为断讼之法",
+      "new_bifa": "官讼以官鬼为用，子孙为忌，财爻为辅，此为断讼之法"
+    },
+    {
+      "index": 66,
+      "zhanshi": "官讼",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "官讼以官鬼为用，子孙为忌，财爻为辅，此为断讼之法",
+      "new_bifa": "官讼以官鬼为用，子孙为忌，财爻为辅，此为断讼之法"
+    },
+    {
+      "index": 68,
+      "zhanshi": "功名",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "功名以官鬼为用，父母为辅，财爻为忌，此为应试之要",
+      "new_bifa": "功名以官鬼为用，父母为辅，财爻为忌，此为应试之要"
+    },
+    {
+      "index": 69,
+      "zhanshi": "功名",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "功名以官鬼为用，父母为辅，财爻为忌，此为应试之要",
+      "new_bifa": "功名以官鬼为用，父母为辅，财爻为忌，此为应试之要"
+    },
+    {
+      "index": 71,
+      "zhanshi": "功名",
+      "old_quality": 0.75,
+      "new_quality": 0.9,
+      "old_bifa": "功名以官鬼为用，父母为辅，财爻为忌，此为应试之要",
+      "new_bifa": "功名以官鬼为用，父母为辅，财爻为忌，此为应试之要"
+    }
+  ],
+  "quality_distribution": {
+    "high(≥0.8)": 284,
+    "medium(0.5-0.8)": 0,
+    "low(<0.5)": 0
+  },
+  "zhanshi_quality": {
+    "占宅": {
+      "count": 11,
+      "avg_quality": 0.9,
+      "min_quality": 0.8999999999999999,
+      "max_quality": 0.8999999999999999
+    },
+    "占病": {
+      "count": 7,
+      "avg_quality": 0.9,
+      "min_quality": 0.9,
+      "max_quality": 0.9
+    },
+    "婚姻": {
+      "count": 22,
+      "avg_quality": 0.9,
+      "min_quality": 0.9,
+      "max_quality": 0.9
+    },
+    "出行": {
+      "count": 17,
+      "avg_quality": 0.81,
+      "min_quality": 0.8,
+      "max_quality": 0.9
+    },
+    "官讼": {
+      "count": 10,
+      "avg_quality": 0.9,
+      "min_quality": 0.9,
+      "max_quality": 0.9
+    },
+    "功名": {
+      "count": 5,
+      "avg_quality": 0.9,
+      "min_quality": 0.8999999999999999,
+      "max_quality": 0.9
+    },
+    "家宅": {
+      "count": 212,
+      "avg_quality": 0.9,
+      "min_quality": 0.8999999999999999,
+      "max_quality": 0.8999999999999999
+    }
+  }
+}

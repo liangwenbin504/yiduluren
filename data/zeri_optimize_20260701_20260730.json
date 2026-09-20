@@ -1,0 +1,370 @@
+{
+  "meta": {
+    "start_date": "2026-07-01",
+    "end_date": "2026-07-30",
+    "days": 30,
+    "mountains": 3,
+    "elapsed_stats": {
+      "days": 30,
+      "phase1_checked": 1080,
+      "phase2_checked": 300,
+      "phase3_checked": 60,
+      "phase1_candidates": 300,
+      "phase2_candidates": 60,
+      "phase3_candidates": 15
+    }
+  },
+  "results": {
+    "壬": [
+      {
+        "date": "2026-07-04",
+        "shichen": "寅",
+        "mountain": "壬",
+        "sizhu": "丙午 甲午 己卯 丙寅",
+        "total_score": 65,
+        "grade": "中吉",
+        "phase1_score": 45,
+        "phase2_score": 20,
+        "phase3_score": 0,
+        "doushou_classes": {
+          "年": "武财",
+          "月": "元辰",
+          "日": "未知",
+          "时": "武财"
+        },
+        "yuanchen": true,
+        "sanyuan_grade": "",
+        "gong_count": 0,
+        "gong_names": [],
+        "huoma_count": 0,
+        "daoshan_count": 2
+      },
+      {
+        "date": "2026-07-04",
+        "shichen": "午",
+        "mountain": "壬",
+        "sizhu": "丙午 甲午 己卯 庚午",
+        "total_score": 65,
+        "grade": "中吉",
+        "phase1_score": 45,
+        "phase2_score": 20,
+        "phase3_score": 0,
+        "doushou_classes": {
+          "年": "武财",
+          "月": "元辰",
+          "日": "未知",
+          "时": "廉子"
+        },
+        "yuanchen": true,
+        "sanyuan_grade": "",
+        "gong_count": 0,
+        "gong_names": [],
+        "huoma_count": 0,
+        "daoshan_count": 2
+      },
+      {
+        "date": "2026-07-01",
+        "shichen": "申",
+        "mountain": "壬",
+        "sizhu": "丙午 甲午 丙子 丙申",
+        "total_score": 63,
+        "grade": "吉",
+        "phase1_score": 60,
+        "phase2_score": 3,
+        "phase3_score": 0,
+        "doushou_classes": {
+          "年": "武财",
+          "月": "元辰",
+          "日": "武财",
+          "时": "武财"
+        },
+        "yuanchen": true,
+        "sanyuan_grade": "三武格局",
+        "gong_count": 0,
+        "gong_names": [],
+        "huoma_count": 0,
+        "daoshan_count": 0
+      },
+      {
+        "date": "2026-07-04",
+        "shichen": "戌",
+        "mountain": "壬",
+        "sizhu": "丙午 甲午 己卯 甲戌",
+        "total_score": 63,
+        "grade": "吉",
+        "phase1_score": 45,
+        "phase2_score": 18,
+        "phase3_score": 0,
+        "doushou_classes": {
+          "年": "武财",
+          "月": "元辰",
+          "日": "未知",
+          "时": "元辰"
+        },
+        "yuanchen": true,
+        "sanyuan_grade": "",
+        "gong_count": 0,
+        "gong_names": [],
+        "huoma_count": 0,
+        "daoshan_count": 2
+      },
+      {
+        "date": "2026-07-05",
+        "shichen": "申",
+        "mountain": "壬",
+        "sizhu": "丙午 甲午 庚辰 甲申",
+        "total_score": 60,
+        "grade": "吉",
+        "phase1_score": 55,
+        "phase2_score": 5,
+        "phase3_score": 0,
+        "doushou_classes": {
+          "年": "武财",
+          "月": "元辰",
+          "日": "廉子",
+          "时": "元辰"
+        },
+        "yuanchen": true,
+        "sanyuan_grade": "",
+        "gong_count": 0,
+        "gong_names": [],
+        "huoma_count": 0,
+        "daoshan_count": 0
+      }
+    ],
+    "子": [
+      {
+        "date": "2026-07-04",
+        "shichen": "寅",
+        "mountain": "子",
+        "sizhu": "丙午 甲午 己卯 丙寅",
+        "total_score": 65,
+        "grade": "中吉",
+        "phase1_score": 45,
+        "phase2_score": 20,
+        "phase3_score": 0,
+        "doushou_classes": {
+          "年": "武财",
+          "月": "元辰",
+          "日": "未知",
+          "时": "武财"
+        },
+        "yuanchen": true,
+        "sanyuan_grade": "",
+        "gong_count": 0,
+        "gong_names": [],
+        "huoma_count": 0,
+        "daoshan_count": 2
+      },
+      {
+        "date": "2026-07-04",
+        "shichen": "午",
+        "mountain": "子",
+        "sizhu": "丙午 甲午 己卯 庚午",
+        "total_score": 65,
+        "grade": "中吉",
+        "phase1_score": 45,
+        "phase2_score": 20,
+        "phase3_score": 0,
+        "doushou_classes": {
+          "年": "武财",
+          "月": "元辰",
+          "日": "未知",
+          "时": "廉子"
+        },
+        "yuanchen": true,
+        "sanyuan_grade": "",
+        "gong_count": 0,
+        "gong_names": [],
+        "huoma_count": 0,
+        "daoshan_count": 2
+      },
+      {
+        "date": "2026-07-01",
+        "shichen": "申",
+        "mountain": "子",
+        "sizhu": "丙午 甲午 丙子 丙申",
+        "total_score": 63,
+        "grade": "吉",
+        "phase1_score": 60,
+        "phase2_score": 3,
+        "phase3_score": 0,
+        "doushou_classes": {
+          "年": "武财",
+          "月": "元辰",
+          "日": "武财",
+          "时": "武财"
+        },
+        "yuanchen": true,
+        "sanyuan_grade": "三武格局",
+        "gong_count": 0,
+        "gong_names": [],
+        "huoma_count": 0,
+        "daoshan_count": 0
+      },
+      {
+        "date": "2026-07-04",
+        "shichen": "戌",
+        "mountain": "子",
+        "sizhu": "丙午 甲午 己卯 甲戌",
+        "total_score": 63,
+        "grade": "吉",
+        "phase1_score": 45,
+        "phase2_score": 18,
+        "phase3_score": 0,
+        "doushou_classes": {
+          "年": "武财",
+          "月": "元辰",
+          "日": "未知",
+          "时": "元辰"
+        },
+        "yuanchen": true,
+        "sanyuan_grade": "",
+        "gong_count": 0,
+        "gong_names": [],
+        "huoma_count": 0,
+        "daoshan_count": 2
+      },
+      {
+        "date": "2026-07-05",
+        "shichen": "申",
+        "mountain": "子",
+        "sizhu": "丙午 甲午 庚辰 甲申",
+        "total_score": 60,
+        "grade": "吉",
+        "phase1_score": 55,
+        "phase2_score": 5,
+        "phase3_score": 0,
+        "doushou_classes": {
+          "年": "武财",
+          "月": "元辰",
+          "日": "廉子",
+          "时": "元辰"
+        },
+        "yuanchen": true,
+        "sanyuan_grade": "",
+        "gong_count": 0,
+        "gong_names": [],
+        "huoma_count": 0,
+        "daoshan_count": 0
+      }
+    ],
+    "癸": [
+      {
+        "date": "2026-07-24",
+        "shichen": "酉",
+        "mountain": "癸",
+        "sizhu": "丙午 乙未 己亥 癸酉",
+        "total_score": 73,
+        "grade": "中吉",
+        "phase1_score": 55,
+        "phase2_score": 18,
+        "phase3_score": 0,
+        "doushou_classes": {
+          "年": "未知",
+          "月": "武财",
+          "日": "廉子",
+          "时": "元辰"
+        },
+        "yuanchen": true,
+        "sanyuan_grade": "",
+        "gong_count": 0,
+        "gong_names": [],
+        "huoma_count": 0,
+        "daoshan_count": 2
+      },
+      {
+        "date": "2026-07-04",
+        "shichen": "酉",
+        "mountain": "癸",
+        "sizhu": "丙午 甲午 己卯 癸酉",
+        "total_score": 70,
+        "grade": "中吉",
+        "phase1_score": 55,
+        "phase2_score": 15,
+        "phase3_score": 0,
+        "doushou_classes": {
+          "年": "未知",
+          "月": "未知",
+          "日": "廉子",
+          "时": "元辰"
+        },
+        "yuanchen": true,
+        "sanyuan_grade": "",
+        "gong_count": 0,
+        "gong_names": [],
+        "huoma_count": 0,
+        "daoshan_count": 2
+      },
+      {
+        "date": "2026-07-14",
+        "shichen": "酉",
+        "mountain": "癸",
+        "sizhu": "丙午 乙未 己丑 癸酉",
+        "total_score": 70,
+        "grade": "中吉",
+        "phase1_score": 55,
+        "phase2_score": 15,
+        "phase3_score": 0,
+        "doushou_classes": {
+          "年": "未知",
+          "月": "武财",
+          "日": "廉子",
+          "时": "元辰"
+        },
+        "yuanchen": true,
+        "sanyuan_grade": "",
+        "gong_count": 0,
+        "gong_names": [],
+        "huoma_count": 0,
+        "daoshan_count": 2
+      },
+      {
+        "date": "2026-07-14",
+        "shichen": "丑",
+        "mountain": "癸",
+        "sizhu": "丙午 乙未 己丑 乙丑",
+        "total_score": 65,
+        "grade": "中吉",
+        "phase1_score": 45,
+        "phase2_score": 20,
+        "phase3_score": 0,
+        "doushou_classes": {
+          "年": "未知",
+          "月": "武财",
+          "日": "廉子",
+          "时": "武财"
+        },
+        "yuanchen": false,
+        "sanyuan_grade": "",
+        "gong_count": 0,
+        "gong_names": [],
+        "huoma_count": 0,
+        "daoshan_count": 2
+      },
+      {
+        "date": "2026-07-14",
+        "shichen": "巳",
+        "mountain": "癸",
+        "sizhu": "丙午 乙未 己丑 己巳",
+        "total_score": 65,
+        "grade": "中吉",
+        "phase1_score": 45,
+        "phase2_score": 20,
+        "phase3_score": 0,
+        "doushou_classes": {
+          "年": "未知",
+          "月": "武财",
+          "日": "廉子",
+          "时": "廉子"
+        },
+        "yuanchen": false,
+        "sanyuan_grade": "",
+        "gong_count": 0,
+        "gong_names": [],
+        "huoma_count": 0,
+        "daoshan_count": 2
+      }
+    ]
+  }
+}

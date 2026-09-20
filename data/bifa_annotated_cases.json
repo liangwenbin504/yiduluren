@@ -1,0 +1,6286 @@
+{
+  "_meta": {
+    "total_cases": 334,
+    "detection_date": "2026-07-29",
+    "engine_version": "v1.0-batch1+batch2",
+    "rules_detectable": 100
+  },
+  "stats": {
+    "cases_with_rules": 311,
+    "total_rules_detected": 909,
+    "coverage_pct": 93.1,
+    "signal_distribution": {
+      "涨": 141,
+      "跌": 111,
+      "震荡": 59,
+      "平": 23
+    },
+    "rule_frequency": {
+      "1": 125,
+      "76": 92,
+      "38": 74,
+      "68": 58,
+      "83": 58,
+      "37": 39,
+      "6": 37,
+      "58": 36,
+      "99": 30,
+      "13": 29,
+      "95": 28,
+      "34": 28,
+      "5": 27,
+      "93": 26,
+      "96": 23,
+      "19": 22,
+      "26": 22,
+      "20": 22,
+      "97": 19,
+      "45": 18,
+      "94": 17,
+      "73": 16,
+      "31": 15,
+      "25": 12,
+      "33": 10,
+      "32": 6,
+      "42": 5,
+      "52": 4,
+      "82": 3,
+      "81": 2,
+      "14": 2,
+      "51": 2,
+      "57": 2
+    }
+  },
+  "cases": [
+    {
+      "index": 0,
+      "ganzhi": "甲子",
+      "sanchuan": [
+        "寅",
+        "巳",
+        "申"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "鬼贼当时无畏忌",
+        "彼此猜忌害相随",
+        "制鬼之位乃良医",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "涨",
+      "signal_strength": 0.58,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 1,
+      "ganzhi": "甲子",
+      "sanchuan": [
+        "辰",
+        "巳",
+        "午"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "末助初兮三等论"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 2,
+      "ganzhi": "甲子",
+      "sanchuan": [
+        "辰",
+        "午",
+        "申"
+      ],
+      "kege": "进间传",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "六阳数足须公用",
+        "制鬼之位乃良医",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.8,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 3,
+      "ganzhi": "甲子",
+      "sanchuan": [
+        "辰",
+        "申",
+        "子"
+      ],
+      "kege": "润下课",
+      "bifa_rules": [
+        "三传递生人举荐",
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "六阳数足须公用",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "涨",
+      "signal_strength": 0.85,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 4,
+      "ganzhi": "甲子",
+      "sanchuan": [
+        "寅",
+        "酉",
+        "辰"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "罡塞鬼户任谋为",
+        "用破身心无所归",
+        "妄用三传灾福异"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "震荡",
+      "signal_strength": 0.43,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 5,
+      "ganzhi": "甲子",
+      "sanchuan": [
+        "午",
+        "卯",
+        "子"
+      ],
+      "kege": "高盖乘轩",
+      "bifa_rules": [
+        "前后引从升迁吉"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 6,
+      "ganzhi": "乙丑",
+      "sanchuan": [
+        "寅",
+        "未",
+        "子"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "胎财生气妻怀孕",
+        "前后引从升迁吉",
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 7,
+      "ganzhi": "丙寅",
+      "sanchuan": [
+        "子",
+        "未",
+        "寅"
+      ],
+      "kege": "殃咎课",
+      "bifa_rules": [
+        "三传互克众人欺",
+        "彼此猜忌害相随",
+        "制鬼之位乃良医",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "跌",
+      "signal_strength": 0.73,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 8,
+      "ganzhi": "丙寅",
+      "sanchuan": [
+        "巳",
+        "申",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 9,
+      "ganzhi": "丙寅",
+      "sanchuan": [
+        "辰",
+        "午",
+        "申"
+      ],
+      "kege": "进间传",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 10,
+      "ganzhi": "丁卯",
+      "sanchuan": [
+        "卯",
+        "酉",
+        "卯"
+      ],
+      "kege": "三阴",
+      "bifa_rules": [
+        "六阴相继尽昏迷"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 11,
+      "ganzhi": "丁卯",
+      "sanchuan": [
+        "子",
+        "酉",
+        "午"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "胎财生气妻怀孕",
+        "前后引从升迁吉",
+        "鬼贼当时无畏忌",
+        "闭口卦体两般推",
+        "妄用三传灾福异",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 6,
+      "stock_signal": "涨",
+      "signal_strength": 0.58,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 12,
+      "ganzhi": "丁卯",
+      "sanchuan": [
+        "酉",
+        "子",
+        "卯"
+      ],
+      "kege": "亨通课",
+      "bifa_rules": [
+        "三传递生人举荐",
+        "前后引从升迁吉",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.75,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 13,
+      "ganzhi": "戊辰",
+      "sanchuan": [
+        "子",
+        "申",
+        "辰"
+      ],
+      "kege": "润下课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 14,
+      "ganzhi": "戊辰",
+      "sanchuan": [
+        "寅",
+        "午",
+        "午"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "鬼贼当时无畏忌"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 15,
+      "ganzhi": "己巳",
+      "sanchuan": [
+        "卯",
+        "寅",
+        "丑"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "鬼贼当时无畏忌",
+        "六爻现卦防其克",
+        "尊崇传内遇三奇"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.8,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 16,
+      "ganzhi": "庚午",
+      "sanchuan": [
+        "子",
+        "申",
+        "辰"
+      ],
+      "kege": "润下课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "六阳数足须公用",
+        "闭口卦体两般推",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "涨",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 17,
+      "ganzhi": "庚午",
+      "sanchuan": [
+        "午",
+        "巳",
+        "辰"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "鬼贼当时无畏忌",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 0.5,
+      "advice": "毕法赋信号偏弱，参考价值有限"
+    },
+    {
+      "index": 18,
+      "ganzhi": "庚午",
+      "sanchuan": [
+        "午",
+        "巳",
+        "辰"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "震荡",
+      "signal_strength": 1.0,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 19,
+      "ganzhi": "庚午",
+      "sanchuan": [
+        "酉",
+        "子",
+        "卯"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "金日逢丁凶祸动",
+        "前后引从升迁吉",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 0.62,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 20,
+      "ganzhi": "庚午",
+      "sanchuan": [
+        "申",
+        "寅",
+        "巳"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "鬼贼当时无畏忌",
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.57,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 21,
+      "ganzhi": "壬申",
+      "sanchuan": [
+        "丑",
+        "寅",
+        "卯"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "水日逢丁财动之",
+        "前后引从升迁吉",
+        "彼此猜忌害相随",
+        "制鬼之位乃良医",
+        "苦去甘来乐里悲",
+        "常问不应逢吉象",
+        "尊崇传内遇三奇"
+      ],
+      "bifa_count": 7,
+      "stock_signal": "涨",
+      "signal_strength": 0.63,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 22,
+      "ganzhi": "壬申",
+      "sanchuan": [
+        "子",
+        "寅",
+        "辰"
+      ],
+      "kege": "进间传",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "彼此猜忌害相随",
+        "制鬼之位乃良医",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.55,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 23,
+      "ganzhi": "癸酉",
+      "sanchuan": [
+        "未",
+        "子",
+        "巳"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "末助初兮三等论"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 24,
+      "ganzhi": "癸酉",
+      "sanchuan": [
+        "午",
+        "卯",
+        "子"
+      ],
+      "kege": "高盖乘轩",
+      "bifa_rules": [
+        "水日逢丁财动之",
+        "前后引从升迁吉"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 25,
+      "ganzhi": "癸酉",
+      "sanchuan": [
+        "丑",
+        "卯",
+        "巳"
+      ],
+      "kege": "进间传",
+      "bifa_rules": [
+        "水日逢丁财动之",
+        "前后引从升迁吉",
+        "六阴相继尽昏迷",
+        "制鬼之位乃良医",
+        "末助初兮三等论",
+        "常问不应逢吉象",
+        "昼夜贵加求两贵"
+      ],
+      "bifa_count": 7,
+      "stock_signal": "涨",
+      "signal_strength": 0.72,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 26,
+      "ganzhi": "甲戌",
+      "sanchuan": [
+        "辰",
+        "巳",
+        "午"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "末助初兮三等论"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 27,
+      "ganzhi": "甲戌",
+      "sanchuan": [
+        "辰",
+        "巳",
+        "午"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "末助初兮三等论"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 28,
+      "ganzhi": "甲戌",
+      "sanchuan": [
+        "寅",
+        "午",
+        "戌"
+      ],
+      "kege": "炎上课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "六阳数足须公用"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 29,
+      "ganzhi": "甲戌",
+      "sanchuan": [
+        "寅",
+        "午",
+        "戌"
+      ],
+      "kege": "炎上课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "六阳数足须公用"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 30,
+      "ganzhi": "甲戌",
+      "sanchuan": [
+        "戌",
+        "午",
+        "寅"
+      ],
+      "kege": "炎上课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "六阳数足须公用",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.71,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 31,
+      "ganzhi": "乙亥",
+      "sanchuan": [
+        "未",
+        "卯",
+        "亥"
+      ],
+      "kege": "曲直课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "用破身心无所归",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.55,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 32,
+      "ganzhi": "乙亥",
+      "sanchuan": [
+        "未",
+        "卯",
+        "亥"
+      ],
+      "kege": "曲直课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "用破身心无所归",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.55,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 33,
+      "ganzhi": "乙亥",
+      "sanchuan": [
+        "辰",
+        "亥",
+        "巳"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "末助初兮三等论",
+        "妄用三传灾福异"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.83,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 34,
+      "ganzhi": "乙亥",
+      "sanchuan": [
+        "丑",
+        "寅",
+        "卯"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "用破身心无所归"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 35,
+      "ganzhi": "乙亥",
+      "sanchuan": [
+        "丑",
+        "寅",
+        "卯"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "用破身心无所归"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 36,
+      "ganzhi": "丙子",
+      "sanchuan": [
+        "子",
+        "未",
+        "寅"
+      ],
+      "kege": "殃咎课",
+      "bifa_rules": [
+        "三传互克众人欺",
+        "彼此猜忌害相随",
+        "制鬼之位乃良医"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 37,
+      "ganzhi": "丙子",
+      "sanchuan": [
+        "子",
+        "未",
+        "寅"
+      ],
+      "kege": "殃咎课",
+      "bifa_rules": [
+        "三传互克众人欺",
+        "彼此猜忌害相随",
+        "制鬼之位乃良医"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 38,
+      "ganzhi": "丙子",
+      "sanchuan": [
+        "巳",
+        "戌",
+        "卯"
+      ],
+      "kege": "铸印",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 39,
+      "ganzhi": "丁丑",
+      "sanchuan": [
+        "子",
+        "亥",
+        "戌"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "胎财死气损胎推",
+        "制鬼之位乃良医",
+        "苦去甘来乐里悲",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "震荡",
+      "signal_strength": 0.33,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 40,
+      "ganzhi": "戊寅",
+      "sanchuan": [
+        "子",
+        "未",
+        "寅"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "用破身心无所归"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 41,
+      "ganzhi": "戊寅",
+      "sanchuan": [
+        "戌",
+        "午",
+        "寅"
+      ],
+      "kege": "炎上课",
+      "bifa_rules": [
+        "有始无终难变易",
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "彼此猜忌害相随",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "跌",
+      "signal_strength": 0.54,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 42,
+      "ganzhi": "戊寅",
+      "sanchuan": [
+        "子",
+        "亥",
+        "戌"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 43,
+      "ganzhi": "戊寅",
+      "sanchuan": [
+        "辰",
+        "巳",
+        "午"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 44,
+      "ganzhi": "己卯",
+      "sanchuan": [
+        "巳",
+        "戌",
+        "卯"
+      ],
+      "kege": "铸印",
+      "bifa_rules": [
+        "鬼贼当时无畏忌",
+        "末助初兮三等论"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 45,
+      "ganzhi": "己卯",
+      "sanchuan": [
+        "巳",
+        "戌",
+        "卯"
+      ],
+      "kege": "铸印",
+      "bifa_rules": [
+        "胎财死气损胎推",
+        "末助初兮三等论"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 46,
+      "ganzhi": "己卯",
+      "sanchuan": [
+        "未",
+        "卯",
+        "亥"
+      ],
+      "kege": "曲直课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "胎财死气损胎推",
+        "前后引从升迁吉",
+        "六阴相继尽昏迷",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "跌",
+      "signal_strength": 0.57,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 47,
+      "ganzhi": "己卯",
+      "sanchuan": [
+        "未",
+        "卯",
+        "亥"
+      ],
+      "kege": "曲直课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "六阴相继尽昏迷",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.55,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 48,
+      "ganzhi": "己卯",
+      "sanchuan": [
+        "未",
+        "卯",
+        "亥"
+      ],
+      "kege": "曲直课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "六阴相继尽昏迷",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.55,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 49,
+      "ganzhi": "己卯",
+      "sanchuan": [
+        "辰",
+        "巳",
+        "午"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 50,
+      "ganzhi": "己卯",
+      "sanchuan": [
+        "亥",
+        "丑",
+        "卯"
+      ],
+      "kege": "进间传",
+      "bifa_rules": [
+        "传墓入墓分憎爱",
+        "前后引从升迁吉",
+        "六阴相继尽昏迷",
+        "用破身心无所归"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "跌",
+      "signal_strength": 0.55,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 51,
+      "ganzhi": "庚辰",
+      "sanchuan": [
+        "寅",
+        "未",
+        "子"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "末助初兮三等论"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 52,
+      "ganzhi": "庚辰",
+      "sanchuan": [
+        "卯",
+        "寅",
+        "丑"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "胎财生气妻怀孕",
+        "金日逢丁凶祸动"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 53,
+      "ganzhi": "辛巳",
+      "sanchuan": [
+        "巳",
+        "亥",
+        "巳"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "前后逼迫难进退",
+        "制鬼之位乃良医",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "震荡",
+      "signal_strength": 0.43,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 54,
+      "ganzhi": "辛巳",
+      "sanchuan": [
+        "午",
+        "寅",
+        "戌"
+      ],
+      "kege": "炎上课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "鬼贼当时无畏忌",
+        "昼夜贵加求两贵"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 55,
+      "ganzhi": "辛巳",
+      "sanchuan": [
+        "午",
+        "寅",
+        "戌"
+      ],
+      "kege": "炎上课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "昼夜贵加求两贵"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 56,
+      "ganzhi": "辛巳",
+      "sanchuan": [
+        "午",
+        "寅",
+        "戌"
+      ],
+      "kege": "炎上课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "昼夜贵加求两贵"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 57,
+      "ganzhi": "辛巳",
+      "sanchuan": [
+        "午",
+        "寅",
+        "戌"
+      ],
+      "kege": "炎上课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "昼夜贵加求两贵"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 58,
+      "ganzhi": "辛巳",
+      "sanchuan": [
+        "午",
+        "寅",
+        "戌"
+      ],
+      "kege": "炎上课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "胎财死气损胎推",
+        "昼夜贵加求两贵"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.62,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 59,
+      "ganzhi": "辛巳",
+      "sanchuan": [
+        "卯",
+        "寅",
+        "丑"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "金日逢丁凶祸动"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 60,
+      "ganzhi": "辛巳",
+      "sanchuan": [
+        "卯",
+        "寅",
+        "丑"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "胎财死气损胎推",
+        "金日逢丁凶祸动"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 61,
+      "ganzhi": "壬午",
+      "sanchuan": [
+        "未",
+        "亥",
+        "卯"
+      ],
+      "kege": "曲直课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "制鬼之位乃良医",
+        "苦去甘来乐里悲",
+        "闭口卦体两般推",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 6,
+      "stock_signal": "涨",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 62,
+      "ganzhi": "壬午",
+      "sanchuan": [
+        "戌",
+        "午",
+        "寅"
+      ],
+      "kege": "炎上课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "制鬼之位乃良医",
+        "苦去甘来乐里悲",
+        "闭口卦体两般推",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 6,
+      "stock_signal": "涨",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 63,
+      "ganzhi": "壬午",
+      "sanchuan": [
+        "巳",
+        "寅",
+        "亥"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 64,
+      "ganzhi": "壬午",
+      "sanchuan": [
+        "寅",
+        "戌",
+        "寅"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "制鬼之位乃良医"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 65,
+      "ganzhi": "壬午",
+      "sanchuan": [
+        "亥",
+        "午",
+        "子"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "妄用三传灾福异"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 0.75,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 66,
+      "ganzhi": "壬午",
+      "sanchuan": [
+        "亥",
+        "午",
+        "子"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "妄用三传灾福异"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 0.75,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 67,
+      "ganzhi": "癸未",
+      "sanchuan": [
+        "辰",
+        "未",
+        "辰"
+      ],
+      "kege": "稼穑课",
+      "bifa_rules": [
+        "胎财生气妻怀孕",
+        "前后逼迫难进退",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "震荡",
+      "signal_strength": 0.43,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 68,
+      "ganzhi": "癸未",
+      "sanchuan": [
+        "未",
+        "丑",
+        "未"
+      ],
+      "kege": "稼穑课",
+      "bifa_rules": [
+        "水日逢丁财动之",
+        "前后引从升迁吉",
+        "六阴相继尽昏迷",
+        "前后逼迫难进退",
+        "闭口卦体两般推",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 6,
+      "stock_signal": "跌",
+      "signal_strength": 0.53,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 69,
+      "ganzhi": "甲申",
+      "sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "胎财死气损胎推",
+        "鬼贼当时无畏忌",
+        "彼此猜忌害相随",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "跌",
+      "signal_strength": 0.89,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 70,
+      "ganzhi": "甲申",
+      "sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 71,
+      "ganzhi": "甲申",
+      "sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 72,
+      "ganzhi": "甲申",
+      "sanchuan": [
+        "辰",
+        "申",
+        "子"
+      ],
+      "kege": "润下课",
+      "bifa_rules": [
+        "三传递生人举荐",
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "六阳数足须公用",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "涨",
+      "signal_strength": 0.85,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 73,
+      "ganzhi": "甲申",
+      "sanchuan": [
+        "辰",
+        "申",
+        "子"
+      ],
+      "kege": "润下课",
+      "bifa_rules": [
+        "三传递生人举荐",
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "六阳数足须公用",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "涨",
+      "signal_strength": 0.85,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 74,
+      "ganzhi": "甲申",
+      "sanchuan": [
+        "子",
+        "巳",
+        "戌"
+      ],
+      "kege": "",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 75,
+      "ganzhi": "甲申",
+      "sanchuan": [
+        "子",
+        "巳",
+        "戌"
+      ],
+      "kege": "",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 76,
+      "ganzhi": "甲申",
+      "sanchuan": [
+        "子",
+        "巳",
+        "戌"
+      ],
+      "kege": "",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 77,
+      "ganzhi": "甲申",
+      "sanchuan": [
+        "寅",
+        "申",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "六阳数足须公用",
+        "用破身心无所归"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.62,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 78,
+      "ganzhi": "甲申",
+      "sanchuan": [
+        "戌",
+        "巳",
+        "子"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "胎财死气损胎推"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 79,
+      "ganzhi": "乙酉",
+      "sanchuan": [
+        "亥",
+        "子",
+        "丑"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 80,
+      "ganzhi": "乙酉",
+      "sanchuan": [
+        "申",
+        "子",
+        "辰"
+      ],
+      "kege": "润下课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "鬼贼当时无畏忌",
+        "末助初兮三等论",
+        "闭口卦体两般推",
+        "常问不应逢吉象",
+        "昼夜贵加求两贵"
+      ],
+      "bifa_count": 6,
+      "stock_signal": "涨",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 81,
+      "ganzhi": "乙酉",
+      "sanchuan": [
+        "未",
+        "巳",
+        "未"
+      ],
+      "kege": "三阴",
+      "bifa_rules": [
+        "胎财死气损胎推",
+        "用破身心无所归",
+        "喜惧空亡乃妙机",
+        "旬内空亡逐类推"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "跌",
+      "signal_strength": 0.8,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 82,
+      "ganzhi": "丙戌",
+      "sanchuan": [
+        "子",
+        "未",
+        "寅"
+      ],
+      "kege": "殃咎课",
+      "bifa_rules": [
+        "三传互克众人欺",
+        "胎财生气妻怀孕",
+        "鬼贼当时无畏忌",
+        "彼此猜忌害相随",
+        "制鬼之位乃良医",
+        "喜惧空亡乃妙机",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 7,
+      "stock_signal": "跌",
+      "signal_strength": 0.47,
+      "advice": "毕法赋信号偏弱，参考价值有限"
+    },
+    {
+      "index": 83,
+      "ganzhi": "丙戌",
+      "sanchuan": [
+        "酉",
+        "巳",
+        "丑"
+      ],
+      "kege": "从革课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "用破身心无所归",
+        "末助初兮三等论",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "涨",
+      "signal_strength": 0.62,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 84,
+      "ganzhi": "丙戌",
+      "sanchuan": [
+        "酉",
+        "巳",
+        "丑"
+      ],
+      "kege": "从革课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "用破身心无所归",
+        "末助初兮三等论"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.73,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 85,
+      "ganzhi": "丙戌",
+      "sanchuan": [
+        "亥",
+        "申",
+        "巳"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 86,
+      "ganzhi": "丙戌",
+      "sanchuan": [
+        "卯",
+        "寅",
+        "丑"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 87,
+      "ganzhi": "丙戌",
+      "sanchuan": [
+        "亥",
+        "子",
+        "丑"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "制鬼之位乃良医",
+        "苦去甘来乐里悲",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 88,
+      "ganzhi": "丙戌",
+      "sanchuan": [
+        "子",
+        "寅",
+        "辰"
+      ],
+      "kege": "进间传",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "制鬼之位乃良医",
+        "苦去甘来乐里悲"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.75,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 89,
+      "ganzhi": "丙戌",
+      "sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "三传递生人举荐",
+        "前后引从升迁吉",
+        "彼此猜忌害相随",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.55,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 90,
+      "ganzhi": "丙戌",
+      "sanchuan": [
+        "申",
+        "丑",
+        "申"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 91,
+      "ganzhi": "丁亥",
+      "sanchuan": [
+        "巳",
+        "戌",
+        "卯"
+      ],
+      "kege": "铸印",
+      "bifa_rules": [
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 92,
+      "ganzhi": "丁亥",
+      "sanchuan": [
+        "巳",
+        "亥",
+        "巳"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "六阴相继尽昏迷",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 0.62,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 93,
+      "ganzhi": "丁亥",
+      "sanchuan": [
+        "巳",
+        "亥",
+        "巳"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "六阴相继尽昏迷",
+        "鬼贼当时无畏忌",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "跌",
+      "signal_strength": 0.56,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 94,
+      "ganzhi": "丁亥",
+      "sanchuan": [
+        "巳",
+        "寅",
+        "亥"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 95,
+      "ganzhi": "丁亥",
+      "sanchuan": [
+        "巳",
+        "寅",
+        "亥"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 96,
+      "ganzhi": "丁亥",
+      "sanchuan": [
+        "巳",
+        "寅",
+        "亥"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "鬼贼当时无畏忌",
+        "彼此猜忌害相随",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 0.83,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 97,
+      "ganzhi": "丁亥",
+      "sanchuan": [
+        "酉",
+        "巳",
+        "酉"
+      ],
+      "kege": "三阴",
+      "bifa_rules": [
+        "胎财生气妻怀孕",
+        "六阴相继尽昏迷",
+        "用破身心无所归",
+        "妄用三传灾福异"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "跌",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 98,
+      "ganzhi": "丁亥",
+      "sanchuan": [
+        "戌",
+        "酉",
+        "申"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 99,
+      "ganzhi": "丁亥",
+      "sanchuan": [
+        "戌",
+        "酉",
+        "申"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 100,
+      "ganzhi": "丁亥",
+      "sanchuan": [
+        "申",
+        "酉",
+        "戌"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "末助初兮三等论",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 0.71,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 101,
+      "ganzhi": "丁亥",
+      "sanchuan": [
+        "酉",
+        "亥",
+        "丑"
+      ],
+      "kege": "进间传",
+      "bifa_rules": [
+        "有始无终难变易",
+        "前后引从升迁吉",
+        "六阴相继尽昏迷",
+        "制鬼之位乃良医",
+        "末助初兮三等论",
+        "常问不应逢吉象",
+        "昼夜贵加求两贵"
+      ],
+      "bifa_count": 7,
+      "stock_signal": "涨",
+      "signal_strength": 0.59,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 102,
+      "ganzhi": "丁亥",
+      "sanchuan": [
+        "酉",
+        "亥",
+        "丑"
+      ],
+      "kege": "进间传",
+      "bifa_rules": [
+        "有始无终难变易",
+        "前后引从升迁吉",
+        "六阴相继尽昏迷",
+        "制鬼之位乃良医",
+        "末助初兮三等论",
+        "常问不应逢吉象",
+        "昼夜贵加求两贵"
+      ],
+      "bifa_count": 7,
+      "stock_signal": "涨",
+      "signal_strength": 0.59,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 103,
+      "ganzhi": "丁亥",
+      "sanchuan": [
+        "午",
+        "戌",
+        "午"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "用破身心无所归",
+        "旬内空亡逐类推",
+        "所筮不入仍凭类"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 0.83,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 104,
+      "ganzhi": "戊子",
+      "sanchuan": [
+        "寅",
+        "亥",
+        "申"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "彼此猜忌害相随",
+        "制鬼之位乃良医",
+        "苦去甘来乐里悲"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.55,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 105,
+      "ganzhi": "戊子",
+      "sanchuan": [
+        "戌",
+        "酉",
+        "申"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "所筮不入仍凭类"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.75,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 106,
+      "ganzhi": "戊子",
+      "sanchuan": [
+        "戌",
+        "酉",
+        "申"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "所筮不入仍凭类"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.75,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 107,
+      "ganzhi": "戊子",
+      "sanchuan": [
+        "戌",
+        "酉",
+        "申"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "胎财生气妻怀孕",
+        "彼此猜忌害相随",
+        "所筮不入仍凭类"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "震荡",
+      "signal_strength": 0.43,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 108,
+      "ganzhi": "戊子",
+      "sanchuan": [
+        "辰",
+        "申",
+        "子"
+      ],
+      "kege": "润下课",
+      "bifa_rules": [
+        "万事喜忻三六合"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 109,
+      "ganzhi": "戊子",
+      "sanchuan": [
+        "巳",
+        "戌",
+        "卯"
+      ],
+      "kege": "铸印",
+      "bifa_rules": [
+        "末助初兮三等论",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 110,
+      "ganzhi": "戊子",
+      "sanchuan": [
+        "巳",
+        "戌",
+        "卯"
+      ],
+      "kege": "铸印",
+      "bifa_rules": [
+        "胎财生气妻怀孕",
+        "末助初兮三等论",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.71,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 111,
+      "ganzhi": "己丑",
+      "sanchuan": [
+        "巳",
+        "戌",
+        "卯"
+      ],
+      "kege": "铸印",
+      "bifa_rules": [
+        "末助初兮三等论",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 112,
+      "ganzhi": "己丑",
+      "sanchuan": [
+        "卯",
+        "戌",
+        "巳"
+      ],
+      "kege": "斫轮",
+      "bifa_rules": [
+        "鬼贼当时无畏忌"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 113,
+      "ganzhi": "己丑",
+      "sanchuan": [
+        "子",
+        "辰",
+        "戌"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "用破身心无所归"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 114,
+      "ganzhi": "己丑",
+      "sanchuan": [
+        "子",
+        "辰",
+        "戌"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "用破身心无所归"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 115,
+      "ganzhi": "己丑",
+      "sanchuan": [
+        "子",
+        "辰",
+        "戌"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "用破身心无所归"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 116,
+      "ganzhi": "己丑",
+      "sanchuan": [
+        "子",
+        "亥",
+        "戌"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 117,
+      "ganzhi": "己丑",
+      "sanchuan": [
+        "子",
+        "亥",
+        "戌"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 118,
+      "ganzhi": "己丑",
+      "sanchuan": [
+        "寅",
+        "卯",
+        "辰"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "罡塞鬼户任谋为",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "震荡",
+      "signal_strength": 0.43,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 119,
+      "ganzhi": "己丑",
+      "sanchuan": [
+        "寅",
+        "卯",
+        "辰"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "罡塞鬼户任谋为",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "震荡",
+      "signal_strength": 0.43,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 120,
+      "ganzhi": "己丑",
+      "sanchuan": [
+        "酉",
+        "丑",
+        "巳"
+      ],
+      "kege": "从革课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "六阴相继尽昏迷"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 121,
+      "ganzhi": "庚寅",
+      "sanchuan": [
+        "子",
+        "巳",
+        "戌"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "胎财死气损胎推",
+        "制鬼之位乃良医"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 122,
+      "ganzhi": "庚寅",
+      "sanchuan": [
+        "子",
+        "巳",
+        "戌"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "制鬼之位乃良医"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 123,
+      "ganzhi": "庚寅",
+      "sanchuan": [
+        "寅",
+        "申",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "六阳数足须公用",
+        "用破身心无所归"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.62,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 124,
+      "ganzhi": "庚寅",
+      "sanchuan": [
+        "巳",
+        "寅",
+        "亥"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "金日逢丁凶祸动",
+        "前后引从升迁吉",
+        "彼此猜忌害相随",
+        "制鬼之位乃良医",
+        "苦去甘来乐里悲",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 6,
+      "stock_signal": "跌",
+      "signal_strength": 0.5,
+      "advice": "毕法赋信号偏弱，参考价值有限"
+    },
+    {
+      "index": 125,
+      "ganzhi": "庚寅",
+      "sanchuan": [
+        "午",
+        "寅",
+        "子"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "六阳数足须公用",
+        "制鬼之位乃良医",
+        "苦去甘来乐里悲",
+        "喜惧空亡乃妙机",
+        "旬内空亡逐类推",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 7,
+      "stock_signal": "涨",
+      "signal_strength": 0.5,
+      "advice": "毕法赋信号偏弱，参考价值有限"
+    },
+    {
+      "index": 126,
+      "ganzhi": "庚寅",
+      "sanchuan": [
+        "子",
+        "亥",
+        "戌"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "金日逢丁凶祸动"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 127,
+      "ganzhi": "庚寅",
+      "sanchuan": [
+        "申",
+        "寅",
+        "巳"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 128,
+      "ganzhi": "庚寅",
+      "sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "金日逢丁凶祸动",
+        "彼此猜忌害相随",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 129,
+      "ganzhi": "庚寅",
+      "sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "金日逢丁凶祸动",
+        "彼此猜忌害相随",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 130,
+      "ganzhi": "庚寅",
+      "sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "金日逢丁凶祸动",
+        "彼此猜忌害相随",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 131,
+      "ganzhi": "辛卯",
+      "sanchuan": [
+        "卯",
+        "申",
+        "丑"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "胎财生气妻怀孕",
+        "用破身心无所归"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 132,
+      "ganzhi": "辛卯",
+      "sanchuan": [
+        "戌",
+        "巳",
+        "子"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "制鬼之位乃良医"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 133,
+      "ganzhi": "辛卯",
+      "sanchuan": [
+        "丑",
+        "亥",
+        "酉"
+      ],
+      "kege": "退间传",
+      "bifa_rules": [
+        "金日逢丁凶祸动",
+        "前后引从升迁吉",
+        "妄用三传灾福异"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "震荡",
+      "signal_strength": 0.43,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 134,
+      "ganzhi": "辛卯",
+      "sanchuan": [
+        "丑",
+        "子",
+        "亥"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "金日逢丁凶祸动"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 135,
+      "ganzhi": "辛卯",
+      "sanchuan": [
+        "卯",
+        "子",
+        "卯"
+      ],
+      "kege": "",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 136,
+      "ganzhi": "壬辰",
+      "sanchuan": [
+        "丑",
+        "寅",
+        "卯"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "制鬼之位乃良医",
+        "苦去甘来乐里悲"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 137,
+      "ganzhi": "壬辰",
+      "sanchuan": [
+        "巳",
+        "寅",
+        "亥"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "水日逢丁财动之",
+        "前后引从升迁吉",
+        "彼此猜忌害相随",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.55,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 138,
+      "ganzhi": "壬辰",
+      "sanchuan": [
+        "寅",
+        "子",
+        "戌"
+      ],
+      "kege": "退间传",
+      "bifa_rules": [
+        "胎财死气损胎推",
+        "前后引从升迁吉",
+        "制鬼之位乃良医"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 139,
+      "ganzhi": "壬辰",
+      "sanchuan": [
+        "寅",
+        "子",
+        "戌"
+      ],
+      "kege": "退间传",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "制鬼之位乃良医"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 140,
+      "ganzhi": "壬辰",
+      "sanchuan": [
+        "寅",
+        "子",
+        "戌"
+      ],
+      "kege": "退间传",
+      "bifa_rules": [
+        "胎财死气损胎推",
+        "前后引从升迁吉",
+        "制鬼之位乃良医"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 141,
+      "ganzhi": "癸巳",
+      "sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "水日逢丁财动之",
+        "前后引从升迁吉",
+        "彼此猜忌害相随",
+        "苦去甘来乐里悲",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "涨",
+      "signal_strength": 0.46,
+      "advice": "毕法赋信号偏弱，参考价值有限"
+    },
+    {
+      "index": 142,
+      "ganzhi": "甲午",
+      "sanchuan": [
+        "子",
+        "亥",
+        "戌"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 143,
+      "ganzhi": "甲午",
+      "sanchuan": [
+        "子",
+        "亥",
+        "戌"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 144,
+      "ganzhi": "甲午",
+      "sanchuan": [
+        "寅",
+        "午",
+        "戌"
+      ],
+      "kege": "炎上课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "胎财生气妻怀孕",
+        "六阳数足须公用"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 145,
+      "ganzhi": "甲午",
+      "sanchuan": [
+        "寅",
+        "申",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "六阳数足须公用",
+        "用破身心无所归"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 146,
+      "ganzhi": "甲午",
+      "sanchuan": [
+        "申",
+        "寅",
+        "申"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "六阳数足须公用",
+        "前后逼迫难进退",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.56,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 147,
+      "ganzhi": "乙未",
+      "sanchuan": [
+        "丑",
+        "戌",
+        "未"
+      ],
+      "kege": "稼穑课",
+      "bifa_rules": [
+        "传财太旺反财亏"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 148,
+      "ganzhi": "乙未",
+      "sanchuan": [
+        "戌",
+        "卯",
+        "午"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "有始无终难变易",
+        "前后引从升迁吉",
+        "用破身心无所归",
+        "末助初兮三等论"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 149,
+      "ganzhi": "乙未",
+      "sanchuan": [
+        "酉",
+        "戌",
+        "亥"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 150,
+      "ganzhi": "乙未",
+      "sanchuan": [
+        "酉",
+        "戌",
+        "亥"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "鬼贼当时无畏忌",
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.57,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 151,
+      "ganzhi": "乙未",
+      "sanchuan": [
+        "酉",
+        "戌",
+        "亥"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 152,
+      "ganzhi": "乙未",
+      "sanchuan": [
+        "酉",
+        "戌",
+        "亥"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 153,
+      "ganzhi": "乙未",
+      "sanchuan": [
+        "申",
+        "戌",
+        "子"
+      ],
+      "kege": "进间传",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "昼夜贵加求两贵"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 154,
+      "ganzhi": "乙未",
+      "sanchuan": [
+        "未",
+        "戌",
+        "丑"
+      ],
+      "kege": "稼穑课",
+      "bifa_rules": [
+        "传财太旺反财亏",
+        "前后引从升迁吉"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 155,
+      "ganzhi": "乙未",
+      "sanchuan": [
+        "亥",
+        "卯",
+        "未"
+      ],
+      "kege": "曲直课",
+      "bifa_rules": [
+        "万事喜忻三六合"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 156,
+      "ganzhi": "乙未",
+      "sanchuan": [
+        "亥",
+        "卯",
+        "未"
+      ],
+      "kege": "曲直课",
+      "bifa_rules": [
+        "万事喜忻三六合"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 157,
+      "ganzhi": "乙未",
+      "sanchuan": [
+        "午",
+        "丑",
+        "申"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "制鬼之位乃良医",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 0.62,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 158,
+      "ganzhi": "丙申",
+      "sanchuan": [
+        "巳",
+        "申",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "用破身心无所归",
+        "旬内空亡逐类推"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 159,
+      "ganzhi": "丁酉",
+      "sanchuan": [
+        "丑",
+        "巳",
+        "巳"
+      ],
+      "kege": "三阴",
+      "bifa_rules": [
+        "不行传者考初时",
+        "前后引从升迁吉",
+        "六阴相继尽昏迷",
+        "旬内空亡逐类推",
+        "所筮不入仍凭类"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "跌",
+      "signal_strength": 0.64,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 160,
+      "ganzhi": "丁酉",
+      "sanchuan": [
+        "丑",
+        "巳",
+        "巳"
+      ],
+      "kege": "三阴",
+      "bifa_rules": [
+        "不行传者考初时",
+        "前后引从升迁吉",
+        "六阴相继尽昏迷",
+        "旬内空亡逐类推",
+        "所筮不入仍凭类"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "跌",
+      "signal_strength": 0.64,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 161,
+      "ganzhi": "丁酉",
+      "sanchuan": [
+        "子",
+        "卯",
+        "午"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "鬼贼当时无畏忌"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 162,
+      "ganzhi": "戊戌",
+      "sanchuan": [
+        "寅",
+        "戌",
+        "午"
+      ],
+      "kege": "炎上课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "前后引从升迁吉"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 163,
+      "ganzhi": "戊戌",
+      "sanchuan": [
+        "寅",
+        "午",
+        "戌"
+      ],
+      "kege": "炎上课",
+      "bifa_rules": [
+        "有始无终难变易",
+        "万事喜忻三六合"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 164,
+      "ganzhi": "戊戌",
+      "sanchuan": [
+        "申",
+        "丑",
+        "午"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 165,
+      "ganzhi": "己亥",
+      "sanchuan": [
+        "午",
+        "丑",
+        "申"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "胎财生气妻怀孕",
+        "彼此猜忌害相随",
+        "苦去甘来乐里悲",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "跌",
+      "signal_strength": 0.5,
+      "advice": "毕法赋信号偏弱，参考价值有限"
+    },
+    {
+      "index": 166,
+      "ganzhi": "己亥",
+      "sanchuan": [
+        "午",
+        "丑",
+        "申"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "苦去甘来乐里悲",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 0.71,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 167,
+      "ganzhi": "庚子",
+      "sanchuan": [
+        "午",
+        "辰",
+        "寅"
+      ],
+      "kege": "退间传",
+      "bifa_rules": [
+        "六阳数足须公用",
+        "末助初兮三等论",
+        "闭口卦体两般推",
+        "喜惧空亡乃妙机",
+        "旬内空亡逐类推"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "震荡",
+      "signal_strength": 0.4,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 168,
+      "ganzhi": "辛丑",
+      "sanchuan": [
+        "卯",
+        "申",
+        "丑"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "用破身心无所归",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 169,
+      "ganzhi": "辛丑",
+      "sanchuan": [
+        "卯",
+        "申",
+        "丑"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "用破身心无所归",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 170,
+      "ganzhi": "辛丑",
+      "sanchuan": [
+        "卯",
+        "申",
+        "丑"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "用破身心无所归",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 171,
+      "ganzhi": "辛丑",
+      "sanchuan": [
+        "子",
+        "亥",
+        "戌"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 172,
+      "ganzhi": "辛丑",
+      "sanchuan": [
+        "子",
+        "亥",
+        "戌"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 173,
+      "ganzhi": "壬寅",
+      "sanchuan": [
+        "未",
+        "亥",
+        "卯"
+      ],
+      "kege": "曲直课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "制鬼之位乃良医",
+        "苦去甘来乐里悲"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.75,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 174,
+      "ganzhi": "壬寅",
+      "sanchuan": [
+        "未",
+        "亥",
+        "卯"
+      ],
+      "kege": "曲直课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "制鬼之位乃良医",
+        "苦去甘来乐里悲"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.75,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 175,
+      "ganzhi": "壬寅",
+      "sanchuan": [
+        "寅",
+        "申",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 176,
+      "ganzhi": "壬寅",
+      "sanchuan": [
+        "午",
+        "丑",
+        "申"
+      ],
+      "kege": "亨通课",
+      "bifa_rules": [
+        "三传递生人举荐",
+        "前后引从升迁吉",
+        "彼此猜忌害相随",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.55,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 177,
+      "ganzhi": "壬寅",
+      "sanchuan": [
+        "戌",
+        "午",
+        "寅"
+      ],
+      "kege": "炎上课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "制鬼之位乃良医",
+        "苦去甘来乐里悲"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.75,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 178,
+      "ganzhi": "壬寅",
+      "sanchuan": [
+        "戌",
+        "申",
+        "午"
+      ],
+      "kege": "退间传",
+      "bifa_rules": [
+        "末助初兮三等论"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 179,
+      "ganzhi": "壬寅",
+      "sanchuan": [
+        "子",
+        "亥",
+        "戌"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "前后引从升迁吉"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 180,
+      "ganzhi": "癸卯",
+      "sanchuan": [
+        "丑",
+        "子",
+        "亥"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 181,
+      "ganzhi": "癸卯",
+      "sanchuan": [
+        "丑",
+        "子",
+        "亥"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "胎财死气损胎推"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 182,
+      "ganzhi": "癸卯",
+      "sanchuan": [
+        "未",
+        "酉",
+        "亥"
+      ],
+      "kege": "进间传",
+      "bifa_rules": [
+        "水日逢丁财动之",
+        "前后引从升迁吉",
+        "六阴相继尽昏迷",
+        "妄用三传灾福异"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 183,
+      "ganzhi": "癸卯",
+      "sanchuan": [
+        "酉",
+        "子",
+        "卯"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "胎财死气损胎推",
+        "水日逢丁财动之",
+        "苦去甘来乐里悲"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "震荡",
+      "signal_strength": 0.38,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 184,
+      "ganzhi": "癸卯",
+      "sanchuan": [
+        "酉",
+        "子",
+        "卯"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "胎财生气妻怀孕",
+        "水日逢丁财动之",
+        "苦去甘来乐里悲"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.75,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 185,
+      "ganzhi": "癸卯",
+      "sanchuan": [
+        "酉",
+        "丑",
+        "巳"
+      ],
+      "kege": "从革课",
+      "bifa_rules": [
+        "三传递生人举荐",
+        "万事喜忻三六合",
+        "水日逢丁财动之",
+        "六阴相继尽昏迷",
+        "喜惧空亡乃妙机",
+        "旬内空亡逐类推",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 7,
+      "stock_signal": "涨",
+      "signal_strength": 0.5,
+      "advice": "毕法赋信号偏弱，参考价值有限"
+    },
+    {
+      "index": 186,
+      "ganzhi": "癸卯",
+      "sanchuan": [
+        "卯",
+        "戌",
+        "卯"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "制鬼之位乃良医",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 187,
+      "ganzhi": "癸卯",
+      "sanchuan": [
+        "丑",
+        "亥",
+        "酉"
+      ],
+      "kege": "退间传",
+      "bifa_rules": [
+        "水日逢丁财动之",
+        "六阴相继尽昏迷",
+        "妄用三传灾福异"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "震荡",
+      "signal_strength": 0.43,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 188,
+      "ganzhi": "甲辰",
+      "sanchuan": [
+        "辰",
+        "午",
+        "申"
+      ],
+      "kege": "进间传",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "六阳数足须公用",
+        "鬼贼当时无畏忌",
+        "制鬼之位乃良医",
+        "闭口卦体两般推",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 6,
+      "stock_signal": "涨",
+      "signal_strength": 0.69,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 189,
+      "ganzhi": "甲辰",
+      "sanchuan": [
+        "辰",
+        "午",
+        "申"
+      ],
+      "kege": "进间传",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "六阳数足须公用",
+        "制鬼之位乃良医",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.8,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 190,
+      "ganzhi": "乙巳",
+      "sanchuan": [
+        "酉",
+        "巳",
+        "丑"
+      ],
+      "kege": "从革课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "制鬼之位乃良医",
+        "末助初兮三等论",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "涨",
+      "signal_strength": 0.85,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 191,
+      "ganzhi": "乙巳",
+      "sanchuan": [
+        "未",
+        "申",
+        "酉"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "震荡",
+      "signal_strength": 1.0,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 192,
+      "ganzhi": "乙巳",
+      "sanchuan": [
+        "申",
+        "戌",
+        "子"
+      ],
+      "kege": "进间传",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "昼夜贵加求两贵"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 193,
+      "ganzhi": "乙巳",
+      "sanchuan": [
+        "寅",
+        "未",
+        "子"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "旬内空亡逐类推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 194,
+      "ganzhi": "乙巳",
+      "sanchuan": [
+        "巳",
+        "亥",
+        "巳"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 195,
+      "ganzhi": "乙巳",
+      "sanchuan": [
+        "巳",
+        "亥",
+        "巳"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 196,
+      "ganzhi": "乙巳",
+      "sanchuan": [
+        "午",
+        "丑",
+        "申"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "制鬼之位乃良医"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 197,
+      "ganzhi": "丙午",
+      "sanchuan": [
+        "子",
+        "酉",
+        "午"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "妄用三传灾福异"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "震荡",
+      "signal_strength": 1.0,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 198,
+      "ganzhi": "丙午",
+      "sanchuan": [
+        "丑",
+        "亥",
+        "酉"
+      ],
+      "kege": "退间传",
+      "bifa_rules": [
+        "制鬼之位乃良医",
+        "闭口卦体两般推",
+        "妄用三传灾福异",
+        "昼夜贵加求两贵"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.62,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 199,
+      "ganzhi": "丙午",
+      "sanchuan": [
+        "申",
+        "酉",
+        "戌"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "末助初兮三等论"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 200,
+      "ganzhi": "丙午",
+      "sanchuan": [
+        "申",
+        "戌",
+        "子"
+      ],
+      "kege": "进间传",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "制鬼之位乃良医"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 201,
+      "ganzhi": "丙午",
+      "sanchuan": [
+        "申",
+        "戌",
+        "子"
+      ],
+      "kege": "进间传",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "制鬼之位乃良医"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 202,
+      "ganzhi": "丙午",
+      "sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "三传递生人举荐",
+        "前后引从升迁吉",
+        "彼此猜忌害相随",
+        "喜惧空亡乃妙机",
+        "旬内空亡逐类推"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "涨",
+      "signal_strength": 0.46,
+      "advice": "毕法赋信号偏弱，参考价值有限"
+    },
+    {
+      "index": 203,
+      "ganzhi": "丙午",
+      "sanchuan": [
+        "酉",
+        "丑",
+        "巳"
+      ],
+      "kege": "从革课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "前后引从升迁吉"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 204,
+      "ganzhi": "丙午",
+      "sanchuan": [
+        "酉",
+        "寅",
+        "酉"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "妄用三传灾福异",
+        "喜惧空亡乃妙机",
+        "旬内空亡逐类推"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "震荡",
+      "signal_strength": 0.6,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 205,
+      "ganzhi": "丁未",
+      "sanchuan": [
+        "巳",
+        "丑",
+        "丑"
+      ],
+      "kege": "三阴",
+      "bifa_rules": [
+        "胎财死气损胎推",
+        "六阴相继尽昏迷",
+        "所筮不入仍凭类"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 0.86,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 206,
+      "ganzhi": "丁未",
+      "sanchuan": [
+        "亥",
+        "辰",
+        "辰"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "制鬼之位乃良医",
+        "苦去甘来乐里悲",
+        "妄用三传灾福异"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 207,
+      "ganzhi": "丁未",
+      "sanchuan": [
+        "亥",
+        "辰",
+        "辰"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "制鬼之位乃良医",
+        "苦去甘来乐里悲",
+        "妄用三传灾福异"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 208,
+      "ganzhi": "丁未",
+      "sanchuan": [
+        "未",
+        "丑",
+        "戌"
+      ],
+      "kege": "稼穑课",
+      "bifa_rules": [
+        "所筮不入仍凭类"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "震荡",
+      "signal_strength": 1.0,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 209,
+      "ganzhi": "丁未",
+      "sanchuan": [
+        "申",
+        "酉",
+        "戌"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "末助初兮三等论"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 210,
+      "ganzhi": "丁未",
+      "sanchuan": [
+        "酉",
+        "亥",
+        "丑"
+      ],
+      "kege": "进间传",
+      "bifa_rules": [
+        "有始无终难变易",
+        "胎财生气妻怀孕",
+        "前后引从升迁吉",
+        "六阴相继尽昏迷",
+        "鬼贼当时无畏忌",
+        "制鬼之位乃良医",
+        "末助初兮三等论",
+        "常问不应逢吉象",
+        "昼夜贵加求两贵"
+      ],
+      "bifa_count": 9,
+      "stock_signal": "涨",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 211,
+      "ganzhi": "丁未",
+      "sanchuan": [
+        "酉",
+        "亥",
+        "丑"
+      ],
+      "kege": "进间传",
+      "bifa_rules": [
+        "有始无终难变易",
+        "前后引从升迁吉",
+        "六阴相继尽昏迷",
+        "鬼贼当时无畏忌",
+        "制鬼之位乃良医",
+        "末助初兮三等论",
+        "常问不应逢吉象",
+        "昼夜贵加求两贵"
+      ],
+      "bifa_count": 8,
+      "stock_signal": "涨",
+      "signal_strength": 0.61,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 212,
+      "ganzhi": "丁未",
+      "sanchuan": [
+        "亥",
+        "戌",
+        "戌"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "鬼贼当时无畏忌",
+        "魁度天门关隔定",
+        "制鬼之位乃良医",
+        "苦去甘来乐里悲"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.44,
+      "advice": "毕法赋信号偏弱，参考价值有限"
+    },
+    {
+      "index": 213,
+      "ganzhi": "丁未",
+      "sanchuan": [
+        "亥",
+        "戌",
+        "戌"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "魁度天门关隔定",
+        "制鬼之位乃良医",
+        "苦去甘来乐里悲"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "震荡",
+      "signal_strength": 0.38,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 214,
+      "ganzhi": "戊申",
+      "sanchuan": [
+        "子",
+        "申",
+        "辰"
+      ],
+      "kege": "润下课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "前后引从升迁吉"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 215,
+      "ganzhi": "戊申",
+      "sanchuan": [
+        "丑",
+        "亥",
+        "酉"
+      ],
+      "kege": "退间传",
+      "bifa_rules": [
+        "闭口卦体两般推",
+        "妄用三传灾福异"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 216,
+      "ganzhi": "戊申",
+      "sanchuan": [
+        "戌",
+        "酉",
+        "午"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 217,
+      "ganzhi": "戊申",
+      "sanchuan": [
+        "戌",
+        "酉",
+        "午"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 218,
+      "ganzhi": "戊申",
+      "sanchuan": [
+        "辰",
+        "申",
+        "子"
+      ],
+      "kege": "润下课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 219,
+      "ganzhi": "戊申",
+      "sanchuan": [
+        "辰",
+        "申",
+        "子"
+      ],
+      "kege": "润下课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 220,
+      "ganzhi": "戊申",
+      "sanchuan": [
+        "辰",
+        "申",
+        "子"
+      ],
+      "kege": "润下课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "胎财生气妻怀孕",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.75,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 221,
+      "ganzhi": "己酉",
+      "sanchuan": [
+        "酉",
+        "亥",
+        "丑"
+      ],
+      "kege": "进间传",
+      "bifa_rules": [
+        "有始无终难变易",
+        "前后引从升迁吉",
+        "六阴相继尽昏迷"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 0.62,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 222,
+      "ganzhi": "己酉",
+      "sanchuan": [
+        "戌",
+        "午",
+        "申"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "胎财生气妻怀孕",
+        "前后引从升迁吉"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 223,
+      "ganzhi": "己酉",
+      "sanchuan": [
+        "卯",
+        "午",
+        "酉"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "制鬼之位乃良医",
+        "苦去甘来乐里悲",
+        "妄用三传灾福异",
+        "喜惧空亡乃妙机",
+        "旬内空亡逐类推"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 224,
+      "ganzhi": "庚戌",
+      "sanchuan": [
+        "辰",
+        "申",
+        "子"
+      ],
+      "kege": "润下课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "六阳数足须公用",
+        "苦去甘来乐里悲",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.56,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 225,
+      "ganzhi": "庚戌",
+      "sanchuan": [
+        "戌",
+        "巳",
+        "子"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "制鬼之位乃良医"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 226,
+      "ganzhi": "庚戌",
+      "sanchuan": [
+        "子",
+        "申",
+        "辰"
+      ],
+      "kege": "润下课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "六阳数足须公用",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.8,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 227,
+      "ganzhi": "庚戌",
+      "sanchuan": [
+        "午",
+        "巳",
+        "辰"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "震荡",
+      "signal_strength": 1.0,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 228,
+      "ganzhi": "庚戌",
+      "sanchuan": [
+        "亥",
+        "子",
+        "丑"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 229,
+      "ganzhi": "辛亥",
+      "sanchuan": [
+        "巳",
+        "申",
+        "亥"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "鬼贼当时无畏忌",
+        "彼此猜忌害相随",
+        "制鬼之位乃良医",
+        "苦去甘来乐里悲"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.44,
+      "advice": "毕法赋信号偏弱，参考价值有限"
+    },
+    {
+      "index": 230,
+      "ganzhi": "辛亥",
+      "sanchuan": [
+        "巳",
+        "申",
+        "亥"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "制鬼之位乃良医",
+        "苦去甘来乐里悲"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "震荡",
+      "signal_strength": 0.38,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 231,
+      "ganzhi": "辛亥",
+      "sanchuan": [
+        "未",
+        "亥",
+        "卯"
+      ],
+      "kege": "曲直课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "金日逢丁凶祸动",
+        "喜惧空亡乃妙机",
+        "旬内空亡逐类推"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "跌",
+      "signal_strength": 0.5,
+      "advice": "毕法赋信号偏弱，参考价值有限"
+    },
+    {
+      "index": 232,
+      "ganzhi": "辛亥",
+      "sanchuan": [
+        "戌",
+        "酉",
+        "申"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 233,
+      "ganzhi": "壬子",
+      "sanchuan": [
+        "辰",
+        "午",
+        "申"
+      ],
+      "kege": "进间传",
+      "bifa_rules": [
+        "有始无终难变易",
+        "前后引从升迁吉",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 0.57,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 234,
+      "ganzhi": "壬子",
+      "sanchuan": [
+        "午",
+        "酉",
+        "子"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "妄用三传灾福异"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "震荡",
+      "signal_strength": 1.0,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 235,
+      "ganzhi": "壬子",
+      "sanchuan": [
+        "午",
+        "丑",
+        "申"
+      ],
+      "kege": "亨通课",
+      "bifa_rules": [
+        "三传递生人举荐",
+        "前后引从升迁吉",
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 236,
+      "ganzhi": "壬子",
+      "sanchuan": [
+        "午",
+        "丑",
+        "申"
+      ],
+      "kege": "亨通课",
+      "bifa_rules": [
+        "三传递生人举荐",
+        "前后引从升迁吉",
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 237,
+      "ganzhi": "癸丑",
+      "sanchuan": [
+        "子",
+        "亥",
+        "戌"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 238,
+      "ganzhi": "癸丑",
+      "sanchuan": [
+        "丑",
+        "戌",
+        "未"
+      ],
+      "kege": "稼穑课",
+      "bifa_rules": [
+        "水日逢丁财动之",
+        "前后逼迫难进退",
+        "闭口卦体两般推",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "跌",
+      "signal_strength": 0.56,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 239,
+      "ganzhi": "癸丑",
+      "sanchuan": [
+        "丑",
+        "戌",
+        "未"
+      ],
+      "kege": "稼穑课",
+      "bifa_rules": [
+        "水日逢丁财动之",
+        "前后逼迫难进退",
+        "闭口卦体两般推",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "跌",
+      "signal_strength": 0.56,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 240,
+      "ganzhi": "癸丑",
+      "sanchuan": [
+        "酉",
+        "丑",
+        "巳"
+      ],
+      "kege": "从革课",
+      "bifa_rules": [
+        "三传递生人举荐",
+        "万事喜忻三六合",
+        "六阴相继尽昏迷"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 241,
+      "ganzhi": "癸丑",
+      "sanchuan": [
+        "午",
+        "亥",
+        "辰"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "用破身心无所归",
+        "妄用三传灾福异"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.75,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 242,
+      "ganzhi": "癸丑",
+      "sanchuan": [
+        "午",
+        "亥",
+        "辰"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "用破身心无所归",
+        "妄用三传灾福异"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.75,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 243,
+      "ganzhi": "癸丑",
+      "sanchuan": [
+        "午",
+        "亥",
+        "辰"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "用破身心无所归",
+        "妄用三传灾福异"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.75,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 244,
+      "ganzhi": "癸丑",
+      "sanchuan": [
+        "未",
+        "丑",
+        "未"
+      ],
+      "kege": "稼穑课",
+      "bifa_rules": [
+        "水日逢丁财动之",
+        "前后引从升迁吉",
+        "六阴相继尽昏迷",
+        "前后逼迫难进退",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "震荡",
+      "signal_strength": 0.46,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 245,
+      "ganzhi": "癸丑",
+      "sanchuan": [
+        "未",
+        "丑",
+        "未"
+      ],
+      "kege": "稼穑课",
+      "bifa_rules": [
+        "水日逢丁财动之",
+        "前后引从升迁吉",
+        "六阴相继尽昏迷",
+        "前后逼迫难进退",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "震荡",
+      "signal_strength": 0.46,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 246,
+      "ganzhi": "癸丑",
+      "sanchuan": [
+        "未",
+        "丑",
+        "未"
+      ],
+      "kege": "稼穑课",
+      "bifa_rules": [
+        "水日逢丁财动之",
+        "前后引从升迁吉",
+        "六阴相继尽昏迷",
+        "前后逼迫难进退",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "震荡",
+      "signal_strength": 0.46,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 247,
+      "ganzhi": "癸丑",
+      "sanchuan": [
+        "戌",
+        "未",
+        "辰"
+      ],
+      "kege": "稼穑课",
+      "bifa_rules": [
+        "胎财生气妻怀孕",
+        "水日逢丁财动之",
+        "前后逼迫难进退",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 248,
+      "ganzhi": "甲寅",
+      "sanchuan": [
+        "戌",
+        "申",
+        "午"
+      ],
+      "kege": "退间传",
+      "bifa_rules": [
+        "六阳数足须公用",
+        "制鬼之位乃良医",
+        "末助初兮三等论",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.78,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 249,
+      "ganzhi": "甲寅",
+      "sanchuan": [
+        "辰",
+        "巳",
+        "午"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "末助初兮三等论"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 250,
+      "ganzhi": "甲寅",
+      "sanchuan": [
+        "辰",
+        "巳",
+        "午"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "胎财死气损胎推",
+        "末助初兮三等论"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 251,
+      "ganzhi": "甲寅",
+      "sanchuan": [
+        "辰",
+        "午",
+        "申"
+      ],
+      "kege": "进间传",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "六阳数足须公用",
+        "制鬼之位乃良医"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 252,
+      "ganzhi": "甲寅",
+      "sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 253,
+      "ganzhi": "甲寅",
+      "sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 254,
+      "ganzhi": "甲寅",
+      "sanchuan": [
+        "申",
+        "午",
+        "午"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "六阳数足须公用",
+        "制鬼之位乃良医",
+        "苦去甘来乐里悲",
+        "妄用三传灾福异"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.62,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 255,
+      "ganzhi": "甲寅",
+      "sanchuan": [
+        "子",
+        "巳",
+        "戌"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "胎财死气损胎推",
+        "费有余而得不足",
+        "喜惧空亡乃妙机",
+        "旬内空亡逐类推"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "跌",
+      "signal_strength": 0.8,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 256,
+      "ganzhi": "甲寅",
+      "sanchuan": [
+        "寅",
+        "申",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "六阳数足须公用",
+        "用破身心无所归",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 0.71,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 257,
+      "ganzhi": "甲寅",
+      "sanchuan": [
+        "酉",
+        "辰",
+        "亥"
+      ],
+      "kege": "",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 258,
+      "ganzhi": "乙卯",
+      "sanchuan": [
+        "未",
+        "卯",
+        "亥"
+      ],
+      "kege": "曲直课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "胎财生气妻怀孕",
+        "前后引从升迁吉",
+        "彼此猜忌害相随",
+        "用破身心无所归"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "涨",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 259,
+      "ganzhi": "乙卯",
+      "sanchuan": [
+        "未",
+        "卯",
+        "亥"
+      ],
+      "kege": "曲直课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "彼此猜忌害相随",
+        "用破身心无所归"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 260,
+      "ganzhi": "丙辰",
+      "sanchuan": [
+        "巳",
+        "申",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 261,
+      "ganzhi": "丙辰",
+      "sanchuan": [
+        "亥",
+        "申",
+        "巳"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 262,
+      "ganzhi": "丙辰",
+      "sanchuan": [
+        "巳",
+        "申",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 263,
+      "ganzhi": "丙辰",
+      "sanchuan": [
+        "亥",
+        "午",
+        "午"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "闭口卦体两般推",
+        "妄用三传灾福异"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 264,
+      "ganzhi": "丙辰",
+      "sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "三传递生人举荐",
+        "前后引从升迁吉",
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 265,
+      "ganzhi": "丙辰",
+      "sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "三传递生人举荐",
+        "前后引从升迁吉",
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 266,
+      "ganzhi": "丙辰",
+      "sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "三传递生人举荐",
+        "前后引从升迁吉",
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 267,
+      "ganzhi": "丁巳",
+      "sanchuan": [
+        "巳",
+        "戌",
+        "卯"
+      ],
+      "kege": "铸印",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 268,
+      "ganzhi": "丁巳",
+      "sanchuan": [
+        "亥",
+        "申",
+        "巳"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "胎财生气妻怀孕",
+        "前后引从升迁吉",
+        "鬼贼当时无畏忌",
+        "彼此猜忌害相随",
+        "闭口卦体两般推",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 6,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 269,
+      "ganzhi": "丁巳",
+      "sanchuan": [
+        "巳",
+        "申",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 270,
+      "ganzhi": "丁巳",
+      "sanchuan": [
+        "申",
+        "酉",
+        "戌"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "末助初兮三等论"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 271,
+      "ganzhi": "戊午",
+      "sanchuan": [
+        "卯",
+        "寅",
+        "巳"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "鬼贼当时无畏忌",
+        "彼此猜忌害相随",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 272,
+      "ganzhi": "戊午",
+      "sanchuan": [
+        "巳",
+        "申",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "三传互克众人欺",
+        "鬼贼当时无畏忌",
+        "彼此猜忌害相随",
+        "制鬼之位乃良医",
+        "末助初兮三等论",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 6,
+      "stock_signal": "跌",
+      "signal_strength": 0.57,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 273,
+      "ganzhi": "戊午",
+      "sanchuan": [
+        "巳",
+        "申",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "三传互克众人欺",
+        "彼此猜忌害相随",
+        "制鬼之位乃良医",
+        "末助初兮三等论"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "跌",
+      "signal_strength": 0.55,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 274,
+      "ganzhi": "戊午",
+      "sanchuan": [
+        "寅",
+        "午",
+        "午"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "鬼贼当时无畏忌",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 275,
+      "ganzhi": "戊午",
+      "sanchuan": [
+        "寅",
+        "午",
+        "午"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "胎财死气损胎推",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 276,
+      "ganzhi": "戊午",
+      "sanchuan": [
+        "寅",
+        "午",
+        "午"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "胎财生气妻怀孕",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 277,
+      "ganzhi": "戊午",
+      "sanchuan": [
+        "寅",
+        "午",
+        "戌"
+      ],
+      "kege": "炎上课",
+      "bifa_rules": [
+        "有始无终难变易",
+        "万事喜忻三六合",
+        "鬼贼当时无畏忌",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 278,
+      "ganzhi": "己未",
+      "sanchuan": [
+        "巳",
+        "戌",
+        "卯"
+      ],
+      "kege": "铸印",
+      "bifa_rules": [
+        "末助初兮三等论"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 279,
+      "ganzhi": "己未",
+      "sanchuan": [
+        "巳",
+        "戌",
+        "卯"
+      ],
+      "kege": "铸印",
+      "bifa_rules": [
+        "末助初兮三等论"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 280,
+      "ganzhi": "己未",
+      "sanchuan": [
+        "酉",
+        "辰",
+        "亥"
+      ],
+      "kege": "",
+      "bifa_rules": [],
+      "bifa_count": 0,
+      "stock_signal": "平",
+      "signal_strength": 0.0,
+      "advice": "无毕法赋信号"
+    },
+    {
+      "index": 281,
+      "ganzhi": "己未",
+      "sanchuan": [
+        "卯",
+        "亥",
+        "未"
+      ],
+      "kege": "曲直课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "胎财死气损胎推",
+        "六阴相继尽昏迷"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 282,
+      "ganzhi": "己未",
+      "sanchuan": [
+        "卯",
+        "亥",
+        "未"
+      ],
+      "kege": "曲直课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "六阴相继尽昏迷"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 283,
+      "ganzhi": "己未",
+      "sanchuan": [
+        "未",
+        "申",
+        "申"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "所筮不入仍凭类"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "震荡",
+      "signal_strength": 1.0,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 284,
+      "ganzhi": "己未",
+      "sanchuan": [
+        "未",
+        "申",
+        "申"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "所筮不入仍凭类"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "震荡",
+      "signal_strength": 1.0,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 285,
+      "ganzhi": "己未",
+      "sanchuan": [
+        "未",
+        "申",
+        "申"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "所筮不入仍凭类"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "震荡",
+      "signal_strength": 1.0,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 286,
+      "ganzhi": "己未",
+      "sanchuan": [
+        "未",
+        "申",
+        "申"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "所筮不入仍凭类"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "震荡",
+      "signal_strength": 1.0,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 287,
+      "ganzhi": "己未",
+      "sanchuan": [
+        "酉",
+        "酉",
+        "酉"
+      ],
+      "kege": "三阴",
+      "bifa_rules": [
+        "六阴相继尽昏迷",
+        "所筮不入仍凭类"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.75,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 288,
+      "ganzhi": "己未",
+      "sanchuan": [
+        "酉",
+        "酉",
+        "酉"
+      ],
+      "kege": "三阴",
+      "bifa_rules": [
+        "六阴相继尽昏迷",
+        "所筮不入仍凭类"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.75,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 289,
+      "ganzhi": "己未",
+      "sanchuan": [
+        "酉",
+        "酉",
+        "酉"
+      ],
+      "kege": "三阴",
+      "bifa_rules": [
+        "六阴相继尽昏迷",
+        "所筮不入仍凭类"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.75,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 290,
+      "ganzhi": "己未",
+      "sanchuan": [
+        "酉",
+        "酉",
+        "酉"
+      ],
+      "kege": "三阴",
+      "bifa_rules": [
+        "六阴相继尽昏迷",
+        "所筮不入仍凭类"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.75,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 291,
+      "ganzhi": "己未",
+      "sanchuan": [
+        "酉",
+        "酉",
+        "酉"
+      ],
+      "kege": "三阴",
+      "bifa_rules": [
+        "胎财生气妻怀孕",
+        "六阴相继尽昏迷",
+        "所筮不入仍凭类"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "震荡",
+      "signal_strength": 0.43,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 292,
+      "ganzhi": "己未",
+      "sanchuan": [
+        "亥",
+        "卯",
+        "未"
+      ],
+      "kege": "曲直课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "六阴相继尽昏迷",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 0.62,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 293,
+      "ganzhi": "庚申",
+      "sanchuan": [
+        "卯",
+        "丑",
+        "丑"
+      ],
+      "kege": "三阴",
+      "bifa_rules": [
+        "不行传者考初时",
+        "喜惧空亡乃妙机",
+        "旬内空亡逐类推"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 294,
+      "ganzhi": "庚申",
+      "sanchuan": [
+        "午",
+        "辰",
+        "寅"
+      ],
+      "kege": "退间传",
+      "bifa_rules": [
+        "六阳数足须公用",
+        "末助初兮三等论"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 295,
+      "ganzhi": "庚申",
+      "sanchuan": [
+        "午",
+        "辰",
+        "寅"
+      ],
+      "kege": "退间传",
+      "bifa_rules": [
+        "六阳数足须公用",
+        "末助初兮三等论"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 296,
+      "ganzhi": "庚申",
+      "sanchuan": [
+        "酉",
+        "未",
+        "未"
+      ],
+      "kege": "三阴",
+      "bifa_rules": [
+        "胎财死气损胎推",
+        "前后引从升迁吉"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 297,
+      "ganzhi": "庚申",
+      "sanchuan": [
+        "亥",
+        "酉",
+        "酉"
+      ],
+      "kege": "三阴",
+      "bifa_rules": [
+        "闭口卦体两般推",
+        "所筮不入仍凭类"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 298,
+      "ganzhi": "辛酉",
+      "sanchuan": [
+        "卯",
+        "午",
+        "酉"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "鬼贼当时无畏忌",
+        "彼此猜忌害相随",
+        "妄用三传灾福异"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.5,
+      "advice": "毕法赋信号偏弱，参考价值有限"
+    },
+    {
+      "index": 299,
+      "ganzhi": "辛酉",
+      "sanchuan": [
+        "午",
+        "辰",
+        "寅"
+      ],
+      "kege": "退间传",
+      "bifa_rules": [
+        "鬼贼当时无畏忌",
+        "彼此猜忌害相随",
+        "末助初兮三等论",
+        "昼夜贵加求两贵"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.62,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 300,
+      "ganzhi": "辛酉",
+      "sanchuan": [
+        "酉",
+        "戌",
+        "未"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 301,
+      "ganzhi": "壬戌",
+      "sanchuan": [
+        "辰",
+        "未",
+        "戌"
+      ],
+      "kege": "稼穑课",
+      "bifa_rules": [
+        "胎财死气损胎推",
+        "前后引从升迁吉",
+        "前后逼迫难进退",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "跌",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 302,
+      "ganzhi": "壬戌",
+      "sanchuan": [
+        "辰",
+        "未",
+        "戌"
+      ],
+      "kege": "稼穑课",
+      "bifa_rules": [
+        "胎财生气妻怀孕",
+        "前后引从升迁吉",
+        "前后逼迫难进退",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 303,
+      "ganzhi": "壬戌",
+      "sanchuan": [
+        "巳",
+        "亥",
+        "巳"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "水日逢丁财动之",
+        "前后引从升迁吉",
+        "用破身心无所归"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 304,
+      "ganzhi": "壬戌",
+      "sanchuan": [
+        "巳",
+        "寅",
+        "亥"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "胎财生气妻怀孕",
+        "水日逢丁财动之",
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "涨",
+      "signal_strength": 0.67,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 305,
+      "ganzhi": "壬戌",
+      "sanchuan": [
+        "巳",
+        "寅",
+        "亥"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "水日逢丁财动之",
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 306,
+      "ganzhi": "癸亥",
+      "sanchuan": [
+        "戌",
+        "酉",
+        "申"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "彼此猜忌害相随"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 307,
+      "ganzhi": "癸亥",
+      "sanchuan": [
+        "卯",
+        "巳",
+        "辰"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "水日逢丁财动之",
+        "彼此猜忌害相随",
+        "制鬼之位乃良医",
+        "尊崇传内遇三奇",
+        "昼夜贵加求两贵"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "涨",
+      "signal_strength": 0.79,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 308,
+      "ganzhi": "癸亥",
+      "sanchuan": [
+        "辰",
+        "未",
+        "戌"
+      ],
+      "kege": "稼穑课",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "前后逼迫难进退",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "震荡",
+      "signal_strength": 0.43,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 309,
+      "ganzhi": "癸亥",
+      "sanchuan": [
+        "辰",
+        "未",
+        "戌"
+      ],
+      "kege": "稼穑课",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "前后逼迫难进退",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "震荡",
+      "signal_strength": 0.43,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 310,
+      "ganzhi": "癸亥",
+      "sanchuan": [
+        "辰",
+        "未",
+        "戌"
+      ],
+      "kege": "稼穑课",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "前后逼迫难进退",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "震荡",
+      "signal_strength": 0.43,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 311,
+      "ganzhi": "癸亥",
+      "sanchuan": [
+        "午",
+        "亥",
+        "辰"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "用破身心无所归",
+        "妄用三传灾福异"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "跌",
+      "signal_strength": 0.75,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 312,
+      "ganzhi": "癸亥",
+      "sanchuan": [
+        "巳",
+        "亥",
+        "巳"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "水日逢丁财动之",
+        "前后引从升迁吉",
+        "六阴相继尽昏迷",
+        "用破身心无所归"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "震荡",
+      "signal_strength": 0.5,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 313,
+      "ganzhi": "癸亥",
+      "sanchuan": [
+        "未",
+        "卯",
+        "亥"
+      ],
+      "kege": "曲直课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "六阴相继尽昏迷",
+        "制鬼之位乃良医",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "涨",
+      "signal_strength": 0.64,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 314,
+      "ganzhi": "乙酉",
+      "sanchuan": [
+        "卯",
+        "亥",
+        "未"
+      ],
+      "kege": "曲直课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "喜惧空亡乃妙机",
+        "旬内空亡逐类推"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 315,
+      "ganzhi": "辛未",
+      "sanchuan": [
+        "巳",
+        "丑",
+        "辰"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "胎财死气损胎推"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "跌",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 316,
+      "ganzhi": "己卯",
+      "sanchuan": [
+        "戌",
+        "戌",
+        "寅"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 317,
+      "ganzhi": "乙酉",
+      "sanchuan": [
+        "子",
+        "寅",
+        "辰"
+      ],
+      "kege": "进间传",
+      "bifa_rules": [
+        "前后引从升迁吉"
+      ],
+      "bifa_count": 1,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 318,
+      "ganzhi": "己亥",
+      "sanchuan": [
+        "午",
+        "子",
+        "丑"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "传墓入墓分憎爱",
+        "彼此猜忌害相随",
+        "用破身心无所归",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "跌",
+      "signal_strength": 0.8,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 319,
+      "ganzhi": "壬申",
+      "sanchuan": [
+        "申",
+        "亥",
+        "寅"
+      ],
+      "kege": "玄胎",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "苦去甘来乐里悲",
+        "旬内空亡逐类推"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "跌",
+      "signal_strength": 0.71,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 320,
+      "ganzhi": "己巳",
+      "sanchuan": [
+        "午",
+        "子",
+        "辰"
+      ],
+      "kege": "",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "用破身心无所归",
+        "妄用三传灾福异",
+        "尊崇传内遇三奇"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "涨",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 321,
+      "ganzhi": "己丑",
+      "sanchuan": [
+        "丑",
+        "丑",
+        "丑"
+      ],
+      "kege": "稼穑课",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "六阴相继尽昏迷",
+        "所筮不入仍凭类"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "震荡",
+      "signal_strength": 0.43,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 322,
+      "ganzhi": "丙戌",
+      "sanchuan": [
+        "巳",
+        "丑",
+        "酉"
+      ],
+      "kege": "从革课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "闭口卦体两般推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 323,
+      "ganzhi": "甲子",
+      "sanchuan": [
+        "辰",
+        "申",
+        "子"
+      ],
+      "kege": "润下课",
+      "bifa_rules": [
+        "三传递生人举荐",
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "六阳数足须公用",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "涨",
+      "signal_strength": 0.85,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 324,
+      "ganzhi": "辛酉",
+      "sanchuan": [
+        "丑",
+        "亥",
+        "酉"
+      ],
+      "kege": "退间传",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "彼此猜忌害相随",
+        "费有余而得不足",
+        "妄用三传灾福异",
+        "喜惧空亡乃妙机",
+        "旬内空亡逐类推"
+      ],
+      "bifa_count": 6,
+      "stock_signal": "跌",
+      "signal_strength": 0.57,
+      "advice": "毕法赋多法条共振看跌，建议回避或减仓"
+    },
+    {
+      "index": 325,
+      "ganzhi": "戊申",
+      "sanchuan": [
+        "子",
+        "申",
+        "辰"
+      ],
+      "kege": "润下课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "前后引从升迁吉"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 1.0,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 326,
+      "ganzhi": "己丑",
+      "sanchuan": [
+        "戌",
+        "午",
+        "寅"
+      ],
+      "kege": "炎上课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "鬼贼当时无畏忌",
+        "喜惧空亡乃妙机",
+        "旬内空亡逐类推",
+        "常问不应逢吉象"
+      ],
+      "bifa_count": 6,
+      "stock_signal": "涨",
+      "signal_strength": 0.54,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 327,
+      "ganzhi": "乙酉",
+      "sanchuan": [
+        "子",
+        "辰",
+        "申"
+      ],
+      "kege": "润下课",
+      "bifa_rules": [
+        "万事喜忻三六合",
+        "前后引从升迁吉",
+        "末助初兮三等论",
+        "常问不应逢吉象",
+        "昼夜贵加求两贵"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "涨",
+      "signal_strength": 0.83,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 328,
+      "ganzhi": "甲午",
+      "sanchuan": [
+        "午",
+        "辰",
+        "寅"
+      ],
+      "kege": "退间传",
+      "bifa_rules": [
+        "六阳数足须公用",
+        "闭口卦体两般推",
+        "喜惧空亡乃妙机",
+        "旬内空亡逐类推"
+      ],
+      "bifa_count": 4,
+      "stock_signal": "跌",
+      "signal_strength": 0.5,
+      "advice": "毕法赋信号偏弱，参考价值有限"
+    },
+    {
+      "index": 329,
+      "ganzhi": "戊辰",
+      "sanchuan": [
+        "卯",
+        "寅",
+        "丑"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "胎财死气损胎推",
+        "六爻现卦防其克",
+        "尊崇传内遇三奇"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "震荡",
+      "signal_strength": 0.43,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 330,
+      "ganzhi": "壬戌",
+      "sanchuan": [
+        "子",
+        "亥",
+        "戌"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "旬内空亡逐类推"
+      ],
+      "bifa_count": 2,
+      "stock_signal": "涨",
+      "signal_strength": 0.6,
+      "advice": "毕法赋多法条共振看涨，可考虑建仓"
+    },
+    {
+      "index": 331,
+      "ganzhi": "癸卯",
+      "sanchuan": [
+        "巳",
+        "辰",
+        "卯"
+      ],
+      "kege": "退连茹",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "用破身心无所归",
+        "制鬼之位乃良医",
+        "末助初兮三等论",
+        "喜惧空亡乃妙机",
+        "旬内空亡逐类推",
+        "昼夜贵加求两贵"
+      ],
+      "bifa_count": 7,
+      "stock_signal": "跌",
+      "signal_strength": 0.47,
+      "advice": "毕法赋信号偏弱，参考价值有限"
+    },
+    {
+      "index": 332,
+      "ganzhi": "戊子",
+      "sanchuan": [
+        "寅",
+        "卯",
+        "辰"
+      ],
+      "kege": "进连茹",
+      "bifa_rules": [
+        "彼此猜忌害相随",
+        "罡塞鬼户任谋为",
+        "六爻现卦防其克"
+      ],
+      "bifa_count": 3,
+      "stock_signal": "震荡",
+      "signal_strength": 0.43,
+      "advice": "毕法赋涨跌信号均衡，建议观望"
+    },
+    {
+      "index": 333,
+      "ganzhi": "癸酉",
+      "sanchuan": [
+        "丑",
+        "戌",
+        "未"
+      ],
+      "kege": "稼穑课",
+      "bifa_rules": [
+        "前后引从升迁吉",
+        "前后逼迫难进退",
+        "喜惧空亡乃妙机",
+        "六爻现卦防其克",
+        "旬内空亡逐类推"
+      ],
+      "bifa_count": 5,
+      "stock_signal": "跌",
+      "signal_strength": 0.45,
+      "advice": "毕法赋信号偏弱，参考价值有限"
+    }
+  ]
+}

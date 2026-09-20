@@ -1,0 +1,2232 @@
+{
+  "method_overview": {
+    "M1": {
+      "total": 508,
+      "correct": 312,
+      "accuracy": 61.42,
+      "avg_confidence": 0.4911,
+      "confusion_matrix": {
+        "凶->吉": 1,
+        "吉->吉": 192,
+        "吉->凶": 54,
+        "吉->平": 43,
+        "平->吉": 1,
+        "凶->平": 96,
+        "凶->凶": 120,
+        "平->凶": 1
+      }
+    },
+    "M2": {
+      "total": 508,
+      "correct": 322,
+      "accuracy": 63.39,
+      "avg_confidence": 0.5332,
+      "confusion_matrix": {
+        "凶->吉": 1,
+        "吉->吉": 202,
+        "吉->凶": 54,
+        "平->吉": 1,
+        "凶->平": 96,
+        "凶->凶": 120,
+        "吉->平": 33,
+        "平->凶": 1
+      }
+    },
+    "M3": {
+      "total": 508,
+      "correct": 322,
+      "accuracy": 63.39,
+      "avg_confidence": 0.5332,
+      "confusion_matrix": {
+        "凶->吉": 1,
+        "吉->吉": 202,
+        "吉->凶": 54,
+        "平->吉": 1,
+        "凶->平": 96,
+        "凶->凶": 120,
+        "吉->平": 33,
+        "平->凶": 1
+      }
+    },
+    "M4": {
+      "total": 508,
+      "correct": 202,
+      "accuracy": 39.76,
+      "avg_confidence": 0.1822,
+      "confusion_matrix": {
+        "凶->吉": 1,
+        "吉->吉": 201,
+        "吉->平": 88,
+        "平->吉": 1,
+        "凶->平": 216,
+        "平->平": 1
+      }
+    }
+  },
+  "categories_sorted": [
+    {
+      "category": "其他",
+      "total": 166,
+      "correct": 65,
+      "errors_count": 101,
+      "accuracy": 39.16,
+      "direction": {
+        "平->吉": 1,
+        "凶->平": 49,
+        "吉->平": 17,
+        "吉->凶": 33,
+        "平->凶": 1
+      },
+      "errors": [
+        {
+          "id": "SZ-020",
+          "name": "曹农占收成",
+          "truth": "平",
+          "prediction": "吉",
+          "confidence": 0.613,
+          "prob_up": 0.829,
+          "prob_down": 0.096,
+          "signals": [
+            "青龙临四课：背景资金面偏好",
+            "六合在四课：市场交投存在"
+          ]
+        },
+        {
+          "id": "RH-甲子",
+          "name": "玉连环",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-甲子",
+          "name": "苗公达",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-甲子",
+          "name": "",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-甲子",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-甲子",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-甲子",
+          "name": "一针见血",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-乙丑",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-乙丑",
+          "name": "牧夫占验",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.424,
+          "prob_up": 0.184,
+          "prob_down": 0.334,
+          "signals": []
+        },
+        {
+          "id": "RH-丙寅",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-丙寅",
+          "name": "牧夫占验",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-丙寅",
+          "name": "",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.424,
+          "prob_up": 0.184,
+          "prob_down": 0.334,
+          "signals": []
+        },
+        {
+          "id": "RH-丁卯",
+          "name": "",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-戊辰",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-戊辰",
+          "name": "玉连环",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-己巳",
+          "name": "",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-辛未",
+          "name": "牧夫占验",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-壬申",
+          "name": "玉连环",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-壬申",
+          "name": "玉连环",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-壬申",
+          "name": "玉连环",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-癸酉",
+          "name": "",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-甲戌",
+          "name": "一针见血",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-甲戌",
+          "name": "牧夫占验",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-甲戌",
+          "name": "一针见血",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-甲戌",
+          "name": "牧夫占验",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-乙亥",
+          "name": "玉连环",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-乙亥",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-丙子",
+          "name": "玉连环",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-己卯",
+          "name": "玉连环",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-庚辰",
+          "name": "牧夫占验",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-庚辰",
+          "name": "方本占案",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-庚辰",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-庚辰",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-庚辰",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-辛巳",
+          "name": "一针见血",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-辛巳",
+          "name": "一针见血",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-辛巳",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-辛巳",
+          "name": "玉连环",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-辛巳",
+          "name": "一针见血",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-辛巳",
+          "name": "指南",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-辛巳",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.424,
+          "prob_up": 0.184,
+          "prob_down": 0.334,
+          "signals": []
+        },
+        {
+          "id": "RH-癸未",
+          "name": "",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-乙酉",
+          "name": "指南",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-乙酉",
+          "name": "方本占案",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-丙戌",
+          "name": "一针见血",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-丁亥",
+          "name": "方本占案",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-丁亥",
+          "name": "",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-戊子",
+          "name": "",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.424,
+          "prob_up": 0.184,
+          "prob_down": 0.334,
+          "signals": []
+        },
+        {
+          "id": "RH-己丑",
+          "name": "指南",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-己丑",
+          "name": "",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-己丑",
+          "name": "",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-庚寅",
+          "name": "",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-庚寅",
+          "name": "",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-庚寅",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-辛卯",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-壬辰",
+          "name": "",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-壬辰",
+          "name": "方本占案",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-壬辰",
+          "name": "",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-壬辰",
+          "name": "牧夫占验",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-癸巳",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-乙未",
+          "name": "",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-丁酉",
+          "name": "",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-戊戌",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-己亥",
+          "name": "一针见血",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.424,
+          "prob_up": 0.184,
+          "prob_down": 0.334,
+          "signals": []
+        },
+        {
+          "id": "RH-庚子",
+          "name": "指南",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-辛丑",
+          "name": "一针见血",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-壬寅",
+          "name": "说约",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-壬寅",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-癸卯",
+          "name": "玉连环",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-癸卯",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.424,
+          "prob_up": 0.184,
+          "prob_down": 0.334,
+          "signals": []
+        },
+        {
+          "id": "RH-癸卯",
+          "name": "指南",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-癸卯",
+          "name": "牧夫占验",
+          "truth": "平",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-癸卯",
+          "name": "玉连环",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-癸卯",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-甲辰",
+          "name": "吴越春秋",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-甲辰",
+          "name": "张本占案",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.424,
+          "prob_up": 0.184,
+          "prob_down": 0.334,
+          "signals": []
+        },
+        {
+          "id": "RH-甲辰",
+          "name": "牧夫占验",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.424,
+          "prob_up": 0.184,
+          "prob_down": 0.334,
+          "signals": []
+        },
+        {
+          "id": "RH-甲辰",
+          "name": "方本占案",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-乙巳",
+          "name": "指南",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-丁未",
+          "name": "牧夫占验",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-戊申",
+          "name": "宋本邵案",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-戊申",
+          "name": "",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-己酉",
+          "name": "方本占案",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-庚戌",
+          "name": "牧夫占验",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-辛亥",
+          "name": "吴越春秋",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-辛亥",
+          "name": "苗公达",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-壬子",
+          "name": "方本占案",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-癸丑",
+          "name": "方本占案",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-甲寅",
+          "name": "",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-乙卯",
+          "name": "",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.424,
+          "prob_up": 0.184,
+          "prob_down": 0.334,
+          "signals": []
+        },
+        {
+          "id": "RH-丙辰",
+          "name": "指南",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-戊午",
+          "name": "一针见血",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-己未",
+          "name": "一针见血",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-庚申",
+          "name": "指南",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-庚申",
+          "name": "牧夫占验",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-庚申",
+          "name": "张本占案",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-壬戌",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-壬戌",
+          "name": "一针见血",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-壬戌",
+          "name": "",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-壬戌",
+          "name": "",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-癸亥",
+          "name": "一针见血",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        }
+      ]
+    },
+    {
+      "category": "功名",
+      "total": 83,
+      "correct": 49,
+      "errors_count": 34,
+      "accuracy": 59.04,
+      "direction": {
+        "吉->凶": 12,
+        "吉->平": 10,
+        "凶->平": 12
+      },
+      "errors": [
+        {
+          "id": "SZ-005",
+          "name": "刘生占考试",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.414,
+          "prob_up": 0.245,
+          "prob_down": 0.441,
+          "signals": []
+        },
+        {
+          "id": "SZ-074",
+          "name": "王婆占占功名",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.673,
+          "prob_up": 0.224,
+          "prob_down": 0.382,
+          "signals": []
+        },
+        {
+          "id": "SZ-144",
+          "name": "王匠占占功名",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.673,
+          "prob_up": 0.224,
+          "prob_down": 0.382,
+          "signals": []
+        },
+        {
+          "id": "SZ-204",
+          "name": "李生占占功名",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.673,
+          "prob_up": 0.224,
+          "prob_down": 0.382,
+          "signals": []
+        },
+        {
+          "id": "RH-甲子",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-丙寅",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-戊辰",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-丙子",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.424,
+          "prob_up": 0.184,
+          "prob_down": 0.334,
+          "signals": []
+        },
+        {
+          "id": "RH-丁丑",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-丁丑",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-戊寅",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-戊寅",
+          "name": "",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-戊寅",
+          "name": "",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-庚辰",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-庚辰",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-庚辰",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-辛巳",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-辛巳",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.424,
+          "prob_up": 0.184,
+          "prob_down": 0.334,
+          "signals": []
+        },
+        {
+          "id": "RH-癸未",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-甲申",
+          "name": "指南",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-丁亥",
+          "name": "方本占案",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-壬辰",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-乙未",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-己亥",
+          "name": "指南",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-壬寅",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-戊申",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-己酉",
+          "name": "方本占案",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-辛亥",
+          "name": "方本占案",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-甲寅",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-乙卯",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.424,
+          "prob_up": 0.184,
+          "prob_down": 0.334,
+          "signals": []
+        },
+        {
+          "id": "RH-丁巳",
+          "name": "指南",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-丁巳",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-辛酉",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-癸亥",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        }
+      ]
+    },
+    {
+      "category": "家宅",
+      "total": 57,
+      "correct": 40,
+      "errors_count": 17,
+      "accuracy": 70.18,
+      "direction": {
+        "凶->吉": 1,
+        "凶->平": 14,
+        "吉->平": 1,
+        "吉->凶": 1
+      },
+      "errors": [
+        {
+          "id": "SZ-001",
+          "name": "张九翁占宅",
+          "truth": "凶",
+          "prediction": "吉",
+          "confidence": 0.764,
+          "prob_up": 0.861,
+          "prob_down": 0.101,
+          "signals": [
+            "财爻入中传(中传)：财运行进中，看涨"
+          ]
+        },
+        {
+          "id": "RH-癸酉",
+          "name": "方本占案",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-甲戌",
+          "name": "方本占案",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-丁丑",
+          "name": "一针见血",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-庚辰",
+          "name": "",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.424,
+          "prob_up": 0.184,
+          "prob_down": 0.334,
+          "signals": []
+        },
+        {
+          "id": "RH-辛巳",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-辛巳",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-庚寅",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-庚寅",
+          "name": "",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-壬寅",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-乙巳",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.424,
+          "prob_up": 0.184,
+          "prob_down": 0.334,
+          "signals": []
+        },
+        {
+          "id": "RH-丙午",
+          "name": "方本占案",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-戊申",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-壬子",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-甲寅",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-丁巳",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-癸亥",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        }
+      ]
+    },
+    {
+      "category": "官讼",
+      "total": 16,
+      "correct": 6,
+      "errors_count": 10,
+      "accuracy": 37.5,
+      "direction": {
+        "吉->凶": 4,
+        "凶->平": 5,
+        "吉->平": 1
+      },
+      "errors": [
+        {
+          "id": "RH-丁卯",
+          "name": "牧夫占验",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-辛未",
+          "name": "牧夫占验",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-庚辰",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-庚寅",
+          "name": "",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-庚寅",
+          "name": "一针见血",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-辛卯",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-壬辰",
+          "name": "一针见血",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-壬辰",
+          "name": "方本占案",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-辛丑",
+          "name": "指南",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-辛酉",
+          "name": "指南",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        }
+      ]
+    },
+    {
+      "category": "疾病",
+      "total": 40,
+      "correct": 32,
+      "errors_count": 8,
+      "accuracy": 80.0,
+      "direction": {
+        "吉->平": 1,
+        "凶->平": 7
+      },
+      "errors": [
+        {
+          "id": "RH-辛未",
+          "name": "牧夫占验",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-庚辰",
+          "name": "方本占案",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-癸未",
+          "name": "一针见血",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-丁亥",
+          "name": "指南",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-癸巳",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-丙申",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-庚戌",
+          "name": "指南",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-癸丑",
+          "name": "牧夫占验",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        }
+      ]
+    },
+    {
+      "category": "婚姻",
+      "total": 17,
+      "correct": 13,
+      "errors_count": 4,
+      "accuracy": 76.47,
+      "direction": {
+        "凶->平": 1,
+        "吉->凶": 2,
+        "吉->平": 1
+      },
+      "errors": [
+        {
+          "id": "RH-己卯",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-癸巳",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-辛亥",
+          "name": "壬归",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-癸丑",
+          "name": "牧夫占验",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        }
+      ]
+    },
+    {
+      "category": "求财",
+      "total": 48,
+      "correct": 45,
+      "errors_count": 3,
+      "accuracy": 93.75,
+      "direction": {
+        "吉->平": 1,
+        "凶->平": 2
+      },
+      "errors": [
+        {
+          "id": "RH-癸巳",
+          "name": "口鉴",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-辛丑",
+          "name": "一针见血",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-丙辰",
+          "name": "牧夫占验",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        }
+      ]
+    },
+    {
+      "category": "胎产",
+      "total": 21,
+      "correct": 18,
+      "errors_count": 3,
+      "accuracy": 85.71,
+      "direction": {
+        "凶->平": 3
+      },
+      "errors": [
+        {
+          "id": "RH-乙丑",
+          "name": "方本占案",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-壬申",
+          "name": "牧夫占验",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-癸酉",
+          "name": "一针见血",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        }
+      ]
+    },
+    {
+      "category": "走失",
+      "total": 15,
+      "correct": 13,
+      "errors_count": 2,
+      "accuracy": 86.67,
+      "direction": {
+        "吉->凶": 1,
+        "凶->平": 1
+      },
+      "errors": [
+        {
+          "id": "RH-甲子",
+          "name": "一针见血",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.535,
+          "prob_up": 0.145,
+          "prob_down": 0.476,
+          "signals": []
+        },
+        {
+          "id": "RH-壬辰",
+          "name": "",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        }
+      ]
+    },
+    {
+      "category": "出行",
+      "total": 7,
+      "correct": 5,
+      "errors_count": 2,
+      "accuracy": 71.43,
+      "direction": {
+        "凶->平": 2
+      },
+      "errors": [
+        {
+          "id": "RH-辛卯",
+          "name": "口鉴",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        },
+        {
+          "id": "RH-庚申",
+          "name": "玉连环",
+          "truth": "凶",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        }
+      ]
+    },
+    {
+      "category": "学业",
+      "total": 3,
+      "correct": 1,
+      "errors_count": 2,
+      "accuracy": 33.33,
+      "direction": {
+        "吉->凶": 1,
+        "吉->平": 1
+      },
+      "errors": [
+        {
+          "id": "SZ-026",
+          "name": "郑生占学业",
+          "truth": "吉",
+          "prediction": "凶",
+          "confidence": 0.669,
+          "prob_up": 0.13,
+          "prob_down": 0.599,
+          "signals": []
+        },
+        {
+          "id": "RH-丁卯",
+          "name": "牧夫占验",
+          "truth": "吉",
+          "prediction": "平",
+          "confidence": 0.482,
+          "prob_up": 0.164,
+          "prob_down": 0.408,
+          "signals": []
+        }
+      ]
+    },
+    {
+      "category": "征战",
+      "total": 12,
+      "correct": 12,
+      "errors_count": 0,
+      "accuracy": 100.0,
+      "direction": {},
+      "errors": []
+    },
+    {
+      "category": "蚕桑",
+      "total": 12,
+      "correct": 12,
+      "errors_count": 0,
+      "accuracy": 100.0,
+      "direction": {},
+      "errors": []
+    },
+    {
+      "category": "寿元",
+      "total": 11,
+      "correct": 11,
+      "errors_count": 0,
+      "accuracy": 100.0,
+      "direction": {},
+      "errors": []
+    }
+  ],
+  "cat_method_acc": {
+    "家宅": {
+      "M1": 70.18,
+      "M2": 70.18,
+      "M3": 70.18,
+      "M4": 43.86
+    },
+    "疾病": {
+      "M1": 80.0,
+      "M2": 80.0,
+      "M3": 80.0,
+      "M4": 42.5
+    },
+    "求财": {
+      "M1": 87.5,
+      "M2": 93.75,
+      "M3": 93.75,
+      "M4": 85.42
+    },
+    "婚姻": {
+      "M1": 76.47,
+      "M2": 76.47,
+      "M3": 76.47,
+      "M4": 76.47
+    },
+    "功名": {
+      "M1": 57.83,
+      "M2": 59.04,
+      "M3": 59.04,
+      "M4": 40.96
+    },
+    "征战": {
+      "M1": 50.0,
+      "M2": 100.0,
+      "M3": 100.0,
+      "M4": 100.0
+    },
+    "走失": {
+      "M1": 86.67,
+      "M2": 86.67,
+      "M3": 86.67,
+      "M4": 80.0
+    },
+    "胎产": {
+      "M1": 85.71,
+      "M2": 85.71,
+      "M3": 85.71,
+      "M4": 66.67
+    },
+    "出行": {
+      "M1": 71.43,
+      "M2": 71.43,
+      "M3": 71.43,
+      "M4": 28.57
+    },
+    "其他": {
+      "M1": 39.16,
+      "M2": 39.16,
+      "M3": 39.16,
+      "M4": 4.82
+    },
+    "学业": {
+      "M1": 33.33,
+      "M2": 33.33,
+      "M3": 33.33,
+      "M4": 33.33
+    },
+    "寿元": {
+      "M1": 100.0,
+      "M2": 100.0,
+      "M3": 100.0,
+      "M4": 100.0
+    },
+    "蚕桑": {
+      "M1": 100.0,
+      "M2": 100.0,
+      "M3": 100.0,
+      "M4": 100.0
+    },
+    "官讼": {
+      "M1": 37.5,
+      "M2": 37.5,
+      "M3": 37.5,
+      "M4": 0.0
+    }
+  },
+  "wealth": {
+    "total": 48,
+    "correct": 45,
+    "errors": [
+      {
+        "id": "RH-癸巳",
+        "name": "口鉴",
+        "truth": "吉",
+        "prediction": "平",
+        "confidence": 0.482,
+        "prob_up": 0.164,
+        "prob_down": 0.408,
+        "signals": []
+      },
+      {
+        "id": "RH-辛丑",
+        "name": "一针见血",
+        "truth": "凶",
+        "prediction": "平",
+        "confidence": 0.482,
+        "prob_up": 0.164,
+        "prob_down": 0.408,
+        "signals": []
+      },
+      {
+        "id": "RH-丙辰",
+        "name": "牧夫占验",
+        "truth": "凶",
+        "prediction": "平",
+        "confidence": 0.482,
+        "prob_up": 0.164,
+        "prob_down": 0.408,
+        "signals": []
+      }
+    ]
+  },
+  "total_cases": 557
+}

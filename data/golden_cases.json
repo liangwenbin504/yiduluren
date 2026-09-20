@@ -1,0 +1,1119 @@
+[
+  {
+    "id": "CASE-STOCK-002",
+    "title": "赤峰黄金六壬弹射格——白虎发用主暴跌后筑底",
+    "zhanshi": "求财",
+    "source": "东方财富网财富号",
+    "ground_truth": {
+      "keti": "弹射",
+      "jixiong": "凶",
+      "sanchuan": {
+        "first": "白虎+金",
+        "second": "玄武+水",
+        "third": "勾陈+土"
+      },
+      "key_signals": [
+        "白虎临官鬼主暴跌，玄武主暗流，勾陈主筑底",
+        "白虎主恐慌暴跌，玄武主迷茫，勾陈主拖延筑底"
+      ],
+      "paipan": {
+        "keti": "弹射",
+        "complete": true,
+        "四柱": "丙午 庚寅 乙卯 丙子",
+        "月将": "子",
+        "时辰": "子",
+        "四课": [
+          [
+            "第一课",
+            "辰",
+            "乙",
+            ""
+          ],
+          [
+            "第二课",
+            "辰",
+            "辰",
+            ""
+          ],
+          [
+            "第三课",
+            "卯",
+            "卯",
+            ""
+          ],
+          [
+            "第四课",
+            "卯",
+            "卯",
+            ""
+          ]
+        ],
+        "天地盘": {
+          "子": "子",
+          "丑": "丑",
+          "寅": "寅",
+          "卯": "卯",
+          "辰": "辰",
+          "巳": "巳",
+          "午": "午",
+          "未": "未",
+          "申": "申",
+          "酉": "酉",
+          "戌": "戌",
+          "亥": "亥"
+        },
+        "三传地支": [
+          "辰",
+          "卯",
+          "子"
+        ],
+        "课体": "不虞格",
+        "天将": [
+          "勾陈",
+          "青龙",
+          "太常"
+        ],
+        "date": "2026-02-10"
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "验证：2月金价回调，赤峰黄金从42元跌至35元，3月企稳于36-38元区间",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "CASE-STOCK-022",
+    "title": "刘文元大六壬投资求财案例——巳火子孙旺相，投资发财",
+    "zhanshi": "求财",
+    "source": "刘文元大六壬案例解01",
+    "ground_truth": {
+      "keti": "",
+      "jixiong": "吉",
+      "sanchuan": {
+        "first": "巳（子孙+白虎）",
+        "second": "",
+        "third": ""
+      },
+      "key_signals": [
+        "子孙为财源，旺相生财",
+        "白虎主金，项目与金属相关"
+      ],
+      "paipan": {
+        "keti": "",
+        "complete": true,
+        "四柱": "乙巳 戊子 戊午 壬子",
+        "月将": "寅",
+        "时辰": "子",
+        "四课": [
+          [
+            "第一课",
+            "未",
+            "戊",
+            ""
+          ],
+          [
+            "第二课",
+            "酉",
+            "未",
+            ""
+          ],
+          [
+            "第三课",
+            "申",
+            "午",
+            ""
+          ],
+          [
+            "第四课",
+            "戌",
+            "申",
+            ""
+          ]
+        ],
+        "天地盘": {
+          "子": "寅",
+          "丑": "卯",
+          "寅": "辰",
+          "卯": "巳",
+          "辰": "午",
+          "巳": "未",
+          "午": "申",
+          "未": "酉",
+          "申": "戌",
+          "酉": "亥",
+          "戌": "子",
+          "亥": "丑"
+        },
+        "三传地支": [
+          "申",
+          "戌",
+          "子"
+        ],
+        "课体": "重审课",
+        "天将": [
+          "天后",
+          "玄武",
+          "白虎"
+        ],
+        "date": "2025-12-15"
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "验证：求测人当即开始投资，到戌月生意已很好，最后发了大财",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "CASE-STOCK-023",
+    "title": "铸印破模课+长生空亡+双线凶煞——末传巳空亡+三传天将后勾玄，必跌",
+    "zhanshi": "求财",
+    "source": "人工指定课式验证",
+    "ground_truth": {
+      "keti": "重审，铸印破模",
+      "jixiong": "凶",
+      "sanchuan": {
+        "first": "卯（妻财+天后）",
+        "second": "戌（父母+勾陈）",
+        "third": "巳（官鬼+玄武，空亡）"
+      },
+      "key_signals": [
+        "初传卯妻财、中传戌父母、末传巳官鬼，末传空亡无力",
+        "天后主滞后迟缓，勾陈主停滞阻碍被套，玄武主偷盗暗损骗线，三凶叠加必跌"
+      ],
+      "paipan": {
+        "keti": "重审，铸印破模",
+        "complete": true,
+        "四柱": "丙午 乙未 辛丑 戊子",
+        "月将": "午",
+        "时辰": "子",
+        "四课": [
+          [
+            "第一课",
+            "辰",
+            "辛",
+            ""
+          ],
+          [
+            "第二课",
+            "戌",
+            "辰",
+            ""
+          ],
+          [
+            "第三课",
+            "未",
+            "丑",
+            ""
+          ],
+          [
+            "第四课",
+            "丑",
+            "未",
+            ""
+          ]
+        ],
+        "天地盘": {
+          "子": "午",
+          "丑": "未",
+          "寅": "申",
+          "卯": "酉",
+          "辰": "戌",
+          "巳": "亥",
+          "午": "子",
+          "未": "丑",
+          "申": "寅",
+          "酉": "卯",
+          "戌": "辰",
+          "亥": "巳"
+        },
+        "三传地支": [
+          "亥",
+          "未",
+          "辰"
+        ],
+        "课体": "反吟课",
+        "天将": [
+          "六合",
+          "白虎",
+          "太阴"
+        ],
+        "date": "2026-07-26"
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "待验证",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "GOLDEN-001",
+    "title": "求财类-白虎发用主暴跌",
+    "zhanshi": "求财",
+    "source": "训练案例 CASE-STOCK-002",
+    "ground_truth": {
+      "keti": "弹射",
+      "jixiong": "凶",
+      "sanchuan": {
+        "first": "白虎+金",
+        "second": "玄武+水",
+        "third": "勾陈+土"
+      },
+      "key_signals": [
+        "白虎临官鬼主暴跌",
+        "玄武主暗流",
+        "勾陈主筑底"
+      ],
+      "paipan": {
+        "keti": "弹射",
+        "complete": true,
+        "四柱": "丙午 庚寅 乙卯 丙子",
+        "月将": "子",
+        "时辰": "子",
+        "四课": [
+          [
+            "第一课",
+            "辰",
+            "乙",
+            ""
+          ],
+          [
+            "第二课",
+            "辰",
+            "辰",
+            ""
+          ],
+          [
+            "第三课",
+            "卯",
+            "卯",
+            ""
+          ],
+          [
+            "第四课",
+            "卯",
+            "卯",
+            ""
+          ]
+        ],
+        "天地盘": {
+          "子": "子",
+          "丑": "丑",
+          "寅": "寅",
+          "卯": "卯",
+          "辰": "辰",
+          "巳": "巳",
+          "午": "午",
+          "未": "未",
+          "申": "申",
+          "酉": "酉",
+          "戌": "戌",
+          "亥": "亥"
+        },
+        "三传地支": [
+          "辰",
+          "卯",
+          "子"
+        ],
+        "课体": "不虞格",
+        "天将": [
+          "勾陈",
+          "青龙",
+          "太常"
+        ],
+        "date": "2026-02-10"
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "赤峰黄金从42元跌至35元",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "GOLDEN-003",
+    "title": "疾病类-朱雀临身主发热",
+    "zhanshi": "疾病",
+    "source": "经典六壬案例",
+    "ground_truth": {
+      "keti": "涉害",
+      "jixiong": "凶",
+      "sanchuan": {
+        "first": "朱雀+巳",
+        "second": "太常+未"
+      },
+      "key_signals": [
+        "朱雀主口舌发热",
+        "巳火旺相",
+        "需防炎症"
+      ],
+      "paipan": {
+        "keti": "涉害",
+        "complete": false,
+        "三传地支": [
+          "巳",
+          "未",
+          ""
+        ],
+        "天将": [
+          "朱雀",
+          "太常",
+          ""
+        ],
+        "sanchuan_raw": {
+          "first": "朱雀+巳",
+          "second": "太常+未"
+        }
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "高热不退，后确诊肺炎",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "GOLDEN-004",
+    "title": "婚姻类-六合临妻主良缘",
+    "zhanshi": "婚姻",
+    "source": "经典六壬案例",
+    "ground_truth": {
+      "keti": "六合",
+      "jixiong": "吉",
+      "sanchuan": {
+        "first": "六合+卯",
+        "second": "青龙+寅"
+      },
+      "key_signals": [
+        "六合主婚姻和合",
+        "青龙主喜庆",
+        "卯木为桃花"
+      ],
+      "paipan": {
+        "keti": "六合",
+        "complete": false,
+        "三传地支": [
+          "卯",
+          "寅",
+          ""
+        ],
+        "天将": [
+          "六合",
+          "青龙",
+          ""
+        ],
+        "sanchuan_raw": {
+          "first": "六合+卯",
+          "second": "青龙+寅"
+        }
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "当年结婚，婚姻美满",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "GOLDEN-005",
+    "title": "出行类-驿马临用主速行",
+    "zhanshi": "出行",
+    "source": "经典六壬案例",
+    "ground_truth": {
+      "keti": "元首",
+      "jixiong": "吉",
+      "sanchuan": {
+        "first": "驿马+申",
+        "second": "青龙+寅"
+      },
+      "key_signals": [
+        "驿马主动",
+        "申为道路",
+        "出行顺利"
+      ],
+      "paipan": {
+        "keti": "元首",
+        "complete": false,
+        "三传地支": [
+          "申",
+          "寅",
+          ""
+        ],
+        "天将": [
+          "",
+          "青龙",
+          ""
+        ],
+        "sanchuan_raw": {
+          "first": "驿马+申",
+          "second": "青龙+寅"
+        }
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "如期出发，平安到达",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "GOLDEN-006",
+    "title": "官讼类-白虎临官主胜诉",
+    "zhanshi": "官讼",
+    "source": "经典六壬案例",
+    "ground_truth": {
+      "keti": "重审",
+      "jixiong": "吉",
+      "sanchuan": {
+        "first": "白虎+申",
+        "second": "贵人+丑"
+      },
+      "key_signals": [
+        "白虎主武力",
+        "贵人主帮助",
+        "胜诉有望"
+      ],
+      "paipan": {
+        "keti": "重审",
+        "complete": false,
+        "三传地支": [
+          "申",
+          "丑",
+          ""
+        ],
+        "天将": [
+          "白虎",
+          "贵人",
+          ""
+        ],
+        "sanchuan_raw": {
+          "first": "白虎+申",
+          "second": "贵人+丑"
+        }
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "最终胜诉",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "GOLDEN-007",
+    "title": "求财类-青龙临身主大涨",
+    "zhanshi": "求财",
+    "source": "股票预测案例",
+    "ground_truth": {
+      "keti": "元首课",
+      "jixiong": "吉",
+      "sanchuan": {
+        "first": "青龙+巳",
+        "second": "贵人+申",
+        "third": "勾陈+辰"
+      },
+      "key_signals": [
+        "青龙临身主财运亨通",
+        "贵人拱日干",
+        "妻财爻旺相"
+      ],
+      "paipan": {
+        "keti": "元首课",
+        "complete": false,
+        "三传地支": [
+          "巳",
+          "申",
+          "辰"
+        ],
+        "天将": [
+          "青龙",
+          "贵人",
+          "勾陈"
+        ],
+        "sanchuan_raw": {
+          "first": "青龙+巳",
+          "second": "贵人+申",
+          "third": "勾陈+辰"
+        }
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "贵州茅台一周内上涨5%",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "GOLDEN-008",
+    "title": "求财类-玄武主出货需谨慎",
+    "zhanshi": "求财",
+    "source": "股票预测案例",
+    "ground_truth": {
+      "keti": "重审课",
+      "jixiong": "凶",
+      "sanchuan": {
+        "first": "玄武+亥",
+        "second": "白虎+申",
+        "third": "腾蛇+午"
+      },
+      "key_signals": [
+        "玄武主庄家出货",
+        "白虎主恐慌抛售",
+        "腾蛇主反复洗盘"
+      ],
+      "paipan": {
+        "keti": "重审课",
+        "complete": false,
+        "三传地支": [
+          "亥",
+          "申",
+          "午"
+        ],
+        "天将": [
+          "玄武",
+          "白虎",
+          ""
+        ],
+        "sanchuan_raw": {
+          "first": "玄武+亥",
+          "second": "白虎+申",
+          "third": "腾蛇+午"
+        }
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "某科技股连续3日暴跌12%",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "GOLDEN-009",
+    "title": "求财类-六合主并购利好",
+    "zhanshi": "求财",
+    "source": "股票预测案例",
+    "ground_truth": {
+      "keti": "六合课",
+      "jixiong": "吉",
+      "sanchuan": {
+        "first": "六合+卯",
+        "second": "青龙+寅",
+        "third": "太常+未"
+      },
+      "key_signals": [
+        "六合主并购合作",
+        "青龙主资金流入",
+        "太常主业绩兑现"
+      ],
+      "paipan": {
+        "keti": "六合课",
+        "complete": false,
+        "三传地支": [
+          "卯",
+          "寅",
+          "未"
+        ],
+        "天将": [
+          "六合",
+          "青龙",
+          "太常"
+        ],
+        "sanchuan_raw": {
+          "first": "六合+卯",
+          "second": "青龙+寅",
+          "third": "太常+未"
+        }
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "并购公告后股价涨停",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "GOLDEN-010",
+    "title": "求财类-朱雀主消息驱动",
+    "zhanshi": "求财",
+    "source": "股票预测案例",
+    "ground_truth": {
+      "keti": "三阳课",
+      "jixiong": "吉",
+      "sanchuan": {
+        "first": "朱雀+午",
+        "second": "贵人+未",
+        "third": "青龙+寅"
+      },
+      "key_signals": [
+        "朱雀主消息传闻",
+        "政策利好刺激",
+        "三阳开泰"
+      ],
+      "paipan": {
+        "keti": "三阳课",
+        "complete": false,
+        "三传地支": [
+          "午",
+          "未",
+          "寅"
+        ],
+        "天将": [
+          "朱雀",
+          "贵人",
+          "青龙"
+        ],
+        "sanchuan_raw": {
+          "first": "朱雀+午",
+          "second": "贵人+未",
+          "third": "青龙+寅"
+        }
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "新能源板块受政策刺激大涨",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "GOLDEN-011",
+    "title": "求财类-勾陈主横盘震荡",
+    "zhanshi": "求财",
+    "source": "股票预测案例",
+    "ground_truth": {
+      "keti": "伏吟课",
+      "jixiong": "平",
+      "sanchuan": {
+        "first": "勾陈+辰",
+        "second": "玄武+亥",
+        "third": "勾陈+辰"
+      },
+      "key_signals": [
+        "勾陈主横盘阻力",
+        "伏吟主停滞不前",
+        "等待突破方向"
+      ],
+      "paipan": {
+        "keti": "伏吟课",
+        "complete": false,
+        "三传地支": [
+          "辰",
+          "亥",
+          "辰"
+        ],
+        "天将": [
+          "勾陈",
+          "玄武",
+          "勾陈"
+        ],
+        "sanchuan_raw": {
+          "first": "勾陈+辰",
+          "second": "玄武+亥",
+          "third": "勾陈+辰"
+        }
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "股价横盘震荡2周，无明显方向",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "GOLDEN-012",
+    "title": "婚姻类-天后临身主恩爱",
+    "zhanshi": "婚姻",
+    "source": "经典六壬案例",
+    "ground_truth": {
+      "keti": "比和课",
+      "jixiong": "吉",
+      "sanchuan": {
+        "first": "天后+酉",
+        "second": "六合+卯",
+        "third": "青龙+寅"
+      },
+      "key_signals": [
+        "天后主恩爱和睦",
+        "六合主婚姻和合",
+        "青龙主喜事"
+      ],
+      "paipan": {
+        "keti": "比和课",
+        "complete": false,
+        "三传地支": [
+          "酉",
+          "卯",
+          "寅"
+        ],
+        "天将": [
+          "天后",
+          "六合",
+          "青龙"
+        ],
+        "sanchuan_raw": {
+          "first": "天后+酉",
+          "second": "六合+卯",
+          "third": "青龙+寅"
+        }
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "夫妻感情和睦，家庭幸福",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "GOLDEN-013",
+    "title": "婚姻类-腾蛇主口舌需警惕",
+    "zhanshi": "婚姻",
+    "source": "经典六壬案例",
+    "ground_truth": {
+      "keti": "涉害课",
+      "jixiong": "凶",
+      "sanchuan": {
+        "first": "腾蛇+巳",
+        "second": "朱雀+午",
+        "third": "白虎+申"
+      },
+      "key_signals": [
+        "腾蛇主猜忌疑心",
+        "朱雀主口舌争吵",
+        "需防第三者"
+      ],
+      "paipan": {
+        "keti": "涉害课",
+        "complete": false,
+        "三传地支": [
+          "巳",
+          "午",
+          "申"
+        ],
+        "天将": [
+          "",
+          "朱雀",
+          "白虎"
+        ],
+        "sanchuan_raw": {
+          "first": "腾蛇+巳",
+          "second": "朱雀+午",
+          "third": "白虎+申"
+        }
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "因猜忌导致夫妻冷战",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "GOLDEN-014",
+    "title": "疾病类-白虎临申主肺疾",
+    "zhanshi": "疾病",
+    "source": "经典六壬案例",
+    "ground_truth": {
+      "keti": "知机课",
+      "jixiong": "凶",
+      "sanchuan": {
+        "first": "白虎+申",
+        "second": "太常+未",
+        "third": "勾陈+辰"
+      },
+      "key_signals": [
+        "白虎主肺呼吸系统",
+        "申金为肺",
+        "需做CT检查"
+      ],
+      "paipan": {
+        "keti": "知机课",
+        "complete": false,
+        "三传地支": [
+          "申",
+          "未",
+          "辰"
+        ],
+        "天将": [
+          "白虎",
+          "太常",
+          "勾陈"
+        ],
+        "sanchuan_raw": {
+          "first": "白虎+申",
+          "second": "太常+未",
+          "third": "勾陈+辰"
+        }
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "确诊肺部结节",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "GOLDEN-015",
+    "title": "疾病类-青龙临身主康复",
+    "zhanshi": "疾病",
+    "source": "经典六壬案例",
+    "ground_truth": {
+      "keti": "元首课",
+      "jixiong": "吉",
+      "sanchuan": {
+        "first": "青龙+巳",
+        "second": "贵人+未",
+        "third": "天后+酉"
+      },
+      "key_signals": [
+        "青龙主生机活力",
+        "贵人主医疗资源",
+        "天后主恢复"
+      ],
+      "paipan": {
+        "keti": "元首课",
+        "complete": false,
+        "三传地支": [
+          "巳",
+          "未",
+          "酉"
+        ],
+        "天将": [
+          "青龙",
+          "贵人",
+          "天后"
+        ],
+        "sanchuan_raw": {
+          "first": "青龙+巳",
+          "second": "贵人+未",
+          "third": "天后+酉"
+        }
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "病情好转，顺利康复",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "GOLDEN-016",
+    "title": "出行类-白虎主路有阻",
+    "zhanshi": "出行",
+    "source": "经典六壬案例",
+    "ground_truth": {
+      "keti": "重审课",
+      "jixiong": "凶",
+      "sanchuan": {
+        "first": "白虎+申",
+        "second": "勾陈+辰",
+        "third": "玄武+亥"
+      },
+      "key_signals": [
+        "白虎主交通意外",
+        "勾陈主阻碍",
+        "建议延期出行"
+      ],
+      "paipan": {
+        "keti": "重审课",
+        "complete": false,
+        "三传地支": [
+          "申",
+          "辰",
+          "亥"
+        ],
+        "天将": [
+          "白虎",
+          "勾陈",
+          "玄武"
+        ],
+        "sanchuan_raw": {
+          "first": "白虎+申",
+          "second": "勾陈+辰",
+          "third": "玄武+亥"
+        }
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "途中遇到交通事故，延误行程",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "GOLDEN-017",
+    "title": "出行类-贵人临身主顺利",
+    "zhanshi": "出行",
+    "source": "经典六壬案例",
+    "ground_truth": {
+      "keti": "三阳课",
+      "jixiong": "吉",
+      "sanchuan": {
+        "first": "贵人+丑",
+        "second": "青龙+寅",
+        "third": "驿马+申"
+      },
+      "key_signals": [
+        "贵人主帮助",
+        "青龙主顺利",
+        "驿马主快速"
+      ],
+      "paipan": {
+        "keti": "三阳课",
+        "complete": false,
+        "三传地支": [
+          "丑",
+          "寅",
+          "申"
+        ],
+        "天将": [
+          "贵人",
+          "青龙",
+          ""
+        ],
+        "sanchuan_raw": {
+          "first": "贵人+丑",
+          "second": "青龙+寅",
+          "third": "驿马+申"
+        }
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "行程顺利，按时到达",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "GOLDEN-018",
+    "title": "功名类-青龙临身主高中",
+    "zhanshi": "功名",
+    "source": "经典六壬案例",
+    "ground_truth": {
+      "keti": "元首课",
+      "jixiong": "吉",
+      "sanchuan": {
+        "first": "青龙+寅",
+        "second": "贵人+丑",
+        "third": "朱雀+午"
+      },
+      "key_signals": [
+        "青龙主金榜题名",
+        "贵人主提携",
+        "朱雀主文采"
+      ],
+      "paipan": {
+        "keti": "元首课",
+        "complete": false,
+        "三传地支": [
+          "寅",
+          "丑",
+          "午"
+        ],
+        "天将": [
+          "青龙",
+          "贵人",
+          "朱雀"
+        ],
+        "sanchuan_raw": {
+          "first": "青龙+寅",
+          "second": "贵人+丑",
+          "third": "朱雀+午"
+        }
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "高考成绩优异，被名校录取",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "GOLDEN-019",
+    "title": "功名类-玄武主落榜需努力",
+    "zhanshi": "功名",
+    "source": "经典六壬案例",
+    "ground_truth": {
+      "keti": "伏吟课",
+      "jixiong": "凶",
+      "sanchuan": {
+        "first": "玄武+亥",
+        "second": "白虎+申",
+        "third": "玄武+亥"
+      },
+      "key_signals": [
+        "玄武主失利",
+        "伏吟主停滞",
+        "需再接再厉"
+      ],
+      "paipan": {
+        "keti": "伏吟课",
+        "complete": false,
+        "三传地支": [
+          "亥",
+          "申",
+          "亥"
+        ],
+        "天将": [
+          "玄武",
+          "白虎",
+          "玄武"
+        ],
+        "sanchuan_raw": {
+          "first": "玄武+亥",
+          "second": "白虎+申",
+          "third": "玄武+亥"
+        }
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "首次落榜，次年再战成功",
+      "confidence": "high"
+    }
+  },
+  {
+    "id": "GOLDEN-020",
+    "title": "家宅类-六合主家庭和睦",
+    "zhanshi": "家宅",
+    "source": "经典六壬案例",
+    "ground_truth": {
+      "keti": "六合课",
+      "jixiong": "吉",
+      "sanchuan": {
+        "first": "六合+卯",
+        "second": "天后+酉",
+        "third": "太常+未"
+      },
+      "key_signals": [
+        "六合主和睦",
+        "天后主家庭幸福",
+        "太常主安稳"
+      ],
+      "paipan": {
+        "keti": "六合课",
+        "complete": false,
+        "三传地支": [
+          "卯",
+          "酉",
+          "未"
+        ],
+        "天将": [
+          "六合",
+          "天后",
+          "太常"
+        ],
+        "sanchuan_raw": {
+          "first": "六合+卯",
+          "second": "天后+酉",
+          "third": "太常+未"
+        }
+      }
+    },
+    "verification": {
+      "is_correct": true,
+      "actual_result": "家庭和睦，安居乐业",
+      "confidence": "high"
+    }
+  }
+]

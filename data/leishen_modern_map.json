@@ -1,0 +1,324 @@
+{
+  "items": [
+    {
+      "item": "手机",
+      "zhi": "巳",
+      "wuxing": "火",
+      "reason": "巳主火电（电路电光之象），手机为电子火器，取巳",
+      "directions": "东南方位、办公桌/书桌抽屉、沙发缝隙",
+      "confidence": 0.9
+    },
+    {
+      "item": "钱包",
+      "zhi": "辰",
+      "wuxing": "土",
+      "reason": "辰主钱财五谷磁器，钱包为贮财之器，财库归辰",
+      "directions": "东南方位、卧房衣柜抽屉、包内夹层",
+      "confidence": 0.85
+    },
+    {
+      "item": "钥匙",
+      "zhi": "丑",
+      "wuxing": "土",
+      "reason": "丑主车轮首饰鞋锁，钥匙配锁，锁钥正类归丑",
+      "directions": "东北方位、玄关鞋柜、门口挂钩托盘",
+      "confidence": 0.9
+    },
+    {
+      "item": "笔记本电脑",
+      "zhi": "巳",
+      "wuxing": "火",
+      "reason": "巳主火电，电脑为电路电光之器，电子类火象取巳",
+      "directions": "东南方位、书桌/办公桌、电脑包内",
+      "confidence": 0.9
+    },
+    {
+      "item": "平板电脑",
+      "zhi": "巳",
+      "wuxing": "火",
+      "reason": "巳主火电，平板为电子触屏之器，火象取巳",
+      "directions": "东南方位、床头柜、沙发茶几",
+      "confidence": 0.88
+    },
+    {
+      "item": "手表",
+      "zhi": "酉",
+      "wuxing": "金",
+      "reason": "酉主金玉铜铁，手表为精细金属计时之饰，取酉",
+      "directions": "正西方位、床头柜、卫生间洗手台",
+      "confidence": 0.85
+    },
+    {
+      "item": "戒指",
+      "zhi": "酉",
+      "wuxing": "金",
+      "reason": "酉主金玉首饰，戒指为金玉指环，取酉",
+      "directions": "正西方位、首饰盒、洗手台边、枕下",
+      "confidence": 0.88
+    },
+    {
+      "item": "项链",
+      "zhi": "巳",
+      "wuxing": "火",
+      "reason": "巳主珠玉金铁乐器，项链多珠玉链坠之属，取巳",
+      "directions": "东南方位、梳妆台、卧室床头",
+      "confidence": 0.8
+    },
+    {
+      "item": "耳环",
+      "zhi": "酉",
+      "wuxing": "金",
+      "reason": "酉主金玉铜铁，耳环为金玉小饰，取酉",
+      "directions": "正西方位、首饰盒、枕边床缝",
+      "confidence": 0.82
+    },
+    {
+      "item": "银行卡",
+      "zhi": "申",
+      "wuxing": "金",
+      "reason": "申主金银铜铁刀剑，银行卡为金融凭证，金象取申",
+      "directions": "西南方位、钱包卡位、办公抽屉",
+      "confidence": 0.88
+    },
+    {
+      "item": "身份证",
+      "zhi": "戌",
+      "wuxing": "土",
+      "reason": "戌主印绶，身份证为印信证件，正类取戌",
+      "directions": "西北方位、证件夹、抽屉、玄关钥匙盘",
+      "confidence": 0.92
+    },
+    {
+      "item": "驾驶证",
+      "zhi": "戌",
+      "wuxing": "土",
+      "reason": "戌主印绶，驾驶证为官凭印信，取戌",
+      "directions": "西北方位、车内储物格、证件包",
+      "confidence": 0.9
+    },
+    {
+      "item": "护照",
+      "zhi": "戌",
+      "wuxing": "土",
+      "reason": "戌主印绶，护照为官方文书印信，取戌",
+      "directions": "西北方位、行李箱内袋、文件抽屉",
+      "confidence": 0.9
+    },
+    {
+      "item": "现金",
+      "zhi": "辰",
+      "wuxing": "土",
+      "reason": "辰主钱财五谷，现金为钱财正类，取辰",
+      "directions": "东南方位、衣柜内、书桌抽屉、床垫下",
+      "confidence": 0.9
+    },
+    {
+      "item": "存折",
+      "zhi": "辰",
+      "wuxing": "土",
+      "reason": "辰主钱财，存折为贮财之凭，财库归辰",
+      "directions": "东南方位、抽屉深处、证件收纳盒",
+      "confidence": 0.85
+    },
+    {
+      "item": "u盘",
+      "zhi": "巳",
+      "wuxing": "火",
+      "reason": "巳主火电，u盘为电子存储小件，火象取巳",
+      "directions": "东南方位、电脑包、笔筒抽屉",
+      "confidence": 0.85
+    },
+    {
+      "item": "硬盘",
+      "zhi": "巳",
+      "wuxing": "火",
+      "reason": "巳主火电，硬盘为电子存储之器，火象取巳",
+      "directions": "东南方位、电脑旁、柜格内",
+      "confidence": 0.85
+    },
+    {
+      "item": "耳机",
+      "zhi": "巳",
+      "wuxing": "火",
+      "reason": "巳主火电，耳机为电子线材之器，火象取巳",
+      "directions": "东南方位、包袋口袋、枕边沙发缝",
+      "confidence": 0.82
+    },
+    {
+      "item": "充电宝",
+      "zhi": "午",
+      "wuxing": "火",
+      "reason": "午主火电电光，充电宝为蓄电火器，取午",
+      "directions": "正南方位、背包侧袋、办公桌面",
+      "confidence": 0.85
+    },
+    {
+      "item": "眼镜",
+      "zhi": "酉",
+      "wuxing": "金",
+      "reason": "酉主金玉铜铁，眼镜为金玉细巧之器，取酉",
+      "directions": "正西方位、床头柜、卫生间洗手台",
+      "confidence": 0.8
+    },
+    {
+      "item": "帽子",
+      "zhi": "午",
+      "wuxing": "火",
+      "reason": "午主衣服，帽子为衣饰穿戴之物，取午",
+      "directions": "正南方位、衣帽架、门口挂钩",
+      "confidence": 0.85
+    },
+    {
+      "item": "围巾",
+      "zhi": "子",
+      "wuxing": "水",
+      "reason": "子主布帛丝绵衣服，围巾为丝绵织物，取子",
+      "directions": "正北方位、衣柜、沙发扶手",
+      "confidence": 0.85
+    },
+    {
+      "item": "手套",
+      "zhi": "丑",
+      "wuxing": "土",
+      "reason": "丑主首饰鞋锁（穿戴小物），手套为护手穿戴之属，归丑",
+      "directions": "东北方位、玄关鞋柜、外套口袋",
+      "confidence": 0.78
+    },
+    {
+      "item": "雨伞",
+      "zhi": "亥",
+      "wuxing": "水",
+      "reason": "亥主伞盖笠杖，雨伞正类归亥",
+      "directions": "西北方位、门口伞架、玄关角落",
+      "confidence": 0.93
+    },
+    {
+      "item": "自行车",
+      "zhi": "卯",
+      "wuxing": "木",
+      "reason": "卯主舟车竹器木器，自行车为车驾出行之物，取卯",
+      "directions": "正东方位、楼下车棚、门口",
+      "confidence": 0.85
+    },
+    {
+      "item": "电动车",
+      "zhi": "卯",
+      "wuxing": "木",
+      "reason": "卯主舟车，电动车为车驾，取卯",
+      "directions": "正东方位、车棚/车库、楼道口",
+      "confidence": 0.85
+    },
+    {
+      "item": "汽车钥匙",
+      "zhi": "丑",
+      "wuxing": "土",
+      "reason": "丑主车轮锁钥，车匙合车轮锁钥之象，取丑",
+      "directions": "东北方位、车内、玄关托盘",
+      "confidence": 0.8
+    },
+    {
+      "item": "公文包",
+      "zhi": "寅",
+      "wuxing": "木",
+      "reason": "寅主桌屏书画（文书之器），公文包为盛文书之物，取寅",
+      "directions": "东北方位、办公桌旁、书房",
+      "confidence": 0.75
+    },
+    {
+      "item": "双肩包",
+      "zhi": "子",
+      "wuxing": "水",
+      "reason": "子主布帛丝绵，双肩包多为布帛织物，取子",
+      "directions": "正北方位、沙发、床头椅背",
+      "confidence": 0.75
+    },
+    {
+      "item": "行李箱",
+      "zhi": "辰",
+      "wuxing": "土",
+      "reason": "辰为库藏、主磁器砖瓦（藏贮之器），行李箱为藏衣之库，取辰",
+      "directions": "东南方位、卧室角落、床下/柜顶",
+      "confidence": 0.75
+    },
+    {
+      "item": "外衣",
+      "zhi": "午",
+      "wuxing": "火",
+      "reason": "午主衣服文章，外衣为正衣类，取午",
+      "directions": "正南方位、衣帽架、沙发背",
+      "confidence": 0.88
+    },
+    {
+      "item": "大衣",
+      "zhi": "子",
+      "wuxing": "水",
+      "reason": "子主布帛丝绵衣服，大衣为厚重丝绵织物，取子",
+      "directions": "正北方位、衣柜深处、衣帽间",
+      "confidence": 0.82
+    },
+    {
+      "item": "鞋",
+      "zhi": "丑",
+      "wuxing": "土",
+      "reason": "丑主首饰鞋锁，鞋正类归丑",
+      "directions": "东北方位、玄关鞋柜、床下",
+      "confidence": 0.92
+    },
+    {
+      "item": "玉佩",
+      "zhi": "巳",
+      "wuxing": "火",
+      "reason": "巳主珠玉金铁，玉佩为珠玉贴身之物，取巳",
+      "directions": "东南方位、梳妆台、卧室床头",
+      "confidence": 0.85
+    },
+    {
+      "item": "玉镯",
+      "zhi": "巳",
+      "wuxing": "火",
+      "reason": "巳主珠玉，玉镯为玉器之属，取巳",
+      "directions": "东南方位、首饰盒、洗手台",
+      "confidence": 0.85
+    },
+    {
+      "item": "金银首饰",
+      "zhi": "申",
+      "wuxing": "金",
+      "reason": "申主金银铜铁刀剑，金银首饰正类取申",
+      "directions": "西南方位、首饰盒、抽屉暗格",
+      "confidence": 0.9
+    },
+    {
+      "item": "玩具",
+      "zhi": "寅",
+      "wuxing": "木",
+      "reason": "寅卯林木，玩具多木塑之质、童玩之物，取寅",
+      "directions": "东北方位、儿童房、玩具箱",
+      "confidence": 0.72
+    },
+    {
+      "item": "书本",
+      "zhi": "寅",
+      "wuxing": "木",
+      "reason": "寅主桌屏宝剑书画，书本为书画文籍，取寅",
+      "directions": "东北方位、书架、书桌",
+      "confidence": 0.9
+    },
+    {
+      "item": "文具盒",
+      "zhi": "卯",
+      "wuxing": "木",
+      "reason": "卯主竹器木器，文具盒为竹木小器，取卯",
+      "directions": "正东方位、书桌抽屉、书包内",
+      "confidence": 0.8
+    },
+    {
+      "item": "水杯",
+      "zhi": "子",
+      "wuxing": "水",
+      "reason": "子为水之正位，水类器皿归子亥，水杯盛水取子",
+      "directions": "正北方位、办公桌面、厨房水槽边",
+      "confidence": 0.85
+    }
+  ]
+}

@@ -1,0 +1,290 @@
+================================================================
+  聚宽策略合集 v1.0 — 3套策略，从简到繁，逐个验证
+  复制对应策略的代码到聚宽策略编辑器即可运行
+================================================================
+
+================================================================
+  策略1：双均线趋势跟踪（最简单的基准策略）
+  逻辑：MA5上穿MA20买入，下穿卖出，最简单的趋势策略
+  用途：作为最基础的参照基准，验证趋势跟踪是否有效
+================================================================
+
+import pandas as pd
+from jqdata import *
+
+BENCHMARK = '000300.XSHG'
+ETF = '510300.XSHG'  # 沪深300ETF
+FAST_MA = 5
+SLOW_MA = 20
+
+def initialize(context):
+    set_benchmark(BENCHMARK)
+    set_option('use_real_price', True)
+    set_order_cost(OrderCost(
+        close_tax=0.001, open_commission=0.0003,
+        close_commission=0.0003, min_commission=5
+    ), type='fund')
+    g.holding = False
+    log.info("策略初始化 | 双均线趋势跟踪 | MA%d/MA%d" % (FAST_MA, SLOW_MA))
+
+
+def handle_data(context, data):
+    prices = history(SLOW_MA + 5, '1d', 'close', [ETF])
+    if ETF not in prices.columns:
+        return
+    v = prices[ETF].dropna()
+    if len(v) < SLOW_MA + 1:
+        return
+    
+    ma_fast = v.iloc[-FAST_MA:].mean()
+    ma_slow = v.iloc[-SLOW_MA:].mean()
+    prev_ma_fast = v.iloc[-(FAST_MA+1):-1].mean()
+    prev_ma_slow = v.iloc[-(SLOW_MA+1):-1].mean()
+    
+    # 金叉买入
+    if not g.holding and prev_ma_fast <= prev_ma_slow and ma_fast > ma_slow:
+        order_value(ETF, context.portfolio.total_value)
+        g.holding = True
+        log.info("[买入] 金叉 MA%.0f=%.2f > MA%.0f=%.2f" % (FAST_MA, ma_fast, SLOW_MA, ma_slow))
+    
+    # 死叉卖出
+    elif g.holding and prev_ma_fast >= prev_ma_slow and ma_fast < ma_slow:
+        order_target(ETF, 0)
+        g.holding = False
+        log.info("[卖出] 死叉 MA%.0f=%.2f < MA%.0f=%.2f" % (FAST_MA, ma_fast, SLOW_MA, ma_slow))
+
+
+================================================================
+  策略2：宽基ETF动量轮动（当前在用）
+  逻辑：过去N天谁涨得多买谁，全跌就买国债避险
+  用途：验证"动量轮动"是否能跑赢单一指数
+================================================================
+
+import pandas as pd
+from jqdata import *
+
+BENCHMARK = '000300.XSHG'
+
+ETF_POOL = [
+    '510300.XSHG',   # 沪深300ETF
+    '510500.XSHG',   # 中证500ETF
+    '159915.XSHE',   # 创业板ETF
+    '588000.XSHG',   # 科创50ETF
+    '510180.XSHG',   # 上证180ETF
+    '159901.XSHE',   # 深证100ETF
+    '518880.XSHG',   # 黄金ETF（避险）
+    '511010.XSHG',   # 国债ETF（避险）
+]
+
+MOMENTUM_DAYS = 20
+TOP_N = 2
+REBALANCE_DAYS = 5
+MIN_MOMENTUM = 0.0
+
+def initialize(context):
+    set_benchmark(BENCHMARK)
+    set_option('use_real_price', True)
+    set_option('avoid_future_data', True)
+    set_order_cost(OrderCost(
+        close_tax=0.001, open_commission=0.0003,
+        close_commission=0.0003, min_commission=5
+    ), type='fund')
+    g.last_rebalance = None
+    log.info("策略初始化 | ETF动量轮动 v1.0 | 标的%d只" % len(ETF_POOL))
+
+
+def handle_data(context, data):
+    today = context.current_dt.date()
+    if g.last_rebalance is not None:
+        days_since = (today - g.last_rebalance).days
+        if days_since < REBALANCE_DAYS:
+            return
+    g.last_rebalance = today
+    
+    momentum = calc_momentum(ETF_POOL, MOMENTUM_DAYS)
+    if not momentum:
+        return
+    
+    qualified = [(k, v) for k, v in momentum.items() if v >= MIN_MOMENTUM]
+    qualified.sort(key=lambda x: -x[1])
+    
+    if qualified:
+        target = [x[0] for x in qualified[:TOP_N]]
+        weight = 1.0 / len(target)
+    else:
+        target = ['511010.XSHG']
+        weight = 1.0
+    
+    for stock in list(context.portfolio.positions.keys()):
+        if stock not in target:
+            order_target(stock, 0)
+    
+    per_value = context.portfolio.total_value * weight
+    for stock in target:
+        cur = 0
+        if stock in context.portfolio.positions:
+            cur = context.portfolio.positions[stock].value
+        diff = per_value - cur
+        if abs(diff) > 1000:
+            order_value(stock, diff)
+    
+    names = []
+    for s in target:
+        info = get_security_info(s)
+        names.append(info.display_name if info else s)
+    log.info("[调仓] 持有: %s" % "、".join(names))
+
+
+def calc_momentum(stocks, days):
+    prices = history(days + 2, '1d', 'close', stocks)
+    result = {}
+    for s in stocks:
+        if s not in prices.columns:
+            continue
+        v = prices[s].dropna()
+        if len(v) < days:
+            continue
+        ret = v.iloc[-2] / v.iloc[-(days+1)] - 1
+        result[s] = ret
+    return result
+
+
+================================================================
+  策略3：行业ETF动量轮动（进阶版）
+  逻辑：行业ETF比宽基ETF波动大，轮动收益可能更高
+  用途：验证行业轮动是否能跑赢宽基轮动
+  注意：行业ETF数量多，风险也大，建议先小仓位试
+================================================================
+
+import pandas as pd
+from jqdata import *
+
+BENCHMARK = '000300.XSHG'
+
+# 主要行业ETF池（15只）
+INDUSTRY_ETFS = [
+    '512480.XSHG',   # 半导体ETF
+    '515030.XSHG',   # 新能源车ETF
+    '512690.XSHG',   # 酒ETF（消费）
+    '512010.XSHG',   # 医药ETF
+    '512880.XSHG',   # 证券ETF
+    '512200.XSHG',   # 房地产ETF
+    '515790.XSHG',   # 光伏ETF
+    '512660.XSHG',   # 军工ETF
+    '515000.XSHG',   # 科技ETF
+    '512980.XSHG',   # 传媒ETF
+    '516160.XSHG',   # 新能源ETF
+    '512170.XSHG',   # 医疗ETF
+    '159995.XSHE',   # 芯片ETF
+    '512760.XSHG',   # 芯片ETF（沪市）
+    '515880.XSHG',   # 通信ETF
+]
+
+# 避险资产
+SAFE_ETFS = [
+    '518880.XSHG',   # 黄金ETF
+    '511010.XSHG',   # 国债ETF
+]
+
+ALL_ETFS = INDUSTRY_ETFS + SAFE_ETFS
+
+MOMENTUM_DAYS = 20     # 动量天数
+TOP_N = 3              # 选前3只
+REBALANCE_DAYS = 5     # 调仓周期
+MIN_MOMENTUM = -0.03   # 最低动量要求（-3%，比宽基松一点）
+MAX_POSITION = 0.4     # 单只最大仓位40%
+
+def initialize(context):
+    set_benchmark(BENCHMARK)
+    set_option('use_real_price', True)
+    set_option('avoid_future_data', True)
+    set_order_cost(OrderCost(
+        close_tax=0.001, open_commission=0.0003,
+        close_commission=0.0003, min_commission=5
+    ), type='fund')
+    g.last_rebalance = None
+    log.info("策略初始化 | 行业ETF动量轮动 | 标的%d只" % len(ALL_ETFS))
+
+
+def handle_data(context, data):
+    today = context.current_dt.date()
+    if g.last_rebalance is not None:
+        days_since = (today - g.last_rebalance).days
+        if days_since < REBALANCE_DAYS:
+            return
+    g.last_rebalance = today
+    
+    # 先看大盘趋势（大盘差直接避险）
+    if not is_market_up():
+        # 大盘不好，买黄金+国债避险
+        target = ['518880.XSHG', '511010.XSHG']
+        weight = 0.5
+        log.info("[调仓] 大盘走弱，避险模式（黄金+国债）")
+    else:
+        # 大盘好，行业轮动
+        momentum = calc_momentum(INDUSTRY_ETFS, MOMENTUM_DAYS)
+        if not momentum:
+            return
+        
+        qualified = [(k, v) for k, v in momentum.items() if v >= MIN_MOMENTUM]
+        qualified.sort(key=lambda x: -x[1])
+        
+        if qualified:
+            target = [x[0] for x in qualified[:TOP_N]]
+            weight = min(1.0 / len(target), MAX_POSITION)
+        else:
+            target = ['511010.XSHG']
+            weight = 1.0
+        
+        names = []
+        for s in target:
+            info = get_security_info(s)
+            names.append(info.display_name if info else s)
+        log.info("[调仓] 持有: %s" % "、".join(names))
+    
+    # 调仓执行
+    for stock in list(context.portfolio.positions.keys()):
+        if stock not in target:
+            order_target(stock, 0)
+    
+    per_value = context.portfolio.total_value * weight
+    for stock in target:
+        cur = 0
+        if stock in context.portfolio.positions:
+            cur = context.portfolio.positions[stock].value
+        diff = per_value - cur
+        if abs(diff) > 1000:
+            order_value(stock, diff)
+
+
+def is_market_up():
+    """大盘MA20判断"""
+    p = history(25, '1d', 'close', ['000300.XSHG'])
+    if len(p) < 20:
+        return True
+    ma20 = p['000300.XSHG'].iloc[-20:].mean()
+    cur = p['000300.XSHG'].iloc[-1]
+    return cur > ma20
+
+
+def calc_momentum(stocks, days):
+    prices = history(days + 2, '1d', 'close', stocks)
+    result = {}
+    for s in stocks:
+        if s not in prices.columns:
+            continue
+        v = prices[s].dropna()
+        if len(v) < days:
+            continue
+        ret = v.iloc[-2] / v.iloc[-(days+1)] - 1
+        result[s] = ret
+    return result
+
+
+================================================================
+  测试顺序建议：
+  1. 先跑 策略1（双均线）— 最简单，验证趋势跟踪逻辑
+  2. 再跑 策略2（宽基ETF轮动）— 验证轮动是否增强收益
+  3. 最后跑 策略3（行业ETF轮动）— 进阶，风险更高
+  4. 都没问题了，再加六壬择时对比
+================================================================

@@ -1,0 +1,12 @@
+{
+  "validation_time": "2026-08-28T17:18:53.258264",
+  "total_quotes": 52,
+  "valid_quotes": 52,
+  "valid_rate": 100.0,
+  "fixed_count": 5,
+  "quality_distribution": {
+    "high": 221,
+    "medium": 0,
+    "low": 0
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "report_type": "fusion_validation",
+  "generated_at": "2026-08-27T20:15:26.167244",
+  "summary": {
+    "overall_score_change": 0.025000000000000022,
+    "overall_score_change_percent": 3.591954022988509,
+    "success_rate_change": 0.0,
+    "verdict": "🟡 知识融合有轻微效果"
+  },
+  "details": {
+    "original_score": 0.696,
+    "fused_score": 0.721,
+    "score_change": 0.025000000000000022,
+    "score_change_percent": 3.591954022988509,
+    "original_success_rate": 100.0,
+    "fused_success_rate": 100.0,
+    "success_rate_change": 0.0,
+    "zhanshi_comparison": [
+      {
+        "zhanshi": "出行",
+        "original_score": 0.5333333333333333,
+        "fused_score": 0.5333333333333333,
+        "change": 0.0,
+        "improved": false
+      },
+      {
+        "zhanshi": "功名",
+        "original_score": 0.5,
+        "fused_score": 0.5,
+        "change": 0.0,
+        "improved": false
+      },
+      {
+        "zhanshi": "婚姻",
+        "original_score": 0.6999999999999998,
+        "fused_score": 0.9,
+        "change": 0.20000000000000018,
+        "improved": true
+      },
+      {
+        "zhanshi": "官讼",
+        "original_score": 0.5,
+        "fused_score": 0.6000000000000001,
+        "change": 0.10000000000000009,
+        "improved": true
+      },
+      {
+        "zhanshi": "家宅",
+        "original_score": 0.5,
+        "fused_score": 0.5,
+        "change": 0.0,
+        "improved": false
+      },
+      {
+        "zhanshi": "求财",
+        "original_score": 0.8636363636363636,
+        "fused_score": 0.809090909090909,
+        "change": -0.054545454545454675,
+        "improved": false
+      },
+      {
+        "zhanshi": "疾病",
+        "original_score": 0.5,
+        "fused_score": 0.6666666666666666,
+        "change": 0.16666666666666663,
+        "improved": true
+      }
+    ]
+  },
+  "recommendations": [
+    "⚠️ 出行: 融合无明显提升 (分数变化 +0.000)",
+    "⚠️ 功名: 融合无明显提升 (分数变化 +0.000)",
+    "📈 婚姻: 融合有效 (分数变化 +0.200)",
+    "📈 官讼: 融合有效 (分数变化 +0.100)",
+    "⚠️ 家宅: 融合无明显提升 (分数变化 +0.000)",
+    "⚠️ 求财: 融合无明显提升 (分数变化 -0.055)",
+    "📈 疾病: 融合有效 (分数变化 +0.167)"
+  ]
+}

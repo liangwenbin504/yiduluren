@@ -1,0 +1,13 @@
+{
+  "enhancement_time": "2026-08-28T16:42:13.103436",
+  "total_medium_quality": 141,
+  "enhanced_count": 140,
+  "failed_count": 0,
+  "post_enhancement_quality": {
+    "high": 216,
+    "medium": 5,
+    "low": 0
+  },
+  "bifa_reference_count": 173,
+  "total_rules": 221
+}
