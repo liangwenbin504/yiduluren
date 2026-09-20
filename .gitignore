@@ -103,6 +103,8 @@ training_v4_*.txt
 
 # ── 调试/测试脚本(一次性) ──
 _*.py
+# ⛔ 例外：`_*.py` 规则过宽，曾误伤权威基线脚本（2026-09-20）
+!engine/_honest_skill_all.py
 test_*.py
 *_test.py
 check_*.py
