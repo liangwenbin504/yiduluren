@@ -5995,6 +5995,43 @@ function openZeriModal(pai) {
         '<div style="font-size:12px;color:#e0e0e0;white-space:pre-wrap;line-height:1.6;">' + d.yingqi + '</div>' +
         '</div>';
     }
+    // ── 方位 / 道里数 / 转折（叙事层；2026-09-21 接入）──
+    // 何地（方位）·几何（道里数）·如何变化（转折）；⛔ 纯描述，**不改吉凶、不进择日评分**。
+    // 引擎侧已硬核对：方位 5/5、道里数 4/4、课格 乱首6/6·斩关1/1·赘婿2/2·天狱2/2。
+    // 长 desc 走 title 悬停（憨爷偏好：长内容不占版面）。
+    var _fw = (d.fangwei && (d.fangwei.sanchuan || d.fangwei.leishen_jia || d.fangwei.yima)) ? d.fangwei : null;
+    var _sm = (d.shumu && (d.shumu.sum || d.shumu.cheng)) ? d.shumu : null;
+    var _zz = (d.zhuanzhe && d.zhuanzhe.mode) ? d.zhuanzhe : null;
+    if (_fw || _sm || _zz) {
+      body += '<div style="margin-top:8px;padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid #3a3a6a;border-radius:8px;">';
+      body += '<div style="font-size:12px;font-weight:600;color:#8ea2ff;margin-bottom:5px;">🧭 方位·数目·转折（何地·几何·如何变化）</div>';
+      if (_fw) {
+        var _fwP = [];
+        if (_fw.sanchuan && _fw.sanchuan.length) {
+          _fwP.push('三传：' + _fw.sanchuan.map(function (x) { return (x.zhi || '') + '·' + (x.fang || ''); }).join(' → '));
+        }
+        if (_fw.leishen_jia && _fw.leishen_jia.fang) { _fwP.push('类神所加：' + _fw.leishen_jia.fang); }
+        if (_fw.yima && _fw.yima.fang) { _fwP.push('驿马：' + _fw.yima.fang); }
+        if (_fwP.length) {
+          body += '<div style="font-size:12px;color:#e0e0e0;line-height:1.6;">' + _fwP.join('　｜　') + '</div>';
+        }
+      }
+      if (_sm) {
+        var _smP = [];
+        if (_sm.sum) { _smP.push('相加 ' + _sm.sum.parts + ' = ' + _sm.sum.sum); }
+        if (_sm.cheng) { _smP.push('相乘 ' + _sm.cheng.parts + ' = ' + _sm.cheng.sum); }
+        if (_smP.length) {
+          body += '<div style="margin-top:3px;font-size:12px;color:#e0e0e0;line-height:1.6;">数目：' + _smP.join('　｜　') + '</div>';
+        }
+      }
+      if (_zz) {
+        body += '<div style="margin-top:3px;font-size:12px;color:#e0e0e0;line-height:1.6;" title="' + String(_zz.desc || '').replace(/"/g, '&quot;') + '">' +
+          '转折：<span style="color:#fff;">' + _zz.mode + '</span>' +
+          ((_zz.kege && _zz.kege.length) ? '　<span style="color:#c4b5fd;">课格：' + _zz.kege.join('、') + '</span>' : '') +
+          ((_zz.desc) ? '　<span style="font-size:11px;color:#7a7a9a;">（悬停看判据）</span>' : '') + '</div>';
+      }
+      body += '</div>';
+    }
     body += '<div style="margin-top:8px;font-size:12px;color:#aaa;">到山到向：' + d.daoshan_daoxiang.total_count + '项　活禄马：' + d.huoma_huolu.count + '项　拱格：' + d.gong_patterns.length + '个　' +
       (d.summary ? '<div style="margin-top:4px;color:#e0e0e0;">' + d.summary + '</div>' : '') + '</div>';
     // ── 占类断语（P3：按占事给专属断语，2026-08-15）──
