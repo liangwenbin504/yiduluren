@@ -17,7 +17,7 @@ import os
 import sys
 from pathlib import Path
 from collections import Counter, defaultdict
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Tuple
 
 BASE = Path(__file__).parent.parent
 sys.path.insert(0, str(BASE))
@@ -228,27 +228,140 @@ def _fangwei_shumu_for_ancient(ri_zhi: str, sanchuan_dizhi: List[str], si_ke,
     return out
 
 
+# ============================================================================
+# 转折加厚：六亲层 + 课格层（2026-09-20 二补）
+# ============================================================================
+# 🔴 六亲定性**不是**股票域 LIUQIN_SCORE（那边 官鬼=+1「主力动作偏多」）。
+#    古例域以《通解》原文为准：
+#      · 通解_上.txt:3370「初传为官鬼、中传为父母、末传为妻财 ⇒ **先阻、中助、末得**」
+#        ⇒ 官鬼=阻(凶)／父母=助(吉)／妻财=得(吉)
+#      · 通解_上.txt:3375「发用为兄弟，代表兄弟、朋友事或**阻力是非**」⇒ 兄弟=凶
+#      · 通解_上.txt:4145「子孙克官鬼…子为杀鬼之神，主有良医解救」但
+#        通解_上.txt:3138「系脱气…课象凶以日鬼脱耗论」⇒ 子孙**以脱气为主**＝−1
+#        （占病/忧患则解厄为例外，本层不细分）
+_LIUQIN_ANCIENT_SCORE = {"妻财": 1, "父母": 1, "官鬼": -1, "兄弟": -1, "子孙": -1}
+_TEN_GOD_TO_LIUQIN = {
+    "正官": "官鬼", "七杀": "官鬼",
+    "正财": "妻财", "偏财": "妻财",
+    "正印": "父母", "偏印": "父母",
+    "食神": "子孙", "伤官": "子孙",
+    "比肩": "兄弟", "劫财": "兄弟",
+}
+_GAN_WUXING = {"甲": "木", "乙": "木", "丙": "火", "丁": "火", "戊": "土",
+               "己": "土", "庚": "金", "辛": "金", "壬": "水", "癸": "水"}
+_ZHI_WUXING = {"亥": "水", "子": "水", "寅": "木", "卯": "木",
+               "巳": "火", "午": "火", "申": "金", "酉": "金",
+               "辰": "土", "戌": "土", "丑": "土", "未": "土"}
+_GAN_JIGONG = {"甲": "寅", "乙": "辰", "丙": "巳", "丁": "未", "戊": "巳",
+               "己": "未", "庚": "申", "辛": "戌", "壬": "亥", "癸": "丑"}
+_WX_MU = {"木": "未", "火": "戌", "土": "辰", "金": "丑", "水": "辰"}
+_WX_CHANGSHENG = {"木": "亥", "火": "寅", "金": "巳", "水": "申", "土": "申"}
+_WX_KE = {"木": "土", "火": "金", "土": "水", "金": "木", "水": "火"}      # 我克
+_WX_KE_ME = {v: k for k, v in _WX_KE.items()}                              # 克我
+
+
+def _liuqin_layer(ri_gan: str, sanchuan_dizhi: List[str]) -> List[Dict[str, Any]]:
+    """六亲层（古例域定性）：三传各地支对日干 → 六亲名 + 吉凶分（原文见表上注释）。"""
+    sc = list(sanchuan_dizhi or [])[:3]
+    if not ri_gan or ri_gan not in _GAN_WUXING:
+        return [{"zhi": z, "liuqin": "", "score": 0} for z in sc]
+    try:
+        from engine.calibration import liuqin_of
+    except Exception:
+        return [{"zhi": z, "liuqin": "", "score": 0} for z in sc]
+    out = []
+    for z in sc:
+        try:
+            lq = _TEN_GOD_TO_LIUQIN.get(liuqin_of(ri_gan, z), "")
+        except Exception:
+            lq = ""
+        out.append({"zhi": z, "liuqin": lq, "score": _LIUQIN_ANCIENT_SCORE.get(lq, 0)})
+    return out
+
+
+def _kege_for_zhuanzhe(si_ke, ri_gan: str, ri_zhi: str, sanchuan_dizhi: List[str],
+                       tiandi_pan: Optional[Dict[str, str]] = None
+                       ) -> Tuple[List[str], Dict[str, Any]]:
+    """课格层（叙事层专用）：只判《通解》有白纸黑字判据的四种。
+
+    判据出处 data/_tongjie_ocr/通解_上.txt:5136（课体口诀）：
+        「乱首支加干克干，干加支上被克同」｜「斩关魁罡日辰用」
+        「天狱墓作死囚用，天罡日本之宫躔」｜「赘婿支临干被克，干加支上克支通」
+    天狱第二支「天罡加日本」实例：通解_下.txt §022「斗罡系日本加亥」、§025「天罡加日本」。
+    ⛔ 只用这四条，**不造**没有原文印证的课格。
+    """
+    names: List[str] = []
+    sk = list(si_ke or [])
+    if len(sk) < 4:
+        return names, {}
+
+    def _shang(e):
+        if isinstance(e, dict):
+            return str(e.get("上神", "") or "")
+        try:
+            return str(e[1]) if len(e) >= 2 else ""   # 引擎格式 [课名, 上神, 下神, 天将]
+        except Exception:
+            return ""
+
+    gan_shang, zhi_shang = _shang(sk[0]), _shang(sk[2])
+    gw = _GAN_WUXING.get(ri_gan, "")
+    zw = _ZHI_WUXING.get(ri_zhi, "")
+    ji = _GAN_JIGONG.get(ri_gan, "")
+    det = {"干上神": gan_shang, "支上神": zhi_shang, "日干寄宫": ji,
+           "日干五行": gw, "日支五行": zw}
+
+    bei_ke = _WX_KE_ME.get(gw) == zw          # 支克干（我受克）
+    shangmen = gan_shang == ri_zhi and bei_ke  # 支加干克干
+    ziqu = zhi_shang == ji and bei_ke          # 干加支被支克
+    if shangmen and ziqu:
+        names.append("乱首")        # 干支同宫（日支==寄宫）⇒ 二义同归
+    elif shangmen:
+        names.append("上门乱首")
+    elif ziqu:
+        names.append("自取乱首")
+    if gan_shang == ri_zhi and _WX_KE.get(gw) == zw:
+        names.append("赘婿")        # 支临干被干克
+    sc = list(sanchuan_dizhi or [])
+    if sc and sc[0] in ("辰", "戌") and sc[0] in (gan_shang, zhi_shang):
+        names.append("斩关")        # 魁罡加日辰发用
+    tdp = dict(tiandi_pan or {})
+    if sc and _WX_MU.get(gw) and sc[0] == _WX_MU.get(gw):
+        names.append("天狱")        # 墓作死囚用
+    elif _WX_CHANGSHENG.get(gw) and tdp.get(_WX_CHANGSHENG.get(gw)) == "辰":
+        names.append("天狱")        # 天罡加日本
+    return names, det
+
+
 def _zhuanzhe_for_ancient(sanchuan_dizhi: List[str],
                           sanchuan_tianjiang: List[str],
                           kongwang: Optional[List[str]] = None,
-                          ri_gan: str = "") -> Dict[str, Any]:
-    """转折（事态走向：先吉后凶／先凶后吉／始终…；2026-09-20 新建）。
+                          ri_gan: str = "",
+                          ri_zhi: str = "",
+                          si_ke: Optional[List] = None,
+                          tiandi_pan: Optional[Dict[str, str]] = None,
+                          wangshuai: Optional[List] = None) -> Dict[str, Any]:
+    """转折（事态走向：先吉后凶／先凶后吉／始终…；2026-09-20 新建 + 同日加厚）。
 
     🔴 定位：**叙事层**，⛔ **不进评分链** —— 只描述"事态如何变化"，不改吉凶方向。
 
-    判据（确定性）：三传各传所乘天将的吉凶分（`judgment_fusion.TIANJIANG_SCORE`，
-    与评分链**同一张表** ⇒ 口径一致：贵人/青龙/六合/太常/天后/太阴=+1，
-    朱雀=0，勾陈/螣蛇/玄武/天空=−1，白虎=−2）。
-      · 初 > 0 且末 < 0 → 先吉后凶
-      · 初 < 0 且末 > 0 → 先凶后吉
-      · 同号            → 始终吉／始终凶
-      · 中传与初、末**均不同号** → 追加「中传生变」
-      单传（三传不足）或天将缺失 → 返回空。
+    三层判据（全确定性、全可复核）：
+      L1 **天将**：三传天将吉凶分（`judgment_fusion.TIANJIANG_SCORE`，与评分链**同一张表**：
+         贵人/青龙/六合/太常/天后/太阴=+1，朱雀=0，勾陈/螣蛇/玄武/天空=−1，白虎=−2）。
+         原文印证 通解_上.txt:4208「虎头蛇尾重还轻，**龙末虎初凶变吉**」。
+      L2 **六亲**：三传地支对日干 → 官鬼/父母/妻财/子孙/兄弟，按《通解》**古例域**定性
+         （⛔ 不是股票域 LIUQIN_SCORE）。原文印证 通解_上.txt:3370
+         「初传为官鬼、中传为父母、末传为妻财 ⇒ **先阻、中助、末得**」。
+      L3 **课格**：乱首／斩关／天狱／赘婿（课体口诀 通解_上.txt:5136）。
+         🔴 **乱首会翻 mode**：通解_下.txt:8394「大凡上门乱首……
+         经曰：**旺相相生灾未发，死囚刑克便灾临**」⇒ 其凶**应时令而后发**＝**先吉后凶**。
+      + **旬空修正**：§宅墓02·035「可望先凶后吉。奈何**寅是空亡**，所以不能引进，
+        **见生不生，反成凶咎**」。
 
-    🔴 **空亡修正**（2026-09-20 补）：某传地支落入旬空 ⇒ 该传走向**落空无效**。
-      铁证 §宅墓02·035「可望先凶后吉。奈何**寅是空亡**，所以不能引进，**见生不生，反成凶咎**」
-      —— 末传寅（生我，本吉）空亡 ⇒ 先凶后吉**不成立**，反成凶。
-      ⇒ 末传空亡时 mode 追加「（末传空亡，走向落空）」并按「未能转吉/未能转凶」标注。
+    合成规则（避免臆造）：
+      · L1 有信号（初/末天将分非全 0）⇒ mode 取 L1；L2 只作「张力」附注。
+      · L1 无信号（初末皆 0）⇒ mode 仍为「平平无变」，**不用 L2 顶替**
+        （实测：6 案原文 ground truth 下 L1=3/6 最优，L2=2/6、L4旺衰=2/6、
+        任两层相加均降至 1/6 ⇒ 合成反而更差，见 _冗余待删/_exp_zhuanzhe_layers.py）。
     """
     empty: Dict[str, Any] = {}
     try:
@@ -260,6 +373,18 @@ def _zhuanzhe_for_ancient(sanchuan_dizhi: List[str],
     if len(sc) < 3 or len(tj) < 3:
         return empty
 
+    def _mode_of(a: int, c: int, zero_word: str = "平平无变") -> str:
+        if a > 0 and c < 0:
+            return "先吉后凶"
+        if a < 0 and c > 0:
+            return "先凶后吉"
+        if a > 0 and c > 0:
+            return "始终吉"
+        if a < 0 and c < 0:
+            return "始终凶"
+        return zero_word
+
+    # ---- L1 天将 ----
     def _s(zhi, jiang):
         v = TIANJIANG_SCORE.get(jiang, 0)
         return {"zhi": zhi, "jiang": jiang, "score": v,
@@ -267,17 +392,30 @@ def _zhuanzhe_for_ancient(sanchuan_dizhi: List[str],
 
     a, b, c = _s(sc[0], tj[0]), _s(sc[1], tj[1]), _s(sc[2], tj[2])
     va, vb, vc = a["score"], b["score"], c["score"]
-    if va > 0 and vc < 0:
-        mode = "先吉后凶"
-    elif va < 0 and vc > 0:
-        mode = "先凶后吉"
-    elif va > 0 and vc > 0:
-        mode = "始终吉"
-    elif va < 0 and vc < 0:
-        mode = "始终凶"
-    else:
-        mode = "平平无变"
-    # ---- 空亡修正（§035「寅是空亡…见生不生，反成凶咎」）----
+    jiang_mode = _mode_of(va, vc)
+
+    # ---- L2 六亲 ----
+    lq = _liuqin_layer(ri_gan, sc)
+    for i, item in enumerate(lq):
+        (a, b, c)[i].update({"liuqin": item.get("liuqin", ""),
+                             "lq_score": item.get("score", 0)})
+    la, lb, lc = (x.get("lq_score", 0) for x in (a, b, c))
+    lq_mode = _mode_of(la, lc, zero_word="")
+    # 🔴 L2 只作「张力」附注，**不参与判 mode**（实测合成更差，见函数 docstring）
+    tension = ""
+    if lq_mode and lq_mode != jiang_mode and jiang_mode != "平平无变":
+        tension = (f"；⚠ 六亲走向相反（初{a.get('liuqin','') or '—'}→末{c.get('liuqin','') or '—'}，"
+                   f"主{lq_mode}）")
+    mode = jiang_mode
+
+    # L4 旺衰：**只描述不判定**（实测作判据会降分）
+    ws_txt = ""
+    if wangshuai:
+        ws_list = [str((w or {}).get("旺衰", "")) for w in list(wangshuai)[:3]]
+        if any(ws_list):
+            ws_txt = f"；旺衰（月令）：初{ws_list[0] or '—'}→中{ws_list[1] if len(ws_list)>1 else '—'}→末{ws_list[2] if len(ws_list)>2 else '—'}"
+
+    # ---- 旬空修正（§035「寅是空亡…见生不生，反成凶咎」）----
     kw = set(kongwang or [])
     kong_flags = [z in kw for z in sc]
     if kong_flags[2] and mode in ("先凶后吉", "始终吉"):
@@ -286,20 +424,46 @@ def _zhuanzhe_for_ancient(sanchuan_dizhi: List[str],
         mode = f"{mode}（末传空亡，凶亦落空）"
     elif kong_flags[0]:
         mode = f"初传{sc[0]}空亡（起始之力落空）→ {mode}"
+
+    # ---- L3 课格 ----
+    kege, kege_det = _kege_for_zhuanzhe(si_ke, ri_gan, ri_zhi, sc, tiandi_pan)
+    kege_note = ""
+    if any("乱首" in k for k in kege):
+        # 🔴 原文铁证：通解_下.txt:8394「旺相相生灾未发，死囚刑克便灾临」⇒ 灾**后发**
+        mode = "先吉后凶"
+        kege_note = ("；课格乱首（下犯上）：通解_下8394「旺相相生灾未发，死囚刑克便灾临」"
+                     "⇒ 其凶应时令而后发，故**先吉后凶**")
+    if "天狱" in kege:
+        kege_note += "；课格天狱（墓作死囚用／天罡加日本）：§022「不有大服，必有大祸」"
+    if "斩关" in kege:
+        kege_note += "；课格斩关（魁罡加日辰发用）：关梁闭塞，君子利有攸往 ⇒ 先阻后通"
+    if "赘婿" in kege:
+        kege_note += "；课格赘婿（支临干被克）：屈从于人"
+
     mid = ""
     if vb != 0 and ((vb > 0 and va < 0 and vc < 0) or (vb < 0 and va > 0 and vc > 0)):
         mid = "，中传生变"
     desc = (f"初传{sc[0]}乘{tj[0]}（{a['xing']}）→ 中传{sc[1]}乘{tj[1]}（{b['xing']}）"
             f"→ 末传{sc[2]}乘{tj[2]}（{c['xing']}），主{mode}{mid}")
+    if any(x.get("liuqin") for x in (a, b, c)):
+        desc += (f"；六亲：初{a.get('liuqin','') or '—'}→中{b.get('liuqin','') or '—'}"
+                 f"→末{c.get('liuqin','') or '—'}")
+    desc += tension
+    desc += ws_txt
+    desc += kege_note
     if any(kong_flags):
         desc += f"；空亡：{'、'.join(f'{z}空' for z, f in zip(sc, kong_flags) if f)}"
     return {
         "初": a, "中": b, "末": c, "mode": mode,
+        "liuqin": {"初": a.get("liuqin", ""), "中": b.get("liuqin", ""), "末": c.get("liuqin", "")},
+        "kege": kege, "kege_detail": kege_det,
         "kong": kong_flags, "desc": desc,
-        "src": ("§前程仕进03·046「此课先失后得，先虚后实」；§宅墓02·035「望先凶后吉」"
-                "（+「寅是空亡…见生不生，反成凶咎」⇒ 空亡修正）；"
-                "§终身04·118「主日后因犯官长，断勒归家」。"
-                "判据=三传天将吉凶走向（TIANJIANG_SCORE，与评分链同表）+ 旬空修正"),
+        "src": ("§前程仕进03·046「此课先失后得，先虚后实」；"
+                "§宅墓02·035「望先凶后吉」（+「寅是空亡…见生不生，反成凶咎」⇒ 旬空修正）；"
+                "§终身04·118「主日后因犯官长，断勒归家」（⇒ 乱首时序修正）。"
+                "判据＝L1三传天将（TIANJIANG_SCORE，与评分链同表，通解上4208「龙末虎初凶变吉」）"
+                "＋L2六亲（通解上3370「官鬼→阻／父母→助／妻财→得」）"
+                "＋L3课格（通解上5136课体口诀；乱首时序见通解下8394）＋旬空修正"),
     }
 
 
@@ -576,12 +740,19 @@ def build_result_from_ancient(ancient_case: Dict) -> Dict[str, Any]:
     #       · 转折无现成字段 ⇒ 新建，由三传天将吉凶走向**确定性推导**
     #         （用 `judgment_fusion.TIANJIANG_SCORE`，与评分链**同一张表** ⇒ 口径一致）。
     # 约束：只写 result["fangwei"]/["shumu"]/["zhuanzhe"]，`fuse()` 不读 ⇒ 对 prediction 零影响。
-    _fw = _fangwei_shumu_for_ancient(ri_zhi, sanchuan_dizhi, si_ke, tiandi_pan, leishen_used)
-    result["fangwei"] = _fw.get("fangwei", {})
-    result["shumu"] = _fw.get("shumu", {})
-    result["zhuanzhe"] = _zhuanzhe_for_ancient(
-        sanchuan_dizhi, result.get("sanchuan_tianjiang", []),
-        kongwang=_kongwang, ri_gan=ri_gan)
+    # 🔴 叙事层绝不允许炸主链路：任何异常一律降级为空，不影响 prediction
+    try:
+        _fw = _fangwei_shumu_for_ancient(ri_zhi, sanchuan_dizhi, si_ke, tiandi_pan, leishen_used)
+        result["fangwei"] = _fw.get("fangwei", {})
+        result["shumu"] = _fw.get("shumu", {})
+        result["zhuanzhe"] = _zhuanzhe_for_ancient(
+            sanchuan_dizhi, result.get("sanchuan_tianjiang", []),
+            kongwang=_kongwang, ri_gan=ri_gan, ri_zhi=ri_zhi,
+            si_ke=si_ke, tiandi_pan=tiandi_pan, wangshuai=wangshuai_list)
+    except Exception:
+        result.setdefault("fangwei", {})
+        result.setdefault("shumu", {})
+        result.setdefault("zhuanzhe", {})
 
     # ---- 真实神煞/八杀 valence 抽取（确定性，占类化，无泄漏）----
     result["analysis"]["_shen_sha_valence"] = extract_shen_sha_valence(
