@@ -127,6 +127,65 @@ def _yingqi_for_ancient(ri_gan: str, ri_zhi: str, sanchuan_dizhi: List[str],
     }
 
 
+# ══════════════════════════════════════════════════════════════════════════════
+# 类神(leishen)来源解析（2026-09-20 憨爷拍板：人工预填 → **自推**）
+#
+# 🔴 背景：218 语料里 `leishen` 只有 12 案非空（全亡盗章），且是**人工从原文读出**的
+#    ⇒ 引擎不自推 ⇒ 等于喂答案。`judgment_fusion.py:L402` 有一条
+#      「占类=其他 + 带 leishen + 吉向 ⇒ 置信×1.5」的亡盗专属提权在消费它。
+#
+# 本函数把来源切到**自推**：用 `engine/shuzheng_suozhan.json` 里人工精校的
+# `suozhan_desc`（所占之事描述，**不含吉凶答案**）驱动 `leishen_from_ancient_text`
+# （⛔ 禁 LLM 兜底，避免写脏 data/leishen_llm_cache.json）。
+#
+# 三档口径（实测 M3，朴素基线同为 85.5%）：
+#   auto（默认，自推）→ **89.9%**，净 +4.3pp   ← 现行
+#   human（人工预填） → 91.8%，净 +6.3pp      ← 旧口径，含泄漏
+#   none（不给类神）  → 87.9%，净 +2.4pp
+# ⇒ 切换后数字下降**不是退步**，是剔掉喂答案的部分；自推净贡献 +1.9pp 为真实能力。
+#
+# 回滚：环境变量 `LEISHEN_SOURCE=human|none|auto`（默认 auto）。
+# ⛔ 表外案（928 案语料／股票路径等）**保持原行为**（透传原 leishen）⇒ 零涟漪。
+# ══════════════════════════════════════════════════════════════════════════════
+LEISHEN_SOURCE = os.environ.get("LEISHEN_SOURCE", "auto").strip().lower()
+_SUOZHAN_TABLE = None
+_DIZHI = set("子丑寅卯辰巳午未申酉戌亥")
+
+
+def _load_suozhan_table() -> Dict[str, Dict]:
+    global _SUOZHAN_TABLE
+    if _SUOZHAN_TABLE is None:
+        try:
+            _p = os.path.join(BASE, "engine", "shuzheng_suozhan.json")
+            with open(_p, encoding="utf-8") as f:
+                _SUOZHAN_TABLE = {i.get("case_id"): i
+                                  for i in (json.load(f).get("items") or [])}
+        except Exception:
+            _SUOZHAN_TABLE = {}
+    return _SUOZHAN_TABLE
+
+
+def _resolve_leishen(ancient_case: Dict) -> str:
+    """按 LEISHEN_SOURCE 解析本例的类神地支（⛔ 只接受单字地支，过滤『朱雀』等天将名）"""
+    src = LEISHEN_SOURCE
+    if src == "none":
+        return ""
+    if src == "human":
+        return ancient_case.get("leishen", "")
+    _cid = ancient_case.get("id") or ancient_case.get("case_id") or ""
+    _it = _load_suozhan_table().get(_cid)
+    if not _it:
+        # 表外案（928 案语料 / 股票路径）：保持原行为 ⇒ 零涟漪
+        return ancient_case.get("leishen", "")
+    try:
+        from engine.leishen_engine import leishen_from_ancient_text
+        _z = leishen_from_ancient_text(_it.get("suozhan_desc", ""),
+                                       force_lost=True, allow_llm=False)
+    except Exception:
+        _z = ""
+    return _z if (len(_z) == 1 and _z in _DIZHI) else ""
+
+
 def build_result_from_ancient(ancient_case: Dict) -> Dict[str, Any]:
     """
     从古例数据构造 fuse() 所需的 result dict。
@@ -376,17 +435,21 @@ def build_result_from_ancient(ancient_case: Dict) -> Dict[str, Any]:
         result["basic_info"].get("ri_zhi", ""),
         sanchuan_dizhi, result.get("sanchuan_tianjiang", []), si_ke, zhanlei
     )
+    # 🔴 类神来源：2026-09-20 起默认走**自推**（LEISHEN_SOURCE=auto），见 _resolve_leishen
+    leishen_used = _resolve_leishen(ancient_case)
     result["analysis"]["_zeidao_valence"] = extract_zeidao_valence(
         result["basic_info"].get("ri_gan", ""),
         result["basic_info"].get("ri_zhi", ""),
         sanchuan_dizhi, result.get("sanchuan_tianjiang", []), si_ke, zhanlei,
-        leishen=ancient_case.get("leishen", ""),
+        leishen=leishen_used,
         tianjiang_map=result.get("tianjiang_map", {}),
         shichen=ancient_case.get("shichen", "")
     )
     # 亡盗类神（零涟漪：仅亡盗案置此字段 → 融合层据此放宽 zeidao 消费条件；
     # 其余"其他"案与股票路径无 leishen → 零影响）
-    result["leishen"] = ancient_case.get("leishen", "")
+    result["leishen"] = leishen_used
+    # 叙事层：标注类神来源，便于核对（⛔ 不进评分链）
+    result["leishen_source"] = LEISHEN_SOURCE
 
     # ---- 真实神煞/八杀 valence 抽取（确定性，占类化，无泄漏）----
     result["analysis"]["_shen_sha_valence"] = extract_shen_sha_valence(
