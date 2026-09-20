@@ -480,6 +480,11 @@ def build_result_from_ancient(ancient_case: Dict) -> Dict[str, Any]:
         keti: ["元首","闭口"] (课体列表)
     """
     rizhu = ancient_case.get("rizhu", "")
+    # 🔧 2026-09-20：兼容**原始语料**字段名 day_ganzhi（218 案语料用这个，不是 rizhu）。
+    #    漏了这层兜底 ⇒ ri_gan/ri_zhi 全空 ⇒ 下面四课/天地盘计算静默失败（si_ke=[]、
+    #    tiandi_pan={}）而**无任何报错**，是隐形 bug。
+    if not rizhu:
+        rizhu = ancient_case.get("day_ganzhi", "") or ancient_case.get("rizhu_ganzhi", "")
     ri_gan = rizhu[0] if len(rizhu) >= 1 else ""
     ri_zhi = rizhu[1] if len(rizhu) >= 2 else ""
     yue_jiang = ancient_case.get("yue_jiang", "")
@@ -506,13 +511,22 @@ def build_result_from_ancient(ancient_case: Dict) -> Dict[str, Any]:
     # ---- 1. 四课计算 ----
     si_ke = []
     tiandi_pan = {}
+    # 🔧 2026-09-20：原本 `except: pass` 全静默 ⇒ 排盘失败时四课/天地盘**悄无声息变空**，
+    #    下游（analyzer 六亲/八杀、课格层「天罡加日本」）全部静默退化，极难排查。
+    #    ⇒ 保留兜底不炸，但**把原因留在 result 里**（result["_calc_errors"]），可观测。
+    _calc_errors = []
     try:
         ssc2 = SiKeSanChuanCalculator2()
         calc_result = ssc2.calculate(ri_gan, ri_zhi, yue_jiang, shichen)
         si_ke = calc_result.get("sike", [])
         tiandi_pan = calc_result.get("tiandi_pan", {})
-    except Exception:
-        pass
+        if not si_ke:
+            _calc_errors.append(
+                f"四课为空(ri_gan={ri_gan!r} ri_zhi={ri_zhi!r} 月将={yue_jiang!r} 时={shichen!r})")
+        if not tiandi_pan:
+            _calc_errors.append("天地盘为空")
+    except Exception as _e:
+        _calc_errors.append(f"排盘异常 {type(_e).__name__}: {_e}")
 
     # ---- 2. 天将计算(用 GuiRenCalculator 更稳健) ----
     tianjiang_list = []
@@ -639,6 +653,8 @@ def build_result_from_ancient(ancient_case: Dict) -> Dict[str, Any]:
         "si_ke": si_ke,
         "san_chuan": sanchuan_dizhi,
         "tiandi_pan": tiandi_pan,
+        # 🔧 排盘/四课异常留痕（原为静默 pass ⇒ 空四课不可见，见上方注释）
+        "_calc_errors": _calc_errors,
         "sanchuan_tianjiang": tianjiang_list,
         "tianjiang_map": tianjiang_map,
         "tianjiang_detail": tianjiang_detail,
