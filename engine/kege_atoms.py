@@ -2672,16 +2672,16 @@ def _wu_zhai_kuan_guang_v2(env):
     # B 卖宅备患格：三传生支而克干
     if all(sheng_zhi(z) for z in sc) and all(ke_gan(z) for z in sc):
         return True
-    # C 狮兽冲宅格（🔴 收窄 2026-09-22）：白虎所乘支六冲支上神
-    #    **且**该支加临【六冲日支】之位 —— 原文「壬辰日，申加戌作白虎，冲支上寅」：
-    #    申加戌，而戌六冲日支辰 ⇒ 虎临冲宅之位、又冲支上，双重冲宅。
-    #    旧判据只取「白虎乘支冲支上」＝54/342 课（过宽）。
-    di_of = {v: k for k, v in tdp.items() if v}
-    if zs:
-        for z in tj:
-            if (tj.get(z, '') == '白虎' and LIU_CHONG.get(z, '') == zs
-                    and LIU_CHONG.get(di_of.get(z, ''), '') == rz):
-                return True
+    # C 狮兽冲宅格：某支乘白虎而冲支上神（原文「壬辰日，申加戌作白虎，冲支上寅」）
+    # 🔴【2026-09-22 证伪·勿重试】曾加「该支加临六冲日支之位」作收窄 ⇒ **恒等、无效**：
+    #    天地盘整体平移（天盘支 = 地盘位 + Δ）。支上神 zs 加临日支 ⇒ di[zs] = rz；
+    #    若 z 冲 zs（z + 6 = zs），则 di[z] + 6 = (z − Δ) + 6 = zs − Δ = rz
+    #    ⇒ 「di[z] 六冲日支」与「z 冲支上」**逻辑等价**（同义反复）。
+    #    实测 54 课无一例外（见 _冗余待删/_probe_fa30_c.py）。原文的「申加戌」
+    #    正是此恒等式的必然结果，**不携带额外信息**。
+    #    ⛔ 收窄须改用平移不变之外的信息：天将、旬空、日干寄宫、三传结构等。
+    if zs and any(LIU_CHONG.get(z, '') == zs and tj.get(z, '') == '白虎' for z in tj):
+        return True
     # D 血厌克宅格：天后**临支**（地盘日支位所乘天盘支）而克支
     z_tp = tdp.get(rz, '')
     if z_tp and tj.get(z_tp, '') == '天后' and ke_zhi(z_tp):
