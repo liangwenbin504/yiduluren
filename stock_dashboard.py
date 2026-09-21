@@ -5496,6 +5496,20 @@ def _build_tianji_prediction_record(full, rec, shichen):
     }
 
 
+def _write_training_cases(path, cases):
+    """原子写入 stock_training_cases.json（先 .tmp 后 os.replace）。
+
+    案例库已 1.1MB，直接 write_text 若中途中断会留下截断的坏 JSON；
+    tmp + os.replace 为同分区原子替换，读侧要么拿到旧版、要么拿到新版。
+    """
+    tmp_path = str(path) + '.tmp'
+    with open(tmp_path, 'w', encoding='utf-8') as f:
+        json.dump(cases, f, ensure_ascii=False, indent=2)
+        f.flush()
+        os.fsync(f.fileno())
+    os.replace(tmp_path, path)
+
+
 def _append_tianji_to_stock_knowledge(full, rec, shichen):
     """将天机起课结果追加到股票训练知识库 (stock_training_cases.json)
     作为持久化学习数据，供 AI 学习模块检索和分析。
@@ -5517,7 +5531,6 @@ def _append_tianji_to_stock_knowledge(full, rec, shichen):
                 qiushi_type = axes.get('占事类型', 'stock')
 
         # 生成案例 ID
-        import uuid
         case_id = f"CASE-TIANJI-{rec.get('period_index', 0):04d}-{rec.get('cast_date', '')}"
 
         # 确定课体
@@ -5583,17 +5596,33 @@ def _append_tianji_to_stock_knowledge(full, rec, shichen):
             except Exception:
                 existing_cases = []
 
-        # 避免重复写入（按日期+时辰+课体去重）
-        date_str = rec.get('cast_date', '')
-        dedup_key = f"{date_str}_{shichen}_{keti}"
-        for case in existing_cases:
-            case_date = case.get('date', '')
-            case_title = case.get('title', '')
-            if case_date == date_str and dedup_key[:10] in case_title:
-                return {'success': True, 'message': '案例已存在，跳过', 'skipped': True, 'case_id': case.get('id', '')}
+        # 🔴 去重（2026-09-21 修复）
+        #   旧判据 `case_date == date_str and dedup_key[:10] in case_title` **恒为 False**：
+        #   dedup_key[:10] 是日期（"2026-09-21"），而 title ＝「天机起课：X课 · 涨跌 · 置信度N%」
+        #   **根本不含日期** ⇒ 同一课重复调用会写出 id 完全相同的多条记录（实测 2 次→2 条）。
+        #   新判据：按 case_id + cast_datetime 精确匹配，命中则 upsert 覆盖
+        #   （口径与上方 stock_predictions.json 的 upsert 一致：同 id 覆盖刷新完整字段）。
+        cast_dt = f"{rec.get('cast_date', '')} {shichen}时"
+        hit_idx = -1
+        same_id_other_shichen = False
+        for i, case in enumerate(existing_cases):
+            if case.get('id') == case_id:
+                if case.get('cast_datetime') == cast_dt:
+                    hit_idx = i
+                    break
+                same_id_other_shichen = True
+        if hit_idx >= 0:
+            existing_cases[hit_idx] = new_case
+            _write_training_cases(stock_cases_path, existing_cases)
+            _refresh_training_knowledge()
+            return {'success': True, 'message': '案例已存在，已刷新覆盖', 'updated': True, 'case_id': case_id}
+        if same_id_other_shichen:
+            # 同周期同日、不同时辰另起的一课 ⇒ id 补时辰后缀，避免主键撞号
+            case_id = f"{case_id}-{shichen}"
+            new_case['id'] = case_id
 
         existing_cases.append(new_case)
-        stock_cases_path.write_text(json.dumps(existing_cases, ensure_ascii=False, indent=2), encoding='utf-8')
+        _write_training_cases(stock_cases_path, existing_cases)
 
         # 触发知识库刷新，使新案例立即可检索
         _refresh_training_knowledge()
