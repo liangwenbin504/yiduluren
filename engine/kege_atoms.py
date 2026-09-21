@@ -2793,15 +2793,99 @@ def _tian_wang_zi_guo_v2(env):
 
 
 def _fei_you_er_de_bu_zu_v2(env):
-    """第57法 费有余得不足：父母爻空+子孙爻实在"""
-    sc = env.get('sanchuan', [])
+    """第57法「费有余而得不足」（2026-09-21 按原文六课重建）
+
+    原文总纲（在线_bifa_sina.html L1800 起）：「四夷虽服而海内空虚矣」。
+    判据＝「**生我者空亡，脱我者（或鬼）实在**」⇒ 所得不偿所费
+    （L1829 总括句：「以上总皆**生空，脱与鬼皆实**论耳」）。
+
+      🔴【BUG-FIX 2026-09-21】旧版只扫三传找「父母爻空 + 子孙爻实」，
+        而原文六课的「生空／脱实」分别落在 **干上、支上、日支、四课上神、三传合局** 上
+        ⇒ 6 课 0/12 命中。
+
+      🆕🔴 **「空」有两义（原文课盘 ◎／⊙ 二标记，实测 6 课 5 课有标记、5/5 吻合）**：
+         · **◎ ＝ 旬空**（日柱旬中空亡）
+         · **⊙ ＝ 坐空**（该支所临之**地盘**位为旬空，即「落空乡」）
+         课4「岂可**初末**空亡」＝初传巳**坐空**(巳@酉，酉旬空) ＋ 末传酉**旬空**
+         —— ⛔ 只认旬空则初传不空、该课永不可解。
+
+    六课实测（子类 A~F）：
+      A 课1 丙午 干上寅支上卯：干支上**皆父母(生我)而俱旬空**(寅卯)
+        ＋干上之上亥、支上之上子**皆鬼贼**（L1801「第二、第四课却全见鬼贼」）。
+      B 课2 癸未 干上申：申为水之**长生**而旬空（五行长生：水长生于申）
+        ＋支上寅为脱气**却实**。
+      C 课3 戊子 干上午：午为生气而旬空 ＋ 三传寅卯辰**皆鬼**（寅卯克土）。
+      D 课4 癸未 三传巳丑酉：**金局生日**，初巳坐空、末酉旬空，独中传丑土**不空为鬼**。
+      E 课5 乙巳 干上卯：卯为乙之**旺禄**而旬空，情愿「以干加支而受脱」（日支巳脱气实）。
+      F 课6 甲寅 干上卯（**得少失多格**）：卯为日之旺神，初传辰与干上卯**六害**，
+        中巳末午**盗气**（L1837「贪他一粒米，失却半年粮」）。
+    """
     gan = env.get('ri_gan', '')
-    kong = env.get('kongwang', ('', ''))
-    if len(sc) != 3 or not gan or not kong[0]:
+    rz = env.get('ri_zhi', '')
+    sc = env.get('sanchuan', []) or []
+    gs = env.get('gan_shang', '')
+    zs = env.get('zhi_shang', '')
+    if not gan or len(sc) != 3:
         return False
-    has_parent_kong = any(_zhi_sheng(z, gan) and _wx(z) != _wx(gan) and z in kong for z in sc)
-    has_child_not_kong = any(_zhi_sheng(gan, z) and z not in kong for z in sc)
-    return has_parent_kong and has_child_not_kong
+    kong = env.get('kongwang') or ('', '')
+    tdp = env.get('tiandi_pan') or {}
+    di_of = {v: k for k, v in tdp.items() if v}
+    gw = _wx(gan)
+    # 十干禄（⛔ 不得用 env['lu']：口径一致性起见与第58法同用本地表）
+    LU = {'甲': '寅', '乙': '卯', '丙': '巳', '丁': '午', '戊': '巳',
+          '己': '午', '庚': '申', '辛': '酉', '壬': '亥', '癸': '子'}
+    # 三合局 → 局五行（申子辰水／亥卯未木／寅午戌火／巳酉丑金）
+    SANHE_JU = ((('申', '子', '辰'), '水'), (('亥', '卯', '未'), '木'),
+                (('寅', '午', '戌'), '火'), (('巳', '酉', '丑'), '金'))
+
+    def is_kong(z):
+        """旬空 ◎ ／ 坐空 ⊙ 皆为空"""
+        if not z:
+            return False
+        if z in kong:
+            return True
+        return di_of.get(z, '') in kong
+
+    def sheng_wo(z):
+        """生我者（父母／长生／生气）"""
+        return bool(z) and WX_SHENG.get(_wx(z), '') == gw and _wx(z) != gw
+
+    def tuo_wo(z):
+        """脱我者（子孙／盗气／脱气）"""
+        return bool(z) and WX_SHENG.get(gw, '') == _wx(z) and _wx(z) != gw
+
+    def ke_wo(z):
+        """克我者（官鬼／鬼贼）"""
+        return bool(z) and WX_KE.get(_wx(z), '') == gw and _wx(z) != gw
+
+    def you_yu(z):
+        """「有余」之神：生我者 ／ 比旺 ／ 日禄（总纲「生空」之「生」的宽口径）"""
+        return bool(z) and (sheng_wo(z) or _wx(z) == gw or LU.get(gan, '') == z)
+
+    # A：干上、支上皆「有余」而俱空 ＋ 干上之上／支上之上皆鬼贼（课1）
+    if gs and zs and you_yu(gs) and you_yu(zs) and is_kong(gs) and is_kong(zs):
+        if ke_wo(tdp.get(gs, '')) and ke_wo(tdp.get(zs, '')):
+            return True
+    # B：干上「有余」而空 ＋ 支上脱气却实（课2）
+    if gs and you_yu(gs) and is_kong(gs) and tuo_wo(zs) and not is_kong(zs):
+        return True
+    # C：干上「有余」而空 ＋ 三传鬼 ≥ 2（课3）
+    if gs and you_yu(gs) and is_kong(gs) and sum(1 for z in sc if ke_wo(z)) >= 2:
+        return True
+    # D：三传合局生日 ＋ 初末空亡 ＋ 中传不空且为鬼（课4）
+    for ju, w in SANHE_JU:
+        if set(sc) == set(ju) and WX_SHENG.get(w, '') == gw:
+            if is_kong(sc[0]) and is_kong(sc[2]) \
+               and not is_kong(sc[1]) and ke_wo(sc[1]):
+                return True
+    # E：干上「有余」而空 ＋ 干加支受脱（日支为脱气而实）（课5）
+    if gs and you_yu(gs) and is_kong(gs) and tuo_wo(rz) and not is_kong(rz):
+        return True
+    # F：得少失多格 —— 干上旺神 ＋ 初传与干上六害 ＋ 中末盗气（课6）
+    if gs and (_wx(gs) == gw or LU.get(gan, '') == gs) \
+       and LIU_HAI.get(gs, '') == sc[0] and tuo_wo(sc[1]) and tuo_wo(sc[2]):
+        return True
+    return False
 
 
 def _yong_po_shen_xin(env):
