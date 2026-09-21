@@ -3887,7 +3887,9 @@ def api_zeri_analyze():
             result['zhuanzhe'] = _zz_fn(
                 _fx_sc, _tj_list, kongwang=_kw_cl,
                 ri_gan=ri_gan, ri_zhi=ri_zhi,
-                si_ke=sike, tiandi_pan=tiandi_pan)
+                si_ke=sike, tiandi_pan=tiandi_pan,
+                # 🆕 太岁段位（通解_上:3416）：口径与上方应期引擎一致（tai_sui_zhi = 年支）
+                tai_sui_zhi=str(nian_zhi or ''))
         except Exception as _e_fx:
             result.setdefault('fangwei', {})
             result.setdefault('shumu', {})

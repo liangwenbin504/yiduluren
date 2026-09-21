@@ -410,12 +410,22 @@ def _kege_enrich(names: List[str]) -> List[Dict[str, Any]]:
 
 
 def _timing_hints(sc: List[str], tj: List[str], kw: set,
-                  ri_gan: str, kege: List[str]) -> List[Dict[str, str]]:
+                  ri_gan: str, kege: List[str],
+                  tai_sui_zhi: str = "") -> List[Dict[str, str]]:
     """🔴 **时序提示**（2026-09-21 新增）：只摆**有原文可证的时序事实**，⛔ **不下方向判断**。
 
     为什么不做判断：把「末传墓绝⇒先凶后吉」「乱首⇒先吉后凶」放到全量 218 案人工精读后，
     precision 分别从 77.8%→23.1%、100%→25%（详见 `ZHUANZHE_STRICT` 处注释）。
     ⇒ 凡是有出处的，照引原文；凡是要我拍板的，一律不拍。
+
+    🆕 2026-09-21 补「太岁段位」与「明文段位格」（憨爷令：接入行年/本命/太岁时序判据）。
+    ⛔ **实测证伪记录**（GT n=53，恒定猜「先凶后吉」是必须打赢的基线 58.5%）：
+       太岁时序       n=17  precision 33.3%  < 恒定 58.8%  ⇒ 证伪
+       五福④本命救解  n=3   precision 33.3%  = 恒定 33.3%  ⇒ 无判别力
+       自墓传生/鬼脱生 n=3   precision 100%   = 恒定 100%   ⇒ 无法区分
+       自生传墓       n=1   precision 0%     < 恒定 100%   ⇒ 证伪
+       （行年：语料仅 29/218 有 `xing_nian_zhi`，且由 `age` 反推只有 13/28 吻合 ⇒ 样本不足，不接）
+    ⇒ 故**全部只引原文、不落 mode**；带方向的是**原文原话**，不是引擎判断。
     """
     h: List[Dict[str, str]] = []
     if any("乱首" in k for k in kege or []):
@@ -451,6 +461,56 @@ def _timing_hints(sc: List[str], tj: List[str], kw: set,
                       "文": "归长生 ⇒ 后阶段有生源" + kong_tail,
                       "src": "十二长生；§前程仕进03·077「末传寅在前，引动墓，人遂得出去」"
                              + ("；§宅墓02·035「寅是空亡…见生不生，反成凶咎」" if mo_kong else "")})
+
+    # ---- 🆕 明文段位格：初/末 与「日干长生·墓·鬼」的组合（原文点名的格）----
+    # ⛔ 方向一律是**原文原话**（本库 GT 实测 n=1~3，无法证实亦无法证伪 ⇒ 只引不判）
+    _KEW = {"木": "土", "火": "金", "土": "水", "金": "木", "水": "火"}      # 我克者
+    _SHENGW = {"木": "水", "火": "木", "土": "火", "金": "土", "水": "金"}   # 生我者
+    if gw and len(sc) > 2:
+        chu, mo = sc[0], sc[2]
+        c_wx, m_wx = _ZHI_WUXING.get(chu, ""), _ZHI_WUXING.get(mo, "")
+        c_cs, m_cs = chu == _WX_CHANGSHENG.get(gw), mo == _WX_CHANGSHENG.get(gw)
+        c_mu, m_mu = chu == _WX_MU.get(gw), mo == _WX_MU.get(gw)
+        c_gui = bool(c_wx and _KEW.get(c_wx) == gw)          # 支克干 ⇒ 鬼
+        # 🔴🔴 空亡否决（通解_中:9891）：末长生落空 ⇒ 「不能引进，**见生不生，反成凶**」
+        #    铁证＝本库 §宅墓02·035（三传子未寅，末寅为长生）：原文断「可望先凶后吉。
+        #    奈何寅是空亡，所以不能引进，见生不生，反成凶咎」⇒ ⛔ 落空时**绝不能**引"先凶后吉"。
+        _KO = ("⚠ 末传落空，**见生不生，反成凶咎**（§宅墓02·035／通解_中:9891）"
+               "⇒ 此格不实，**不**作转吉论" if mo_kong else "")
+        if c_cs and m_mu:
+            h.append({"名": "原文格法·自生传墓",
+                      "文": ("初传＝日干长生，末传＝日干之墓 ⇒ 原文云「**先吉后凶**」"
+                             + ("；但末传墓落空 ⇒ 「本身之墓既空，渐次脱去，次第亨通」（§064）"
+                                " ⇒ 不作入墓论" if mo_kong else "")),
+                      "src": "通解_上:6087「但自生传墓，先吉后凶耳」"
+                             "；⚠ 本库 GT 实测 n=1 且判错，未获统计支持"})
+        elif c_mu and m_cs:
+            h.append({"名": "原文格法·自墓传生",
+                      "文": ("初传＝日干之墓，末传＝日干长生 ⇒ 原文云「**先难后易**」（先凶后吉）"
+                             if not mo_kong else _KO),
+                      "src": "通解_中:5517「初传戌为干墓，末传寅乃丙火长生之地，占事先难后易」"
+                             + ("；通解_中:9891「奈何寅是空亡，所以不能引进，见生不生，反成凶」"
+                                if mo_kong else "；⚠ 本库 GT 实测 n=2 全中，样本过小")})
+        elif c_gui and m_cs and _SHENGW.get(m_wx) == c_wx:    # 初鬼生末长生
+            h.append({"名": "原文格法·鬼脱生格",
+                      "文": ("初传＝日鬼且生末传，末传＝日干长生 ⇒ 原文云「**主一切先凶后吉**」"
+                             if not mo_kong else _KO),
+                      "src": "通解_上:997「凡鬼发用生末传作干长生，名鬼脱生格。主一切先凶后吉」"
+                             + ("；通解_中:9891「奈何寅是空亡，所以不能引进，见生不生，反成凶」"
+                                if mo_kong else "；⚠ 本库 GT 实测 n=1，样本过小")})
+
+    # ---- 🆕 太岁段位（时序，**不判吉凶方向**）----
+    # 🔴 这是《通解》里唯一一条讲太岁**时序**的明文；本命/行年**没有**对应的时序明文。
+    if tai_sui_zhi and len(sc) >= 3 and tai_sui_zhi in sc[:3]:
+        p = sc.index(tai_sui_zhi)
+        _ts = {0: "在**初传** ⇒ 为**当年事**（近）",
+               1: "在**中传** ⇒ **方来过去**（时序游移，不判远近）",
+               2: "在**末传** ⇒ 为**久远事**（远）"}[p]
+        h.append({"名": f"太岁{tai_sui_zhi}入{'初中末'[p]}传",
+                  "文": _ts,
+                  "src": "通解_上:3416「太岁在初传，为当年事；在末，为久远事；在中兮，方来过去。"
+                         "传顺年浅，传逆年深」"
+                         + ("；通解_上:2690「凡太岁发用，必有急事发」" if p == 0 else "")})
     return h
 
 
@@ -461,7 +521,8 @@ def _zhuanzhe_for_ancient(sanchuan_dizhi: List[str],
                           ri_zhi: str = "",
                           si_ke: Optional[List] = None,
                           tiandi_pan: Optional[Dict[str, str]] = None,
-                          wangshuai: Optional[List] = None) -> Dict[str, Any]:
+                          wangshuai: Optional[List] = None,
+                          tai_sui_zhi: str = "") -> Dict[str, Any]:
     """转折（事态走向：先吉后凶／先凶后吉／始终…；2026-09-20 新建 + 同日加厚）。
 
     🔴 定位：**叙事层**，⛔ **不进评分链** —— 只描述"事态如何变化"，不改吉凶方向。
@@ -573,7 +634,7 @@ def _zhuanzhe_for_ancient(sanchuan_dizhi: List[str],
     mid = ""
     if vb != 0 and ((vb > 0 and va < 0 and vc < 0) or (vb < 0 and va > 0 and vc > 0)):
         mid = "，中传生变"
-    hints = _timing_hints(sc, tj, set(kongwang or []), ri_gan, kege)
+    hints = _timing_hints(sc, tj, set(kongwang or []), ri_gan, kege, tai_sui_zhi)
     if ZHUANZHE_STRICT >= 2:
         _tail = "（时序：见下方提示，不判方向）" if hints else "（无时序提示）"
     else:
@@ -904,7 +965,8 @@ def build_result_from_ancient(ancient_case: Dict) -> Dict[str, Any]:
         result["zhuanzhe"] = _zhuanzhe_for_ancient(
             sanchuan_dizhi, result.get("sanchuan_tianjiang", []),
             kongwang=_kongwang, ri_gan=ri_gan, ri_zhi=ri_zhi,
-            si_ke=si_ke, tiandi_pan=tiandi_pan, wangshuai=wangshuai_list)
+            si_ke=si_ke, tiandi_pan=tiandi_pan, wangshuai=wangshuai_list,
+            tai_sui_zhi=_nian_zhi)
     except Exception:
         result.setdefault("fangwei", {})
         result.setdefault("shumu", {})
