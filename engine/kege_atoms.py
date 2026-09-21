@@ -2971,17 +2971,57 @@ def _tai_yang_she_zhai_v2(env):
 
 
 def _zhi_cheng_mu_hu_v2(env):
-    """第62法 支乘墓虎：干墓临支或支墓临支 + 白虎"""
-    zs = env.get('zhi_shang', '')
+    """第62法「支乘墓虎有伏尸」（2026-09-21 按原文四格重建）
+
+    原文（在线_bifa_sina.html L1940 起）「此例有**二等**：一者**干墓临支**，二者**支墓临支**，
+    以上二例占宅必有伏尸鬼祸或有形响，**如又克宅者为的**」＋ **虎鬼克支格** ＋
+    **蛇墓克支格** ＋ **墓门开格**。
+
+      🔴【BUG-FIX 2026-09-21】旧版只判「支上＝干墓或支墓 且 乘白虎」⇒ 漏三格：
+        · **虎鬼克支格**（原文「缘**支鬼乘白虎而克支**者」）—— 鬼可在**三传**，非必在支上（课3）。
+        · **蛇墓克支格**（原文「缘**干墓乘螣蛇**而加支又克支者」）—— 乘**螣蛇**亦可（课5）。
+        · **墓门开格**（原文「如**卯酉日**占，**干墓乘蛇虎加支**」）。
+      ⓘ 另：旧对账口径把天将盘**多换算一次**（天盘→天盘）致天将整体错位，
+        使得本课1/2 的「昼占支上乘白虎」也排不出来 ⇒ 对账侧 0 命中（脚本侧已修，非引擎问题）。
+
+    五课实测（ⓘ 命中占时数与原文昼/夜标注一致 ⇒ 判据得到原文印证）：
+      课1 乙亥 支上未：未＝乙木之**干墓**临支，克支(未土克亥水)，**昼占乘白虎**（6/12）。
+      课2 丙子 支上辰：辰＝子水之**支墓**临支，克支，**昼占乘白虎**（6/12）。
+      课3 壬子 三传戌酉申：**初传戌**为支鬼(戌土克子水)且**乘白虎**（「壬子日戌加子昼」）。
+      课4 丁丑 支上寅：寅为支鬼(木克丑土)且**乘白虎**（「丁丑日寅加丑**夜**」）。
+      课5 丙子 支上戌：戌＝丙火之干墓，**夜占乘螣蛇**加支又克支（「丙子日戌加子**夜**」）。
+    """
     gan = env.get('ri_gan', '')
-    zhi = env.get('ri_zhi', '')
-    tj = env.get('tian_jiang', {})
-    if not zs or not gan:
+    rz = env.get('ri_zhi', '')
+    zs = env.get('zhi_shang', '')
+    sc = env.get('sanchuan', []) or []
+    tj = env.get('tian_jiang') or {}
+    if not gan or not rz:
         return False
-    gan_mu = WX_MU.get(_wx(gan), '')
-    zhi_mu = WX_MU.get(_wx(zhi), '')
-    is_mu = (zs == gan_mu) or (zs == zhi_mu)
-    return bool(is_mu and tj.get(zs) == '白虎')
+    mu_gan = WX_MU.get(_wx(gan), '')
+    mu_zhi = WX_MU.get(_wx(rz), '')
+
+    def ke_zhi(z):
+        """克日支（＝克宅／支鬼）"""
+        return bool(z) and WX_KE.get(_wx(z), '') == _wx(rz) and _wx(z) != _wx(rz)
+
+    # 一等：干墓临支而乘白虎（克支者为「的」，不强制）
+    if zs and zs == mu_gan and tj.get(zs, '') == '白虎':
+        return True
+    # 二等：支墓临支而乘白虎
+    if zs and zs == mu_zhi and tj.get(zs, '') == '白虎':
+        return True
+    # 蛇墓克支格：干墓乘螣蛇而加支又克支
+    if zs and zs == mu_gan and tj.get(zs, '') == '螣蛇' and ke_zhi(zs):
+        return True
+    # 墓门开格：卯酉日占，干墓乘蛇虎加支
+    if rz in ('卯', '酉') and zs and zs == mu_gan and tj.get(zs, '') in ('螣蛇', '白虎'):
+        return True
+    # 虎鬼克支格：支鬼乘白虎而克支（ⓘ 位置可在支上，亦可在三传）
+    for z in [zs] + list(sc):
+        if ke_zhi(z) and tj.get(z, '') == '白虎':
+            return True
+    return False
 
 
 def _gan_mu_bing_guan(env):
