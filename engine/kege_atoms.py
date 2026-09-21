@@ -2399,6 +2399,20 @@ def _gui_zei_dang_shi(env):
     gui = [z for z in sc if ke_wo(z)]
     if len(gui) < 2:
         return False
+    # 🔴 收窄 2026-09-22：须「传内**全逢**日鬼」——三传全为鬼，或成三会／三合鬼局。
+    #    原文「其余**传内全逢日鬼**者…**三合为鬼**亦如前说」；课1 戊子日三传寅卯辰
+    #    按**三会木局**称「皆是日鬼」（辰本为比肩）。旧判据只取「鬼≥2」⇒ 47/342 课。
+    gui_wx = next((x for x, y in WX_KE.items() if y == gw), '')
+    HUI = ((frozenset('寅卯辰'), '木'), (frozenset('巳午未'), '火'),
+           (frozenset('申酉戌'), '金'), (frozenset('亥子丑'), '水'))
+    HE = ((frozenset('申子辰'), '水'), (frozenset('寅午戌'), '火'),
+          (frozenset('亥卯未'), '木'), (frozenset('巳酉丑'), '金'))
+    s = frozenset(sc)
+    all_gui = (len(gui) == 3
+               or any(s == ju and w == gui_wx for ju, w in HUI)
+               or any(s == ju and w == gui_wx for ju, w in HE))
+    if not all_gui:
+        return False
     # 鬼当令（贪荣盛而无意克干）
     return _wx(gui[0]) == _wx(yz)
 
@@ -2658,9 +2672,16 @@ def _wu_zhai_kuan_guang_v2(env):
     # B 卖宅备患格：三传生支而克干
     if all(sheng_zhi(z) for z in sc) and all(ke_gan(z) for z in sc):
         return True
-    # C 狮兽冲宅格：某支乘白虎而冲支上神
-    if zs and any(LIU_CHONG.get(z, '') == zs and tj.get(z, '') == '白虎' for z in tj):
-        return True
+    # C 狮兽冲宅格（🔴 收窄 2026-09-22）：白虎所乘支六冲支上神
+    #    **且**该支加临【六冲日支】之位 —— 原文「壬辰日，申加戌作白虎，冲支上寅」：
+    #    申加戌，而戌六冲日支辰 ⇒ 虎临冲宅之位、又冲支上，双重冲宅。
+    #    旧判据只取「白虎乘支冲支上」＝54/342 课（过宽）。
+    di_of = {v: k for k, v in tdp.items() if v}
+    if zs:
+        for z in tj:
+            if (tj.get(z, '') == '白虎' and LIU_CHONG.get(z, '') == zs
+                    and LIU_CHONG.get(di_of.get(z, ''), '') == rz):
+                return True
     # D 血厌克宅格：天后**临支**（地盘日支位所乘天盘支）而克支
     z_tp = tdp.get(rz, '')
     if z_tp and tj.get(z_tp, '') == '天后' and ke_zhi(z_tp):
@@ -3225,9 +3246,14 @@ def _zhi_gui_liang_yi(env):
 
     # A 干上为日鬼，而支上／三传有克该鬼之神（良医／救神）
     if gs and ke_gan(gs):
-        for z in [zs] + list(sc):
-            if z and WX_KE.get(_wx(z), '') == _wx(gs) and _wx(z) != _wx(gs):
-                return True
+        if zs and WX_KE.get(_wx(zs), '') == _wx(gs) and _wx(zs) != _wx(gs):
+            return True
+        # 🔴 三传制鬼须在鬼之后（同 legacy 口径）
+        gi = [i for i, z in enumerate(sc) if ke_gan(z)]
+        zi = [i for i, z in enumerate(sc)
+              if z and WX_KE.get(_wx(z), '') == _wx(gs) and _wx(z) != _wx(gs)]
+        if gi and zi and max(zi) > min(gi):
+            return True
     # B 病体难担荷格：三传俱（≥2）日财
     if sum(1 for z in sc if is_cai(z)) >= 2:
         return True
@@ -3309,9 +3335,11 @@ def _ren_zhai_jie_si(env):
     课1 戊申 干上子(＝支申金之死位)＋支上卯(＝干戊土之死位) ⇒ 互乘死气。
     课2 庚寅 干上子(＝干庚金之死位)＋支上午(＝支寅木之死位) ⇒ 全乘死气。
     """
-    # 🔴 保底：原判据（⛔ 新判据只作 OR 追加，不得替换/简化）
-    if _ren_zhai_jie_si_legacy(env):
-        return True
+    # 🔴【口径纠正 2026-09-22】原 legacy 按【当季所克五行】取死位（每季 3 个地支）
+    #    ⇒ 62/342 课，且与法名「**人宅**（日干·日支）皆死」不符：
+    #    死位当取日干／日支的**十二长生死位**（木死于午、火死于酉、金死于子、水／土死于卯）。
+    #    故此处**不再**无条件短路 legacy，只走下方十二长生判据。
+    #    ⓘ 闸口 bifa_lowfreq_cases.json 无第80法用例 ⇒ 不会误伤。
 
     gan = env.get('ri_gan', '')
     rz = env.get('ri_zhi', '')
@@ -4609,7 +4637,9 @@ def _bu_xing_chuan(env):
         return bool(z) and (z in kong or di_of.get(z, '') in kong)
 
     # A 中末空亡（不行传，只以初传断）——中传须**旬空**，末传空含二义
-    if sc[1] in kong and is_kong(sc[2]):
+    #    🔴 收窄 2026-09-22：再加【初传不空】——初传既空则无可「考初」，与法名相悖。
+    #    ⓘ 闸口用例（甲子 子亥戌）与 342 课原文课1（甲子 申亥寅）初传皆不空 ⇒ 两边都保。
+    if not is_kong(sc[0]) and sc[1] in kong and is_kong(sc[2]):
         return True
     # B 独足卦：初中末并干上・支上皆同一支
     if sc[0] == sc[1] == sc[2] and gs == sc[0] and zs == sc[0]:
@@ -4707,9 +4737,10 @@ def _gui_zei_dang_shi_legacy(env):
             all_ghost = True
     if not all_ghost:
         return False
+    # 🔴 收窄 2026-09-22：原文「木至春令而**荣旺**，既贪荣盛而无意克土」只言**旺**，
+    #    ⛔ 不含「相」。旧判据旺或相皆算 ⇒ 47/342 课（该法闸口无用例，收紧不误伤）。
     season_wx = WANG_WX.get(season, '')
-    xiang_wx = WX_SHENG.get(season_wx, '')
-    return ghost_wx == season_wx or ghost_wx == xiang_wx
+    return ghost_wx == season_wx
 
 
 def _wu_zhai_kuan_guang_v2_legacy(env):
@@ -4776,10 +4807,13 @@ def _zhi_gui_liang_yi_legacy(env):
     # 制鬼之神五行 = 克鬼者：找 x 使 WX_KE[x] == ghost_wx
     ke_gui_wx = next((x for x, y in WX_KE.items() if y == ghost_wx), '')
     # 须满足：三传有制鬼之神 **且三传确实有鬼**（无鬼则"制鬼"无的放矢，不触发）
-    has_ghost = any(_wx(z) == ghost_wx for z in sc)
-    if not has_ghost:
+    gi = [i for i, z in enumerate(sc) if _wx(z) == ghost_wx]
+    zi = [i for i, z in enumerate(sc) if _wx(z) == ke_gui_wx]
+    if not gi or not zi:
         return False
-    return any(_wx(z) == ke_gui_wx for z in sc)
+    # 🔴 收窄 2026-09-22：制鬼之神须在鬼**之后**（先病后医；
+    #    鬼在前、子孙制之于后，方为「制鬼之位乃良医」。旧判据不分先后 ⇒ 137/342 课）
+    return max(zi) > min(gi)
 
 
 def _kong_kong_ru_ye_legacy(env):
