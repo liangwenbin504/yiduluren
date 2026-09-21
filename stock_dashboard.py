@@ -5717,13 +5717,21 @@ def _append_zeri_results_to_knowledge(results, mountain, zetiri_type, qiushi='')
                 "doushou_score": rec.get('doushou_score', 0),
             }
 
-            # 避免重复写入（按日期+时辰+山向去重）
-            dedup_key = f"{date_str}_{shichen}_{mountain}"
+            # 🔴 去重（2026-09-21 修复）
+            #   旧判据 `dedup_key in case_title / case_raw`，而 dedup_key ＝ "2026-09-03_午_?"
+            #   **用下划线拼接**，但 title/raw_text 里根本不含下划线 ⇒ 恒 False
+            #   ⇒ 每次批量择日固定 +10 条，库里一度 1077 条中 636 条重复（59%）。
+            #   新判据：逐字段精确比较（口径同 _冗余待删/_clean_zeri_dup.py 的清理指纹）。
+            _fp = (f"择日系统-{zetiri_type}", str(date_str), str(mountain),
+                   str(keti), str(total_score), str(new_case["raw_text"]),
+                   str(new_case["stock_name"]))
             skip = False
             for case in existing_cases:
-                case_title = case.get('title', '')
-                case_raw = case.get('raw_text', '')
-                if dedup_key in case_title or dedup_key in case_raw:
+                _cfp = (str(case.get("source", "")), str(case.get("date", "")),
+                        str(case.get("mountain", "")), str(case.get("keti", "")),
+                        str(case.get("total_score", "")), str(case.get("raw_text", "")),
+                        str(case.get("stock_name", "")))
+                if _cfp == _fp:
                     skip = True
                     break
             if skip:
@@ -5733,7 +5741,7 @@ def _append_zeri_results_to_knowledge(results, mountain, zetiri_type, qiushi='')
             added_count += 1
 
         if added_count > 0:
-            stock_cases_path.write_text(json.dumps(existing_cases, ensure_ascii=False, indent=2), encoding='utf-8')
+            _write_training_cases(stock_cases_path, existing_cases)
             # 触发知识库刷新
             _refresh_training_knowledge()
 
