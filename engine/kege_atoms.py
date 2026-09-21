@@ -1351,6 +1351,79 @@ def _sc_ju_wx(sc):
     return ''
 
 
+def _bi_nan_tao_sheng(env):
+    """第9法「避难逃生须弃旧」专用谓词（2026-09-21 按原文格义重建）
+
+    原文（在线_bifa_sina.html L398 起）：三传既无所益，不免弃三传而「就」别处受生。
+      A  避难逃生格：三传皆无益（不生日干，且非实财／财而旬空），而**干上神**生日干
+         ——甲子日干上子、三传戌申午「戌虽曰日财乃是旬空，申又是日鬼，午作脱气…
+           不免只就干上子水而受生」。
+      A2 同格变体：三传皆无益，而**日支（日干所坐地盘）**生日干
+         ——甲子日辰加寅为初传，三传辰午申（辰虽曰日财，奈昼夜天将皆是六合，
+           其财受上下夹克，终不可得）「不免日干就子支上而受生」。
+      A3 避难逃生**得财**格：三传皆无益，弃三传而日干加日支**取财**
+         ——壬午日三传辰酉寅「弃墓而投中传酉金之生（又是旬空），遂再投末传寅木
+           （又是脱气），然后弃其三传，而壬干加午而取财也」。
+      B  三传成局皆作脱气（局五行＝我生者），而支上／日支／干上有生可就
+         ——庚子日子加申「三传水局皆作脱气…天盘申金坐于辰土之上就生」。
+      ⛔ 原文**反例**必须不命中（否则判据过宽）：
+         丁亥日三传午戌寅——原文明言「避难逃生而**终不能逃生者**」（寅实生丁，非皆无益）；
+         乙酉日三传亥午丑——原文「**舍就皆不可**格」（亥实生乙，非皆无益）。
+    【无益判据】z 生日干而旬空／为财而（旬空·落空地·受上下夹克）／不生日干（鬼·脱·比和）。
+    """
+    gan = env.get('ri_gan', '')
+    sc = env.get('sanchuan', []) or []
+    gs = env.get('gan_shang', '')
+    zs = env.get('zhi_shang', '')
+    ri_zhi = env.get('ri_zhi', '')
+    if not gan or len(sc) != 3:
+        return False
+    kong = env.get('kongwang') or ('', '')
+    tdp = env.get('tiandi_pan') or {}
+    tj = env.get('tian_jiang') or {}
+    di_of = {v: k for k, v in tdp.items() if v}      # 天盘支 → 所临地盘
+
+    def sheng_gan(z):                       # z 生日干
+        return bool(z) and _zhi_sheng(z, gan)
+
+    def is_cai(z):                          # 日干克 z ⇒ 妻财
+        return bool(z) and _zhi_ke(gan, z)
+
+    def jia_ke(z):                          # 财受上下夹克：天将五行克 z 且所临地盘五行克 z
+        if not z:
+            return False
+        di = di_of.get(z, '')
+        up = TIANJIANG_WX_MAP.get(tj.get(z, ''), '')
+        if not di or not up:
+            return False
+        zw = _wx(z)
+        return WX_KE.get(up, '') == zw and WX_KE.get(_wx(di), '') == zw
+
+    def wuyi(z):                            # 无益（不可就）
+        if not z:
+            return False
+        if sheng_gan(z):
+            return z in kong                              # 生我而旬空 ⇒ 不能就
+        if is_cai(z):
+            return (z in kong) or (di_of.get(z, '') in kong) or jia_ke(z)
+        return True                                       # 鬼／脱气／比和 ⇒ 无益
+
+    # A / A2 / A3
+    if all(wuyi(z) for z in sc):
+        if gs and sheng_gan(gs):
+            return True
+        if ri_zhi and sheng_gan(ri_zhi):
+            return True
+        if ri_zhi and is_cai(ri_zhi):       # A3：弃三传而日干加日支取财
+            return True
+    # B：三传成局作脱气，而别处有生可就
+    ju = _sc_ju_wx(sc)
+    if ju and WX_SHENG.get(_wx(gan), '') == ju:
+        if (zs and sheng_gan(zs)) or (ri_zhi and sheng_gan(ri_zhi)) or (gs and sheng_gan(gs)):
+            return True
+    return False
+
+
 def _zhuan_cai_hua_gui(env):
     """第27法「传财化鬼财休觅」专用谓词（2026-09-21 按原文五格重建）
 
@@ -2244,19 +2317,6 @@ def _lian_mu_gui_ren(env):
     is_day = env.get('is_day', True)
     lianmu = gr[1] if is_day else gr[0]  # 昼占夜贵、夜占昼贵
     return gs == lianmu
-
-
-def _bi_nan_tao_sheng(env):
-    """第9法 避难逃生：三传皆鬼或脱气，干上生干"""
-    sc = env.get('sanchuan', [])
-    gan = env.get('ri_gan', '')
-    gs = env.get('gan_shang', '')
-    if len(sc) != 3 or not gan or not gs:
-        return False
-    all_bad = all((_zhi_ke(z, gan) and _wx(z) != _wx(gan)) or _zhi_sheng(gan, z) for z in sc)
-    if not all_bad:
-        return False
-    return _zhi_sheng(gs, gan)
 
 
 def _zhuo_lun_xiu_mu(env):
@@ -3459,37 +3519,6 @@ def _gan_cheng_mu_hu(env):
     return False
 
 
-def _hu_cheng_dun_gui(env):
-    """第69法 虎乘遁鬼殃非浅：白虎乘课传六处某支，其旬遁干克日干"""
-    gan = env.get('ri_gan', '')
-    rz = env.get('ri_zhi', '')
-    tj = env.get('tian_jiang', {})
-    sc = env.get('sanchuan', [])
-    gs = env.get('gan_shang', '')
-    zs = env.get('zhi_shang', '')
-    if not gan or not rz or not tj:
-        return False
-    six = [z for z in list(sc) + [gs, zs] if z]
-    try:
-        g_idx = '甲乙丙丁戊己庚辛壬癸'.index(gan)
-        z_idx = DIZHI_ORDER.index(rz)
-        shou = (z_idx - g_idx) % 12
-    except (ValueError, IndexError):
-        return False
-    for z in six:
-        if tj.get(z) != '白虎':
-            continue
-        try:
-            z2_idx = DIZHI_ORDER.index(z)
-            offset = (z2_idx - shou) % 12
-            dun = '甲乙丙丁戊己庚辛壬癸'[offset % 10]
-            if WX_KE.get(GAN_WX.get(dun, ''), '') == GAN_WX.get(gan, ''):
-                return True
-        except (ValueError, IndexError):
-            continue
-    return False
-
-
 def _gui_lin_san_si_v2(env):
     """第70法 鬼临三四讼灾随：第三课和第四课都有日干之鬼"""
     gan = env.get('ri_gan', '')
@@ -3979,6 +4008,8 @@ _ATOMS = {
     'tp_jia': _tp_jia, 'x_shi_siqi': _x_shi_siqi, 'xiaochuan': _xiaochuan,
     # 第27法专用：传财化鬼财休觅（原文五格，2026-09-21）
     'zhuan_cai_hua_gui': _zhuan_cai_hua_gui,
+    # 第9法专用：避难逃生须弃旧（原文格义，2026-09-21）
+    'bi_nan_tao_sheng': _bi_nan_tao_sheng,
     'x_shi_bai': _x_shi_bai,
     'tian_gang_bi_gan': _tian_gang_bi_gan, 'tian_gang_bi_zhi': _tian_gang_bi_zhi,
     'shen_jia_fu_ming': _shen_jia_fu_ming, 'qi_xing_nian_shang_yang': _qi_xing_nian_shang_yang, 'qi_xing_nian_shang_yin': _qi_xing_nian_shang_yin,
