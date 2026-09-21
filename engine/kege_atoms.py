@@ -2805,31 +2805,73 @@ def _fei_you_er_de_bu_zu_v2(env):
 
 
 def _yong_po_shen_xin(env):
-    """第58法 用破身心：初传财/禄落空、或初传财被中传克且引入中末鬼乡、或中末尽空（无实得）。
-    原文：戊申日干上未三传子寅辰（初财坐戌受克乘白虎引中末鬼乡）/丙寅日申乘蛇夹克财中末空陷/
-    丁卯日酉乘雀夹克财中末鬼空/癸未日巳作财传墓入墓/己酉日亥作财受克中末空亡/
-    壬寅返吟干上空财/壬寅伏吟干上禄乘天空中值脱末财又空 → 「财禄俱作空被克，总无实得之意」。
-    【B5c】分支B 收紧：原「中克初即命中」过宽（12.5%），按原文加「引入中末鬼乡」（中/末为日鬼）。"""
-    sc = env.get('sanchuan', [])
+    """第58法「用破身心无所归」（2026-09-21 按原文七课重建）
+
+    原文总纲（在线_bifa_sina.html L1844 起）：「**财禄俱作空被克，总无实得之意**」。
+    判据＝用神（初传／干上）为日之**财或禄**，而该用神「**作空或被克**」，
+    且三传余位**不能为依靠**。
+
+      ⛔【BUG-FIX 2026-09-21】旧版两处硬伤（该法 7 课 0 命中）：
+        · `lu = env.get('lu', '')` —— **`judge_orchestrator.build_judge_env` 不产 'lu' 键**
+          （只有 `bifa_detector` / `kege_bianjie_engine` 才设）⇒ is_lu 恒 False，
+          禄格永不命中；判否又被 judge 的 except 静默吞掉。⇒ 改用**本地十干禄表**。
+        · 只看初传不看干上；分支A 要求「初传落空」、分支B 要求「中传克初传」
+          ⇒ 课1~5（初传财受**坐克／上克**）与课6~7（关键在**干上**）全部落空。
+
+    七课实测（用神破 + 余位无所归）：
+      课1 戊申 三传子寅辰：初子为财「坐戌土之上受克」＋中寅为鬼且空（寅卯空）。
+      课2 丙申 三传申亥寅：初申为财「申加巳」坐克（巳火克金）＋中亥为鬼。
+      课3 丁卯 三传酉亥丑：初酉为财「昼乘朱雀」上克（火克金）＋中亥为鬼且空。
+      课4 癸未 三传巳戌卯：初巳为财「巳加子」坐克（子水克火）＋中戌为鬼、末卯脱气。
+      课5 己酉 三传亥卯未：初亥为财「亥加己」坐克（未土克水）＋中卯为鬼且空。
+      课6 壬寅返吟 干上巳：干上巳为财而**落空**（辰巳空）＋初末寅为脱气。
+      课7 壬寅伏吟 干上亥：干上亥为**日禄**（壬禄亥）乘天空土将克水＋中寅脱气、末巳财空。
+    """
     gan = env.get('ri_gan', '')
-    kong = env.get('kongwang', ('', ''))
-    lu = env.get('lu', '')
-    if len(sc) != 3 or not gan:
+    sc = env.get('sanchuan', []) or []
+    gs = env.get('gan_shang', '')
+    if not gan or len(sc) != 3:
         return False
-    chu, zhong, mo = sc[0], sc[1], sc[2]
-    is_cai = _zhi_ke(gan, chu) and _wx(chu) != _wx(gan)
-    is_lu = bool(lu) and chu == lu
-    # 分支A：初传财/禄落空（壬寅返吟干上空财、伏吟干上禄空仍以初传/干上论）
-    if (is_cai or is_lu) and kong[0] and chu in kong:
-        return True
-    # 分支C：己酉日例「初传财，中末空陷/鬼空」——初传财且中末皆空
-    if is_cai and kong[0] and zhong in kong and mo in kong:
-        return True
-    # 分支B：初传财被中传克，且引入中末鬼乡（中或末为日鬼）
-    if is_cai and _zhi_ke(zhong, chu):
-        is_gui = lambda z: bool(z) and _zhi_ke(z, gan) and _wx(z) != _wx(gan)
-        if is_gui(zhong) or is_gui(mo):
+    kong = env.get('kongwang') or ('', '')
+    tj = env.get('tian_jiang') or {}
+    tdp = env.get('tiandi_pan') or {}
+    di_of = {v: k for k, v in tdp.items() if v}      # 天盘支 → 所临地盘
+    # 十干禄（⛔ 不得用 env['lu']：judge_orchestrator.build_judge_env 不产该键）
+    LU = {'甲': '寅', '乙': '卯', '丙': '巳', '丁': '午', '戊': '巳',
+          '己': '午', '庚': '申', '辛': '酉', '壬': '亥', '癸': '子'}
+
+    def is_cai(z):
+        return bool(z) and _zhi_ke(gan, z) and _wx(z) != _wx(gan)
+
+    def is_lu(z):
+        return bool(z) and LU.get(gan, '') == z
+
+    def bei_ke(z):
+        """用神「作空或被克」：落旬空／坐克（所临地盘克之）／上克（天将五行克之）"""
+        if not z:
+            return False
+        if z in kong:
             return True
+        di = di_of.get(z, '')
+        if di and WX_KE.get(_wx(di), '') == _wx(z):
+            return True
+        up = TIANJIANG_WX_MAP.get(tj.get(z, ''), '')
+        return bool(up) and WX_KE.get(up, '') == _wx(z)
+
+    def wu_suo_gui(z):
+        """余位不能为依靠：为日鬼（含鬼而空）／脱气／落空"""
+        if not z:
+            return False
+        if _zhi_ke(z, gan) and _wx(z) != _wx(gan):
+            return True
+        if _zhi_sheng(gan, z):
+            return True
+        return z in kong
+
+    for u in (sc[0], gs):                            # 用神：先初传，后干上
+        if u and (is_cai(u) or is_lu(u)) and bei_ke(u):
+            if any(wu_suo_gui(z) for z in sc if z != u):
+                return True
     return False
 
 
