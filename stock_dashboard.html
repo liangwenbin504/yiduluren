@@ -6037,10 +6037,24 @@ function openZeriModal(pai) {
           (_zz.basis ? '　【依据】' + _escH(_zz.basis) : '');
         var _zzTxt = _zz.mode
           ? '<span style="color:#fff;">' + _escH(_zz.mode) + '</span>'
-          : '<span style="color:#9aa0b5;">未判（据不足）</span>';
+          : '<span style="color:#9aa0b5;">不判方向</span>';
         body += '<div style="margin-top:3px;font-size:12px;color:#e0e0e0;line-height:1.6;" title="' + _zzTip + '">' +
           '转折：' + _zzTxt +
           '　<span style="font-size:11px;color:#7a7a9a;">（悬停看判据）</span></div>';
+        // ── 时序提示（2026-09-21 新增）：只摆**有原文可证的时序事实**，不下方向判断 ──
+        // 🔴 背景：把「末传墓绝⇒先凶后吉」「乱首⇒先吉后凶」放到全量 218 案人工精读后，
+        //    precision 从 77.8%→23.1%、100%→25%，全部被证伪 ⇒ 改为引原文、摆事实。
+        var _th = _zz.timing_hints || [];
+        if (_th.length) {
+          var _thHtml = _th.map(function (t) {
+            var _tw = String(t.文 || '').replace(/\*\*/g, '');
+            var _tp = _escH(_tw + '　【出处】' + (t.src || ''));
+            return '<span title="' + _tp + '" style="color:#fbbf24;border-bottom:1px dotted #8a6d3b;cursor:help;">' +
+              _escH(t.名) + '<span style="color:#9aa0b5;">：' + _escH(_tw) + '</span></span>';
+          }).join('　·　');
+          body += '<div style="margin-top:3px;font-size:12px;color:#e0e0e0;line-height:1.6;">时序：' + _thHtml +
+            '　<span style="font-size:11px;color:#7a7a9a;">（悬停看原文出处）</span></div>';
+        }
       }
       // ── 课格单独成行（2026-09-21 憨爷拍板）──
       // 课格是「课体性质」，与「转折(时序走向)」是两回事，不该只在转折行里带一嘴。
