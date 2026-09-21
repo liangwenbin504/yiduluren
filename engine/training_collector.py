@@ -34,11 +34,17 @@ def get_beijing_now():
 
 
 def _next_case_id(cases) -> str:
-    """生成下一个案例ID (CASE-STOCK-026)"""
+    """生成下一个案例ID (CASE-STOCK-026)
+
+    🔴 只认 1~3 位纯数字序号（本命名空间的旧格式）。
+    旧实现用 `re.search(r"CASE-STOCK-(\\d+)")` 对全库求 max，被日期型 id
+    （人工校正案例 `CASE-STOCK-20260730-YISI`）顶到 20260730 ⇒
+    之后一路生成 20260731…20260738，`:03d` 补零形同虚设（命名空间串味）。
+    """
     max_num = 0
     for c in cases:
         cid = c.get("id", "")
-        m = re.search(r"CASE-STOCK-(\d+)", cid)
+        m = re.fullmatch(r"CASE-STOCK-(\d{1,3})", cid)
         if m:
             num = int(m.group(1))
             if num > max_num:
@@ -108,9 +114,28 @@ def _build_original_prediction(pred: dict) -> str:
     return pred.get("analysis", "")
 
 
+def _has_real_quote(details) -> bool:
+    """行情完整性判据：必须有收盘价与涨跌幅，且收盘价 > 0。
+
+    🔴 背景（2026-09-21 事故）：`tj-261-2026-07-31` 的 actual_details 只有
+       `{window_start, window_end, basis}`，**没有 price/change_pct/high/low**；
+       而 `_build_actual_result_text()` 用 `.get(k, 0)` 兜底 ⇒ 写出
+       「收盘0.00，涨跌幅+0.00%」的假验证案例，还据此算 is_correct（8 条里 7 条被判错）。
+    """
+    if not isinstance(details, dict) or not details:
+        return False
+    if details.get("price") is None or details.get("change_pct") is None:
+        return False
+    try:
+        return float(details["price"]) > 0
+    except (TypeError, ValueError):
+        return False
+
+
 def _build_actual_result_text(actual_trend: str, details: dict) -> str:
     """从实际行情构建 actual_result 文字描述"""
-    if not details:
+    if not _has_real_quote(details):
+        # 缺真实行情时只写走势，不伪造价格数字
         return f"实际走势：{actual_trend}"
     price = details.get("price", 0)
     change_pct = details.get("change_pct", 0)
@@ -167,6 +192,12 @@ def collect(prediction_entry: dict) -> dict:
     if not actual_trend:
         return None
 
+    # 🔴 行情守卫：无真实收盘价/涨跌幅的预测一律拒绝入库（宁可不收集，不写假验证）
+    if not _has_real_quote(prediction_entry.get("actual_details")):
+        print(f"  [WARN] 预测 {prediction_entry.get('id', '')} 缺行情明细"
+              f"（actual_details 无 price/change_pct），拒绝收集为训练案例", flush=True)
+        return None
+
     trend_prediction = prediction_entry.get("trend_prediction", "")
     is_correct = trend_prediction == actual_trend
 
@@ -184,6 +215,7 @@ def collect(prediction_entry: dict) -> dict:
 
     case = {
         "id": "",
+        "predict_id": prediction_entry.get("id", ""),  # 🔴 去重主键（见 _is_already_collected）
         "stock_code": stock_code,
         "stock_name": stock_name,
         "date": date_str,
@@ -237,14 +269,21 @@ def collect_last_completed() -> dict:
 
 
 def _is_already_collected(predict_id: str) -> bool:
-    """检查该预测ID是否已被收集为训练案例"""
-    if not os.path.exists(TRAINING_FILE):
+    """检查该预测ID是否已被收集为训练案例
+
+    🔴 旧判据 `predict_id in source` 恒为 False：predict_id＝`tj-261-2026-07-31`，
+       而 source 写的是 `实时预测自动收集 2026-07-31` ⇒ 子串永不命中 ⇒
+       去重失效，同一条预测被重复收集 8 次（CASE-STOCK-20260731~20260738）。
+       新判据：精确匹配 `predict_id` 字段；老数据降级到 source 子串兜底。
+    """
+    if not predict_id or not os.path.exists(TRAINING_FILE):
         return False
     with open(TRAINING_FILE, "r", encoding="utf-8") as f:
         cases = json.load(f)
     for c in cases:
-        source = c.get("source", "")
-        if predict_id in source:
+        if c.get("predict_id") == predict_id:
+            return True
+        if predict_id in str(c.get("source", "")):
             return True
     return False
 

@@ -135,9 +135,19 @@ class FeedbackLoop:
             if pred_id and pred_id in case.get("source", ""):
                 return False
 
+        # 🔴 与 engine/training_collector._next_case_id 统一编号命名空间：
+        #    原 len(existing)+1 会生成 4 位 id（如 1085），与序号式 id（024）分裂，未来会撞号。
+        #    导入失败时回退原逻辑，零风险。
+        try:
+            from engine.training_collector import _next_case_id
+            case_id = _next_case_id(existing)
+        except Exception:
+            case_id = f"CASE-STOCK-{len(existing)+1:03d}"
+
         # 构建训练案例
         case = {
-            "id": f"CASE-STOCK-{len(existing)+1:03d}",
+            "id": case_id,
+            "predict_id": pred_id,  # 🔴 去重主键（与 training_collector 同口径）
             "date": prediction.get("date", ""),
             "rizhu": prediction.get("rizhu", ""),
             "sanchuan": prediction.get("sanchuan", []),
