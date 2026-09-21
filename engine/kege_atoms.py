@@ -2479,15 +2479,58 @@ def _shui_ri_feng_ding(env):
 
 
 def _chuan_gui_hua_cai_v2(env):
-    """第28法 传鬼化财：三传皆鬼+干上制鬼"""
-    sc = env.get('sanchuan', [])
+    """第28法「传鬼化财钱险危」判据（2026-09-21 按原文五格重建；旧判据要求
+    「三传逐个克日干」+「干上克传」，于该法 8 课 **0 命中**）
+
+    原文（在线_bifa_sina.html L989 起）五格：
+      A  主格·全鬼变财：三传成三合局而其**局克日干**（作日之鬼），**传内有一神作财现**
+         ——丙申日三传子申辰（申子辰水局为丙之鬼），中传申为日财「中间为财者」。
+      B  取还魂债格·生**干上**财神：三传成局皆作脱气（局五行＝我生者），而局生起
+         干上神，干上神为日之财——己丑日干上亥、三传酉丑巳（金局脱气生亥水作财）。
+      B2 取还魂债格·生**支上**财神：三传成局皆作脱气，而局生起支上神，
+         支上神为日之财——壬寅日支上午、三传未亥卯（木局脱气生午火作财）。
+      C  传内财爻旬空，而传内另有他神生之（「**墓土将生空亡之财**」）
+         ——丁丑日三传酉丑巳，酉为丁财而旬空，中传丑土生之。
+      D  求财急取格（**财就人格**）：干上神为日之财，且**初传即干上神**
+         ——乙巳日干上未初传未；辛卯日干上卯初传卯。
+      E  空财格：干上神／初传为日之财而**落旬空**——丙子日酉加巳，申酉空。
+      F  危中取财格：**日干克日支（支为财），而支上神克日干为鬼**
+         ——甲辰日甲木克辰土为财，辰上乘申（申金克甲木为鬼）。
+         ⛔ 排除支上鬼落旬空者：原文「甲戌日支上申空亡，似乎无畏」「辛卯日支上午
+           作空亡，不可畏之」⇒ 空鬼不须畏，不算危中取财。
+    """
     gan = env.get('ri_gan', '')
+    sc = env.get('sanchuan', []) or []
     gs = env.get('gan_shang', '')
-    if len(sc) != 3 or not gan or not gs:
+    zs = env.get('zhi_shang', '')
+    ri_zhi = env.get('ri_zhi', '')
+    if not gan or len(sc) != 3:
         return False
-    if not all(_zhi_ke(z, gan) and _wx(z) != _wx(gan) for z in sc):
-        return False
-    return any(_zhi_ke(gs, z) for z in sc)
+    kong = env.get('kongwang') or ('', '')
+
+    def is_cai(z):                          # 日干克 z ⇒ 妻财
+        return bool(z) and _zhi_ke(gan, z)
+
+    ju = _sc_ju_wx(sc)
+    # A：三传成局克日干（鬼局）而传内有财
+    if ju and WX_KE.get(ju, '') == _wx(gan) and any(is_cai(z) for z in sc):
+        return True
+    # B / B2：三传成局作脱气，而局生起干上／支上财神
+    if ju and WX_SHENG.get(_wx(gan), '') == ju:
+        for t in (gs, zs):
+            if t and is_cai(t) and WX_SHENG.get(ju, '') == _wx(t):
+                return True
+    # C：传内财爻旬空，而传内另有他神生之
+    for z in sc:
+        if is_cai(z) and z in kong and any(o != z and _zhi_sheng(o, z) for o in sc):
+            return True
+    # D / E：财就人格（干上为财且初传即干上）；财落旬空亦属空财格
+    if gs and is_cai(gs) and sc[0] == gs:
+        return True
+    # F：危中取财——支为日财，支上神为鬼且不落旬空
+    if ri_zhi and is_cai(ri_zhi) and zs and _zhi_ke(zs, gan) and zs not in kong:
+        return True
+    return False
 
 
 def _juan_shu_feng_ying(env):
