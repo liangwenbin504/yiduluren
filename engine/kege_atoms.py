@@ -3687,13 +3687,57 @@ def _liang_she_jia_mu_v2(env):
 
 
 def _hu_shi_peng_hu_v2(env):
-    """第54法 虎视逢虎力难施：昴星课(虎视课)且三传有支乘白虎"""
-    keti = env.get('keti', '') or ''
-    if '昴星' not in keti and '虎视' not in keti:
+    """第54法「虎视逢虎力难施」（2026-09-21 按原文五课重建）
+
+    原文（在线_bifa_sina.html L1743 起）：
+      「谓**虎视课**者，乃**柔日**也，**昴星课**者，乃**刚日**也……
+        如柔日虎视卦中，**天将又乘白虎**者，譬如前后皆有猛虎，纵勇夫亦难施力」
+      「缘**临干上乃白虎临身**，兼**中传并干上是两重虎**，又**支上乘申**，
+        及**初末申**亦作**白虎之本位**，乃支干三传乘其虎五」
+
+      🔴【BUG-FIX 2026-09-21】旧版两处硬伤（该法 5 课 0 命中）：
+        · `'昴星' in env['keti']` —— ⛔ **`judge_all` 跑完 `_judge_64keti` 后会回填 `env['keti']`**
+          （与第90法同坑）⇒ 课体名被 64 课格覆盖，该判据恒 False。⇒ 改用**三传结构自判昴星**。
+        · 只认「三传有支乘白虎」（天将）⇒ 5 课里只有课2(戊寅旦占)命中；
+          而课1/3/4/5 之虎来自**地支申＝白虎本位**（干上／支上／初末传）—— 原文已明言。
+
+      🆕 **昴星课结构判据（⛔ 不依赖 keti，五课 5/5 复现）**：
+        · **柔日昴星（虎视）**：初传＝**酉所临之地盘**支，中传＝**干上神**，末传＝**支上神**
+        · **刚日昴星（酉）**  ：初传＝**酉上所得天盘**支，中传＝**支上神**，末传＝**干上神**
+      ⓘ 刚日不在「虎视」本义内，但原文 L1750 明言「及有戊寅日丑加酉**旦占**，
+        **虽是刚日，亦如前详**，俗谚云双拳不敌四手」⇒ 刚日昴星一并纳入（课2）。
+
+    五课实测：
+      课1 辛未 申亥申：虎视(柔日) ＋ 支上申、初末皆申（虎本位）。
+      课2 戊寅 丑午酉：**刚日**昴星，旦占**中传午乘白虎**。
+      课3 己巳 申申午：虎视 ＋ 干上申、初传申、中传申（「既历四重虎穴」）。
+      课4 己酉 戌午申：虎视 ＋ 支上申、末传申（「亦如值三虎」）。
+      课5 癸未 申寅申：虎视 ＋ 支上申、初末皆申（「一如四虎」）。
+    """
+    gan = env.get('ri_gan', '')
+    gs = env.get('gan_shang', '')
+    zs = env.get('zhi_shang', '')
+    sc = env.get('sanchuan', []) or []
+    tj = env.get('tian_jiang') or {}
+    tdp = env.get('tiandi_pan') or {}
+    if not gan or len(sc) != 3 or not tdp:
         return False
-    tj = env.get('tian_jiang', {})
-    sc = env.get('sanchuan', [])
-    return any(tj.get(z) == '白虎' for z in sc if z)
+    you_xia = [k for k, v in tdp.items() if v == '酉']     # 酉所临之地盘
+    you_shang = tdp.get('酉', '')                           # 酉上所得之天盘
+    # 柔日昴星（虎视）：初＝酉下，中＝干上，末＝支上
+    rou = bool(you_xia) and sc[0] == you_xia[0] and sc[1] == gs and sc[2] == zs
+    # 刚日昴星（酉）：初＝酉上，中＝支上，末＝干上
+    gang = bool(you_shang) and sc[0] == you_shang and sc[1] == zs and sc[2] == gs
+    if not (rou or gang):
+        return False
+    pos = [gs, zs, tdp.get(gs, ''), tdp.get(zs, '')] + list(sc)
+    # 天将乘白虎（「天将又乘白虎」）
+    if any(tj.get(z, '') == '白虎' for z in pos if z):
+        return True
+    # 申＝白虎本位（「支上乘申，及初末申亦作白虎之本位」）
+    if any(z == '申' for z in pos if z):
+        return True
+    return False
 
 
 def _gan_cheng_mu_hu(env):
