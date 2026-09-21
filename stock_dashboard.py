@@ -5496,6 +5496,10 @@ def _build_tianji_prediction_record(full, rec, shichen):
     }
 
 
+# 单次批量择日最多入库的训练案例条数（去重后取评分最高的前 N 条）
+ZERI_KEEP_TOP_N = 10
+
+
 def _write_training_cases(path, cases):
     """原子写入 stock_training_cases.json（先 .tmp 后 os.replace）。
 
@@ -5660,8 +5664,23 @@ def _append_zeri_results_to_knowledge(results, mountain, zetiri_type, qiushi='')
             except Exception:
                 existing_cases = []
 
+        # 🔴 改为「按 total_score 降序 + 去重后取前 N 条」（2026-09-21）
+        #   原实现取 results[:10]，而 results 是按**业务评级**排序的
+        #   （禄马贵人 → 类神吉应梯次 → 加权分 → 六象 → …，见 :7515/:7525），
+        #   total_score 只排在末位 ⇒ 大区间择日时高分课可能排在 10 名之外被丢弃。
+        #   另：原写法「取列表前 10 条再逐条去重」，若这 10 条都已在库则 added=0，
+        #   后面的新课永远进不来 ⇒ 现改为跳过已入库的、继续往下取，直到凑满 N 条。
+        _ranked = sorted(results, key=lambda r: (
+            -float(r.get('total_score', 0) or 0),
+            -float(r.get('liuren_score', 0) or 0),
+            -float(r.get('doushou_score', 0) or 0),
+            str(r.get('date', '')),
+        ))
+
         added_count = 0
-        for i, rec in enumerate(results[:10]):  # 仅保存前10个
+        for rec in _ranked:
+            if added_count >= ZERI_KEEP_TOP_N:
+                break
             date_str = rec.get('date', '')
             shichen = rec.get('shichen', '')
             total_score = rec.get('total_score', 0)
@@ -5682,9 +5701,9 @@ def _append_zeri_results_to_knowledge(results, mountain, zetiri_type, qiushi='')
                                'second': sanchuan_list[1] if len(sanchuan_list) > 1 else '',
                                'third': sanchuan_list[2] if len(sanchuan_list) > 2 else ''}
             
-            # 生成案例 ID
+            # 生成案例 ID（序号＝评分排名位次 01..N）
             import time
-            case_id = f"CASE-ZERI-{int(time.time()) % 100000:05d}-{i+1:02d}-{date_str}"
+            case_id = f"CASE-ZERI-{int(time.time()) % 100000:05d}-{added_count + 1:02d}-{date_str}"
 
             # 构建案例数据
             new_case = {
