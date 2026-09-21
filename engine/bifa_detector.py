@@ -686,6 +686,11 @@ class BiFaDetector:
             _yj = yuejiang.replace('将', '').strip() if yuejiang else ''
             _sike_shang = _extract_sike_shang(si_ke_info)
             _de = ''  # 日德（如需可扩展）
+            # ──【2026-09-22 补】月建（当令之本）：月将亥↔寅月 ⇒ 月建=(14-月将)%12
+            #    旧 _data_env 只有 yuejiang/season，**无 yue_zhi** ⇒ 读 yue_zhi 的谓词
+            #    （如第13法鬼贼当时）恒取空值、静默判否（外圈 except: pass 全吞）。
+            _Z12 = '子丑寅卯辰巳午未申酉戌亥'
+            _yue_zhi = _Z12[(14 - _Z12.index(_yj)) % 12] if _yj in _Z12 else ''
             _data_env = {
                 'ri_gan': ri_gan, 'ri_zhi': ri_zhi,
                 'gan_shang': gan_shang_shen, 'zhi_shang': zhi_shang_shen,
@@ -699,6 +704,8 @@ class BiFaDetector:
                 'tai_sui': tai_sui or '',
                 # ── 三期扩展字段（2026-08-21）──
                 'yuejiang': _yj,            # 月将地支（去'将'字）
+                'yue_zhi': _yue_zhi,        # 🔴 月建（判「当令」之本，2026-09-22 补）
+                'yue_jiang': _yj,          # 键名兼容：部分谓词读 yue_jiang
                 'is_day': is_day,            # 昼夜
                 'ben_ming': ben_ming_zhi or '',
                 'trend': trend,             # 三传走势
