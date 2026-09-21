@@ -106,6 +106,8 @@ _*.py
 # ⛔ 例外：`_*.py` 规则过宽，曾误伤权威基线脚本（2026-09-20）
 !engine/_honest_skill_all.py
 test_*.py
+# ⛔ 例外：`test_*.py` 会误伤毕法赋回归闸口（2026-09-21，22 项检查）
+!engine/test_bifa_100.py
 *_test.py
 check_*.py
 debug_*.py
