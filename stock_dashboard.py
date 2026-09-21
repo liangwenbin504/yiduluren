@@ -5645,6 +5645,13 @@ def _append_zeri_results_to_knowledge(results, mountain, zetiri_type, qiushi='')
     仅保存前10个最优结果，避免数据膨胀。
     """
     try:
+        # 🔴 占位参数守卫（2026-09-21）：调用方未传坐山/事项类型时，引擎以 '?' / '??' 占位。
+        #    这类案例没有真实山向与事项，对训练与统计毫无意义 ⇒ 直接拒绝入库。
+        #    （历史因此堆积 64 条 junk，已清理；此处止血防复发）
+        if str(mountain).strip('？? ') == '' or str(zetiri_type).strip('？? ') == '':
+            return {'success': True, 'message': '坐山或事项类型为占位值，跳过入库',
+                    'added_count': 0, 'skipped': 'placeholder_args'}
+
         stock_cases_path = Path(__file__).parent / 'data' / 'stock_training_cases.json'
         existing_cases = []
         if stock_cases_path.exists():
