@@ -26,6 +26,55 @@ def _season_by_lunar_month(lm: int) -> str:
             7: '秋', 8: '秋', 9: '秋', 10: '冬', 11: '冬', 12: '冬'}.get(lm, '')
 
 
+def _derive_bifa_ext_keys(env: dict) -> dict:
+    """补齐毕法赋谓词需要的派生 env 键（2026-09-21 新增）。
+
+    🔴 **血泪根因**：`build_judge_env` 原本只产 30 个键，而 `kege_atoms` 的谓词
+    还读了 16 个它不产的键 ⇒ 恒取默认空值 ⇒ **47 个谓词、15 个法静默失效**
+    （实测零中法 4 个：第 2/56/61/72 法），判否又被 judge 的 `except` 吞掉，
+    运行时零日志零报错。
+
+    **真源一律复用 `engine.bifa_detector`** —— 那里已有一个**完整版** env 建造者
+    （`detect()` 内 `_data_env`），谓词本就是按它写的。⛔ 不在此另立标准。
+
+    ⚠️ 本批**不补**的两类（避免臆造定义）：
+      · `de`（日德）—— bifa_detector 里也注释「如需可扩展」，实体未实现 ⇒ 保持 `''`。
+      · `shensha`／`si_qi` —— 在任何 env 建造者里都**没有真源** ⇒ 保持缺失，
+        相关 4 个谓词仍失效，待专项排期。
+    """
+    out = {}
+    try:
+        from engine.bifa_detector import (LU_SHEN, YIMA, GUIREN_MAP, get_ding_shen,
+                                          get_xun_shou, get_xun_wei, get_fen_xun_kong,
+                                          _extract_sike_shang, _get_sanchuan_trend)
+    except Exception:
+        return out
+    gz = env.get('ganzhi', '')
+    rg, rz = env.get('ri_gan', ''), env.get('ri_zhi', '')
+    try:
+        out['lu'] = LU_SHEN.get(rg, '')                      # 十干禄
+        out['yima'] = YIMA.get(rz, '')                       # 驿马（按日支三合）
+        gr = GUIREN_MAP.get(rg, ('', ''))                    # (昼贵, 夜贵)
+        out['guiren'] = gr
+        out['gui_ren'] = gr                                  # 兼容两种键名
+        out['ben_ming'] = env.get('ben_ming_zhi', '')        # 兼容 ben_ming_zhi
+        out['si_ke'] = env.get('sike') or []                 # 四课（第70法）
+        out['si_ke_shang'] = _extract_sike_shang(env.get('sike'))
+        out['yue_jiang'] = env.get('yuejiang', '')           # 兼容 yuejiang
+        out['tai_sui'] = env.get('nian_zhi', '')
+        out['ding_shen'] = get_ding_shen(gz) if gz else ''
+        xs = get_xun_shou(gz) if gz else ''
+        xw = get_xun_wei(gz) if gz else ''
+        out['xun_shou_zhi'] = xs[1] if xs and len(xs) > 1 else ''
+        out['xun_wei_zhi'] = xw[1] if xw and len(xw) > 1 else ''
+        out['fen_xun_kong'] = get_fen_xun_kong(gz) if gz else None
+        out['trend'] = _get_sanchuan_trend(env.get('sanchuan') or [])
+        out['de'] = ''                                       # 日德未实现，保持空
+    except Exception:
+        return out
+    return out
+
+
 def build_judge_env(ri_gan, ri_zhi, nian_zhi, yue_zhi, yuejiang,
                     sike, sanchuan, keti, tian_jiang, tiandi_pan,
                     shichen, zhanlei='其他',
@@ -75,7 +124,7 @@ def build_judge_env(ri_gan, ri_zhi, nian_zhi, yue_zhi, yuejiang,
         except Exception:
             xing_nian = ''
 
-    return {
+    _env = {
         'ri_gan': ri_gan, 'ri_zhi': ri_zhi, 'ganzhi': ganzhi,
         'sike': sike, 'sanchuan': sc3l,
         'sanchuan_tianjiang': sanchuan_tianjiang or [],
@@ -92,6 +141,9 @@ def build_judge_env(ri_gan, ri_zhi, nian_zhi, yue_zhi, yuejiang,
         # 【BUG-FIX 2026-09-01】繁昌课需夫妻年命，原 env 无 nianming → 主链路繁昌永不触发
         'nianming': nianming,
     }
+    # 【BUG-FIX 2026-09-21】补毕法赋谓词需要的派生键（原 30 键 ⇒ 47 谓词静默失效）
+    _env.update(_derive_bifa_ext_keys(_env))
+    return _env
 
 
 # ── 适配层：统一 env → 各引擎参数 ──
