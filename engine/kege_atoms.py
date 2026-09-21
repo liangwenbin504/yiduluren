@@ -1351,6 +1351,62 @@ def _sc_ju_wx(sc):
     return ''
 
 
+def _zhuan_cai_hua_gui(env):
+    """第27法「传财化鬼财休觅」专用谓词（2026-09-21 按原文五格重建）
+
+    原文（在线_bifa_sina.html L915 起）五格，实测覆盖该法全部 10/10 课：
+      A  主格·传财化鬼：三传作日之财（逐传皆财 **或** 三合成财局），其财生起**干上神**，
+         而干上神克日干（为鬼）——辛亥日干上午、三传未卯亥「皆作木局为日之财…
+         即生起干上之午火」；丁丑日干上亥、三传酉丑巳（金局为丁之财，金生亥水克丁）。
+      A2 三传成局生日干、而干上见鬼——「丁酉日干上亥，三传亥卯未全生，但日上见鬼耳」。
+      B  传财化鬼格：三传作财，反生起**支上神**而克日干——乙巳日三传未戌丑、支上申；
+         丁亥日三传申酉戌、支上子。
+      C  四己日：干上神为日之财，而三传成局来伤（克）日干——己卯日干上亥、三传曲直木局伤干。
+      D  因财致祸格：三传中财爻反克干上之神——庚辰日干上丑、初传寅木为财而伤干上丑土。
+      E  借钱还债格：干上神与支上神**皆为日之财**——辛酉日干上卯支上寅；壬子日干上巳支上午。
+    """
+    gan = env.get('ri_gan', '')
+    sc = env.get('sanchuan', []) or []
+    gs = env.get('gan_shang', '')
+    zs = env.get('zhi_shang', '')
+    if not gan or len(sc) != 3 or not gs:
+        return False
+
+    def is_cai(z):                      # 日干克该支 ⇒ 妻财
+        return bool(z) and _zhi_ke(gan, z)
+
+    ju_wx = _sc_ju_wx(sc)               # 三合成局 → 局五行；不成局 → ''
+    # 🔴 财的五行集合：① 三合成财局；② 三传中任一传为日之财。
+    #    ⛔ 不能只取「逐传皆财/成财局」——原文丁亥日三传申酉戌（戌为土非财）
+    #       明言「支上子…惟宜纳粟得官」，财只取申酉，故须逐传兜底。
+    cai_wxs = set()
+    if ju_wx and WX_KE.get(_wx(gan), '') == ju_wx:
+        cai_wxs.add(ju_wx)
+    for z in sc:
+        if is_cai(z):
+            cai_wxs.add(_wx(z))
+
+    # A：财（或财局）生干上神，干上神克日干
+    if _zhi_ke(gs, gan) and any(WX_SHENG.get(w, '') == _wx(gs) for w in cai_wxs):
+        return True
+    # A2：三传成局生日干，而干上见鬼
+    if ju_wx and WX_SHENG.get(ju_wx, '') == _wx(gan) and _zhi_ke(gs, gan):
+        return True
+    # B：财（或财局）生支上神，支上神克日干
+    if zs and _zhi_ke(zs, gan) and any(WX_SHENG.get(w, '') == _wx(zs) for w in cai_wxs):
+        return True
+    # C：干上神为财，三传成局克日干
+    if is_cai(gs) and ju_wx and WX_KE.get(ju_wx, '') == _wx(gan):
+        return True
+    # D：三传中财爻克干上神
+    if any(is_cai(z) and _zhi_ke(z, gs) for z in sc):
+        return True
+    # E：干上、支上皆日之财
+    if zs and is_cai(gs) and is_cai(zs):
+        return True
+    return False
+
+
 def _liu_yao_xian_gua_father(env):
     """父母爻现卦：三传成三合局，局五行生日干（毕法赋"三传皆作父母爻"。
     如戊寅日三传戌午寅火局，戊土受生。）"""
@@ -3921,6 +3977,8 @@ _ATOMS = {
     'richen_zai_tianyi_qian': _richen_zai_tianyi_qian, 'richen_zai_tianyi_hou': _richen_zai_tianyi_hou,
     'mo_xinghai_jiaohu': _mo_xinghai_jiaohu,
     'tp_jia': _tp_jia, 'x_shi_siqi': _x_shi_siqi, 'xiaochuan': _xiaochuan,
+    # 第27法专用：传财化鬼财休觅（原文五格，2026-09-21）
+    'zhuan_cai_hua_gui': _zhuan_cai_hua_gui,
     'x_shi_bai': _x_shi_bai,
     'tian_gang_bi_gan': _tian_gang_bi_gan, 'tian_gang_bi_zhi': _tian_gang_bi_zhi,
     'shen_jia_fu_ming': _shen_jia_fu_ming, 'qi_xing_nian_shang_yang': _qi_xing_nian_shang_yang, 'qi_xing_nian_shang_yin': _qi_xing_nian_shang_yin,
