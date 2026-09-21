@@ -84,11 +84,28 @@ def _load_json(path, default=None):
         pass
     return default
 
+def _atomic_write_json(path, data):
+    """原子写 JSON：先写同名 .tmp 再 os.replace。
+
+    ⛔ 直接 `write_text(json.dumps(...))` 若中途中断（崩溃/断电/盘满）会留下**截断的坏 JSON**，
+       下次读取直接崩。本项目案例库已 1MB 级，predictions / tracking 也会持续增长
+       ⇒ 所有 JSON 落盘统一走这里（tmp + os.replace 为同分区原子替换，
+         读侧要么拿到旧版、要么拿到新版）。
+    """
+    p = Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    tmp = p.with_name(p.name + '.tmp')
+    with open(tmp, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+        f.flush()
+        os.fsync(f.fileno())
+    os.replace(tmp, p)
+    return True
+
+
 def _save_json(path, data):
     try:
-        Path(path).parent.mkdir(parents=True, exist_ok=True)
-        Path(path).write_text(json.dumps(data, ensure_ascii=False, indent=2), 'utf-8')
-        return True
+        return _atomic_write_json(path, data)
     except Exception:
         return False
 
@@ -5500,20 +5517,6 @@ def _build_tianji_prediction_record(full, rec, shichen):
 ZERI_KEEP_TOP_N = 10
 
 
-def _write_training_cases(path, cases):
-    """原子写入 stock_training_cases.json（先 .tmp 后 os.replace）。
-
-    案例库已 1.1MB，直接 write_text 若中途中断会留下截断的坏 JSON；
-    tmp + os.replace 为同分区原子替换，读侧要么拿到旧版、要么拿到新版。
-    """
-    tmp_path = str(path) + '.tmp'
-    with open(tmp_path, 'w', encoding='utf-8') as f:
-        json.dump(cases, f, ensure_ascii=False, indent=2)
-        f.flush()
-        os.fsync(f.fileno())
-    os.replace(tmp_path, path)
-
-
 def _append_tianji_to_stock_knowledge(full, rec, shichen):
     """将天机起课结果追加到股票训练知识库 (stock_training_cases.json)
     作为持久化学习数据，供 AI 学习模块检索和分析。
@@ -5617,7 +5620,7 @@ def _append_tianji_to_stock_knowledge(full, rec, shichen):
                 same_id_other_shichen = True
         if hit_idx >= 0:
             existing_cases[hit_idx] = new_case
-            _write_training_cases(stock_cases_path, existing_cases)
+            _atomic_write_json(stock_cases_path, existing_cases)
             _refresh_training_knowledge()
             return {'success': True, 'message': '案例已存在，已刷新覆盖', 'updated': True, 'case_id': case_id}
         if same_id_other_shichen:
@@ -5626,7 +5629,7 @@ def _append_tianji_to_stock_knowledge(full, rec, shichen):
             new_case['id'] = case_id
 
         existing_cases.append(new_case)
-        _write_training_cases(stock_cases_path, existing_cases)
+        _atomic_write_json(stock_cases_path, existing_cases)
 
         # 触发知识库刷新，使新案例立即可检索
         _refresh_training_knowledge()
@@ -5767,7 +5770,7 @@ def _append_zeri_results_to_knowledge(results, mountain, zetiri_type, qiushi='')
             added_count += 1
 
         if added_count > 0:
-            _write_training_cases(stock_cases_path, existing_cases)
+            _atomic_write_json(stock_cases_path, existing_cases)
             # 触发知识库刷新
             _refresh_training_knowledge()
 
@@ -5852,7 +5855,7 @@ def api_tianji_cast():
                             break
                 if not replaced:
                     existing.append(rec_pred)
-                preds_path.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding='utf-8')
+                _atomic_write_json(preds_path, existing)
                 # ── 同时回写到 AI 训练知识库（stock_training_cases.json）──
                 try:
                     knowledge_result = _append_tianji_to_stock_knowledge(full, rec, shichen)
@@ -6292,7 +6295,7 @@ def api_compare_record():
             'agreement_rate': round(agreement / max(total, 1) * 100, 1),
         }
         
-        tracking_file.write_text(json.dumps(tracking, ensure_ascii=False, indent=2), encoding='utf-8')
+        _atomic_write_json(tracking_file, tracking)
         return jsonify({'success': True, 'summary': tracking['summary']})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
