@@ -915,6 +915,81 @@ def pursue_chain(env: Dict[str, Any], category: str = '',
     return out
 
 
+def merge_guishen_into_chain(result: Dict[str, Any],
+                            judged: Dict[str, Any] = None,
+                            top_k: int = 6) -> Dict[str, Any]:
+    """把「寺观·僧道·鬼祟」取象并入 `pursue_chain` 的输出（🔴 **零评分影响**）。
+
+    【单一真源】象域判定与候选排序 **只在** `engine.guishen_xiang_engine` 里做一次，
+    由 `judge_orchestrator.judge_all` 产出 `judged['guishen_xiang']`。
+    本函数 ⛔ 不重算、⛔ 不另立判据，只做两件事：
+      ① 把候选支对应的「僧道寺观／神祠／鬼祟」象注入链上节点的 `现代象`
+         （**置顶**，避免被 `top_k` 截断后看不见）；
+      ② 在链输出内挂 `寺观鬼祟` 段（类象语 / 候选 / 依据 / 边界）。
+
+    【为何不在 pursue_chain 内自算】
+      生产调用点（stock_dashboard 排盘段）里，类象链**早于** `judge_all` 执行，
+      此时还没有 `shensha_xiang`（幽冥煞）与 `rangjie`（宜禳）。若在链内自算，
+      就会与 `judge_all` 的 `guishen_xiang` 形成**双真源漂移**（同课两处口径不同）。
+      ⇒ 故改为「后合并」：链算完 → judge 算完 → 用 judge 的结果回注链。
+
+    【原文依据】(见 guishen_xiang_engine 文件头)
+      寅申＝寺观 下L4556｜辰＝寺观 下L10788｜申＝僧（谐音）下L10788
+      未＝神鬼·祭祀 下L9631、下L1182｜子＝祷祝鬼神 下L9598｜戌＝塑画（神像）下L9643
+    """
+    if not isinstance(result, dict):
+        return result
+    gs = (judged or {}).get('guishen_xiang') or {}
+    if not (isinstance(gs, dict) and gs.get('象域')):
+        result['寺观鬼祟'] = {'象域': False}
+        return result
+
+    result['寺观鬼祟'] = {
+        '象域': True,
+        '强度': gs.get('强度', 0),
+        '候选': gs.get('候选') or [],
+        '类象语': gs.get('类象语', ''),
+        '祷所': gs.get('祷所', ''),
+        '依据': gs.get('依据') or [],
+        '边界': ('寺观/僧道/神祠之象；东岳庙、城隍庙抑或土地庙由当地实况定，'
+                 '引擎不落专名（三段式第③段交人）；纯叙事层，不进评分链'),
+    }
+
+    zhi2cls: Dict[str, str] = {}
+    for c in gs.get('候选') or []:
+        if isinstance(c, dict) and c.get('支'):
+            zhi2cls[str(c['支'])] = str(c.get('建筑类') or '')
+    if not zhi2cls:
+        return result
+    keep = max(int(top_k or 6), 8)
+
+    def _put(row: Dict[str, Any]) -> None:
+        z = str(row.get('地支') or '')
+        if z not in zhi2cls:
+            return
+        # 🔴 去重键＝**完整 tag**（不是 建筑类 短名），否则重复调用会叠加
+        tag = '僧道寺观：%s' % zhi2cls[z]
+        row['寺观象'] = zhi2cls[z]
+        xi = row.get('现代象')
+        if isinstance(xi, dict):
+            arr = [x for x in (xi.get('象') or []) if x and x != tag]
+            arr.insert(0, tag)
+            xi['象'] = arr[:keep]
+        else:
+            arr = [x for x in (xi or []) if x and x != tag]
+            arr.insert(0, tag)
+            row['现代象'] = arr[:keep]
+
+    for ch in (result.get('链') or []):
+        for r in ((ch or {}).get('链') or []):
+            if isinstance(r, dict):
+                _put(r)
+    for c in (result.get('收敛候选') or []):
+        if isinstance(c, dict):
+            _put(c)
+    return result
+
+
 def to_narrative(result: Dict[str, Any], max_len: int = 240) -> str:
     """把推演结果压成一句可用批语的叙事串（不含吉凶）。"""
     if not result:

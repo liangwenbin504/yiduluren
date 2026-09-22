@@ -64,9 +64,45 @@ DA_DI_JIANG = ('贵人', '青龙', '太常')
 # ── 小祠类天将（土地庙、社庙、路边小祠、阴庙）──
 XIAO_CI_JIANG = ('螣蛇', '玄武', '天空', '勾陈', '白虎', '朱雀', '六合', '太阴')
 
-# 位置 → (权重, 远近)
+# 取用处 → (权重, 远近)；🔴 2026-09-22 扩象源后为 **四课四上神＋三传＋年命**（原仅 5 处）
 POS_WEIGHT = {'初传': (5, '近（发用最显）'), '支上': (4, '宅内／近邻'),
-              '干上': (3, '自身所近'), '中传': (2, '中'), '末传': (1, '远')}
+              '干上': (3, '自身所近'), '年命': (3, '占人本身'),
+              '干阴': (2, '内而隐'), '支阴': (2, '宅内而隐'),
+              '中传': (2, '中'), '末传': (1, '远')}
+
+
+def _qu_yong_chu(env: Dict[str, Any]) -> List[tuple]:
+    """取用处：**四课四上神（干上·干阴·支上·支阴）＋三传＋年命**。
+
+    🔴 2026-09-22 扩象源（原仅三传＋干上＋支上 5 处）。
+       依据：218 案回测中 §前程03·053 之「寺」象出自**年命戌**、§前程03·085 出自**支阴戌**
+       （`_冗余待删/_probe_expand_src.py` 实测），旧 5 处口径取不到 ⇒ 漏。
+    ⚠️ 与 `_judge_shensha_xiang` 的 5 处口径**不同**：神煞落点按传统课传六处取；
+       本层取象需及于四课全上神与年命（邵公取象本不限于三传）。差异已注明，勿混用。
+    """
+    sc = list(env.get('sanchuan') or [])
+    sk = env.get('sike') or []
+
+    def _shang(i):
+        try:
+            return sk[i][1] or ''
+        except Exception:
+            return ''
+
+    positions = [('干上', env.get('gan_shang') or _shang(0)),
+                 ('干阴', _shang(1)),
+                 ('支上', env.get('zhi_shang') or _shang(2)),
+                 ('支阴', _shang(3)),
+                 ('初传', sc[0] if len(sc) > 0 else ''),
+                 ('中传', sc[1] if len(sc) > 1 else ''),
+                 ('末传', sc[2] if len(sc) > 2 else '')]
+    bm = env.get('ben_ming_zhi') or ''
+    if bm:
+        positions.append(('年命', bm))
+    return [(p, z) for p, z in positions if z]
+
+
+_six_positions = _qu_yong_chu      # 兼容旧名（审计脚本曾 import）
 
 
 def _wangshuai(zhi: str, yue_jian: str) -> str:
@@ -90,15 +126,9 @@ def _is_wangxiang(zhi: str, yue_jian: str) -> bool:
     return _wangshuai(zhi, yue_jian) in ('旺', '相')
 
 
-def _six_positions(env: Dict[str, Any]) -> List[tuple]:
-    """课传六处（口径与 _judge_shensha_xiang 一致：三传＋干上＋支上）。"""
-    sc = list(env.get('sanchuan') or [])
-    return [('初传', sc[0] if len(sc) > 0 else ''),
-            ('中传', sc[1] if len(sc) > 1 else ''),
-            ('末传', sc[2] if len(sc) > 2 else ''),
-            ('干上', env.get('gan_shang', '') or ''),
-            ('支上', env.get('zhi_shang', '') or '')]
-
+# 🔴 2026-09-22：此处原有一份**旧的 6 处** `def _six_positions`（三传＋干上＋支上），
+#    它把上一行的别名**静默覆盖**，导致「扩象源」对旧名调用者完全不生效。
+#    已删除旧定义 ⇒ `_six_positions` 现等价 `_qu_yong_chu`（四课四上神＋三传＋年命）。
 
 def suggest(env: Dict[str, Any], judged: Dict[str, Any]) -> Dict[str, Any]:
     """产出鬼神／祠庙取象（🔴 不进评分链）。"""
@@ -113,23 +143,34 @@ def suggest(env: Dict[str, Any], judged: Dict[str, Any]) -> Dict[str, Any]:
                           if isinstance(x, dict) and x.get('煞') in YOU_MING_SHA})
 
         # ── ① 象域判定 ──
-        pos_list = _six_positions(env)
+        # 🔴 2026-09-22 改：旧判据「神祠支 **AND** (幽冥煞 OR 神祠支乘幽冥将)」里的 AND
+        #    **原文无据**（是我为压噪音自加的），实测把 §宅墓02·005、§前程03·084 漏掉。
+        #    新判据＝ **神祠支在取用处出现 ≥2 次** OR 旧判据。
+        #    A/B（218 案）：召回 A组 90%→**94%**、A严格 85%→**91%**，噪音率 35.1%→34.9%（几乎不动）
+        #    ⇒ 印证「噪音由占类/语境决定、非门槛可解」（第十八节结论）。
+        pos_list = _qu_yong_chu(env)
         hits = [(p, z) for p, z in pos_list if z in SHENCI_ZHI]
         if not hits:
             return out
         you_ming_jiang_hit = any(tj.get(z, '') in YOU_MING_JIANG for _, z in hits)
-        if not (sha_hit or you_ming_jiang_hit):
-            return out                                   # 无幽冥煞亦无幽冥将 ⇒ 不立象域
+        if not (len(hits) >= 2 or sha_hit or you_ming_jiang_hit):
+            return out
         out['象域'] = True
-        out['强度'] = len({z for _, z in hits}) + len(sha_hit) + (1 if you_ming_jiang_hit else 0)
+        out['强度'] = (len({z for _, z in hits}) + len(sha_hit)
+                       + (1 if you_ming_jiang_hit else 0))
 
-        # ── ② 候选排序 ──
+        # ── ② 候选排序（**按支聚合**：同支现于多处则合并位置，象更显）──
+        by_zhi: Dict[str, List[str]] = {}
         for p, z in hits:
+            by_zhi.setdefault(z, []).append(p)
+        for z, ps in by_zhi.items():
             cls, yongfa, src = SHENCI_ZHI[z]
             jiang = tj.get(z, '') or ''
             ws = _wangshuai(z, yue_jian)
-            w, far = POS_WEIGHT.get(p, (0, ''))
-            score = float(w)
+            w, far = POS_WEIGHT.get(ps[0], (0, ''))
+            for _p in ps[1:]:                       # 多处出现取最高位置权重
+                w = max(w, POS_WEIGHT.get(_p, (0, ''))[0])
+            score = float(w) + 0.5 * (len(ps) - 1)  # 重见加分（众象骈集则其象愈显）
             if _is_wangxiang(z, yue_jian):
                 score += 1.0
             if jiang in YOU_MING_JIANG:
@@ -142,7 +183,8 @@ def suggest(env: Dict[str, Any], judged: Dict[str, Any]) -> Dict[str, Any]:
             else:
                 grade = '神格未定（视当地实况）'
             out['候选'].append({
-                '支': z, '位置': p, '建筑类': cls, '用法': yongfa, '天将': jiang,
+                '支': z, '位置': '·'.join(ps), '出现': len(ps),
+                '建筑类': cls, '用法': yongfa, '天将': jiang,
                 '方位': ZHI_FANGWEI.get(z, ''), '远近': far,
                 '旺衰': ws, '神格': grade, '分': round(score, 1),
                 '原文': src,

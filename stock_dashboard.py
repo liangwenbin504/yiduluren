@@ -3724,6 +3724,14 @@ def api_zeri_analyze():
                 result['rangjie'] = _jres.get('rangjie', {'宜禳': False, '提示': [],
                                                           '禳法': [], '有救': False,
                                                           '有救理由': [], '依据': []})
+                # 🆕 2026-09-22：寺观·僧道·鬼祟 **接进类象链**
+                #    单一真源＝_jres['guishen_xiang']（judge_all 已算），此处只回注、不重算
+                #    ⛔ 不在类象链内自算：链段早于 judge_all，拿不到 幽冥煞/宜禳 ⇒ 会双真源漂移
+                try:
+                    from engine.leixiang_chain import merge_guishen_into_chain as _mgc
+                    result['chain_leixiang'] = _mgc(result.get('chain_leixiang') or {}, _jres)
+                except Exception:
+                    pass
                 # 统一口径：毕法赋命中法句以 judge_bifa（含干上/支上神/天将/天地盘）为准
                 if isinstance(result.get('sanchuan'), dict):
                     result['sanchuan']['毕法赋命中'] = result['bifa_judged'].get('匹配法句', [])
