@@ -3409,12 +3409,42 @@ def _quan_cheng_si_qi(env):
     return _zhi_in_wei(gs, gan_die) and _zhi_in_wei(zs, zhi_die)
 
 
-def _san_liu_he(env):
-    """第83法 万事喜忻三六合：三传成三合局"""
+def _san_liu_he_wide_legacy(env):
+    """【2026-09-22 归档】旧宽判据＝仅「三传成三合局」（等效命中 85 课，原文仅 2 课）。
+    《通解·中》L7615 原文明列：三传寅午戌等【或干支上见未】；亥卯未见戌；申子辰见丑；
+    巳酉丑见辰 —— 缺「干支上见中神之六合支」条件。保留仅作考古，不再被调用。"""
     sc = env.get('sanchuan', [])
     if len(sc) != 3:
         return False
     return any(set(sc) == s for s in SANHE)
+
+
+# 中神（三合局旺支）→ 其六合支：火局午未合／木局卯戌合／水局子丑合／金局酉辰合
+_SAN_LIU_HE_ZHONG = {'午': '未', '卯': '戌', '子': '丑', '酉': '辰'}
+
+
+def _san_liu_he(env):
+    """第83法 万事喜忻三六合（2026-09-22 按原文收窄）
+
+    《通解·中》L7615：「谓三传寅午戌等，或干支上见未；三传亥卯未等，或干支上见戌；
+    三传申子辰等，或干支上见丑；三传巳酉丑等，或干支上见辰，皆名为三合课」
+    ＋L7625「三六相呼见喜忻，纵然带恶不成嗔」。
+    ⇒ 判据＝三传成三合局 AND 干上/支上见【与局中神（旺支）六合】之支。
+    实测：等效命中 85 → 11 课；原文 2 课（乙酉/丙申）12/12 占时全中。
+    """
+    sc = env.get('sanchuan', []) or []
+    gs = env.get('gan_shang', '')
+    zs = env.get('zhi_shang', '')
+    if len(sc) != 3 or not (gs or zs):
+        return False
+    s = frozenset(sc)
+    for js in SANHE:
+        if s != js:
+            continue
+        for zhong, he in _SAN_LIU_HE_ZHONG.items():
+            if zhong in s and (gs == he or zs == he):
+                return True
+    return False
 
 
 def _he_zhong_fan_sha(env):
@@ -3477,14 +3507,13 @@ def _chu_zao_jia_ke_v2(env):
     return WX_KE.get(_wx(dipan), '') == chu_wx
 
 
-def _jiang_feng_nei_zhan(env):
-    """第86法 将逢内战：天将五行克所乘地支五行
-
-    【BUG-FIX 2026-09-11】原实现 `_zhi_ke(jwx, z)`（五行×**地支**）恒 False，
-    且 `_wx(jwx)` 对五行输入返回 ''（`_wx` 是"地支→五行"）→ 首条件恒真、次条件恒假
-    → 本节零触发。正解：`_zhi_ke(jwx, _wx(z))`。
-    （"五行不同"是"克"的必要条件，无需单列。）
-    """
+def _jiang_feng_nei_zhan_wide_legacy(env):
+    """【2026-09-22 归档】旧宽判据：扫三传+干上+支上 6 位置、方向「将克神」
+    （等效命中 202 课，原文仅 1 课）。两处不符原文：
+    ①《通解·中》L7728-7737 各内战格皆「为用／发用者」⇒ 只判初传；
+    ②方向反了——L7728 各例（六合乘申／白虎乘午／太常乘卯…）全部是【神克将】，
+      且上卷 L4565 注明「地盘克用克天将为将逢内战」⇒ 地盘克用 AND 用克将。
+    保留仅作考古，不再被调用。"""
     sc = env.get('sanchuan', []) or []
     gs = env.get('gan_shang', '')
     zs = env.get('zhi_shang', '')
@@ -3496,10 +3525,62 @@ def _jiang_feng_nei_zhan(env):
             continue
         jwx = TIANJIANG_WX_MAP.get(jiang, '')
         z_wx = _wx(z)
-        # ⚠️ 同上：不可经 _zhi_ke 传五行（假阳性）
         if jwx and z_wx and WX_KE.get(jwx, '') == z_wx:
             return True
     return False
+
+
+def _sanchuan_ri_chen_nei_zhan(env):
+    """三传日辰内战格（法86 原文明列变体，《通解·中》L7739）：
+    「支干三传皆下克上者，凡占皆是家法不正…如癸酉日，癸水克上神之午火，
+    酉金克上神之寅木，初传未加寅，中传子加未，末传巳加子，皆下贼上」。
+    ⇒ 干克干上神 AND 支克支上神 AND 三传皆被其地盘位所克（下贼上）。"""
+    gan = env.get('ri_gan', '')
+    zhi = env.get('ri_zhi', '')
+    gs = env.get('gan_shang', '')
+    zs = env.get('zhi_shang', '')
+    sc = env.get('sanchuan', []) or []
+    tdp = env.get('tiandi_pan', {}) or {}
+    if not (gan and zhi and gs and zs and len(sc) == 3 and tdp):
+        return False
+    g_wx, z_wx2 = GAN_WX.get(gan, ''), ZHI_WX.get(zhi, '')
+    if not g_wx or not z_wx2:
+        return False
+    if WX_KE.get(g_wx, '') != _wx(gs):                 # 干克干上神
+        return False
+    if WX_KE.get(z_wx2, '') != _wx(zs):                # 支克支上神
+        return False
+    inv = {v: k for k, v in tdp.items()}               # 天盘支 → 所临地盘位
+    # 下贼上＝地盘位克天盘支（未加寅 ⇒ 寅木克未土）
+    return all(inv.get(z) and WX_KE.get(_wx(inv[z]), '') == _wx(z) for z in sc)
+
+
+def _jiang_feng_nei_zhan(env):
+    """第86法 将逢内战所谋危（2026-09-22 按原文收窄）
+
+    《通解·中》L7727-7738：十一天将内战格皆「为用／发用者」（六合加申为用、
+    白虎乘午临亥为用…），且上卷 L4565 注「地盘克用克天将为将逢内战」。
+    ⇒ 判据＝①初传位：所乘之神克天将 AND 地盘克所乘之神（11 例全满足双条件）
+      OR ②三传日辰内战格（支干三传皆下克上，原文 L7739 明列）。
+    实测：等效命中 202 → 13 课；原文盘癸酉由②命中 12/12。
+    """
+    if _sanchuan_ri_chen_nei_zhan(env):
+        return True
+    sc = env.get('sanchuan', []) or []
+    tj = env.get('tian_jiang', {}) or {}
+    tdp = env.get('tiandi_pan', {}) or {}
+    if not sc:
+        return False
+    z = sc[0]                                          # 发用（初传）
+    jiang = tj.get(z, '')
+    if not jiang:
+        return False
+    jwx = TIANJIANG_WX_MAP.get(jiang, '')
+    z_wx = _wx(z)
+    if not (jwx and z_wx and WX_KE.get(z_wx, '') == jwx):   # 神克将
+        return False
+    dipan_pos = next((k for k, v in tdp.items() if v == z), '')
+    return bool(dipan_pos and WX_KE.get(_wx(dipan_pos), '') == z_wx)  # 地盘克用
 
 
 def _ren_zhai_zuo_mu_v2(env):
@@ -3681,8 +3762,10 @@ def _xi_ju_kong_wang(env):
     return any(z in kong for z in sc)
 
 
-def _xun_nei_kong_wang(env):
-    """第96法 旬内空亡逐类推：三传空亡有类应"""
+def _xun_nei_kong_wang_wide_legacy(env):
+    """【2026-09-22 归档】旧宽判据：三传任一支空亡且与日干有生克。
+    「与日干有六亲」几乎恒真（仅比和除外）⇒ 等效命中 145 课（原文 0 课标注）。
+    保留仅作考古，不再被调用。"""
     sc = env.get('sanchuan', [])
     gan = env.get('ri_gan', '')
     kong = env.get('kongwang', ('', ''))
@@ -3695,6 +3778,21 @@ def _xun_nei_kong_wang(env):
                _zhi_sheng(z, gan) or _zhi_sheng(gan, z):
                 return True
     return False
+
+
+def _xun_nei_kong_wang(env):
+    """第96法 旬内空亡逐类推（2026-09-22 按原文收窄为发用空亡）
+
+    《通解·中》L8324-8332：按旬逐日列举空亡六亲（「财空/鬼空/救空/比空/生空」
+    注①L8332），要点「纵戌亥在六处亦不可用」。法96 本质是空亡类应方法论，
+    择其最应者立判：**发用（初传）空亡**——用神落空，谋事必不成。
+    实测：等效命中 145 → 65 课（≈2/11 先验，属本法的正常宽度）。
+    """
+    sc = env.get('sanchuan', []) or []
+    kong = env.get('kongwang', ('', ''))
+    if not sc or not kong[0]:
+        return False
+    return sc[0] in kong
 
 
 def _suo_shi_bu_ru(env):
@@ -3751,8 +3849,10 @@ def _ku_qu_gan_lai_le_li_bei(env):
     return False
 
 
-def _hai_gui_song_zhi_zuo_qu(env):
-    """第43法 害贵讼直作曲断：贵人乘某支，与课传六处某支相害"""
+def _hai_gui_song_zhi_zuo_qu_wide_legacy(env):
+    """【2026-09-22 归档】旧宽判据：贵人支与六处（三传+干上+支上）任一支相害。
+    六处 5 支与贵人成六害的先验 ≈ 40% ⇒ 等效命中 137.5 课（原文 0 课标注）。
+    保留仅作考古，不再被调用。"""
     tj = env.get('tian_jiang', {})
     sc = env.get('sanchuan', [])
     gs = env.get('gan_shang', '')
@@ -3767,6 +3867,24 @@ def _hai_gui_song_zhi_zuo_qu(env):
             if other != gui_zhi and LIU_HAI.get(other, '') == gui_zhi:
                 return True
     return False
+
+
+def _hai_gui_song_zhi_zuo_qu(env):
+    """第43法 害贵讼直作曲断（2026-09-22 按原文收窄为初传害贵人）
+
+    《通解·中》L6050（法43 唯一机制）：「如甲申日未加申为夜贵…初传子与未又为害，
+    如占讼理虽直而必致曲断」⇒ 害贵者须是**初传（发用）**。
+    实测：等效命中 137.5 → 40 课（≈1/11 先验）。
+    """
+    tj = env.get('tian_jiang', {}) or {}
+    sc = env.get('sanchuan', []) or []
+    if not tj or not sc:
+        return False
+    gui = next((z for z, j in tj.items() if j == '贵人'), '')
+    if not gui:
+        return False
+    chu = sc[0]
+    return chu != gui and LIU_HAI.get(chu, '') == gui
 
 
 def _sike_shang_from_sike(env):
