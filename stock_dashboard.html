@@ -3552,6 +3552,82 @@ function jiangShengkeCard(d) {
   h += '</div>';
   return h;
 }
+// ══════════════════════════════════════════════════════════════════
+// 主格裁定 ＋ 禳解趋避（🆕 2026-09-22；🔴 零评分影响，只展示）
+// 单一真源：单课页 `_zeriSummary` 与批量课单 `plRenderDetail` 共用，
+//   避免两处各写一份导致口径漂移（历史教训：pl* 与单课页长期不同源）。
+// 数据来源：后端 judge_all 的 zhuge（engine/keti_arbitration）／
+//   rangjie（engine/rangjie_engine）／shensha_xiang（神煞象意层）。
+// ══════════════════════════════════════════════════════════════════
+function zhugeRangjieCard(d) {
+  if (!d) return '';
+  var _e = function (s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  };
+  var _box = function (inner) {
+    return '<div style="margin-top:8px;padding:8px 10px;background:rgba(255,255,255,.03);'
+      + 'border:1px solid #3a3a6a;border-radius:8px;">' + inner + '</div>';
+  };
+  var html = '';
+  // ── ⚖️ 主格裁定 ──
+  var zg = d.zhuge;
+  if (zg && (zg['主格'] || ((zg['降等'] || []).length))) {
+    var _zgc = zg['主格性质'] === '凶' ? '#ff6b6b'
+             : (zg['主格性质'] === '吉' ? '#7ee2b8'
+             : (zg['主格性质'] === '吉而受制' ? '#ffa502' : '#aaa'));
+    var _down = zg['降等'] || [];
+    var _dHtml = _down.slice(0, 4).map(function (s) {
+      return '<div style="font-size:11px;color:#bbb;line-height:1.5;">· ' + _e(s) + '</div>';
+    }).join('') + (_down.length > 4
+      ? '<div style="font-size:11px;color:#888;">…其余 ' + (_down.length - 4) + ' 条</div>' : '');
+    var _num = zg['数目'] || {}, _yr = zg['羊刃'] || {}, _extra = [];
+    if (_num['本数']) _extra.push('数目：用神' + (_num['用神'] || '') + '＝' + _num['本数']);
+    if (_yr['计数']) _extra.push('阳刃' + (_yr['支'] || '') + '×' + _yr['计数'] + '（' + (_yr['位置'] || []).join('·') + '）');
+    var _ss = d.shensha_xiang || {};
+    var _ssTxt = (((_ss['说明']) || []).slice(0, 3)).map(_e).join('；');
+    html += _box(
+      '<div style="font-size:12px;font-weight:600;color:#8ea2ff;margin-bottom:4px;">⚖️ 主格裁定'
+      + ' <span style="color:#666;font-size:11px;font-weight:400;">（多格并列时按原文轻重定主格，不进评分）</span></div>'
+      + '<div style="font-size:13px;"><b style="color:' + _zgc + '">' + _e(zg['主格'] || '—') + '</b>'
+      + ' <span style="color:' + _zgc + ';font-size:11px;">[' + _e(zg['主格性质'] || '') + ']</span>'
+      + ' <span style="color:#888;font-size:11px;">倾向：' + _e(zg['倾向'] || '') + '</span></div>'
+      + (_down.length ? '<div style="margin-top:4px;">' + _dHtml + '</div>' : '')
+      + (_extra.length ? '<div style="margin-top:4px;font-size:11px;color:#9aa;">' + _extra.map(_e).join('　｜　') + '</div>' : '')
+      + (_ssTxt ? '<div style="margin-top:4px;font-size:11px;color:#9aa;">神煞：' + _ssTxt + '</div>' : ''));
+  }
+  // ── 🙏 禳解趋避 ──
+  var _rj = d.rangjie;
+  if (_rj && (_rj['宜禳'] || (_rj['提示'] || []).length)) {
+    var _rjSave = _rj['有救'];
+    var _rjBadge = '<span style="display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;'
+      + 'background:' + (_rjSave ? 'rgba(126,226,184,.14)' : 'rgba(255,107,107,.14)') + ';'
+      + 'color:' + (_rjSave ? '#7ee2b8' : '#ff6b6b') + ';border:1px solid '
+      + (_rjSave ? 'rgba(126,226,184,.4)' : 'rgba(255,107,107,.4)') + ';">'
+      + (_rjSave ? '有救' : '无救') + '</span>';
+    var _rjTip = (_rj['提示'] || []).slice(0, 4).map(function (s) {
+      return '<div style="font-size:11px;color:#ccc;line-height:1.55;">· ' + _e(s) + '</div>';
+    }).join('');
+    var _rjFa = (_rj['禳法'] || []).length
+      ? '<div style="margin-top:4px;font-size:12px;"><b style="color:#ffa502;">禳法：</b>'
+        + (_rj['禳法'] || []).map(_e).join('　｜　') + '</div>' : '';
+    var _rjJiu = (_rj['有救理由'] || []).length
+      ? '<div style="margin-top:3px;font-size:11px;color:#9aa;">有救依据：'
+        + (_rj['有救理由'] || []).map(_e).join('；') + '</div>' : '';
+    var _yj = _rj['依据'] || [];
+    var _rjYj = _yj.length
+      ? '<div style="margin-top:3px;font-size:11px;color:#888;line-height:1.5;">'
+        + _yj.slice(0, 3).map(_e).join('<br>')
+        + (_yj.length > 3 ? '<span style="color:#666;">…共 ' + _yj.length + ' 条</span>' : '')
+        + '</div>' : '';
+    html += _box(
+      '<div style="font-size:12px;font-weight:600;color:#8ea2ff;margin-bottom:4px;">🙏 禳解趋避'
+      + ' <span style="color:#666;font-size:11px;font-weight:400;">（依原文宜禳／有救判据，不进评分）</span></div>'
+      + '<div style="font-size:13px;"><b style="color:#ff9f43;">宜禳</b> ' + _rjBadge + '</div>'
+      + (_rjTip || '') + _rjFa + _rjJiu + _rjYj);
+  }
+  return html;
+}
 function plRenderDetail(d, dateStr, shichen, it) {
   var sizhu = d.sizhu || {};
   var yq = d.yanqin_full || {};
@@ -3801,6 +3877,8 @@ function plRenderDetail(d, dateStr, shichen, it) {
       return '<b style="color:#a78bfa;">' + (x['課体'] || x['课体'] || '') + '</b>（' + String(x['依据'] || '').slice(0, 40) + '）';
     }).join('　'));
   }
+  // 🆕 2026-09-22：主格裁定 ＋ 禳解趋避（与单课页同源，函数 zhugeRangjieCard）
+  html += zhugeRangjieCard(d);
   if (d.liuqin_duanyu) html += plMiniBlock('👪 六亲断语', String(d.liuqin_duanyu));
   var _ml = d.modern_leixiang || {};
   if (((_ml['推演'] || []).length) || _ml.narrative) {
@@ -5934,33 +6012,8 @@ function openZeriModal(pai) {
       body += '<div style="margin-top:8px;padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid #3a3a6a;border-radius:8px;">' +
         '<div style="font-size:12px;font-weight:600;color:#8ea2ff;margin-bottom:4px;">🔮 特殊课格 · 变格</div>' + skgHtml + '</div>';
     }
-    // ── 主格裁定（2026-09-22 新增：多格并列时按原文明文定主格＋降等理由；🔴 零评分影响）──
-    var zg = d.zhuge;
-    if (zg && (zg['主格'] || ((zg['降等'] || []).length))) {
-      var _zgc = zg['主格性质'] === '凶' ? '#ff6b6b'
-               : (zg['主格性质'] === '吉' ? '#7ee2b8'
-               : (zg['主格性质'] === '吉而受制' ? '#ffa502' : '#aaa'));
-      var _down = zg['降等'] || [];
-      var _dHtml = _down.slice(0, 4).map(function(s){
-        return '<div style="font-size:11px;color:#bbb;line-height:1.5;">· ' + s + '</div>';
-      }).join('') + (_down.length > 4
-        ? '<div style="font-size:11px;color:#888;">…其余 ' + (_down.length - 4) + ' 条（悬停可见）</div>' : '');
-      var _num = zg['数目'] || {}, _yr = zg['羊刃'] || {}, _extra = [];
-      if (_num['本数']) _extra.push('数目：用神' + (_num['用神'] || '') + '＝' + _num['本数']);
-      if (_yr['计数']) _extra.push('阳刃' + (_yr['支'] || '') + '×' + _yr['计数'] + '（' + (_yr['位置'] || []).join('·') + '）');
-      var _ss = d.shensha_xiang || {};
-      var _ssTxt = (((_ss['说明']) || []).slice(0, 3)).join('；');
-      body += '<div style="margin-top:8px;padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid #3a3a6a;border-radius:8px;">'
-        + '<div style="font-size:12px;font-weight:600;color:#8ea2ff;margin-bottom:4px;">⚖️ 主格裁定'
-        + ' <span style="color:#666;font-size:11px;font-weight:400;">（多格并列时按原文轻重定主格，不进评分）</span></div>'
-        + '<div style="font-size:13px;"><b style="color:' + _zgc + '">' + (zg['主格'] || '—') + '</b>'
-        + ' <span style="color:' + _zgc + ';font-size:11px;">[' + (zg['主格性质'] || '') + ']</span>'
-        + ' <span style="color:#888;font-size:11px;">倾向：' + (zg['倾向'] || '') + '</span></div>'
-        + (_down.length ? '<div style="margin-top:4px;">' + _dHtml + '</div>' : '')
-        + (_extra.length ? '<div style="margin-top:4px;font-size:11px;color:#9aa;">' + _extra.join('　｜　') + '</div>' : '')
-        + (_ssTxt ? '<div style="margin-top:4px;font-size:11px;color:#9aa;">神煞：' + _ssTxt + '</div>' : '')
-        + '</div>';
-    }
+    // ── 主格裁定 ＋ 禳解趋避（🆕 2026-09-22；单一真源函数，单课页与批量课单共用）──
+    body += zhugeRangjieCard(d);
     // ── 神将类象（三传/干上/支上 天将所乘地支的类象——应属相·应物）──
     var lx = d.leixiang;
     if (lx && lx.length) {

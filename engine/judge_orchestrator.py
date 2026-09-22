@@ -296,6 +296,8 @@ _FALLBACK = {
     'special_kege': {'匹配课格': [], '课格详情': {}},
     'bianjie_kege': {'匹配变格': [], '变格详情': {}},
     'shensha_xiang': {'落点': [], '说明': [], '煞值': {}},
+    'rangjie': {'宜禳': False, '提示': [], '禳法': [], '有救': False,
+                '有救理由': [], '依据': []},
 }
 
 
@@ -329,4 +331,14 @@ def judge_all(env: dict) -> dict:
         result['zhuge'] = {'主格': '', '主格性质': '平', '吉格': [], '凶格': [],
                            '降等': [], '理由': [], '数目': {}, '倾向': '平',
                            'error': str(e)}
+    # ── 禳解／趋避提示层（依赖 shensha_xiang / keti_judged，故置于主格裁定之后）──
+    # 🆕 2026-09-22：🔴 零评分影响，只出提示不进分；输出一律带原文出处
+    #    依据：中L2201 伏殃「惟宜禳祷以除之」／中L1841 三阴「宜禳之」＋有救判据
+    #    ／中L2305 墓门开「迁葬／合寿木以禳之」／中L2450 励德「谢土神」／中L9371 刘日新移厕远井
+    try:
+        from engine.rangjie_engine import suggest as _rangjie
+        result['rangjie'] = _rangjie(env, result)
+    except Exception as e:
+        result['rangjie'] = {'宜禳': False, '提示': [], '禳法': [], '有救': False,
+                             '有救理由': [], '依据': [], 'error': str(e)}
     return result

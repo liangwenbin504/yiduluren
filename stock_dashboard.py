@@ -3717,6 +3717,10 @@ def api_zeri_analyze():
                                                       '理由': [], '数目': {}, '倾向': '平'})
                 result['shensha_xiang'] = _jres.get('shensha_xiang',
                                                     {'落点': [], '说明': [], '煞值': {}})
+                # 🆕 2026-09-22：禳解／趋避提示层（🔴 零评分影响，仅展示）
+                result['rangjie'] = _jres.get('rangjie', {'宜禳': False, '提示': [],
+                                                          '禳法': [], '有救': False,
+                                                          '有救理由': [], '依据': []})
                 # 统一口径：毕法赋命中法句以 judge_bifa（含干上/支上神/天将/天地盘）为准
                 if isinstance(result.get('sanchuan'), dict):
                     result['sanchuan']['毕法赋命中'] = result['bifa_judged'].get('匹配法句', [])
@@ -3758,6 +3762,8 @@ def api_zeri_analyze():
                                    '降等': [], '理由': [], '数目': {}, '倾向': '平',
                                    'error': str(_e_orch)}
                 result['shensha_xiang'] = {'落点': [], '说明': [], '煞值': {}}
+                result['rangjie'] = {'宜禳': False, '提示': [], '禳法': [], '有救': False,
+                                     '有救理由': [], '依据': [], 'error': str(_e_orch)}
             # 知识库判断（KeKeDuanyu：古籍课课断语·仪度评分，与批量择日同源；两域隔离铁律——不用股票域训练库）
             try:
                 from kekeduanyu import KeKeDuanyu as _KDD3

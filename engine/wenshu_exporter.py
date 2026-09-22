@@ -250,6 +250,44 @@ def _field_value(data, detail, key):
     return '待定'
 
 
+def _strip_rule_tag(s):
+    """剥掉内部规则编号前缀（如「R1 变格：…」→「变格：…」）。
+
+    理由：R1~R6 是 `keti_arbitration` 的**内部裁定链编号**，专业界面（仪表盘卡片）
+    保留可追溯；但**客户课单**是给人看的正式文书，出现编号不知所指。
+    """
+    import re as _re
+    return _re.sub(r'^\s*R\d+\s*[：:]?\s*', '', str(s or '')).strip()
+
+
+def _zhuge_rangjie_lines(detail):
+    """🆕 2026-09-22：文书追加「主格裁定」「宜禳趋避」两行（🔴 零评分影响，只展示）。
+
+    ⛔ 无内容时**返回空列表** —— 不为「引擎没裁定」的课硬凑字段（憨爷：反感噪音）。
+    依据：主格裁定 `engine/keti_arbitration.arbitrate`（中L3460「以用为主」等六条）；
+    禳解 `engine/rangjie_engine.suggest`（中L1841／L2201／L2305／L2450／L9371）。
+    """
+    out = []
+    try:
+        zg = detail.get('zhuge') or {}
+        if zg.get('主格'):
+            txt = '%s（%s）' % (zg.get('主格', ''), zg.get('主格性质') or '平')
+            d = [x for x in (zg.get('降等') or []) if x]
+            # 降等首条若只是在解释主格本身（含主格名），则不再重复（客户课单不堆术语）
+            _d0 = _strip_rule_tag(d[0]) if d else ''
+            if _d0 and (zg.get('主格', '') not in _d0):
+                txt += '；' + _d0
+            out.append(('主格裁定', _trim(txt, 42)))
+        rj = detail.get('rangjie') or {}
+        if rj.get('宜禳'):
+            fa = '／'.join([x for x in (rj.get('禳法') or []) if x][:2])
+            txt = (fa or '宜禳') + '，' + ('有救' if rj.get('有救') else '无救')
+            out.append(('宜禳趋避', _trim(txt, 42)))
+    except Exception:
+        return []
+    return out
+
+
 def _field_lines(data, detail):
     """按择日类型分组，返回字段行 [(label, value), ...]（label/value 转繁体）。
 
@@ -263,6 +301,9 @@ def _field_lines(data, detail):
             lines.append((None, _t(_JOIN_GAP.join(parts))))
         else:
             lines.append((_t(_FIELD_LABEL[item]), _t(_field_value(data, detail, item))))
+    # 🆕 2026-09-22：主格裁定 / 宜禳趋避（有则加，无则不加）
+    for _lb, _vl in _zhuge_rangjie_lines(detail):
+        lines.append((_t(_lb), _t(_vl)))
     return lines
 
 
@@ -438,7 +479,8 @@ def build_wenshu(data):
 
     # 4. 删「六壬课格」行；正文段落首行缩进 2 字符（标题/落款/日期不缩进）
     _indent_prefixes = ('伏以', '仙命', '坐山', '向山', '来龙', '男命', '女命',
-                        '主命', '择取岁次', '批语', '避忌')
+                        '主命', '择取岁次', '批语', '避忌',
+                        '主格裁定', '宜禳趋避')   # 🆕 2026-09-22
     for _para in list(doc.paragraphs):
         _pt = _para.text.strip()
         if not _pt:
