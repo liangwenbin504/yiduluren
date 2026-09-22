@@ -296,6 +296,7 @@ _FALLBACK = {
     'special_kege': {'匹配课格': [], '课格详情': {}},
     'bianjie_kege': {'匹配变格': [], '变格详情': {}},
     'shensha_xiang': {'落点': [], '说明': [], '煞值': {}},
+    'guishen_xiang': {'象域': False, '强度': 0, '候选': [], '建议语': '', '依据': []},
     'rangjie': {'宜禳': False, '提示': [], '禳法': [], '有救': False,
                 '有救理由': [], '依据': []},
 }
@@ -331,6 +332,16 @@ def judge_all(env: dict) -> dict:
         result['zhuge'] = {'主格': '', '主格性质': '平', '吉格': [], '凶格': [],
                            '降等': [], '理由': [], '数目': {}, '倾向': '平',
                            'error': str(e)}
+    # ── 鬼神／祠庙取象层（依赖 shensha_xiang，故置于其后）──
+    # 🆕 2026-09-22：🔴 零评分影响；只给「象域＋方位＋神格＋远近」，⛔ 不落专名
+    #    依据：下L9631 未主祭祀神鬼／下L1182 未临宅＝鬼神／下L9598 子主祷祝鬼神
+    #    ／下L4556 寅申为寺观／下L10788 龙居辰主寺观、申与僧同音／下L9643 戌主塑画／上L865 方位
+    try:
+        from engine.guishen_xiang_engine import suggest as _gsx
+        result['guishen_xiang'] = _gsx(env, result)
+    except Exception as e:
+        result['guishen_xiang'] = {'象域': False, '强度': 0, '候选': [],
+                                   '建议语': '', '依据': [], 'error': str(e)}
     # ── 禳解／趋避提示层（依赖 shensha_xiang / keti_judged，故置于主格裁定之后）──
     # 🆕 2026-09-22：🔴 零评分影响，只出提示不进分；输出一律带原文出处
     #    依据：中L2201 伏殃「惟宜禳祷以除之」／中L1841 三阴「宜禳之」＋有救判据

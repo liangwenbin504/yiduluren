@@ -3711,7 +3711,10 @@ def api_zeri_analyze():
                 result['bifa_judged'] = _jres.get('bifa_judged', {'匹配法句': [], '断法': []})
                 result['special_kege'] = _jres.get('special_kege', {'匹配课格': [], '课格详情': {}})
                 result['bianjie_kege'] = _jres.get('bianjie_kege', {'匹配变格': [], '变格详情': {}})
-                # 🆕 2026-09-22：主格裁定层 + 神煞象意层（🔴 零评分影响，仅展示）
+                # 🆕 2026-09-22：主格裁定层 + 神煞象意层 + 鬼神祠庙取象层（🔴 零评分影响，仅展示）
+                result['guishen_xiang'] = _jres.get('guishen_xiang',
+                                                    {'象域': False, '强度': 0, '候选': [],
+                                                     '建议语': '', '依据': []})
                 result['zhuge'] = _jres.get('zhuge', {'主格': '', '主格性质': '平',
                                                       '吉格': [], '凶格': [], '降等': [],
                                                       '理由': [], '数目': {}, '倾向': '平'})
@@ -3762,6 +3765,8 @@ def api_zeri_analyze():
                                    '降等': [], '理由': [], '数目': {}, '倾向': '平',
                                    'error': str(_e_orch)}
                 result['shensha_xiang'] = {'落点': [], '说明': [], '煞值': {}}
+                result['guishen_xiang'] = {'象域': False, '强度': 0, '候选': [],
+                                           '建议语': '', '依据': [], 'error': str(_e_orch)}
                 result['rangjie'] = {'宜禳': False, '提示': [], '禳法': [], '有救': False,
                                      '有救理由': [], '依据': [], 'error': str(_e_orch)}
             # 知识库判断（KeKeDuanyu：古籍课课断语·仪度评分，与批量择日同源；两域隔离铁律——不用股票域训练库）

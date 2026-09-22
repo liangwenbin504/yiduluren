@@ -283,6 +283,13 @@ def _zhuge_rangjie_lines(detail):
             fa = '／'.join([x for x in (rj.get('禳法') or []) if x][:2])
             txt = (fa or '宜禳') + '，' + ('有救' if rj.get('有救') else '无救')
             out.append(('宜禳趋避', _trim(txt, 42)))
+        # 祷所取象：只取「方位＋建筑类」（客户看得懂的部分），
+        # ⛔ 神格/天将/原文行号属专业界面内容，不进客户课单。
+        gs = detail.get('guishen_xiang') or {}
+        if gs.get('象域') and (gs.get('候选') or []):
+            c0 = gs['候选'][0]
+            _gs = '%s之%s' % (c0.get('方位') or '', c0.get('建筑类') or '')
+            out.append(('祷所', _trim(_gs.strip('之'), 30)))
     except Exception:
         return []
     return out
@@ -480,7 +487,7 @@ def build_wenshu(data):
     # 4. 删「六壬课格」行；正文段落首行缩进 2 字符（标题/落款/日期不缩进）
     _indent_prefixes = ('伏以', '仙命', '坐山', '向山', '来龙', '男命', '女命',
                         '主命', '择取岁次', '批语', '避忌',
-                        '主格裁定', '宜禳趋避')   # 🆕 2026-09-22
+                        '主格裁定', '宜禳趋避', '祷所')   # 🆕 2026-09-22
     for _para in list(doc.paragraphs):
         _pt = _para.text.strip()
         if not _pt:

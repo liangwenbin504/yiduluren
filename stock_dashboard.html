@@ -3626,6 +3626,28 @@ function zhugeRangjieCard(d) {
       + '<div style="font-size:13px;"><b style="color:#ff9f43;">宜禳</b> ' + _rjBadge + '</div>'
       + (_rjTip || '') + _rjFa + _rjJiu + _rjYj);
   }
+  // ── 🏯 祷所取象（鬼神/祠庙：象域＋方位＋神格，⛔ 不落专名）──
+  var _gs = d.guishen_xiang;
+  if (_gs && _gs['象域'] && ((_gs['候选'] || []).length)) {
+    var _gsRows = (_gs['候选'] || []).map(function (c, i) {
+      var _c = i === 0 ? '#ffd479' : '#c9c9d8';
+      return '<div style="margin-top:' + (i ? '5px' : '0') + ';">'
+        + '<div style="font-size:12px;"><b style="color:' + _c + '">'
+        + _e((c['方位'] || '') + '之' + (c['建筑类'] || '')) + '</b>'
+        + ' <span style="color:#888;font-size:11px;">（' + _e(c['支'] || '') + '·' + _e(c['位置'] || '')
+        + '·乘' + _e(c['天将'] || '—') + '·' + _e(c['旺衰'] || '—') + '）</span></div>'
+        + '<div style="font-size:11px;color:#9aa;line-height:1.5;">' + _e(c['神格'] || '')
+        + '　' + _e(c['远近'] || '') + '</div>'
+        + '<div style="font-size:10.5px;color:#6b7f9f;">' + _e(c['原文'] || '') + '</div></div>';
+    }).join('');
+    html += _box(
+      '<div style="font-size:12px;font-weight:600;color:#8ea2ff;margin-bottom:4px;">🏯 祷所取象'
+      + ' <span style="color:#666;font-size:11px;font-weight:400;">（引擎只给方位·神格，'
+      + '东岳／城隍／土地由当地实况定）</span></div>'
+      + '<div style="font-size:12.5px;color:#e2e8f0;line-height:1.7;margin-bottom:5px;">'
+      + _e(_gs['建议语'] || '') + '</div>'
+      + _gsRows);
+  }
   return html;
 }
 function plRenderDetail(d, dateStr, shichen, it) {
