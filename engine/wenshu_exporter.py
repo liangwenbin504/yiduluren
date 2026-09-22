@@ -283,11 +283,11 @@ def _zhuge_rangjie_lines(detail):
             fa = '／'.join([x for x in (rj.get('禳法') or []) if x][:2])
             txt = (fa or '宜禳') + '，' + ('有救' if rj.get('有救') else '无救')
             out.append(('宜禳趋避', _trim(txt, 42)))
-        # 祷所取象：只取「方位＋建筑类」（客户看得懂的部分），
-        # ⛔ 神格/天将/原文行号属专业界面内容，不进客户课单。
+        # 祷所：**仅在禳解层判「宜禳」时**才进客户课单（218 案回测：祷祈语境仅 0.7%）。
+        # ⛔ 类象语属专业界面内容，不进客户课单；神格/天将/原文行号同样不进。
         gs = detail.get('guishen_xiang') or {}
-        if gs.get('象域') and (gs.get('候选') or []):
-            c0 = gs['候选'][0]
+        if gs.get('象域') and gs.get('祷所'):
+            c0 = (gs.get('候选') or [{}])[0]
             _gs = '%s之%s' % (c0.get('方位') or '', c0.get('建筑类') or '')
             out.append(('祷所', _trim(_gs.strip('之'), 30)))
     except Exception:

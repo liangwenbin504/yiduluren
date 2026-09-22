@@ -3626,7 +3626,9 @@ function zhugeRangjieCard(d) {
       + '<div style="font-size:13px;"><b style="color:#ff9f43;">宜禳</b> ' + _rjBadge + '</div>'
       + (_rjTip || '') + _rjFa + _rjJiu + _rjYj);
   }
-  // ── 🏯 祷所取象（鬼神/祠庙：象域＋方位＋神格，⛔ 不落专名）──
+  // ── 🏯 寺观僧道·鬼祟取象（⛔ 陈述"课上有何象"，不做"应当如何"的建议）──
+  //   2026-09-22 晚 218 案回测后改定位：邵公取此象 99.3% 是类象取用（断人/地/事），
+  //   「祷祈禳解」仅 0.7% ⇒ 「宜祷于X方」降级为**仅 rangjie 判宜禳时才显示**。
   var _gs = d.guishen_xiang;
   if (_gs && _gs['象域'] && ((_gs['候选'] || []).length)) {
     var _gsRows = (_gs['候选'] || []).map(function (c, i) {
@@ -3635,18 +3637,23 @@ function zhugeRangjieCard(d) {
         + '<div style="font-size:12px;"><b style="color:' + _c + '">'
         + _e((c['方位'] || '') + '之' + (c['建筑类'] || '')) + '</b>'
         + ' <span style="color:#888;font-size:11px;">（' + _e(c['支'] || '') + '·' + _e(c['位置'] || '')
-        + '·乘' + _e(c['天将'] || '—') + '·' + _e(c['旺衰'] || '—') + '）</span></div>'
+        + '·乘' + _e(c['天将'] || '—') + '·' + _e(c['旺衰'] || '—') + '）</span>'
+        + ' <span style="color:#7ec8ff;font-size:11px;">断' + _e(c['用法'] || '') + '</span></div>'
         + '<div style="font-size:11px;color:#9aa;line-height:1.5;">' + _e(c['神格'] || '')
         + '　' + _e(c['远近'] || '') + '</div>'
         + '<div style="font-size:10.5px;color:#6b7f9f;">' + _e(c['原文'] || '') + '</div></div>';
     }).join('');
+    var _gsDao = _gs['祷所']
+      ? '<div style="margin-top:6px;padding-top:5px;border-top:1px dashed #2a2a4a;">'
+        + '<div style="font-size:12px;"><b style="color:#ff9f43;">宜禳 ⇒ ' + _e(_gs['祷所']) + '</b></div></div>'
+      : '';
     html += _box(
-      '<div style="font-size:12px;font-weight:600;color:#8ea2ff;margin-bottom:4px;">🏯 祷所取象'
-      + ' <span style="color:#666;font-size:11px;font-weight:400;">（引擎只给方位·神格，'
-      + '东岳／城隍／土地由当地实况定）</span></div>'
+      '<div style="font-size:12px;font-weight:600;color:#8ea2ff;margin-bottom:4px;">🏯 寺观·鬼祟取象'
+      + ' <span style="color:#666;font-size:11px;font-weight:400;">（课传有此象；'
+      + '要不要祷由禳解层定）</span></div>'
       + '<div style="font-size:12.5px;color:#e2e8f0;line-height:1.7;margin-bottom:5px;">'
-      + _e(_gs['建议语'] || '') + '</div>'
-      + _gsRows);
+      + _e(_gs['类象语'] || '') + '</div>'
+      + _gsRows + _gsDao);
   }
   return html;
 }
