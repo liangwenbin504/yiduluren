@@ -100,7 +100,16 @@ BAD_WORDS = ["凶", "败", "损", "病", "死", "亡", "讼", "囚", "耗", "灾
 
 # ----------------------------------------------------------------------------- 基础工具
 def _ten_gods(ri_gan, tw, ty):
-    """日干 ri_gan 对目标五行 tw/阴阳 ty 的十神。"""
+    """日干 ri_gan 对目标五行 tw/阴阳 ty 的十神。
+
+    🔴 2026-09-23 修复**死代码 BUG**（`_冗余待删/_proof_liuqin_bug.py` 有完整证明）：
+       旧实现判「克我者」用 `ke2[tw] == w`（ke2 = ke 的反转）——但 ke2[tw] 是"克 tw 者"，
+       故 `ke2[tw]==w` ⟺ **w 克 tw**（我克者），与上一行 `ke[w]==tw` **恒等价**（60 组穷举 0 反例）；
+       「生我者」同理用 `sheng2[tw]==w`，与 `sheng[w]==tw`（我生者）**恒等价**。
+       ⇒ 两条分支**永远进不去**，所有「生我(父母)」「克我(官鬼)」的支都 fall through 到
+          `return "比肩"`，被当成**中性 0.0** 计入 LIUQIN_POLARITY（本应 0.2/-0.1/-0.2/-0.5）。
+       修复：克我者 ⇒ `ke[tw] == w`（tw 克 w）；生我者 ⇒ `sheng[tw] == w`（tw 生 w）。
+    """
     w = GAN_WUXING[ri_gan]
     y = GAN_YINYANG[ri_gan]
     if tw == w:
@@ -111,11 +120,11 @@ def _ten_gods(ri_gan, tw, ty):
         return "食神" if ty == y else "伤官"
     if ke[w] == tw:
         return "偏财" if ty == y else "正财"
-    ke2 = {v: k for k, v in ke.items()}     # 克我者
-    if ke2[tw] == w:
+    # 🔴 修复：克我者（tw 克 w）＝官鬼；旧写的 ke2[tw]==w 与上面「我克者」恒等价 ⇒ 死代码
+    if ke[tw] == w:
         return "七杀" if ty == y else "正官"
-    sheng2 = {v: k for k, v in sheng.items()}  # 生我者
-    if sheng2[tw] == w:
+    # 🔴 修复：生我者（tw 生 w）＝父母；旧写的 sheng2[tw]==w 与上面「我生者」恒等价 ⇒ 死代码
+    if sheng[tw] == w:
         return "偏印" if ty == y else "正印"
     return "比肩"
 
