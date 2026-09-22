@@ -318,4 +318,15 @@ def judge_all(env: dict) -> dict:
             if isinstance(fb, dict):
                 fb['error'] = str(e)
             result[key] = fb
+    # ── 主格裁定层（依赖上述各层结果，故置于最后）──
+    # 🆕 2026-09-22：课格并列时按原文明文裁定主格（🔴 零评分影响，只出裁定）
+    #    依据：中L3460「以用为主」／中L3462「吉将乘囚休气不为吉」／上L2568「克日为凶虽吉将亦为凶」
+    #    ／上L2637「空亡减半」／下L3544「吉不为吉」／上L6960 三光失明。
+    try:
+        from engine.keti_arbitration import arbitrate
+        result['zhuge'] = arbitrate(env, result)
+    except Exception as e:
+        result['zhuge'] = {'主格': '', '主格性质': '平', '吉格': [], '凶格': [],
+                           '降等': [], '理由': [], '数目': {}, '倾向': '平',
+                           'error': str(e)}
     return result
