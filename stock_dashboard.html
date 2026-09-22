@@ -5934,6 +5934,33 @@ function openZeriModal(pai) {
       body += '<div style="margin-top:8px;padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid #3a3a6a;border-radius:8px;">' +
         '<div style="font-size:12px;font-weight:600;color:#8ea2ff;margin-bottom:4px;">🔮 特殊课格 · 变格</div>' + skgHtml + '</div>';
     }
+    // ── 主格裁定（2026-09-22 新增：多格并列时按原文明文定主格＋降等理由；🔴 零评分影响）──
+    var zg = d.zhuge;
+    if (zg && (zg['主格'] || ((zg['降等'] || []).length))) {
+      var _zgc = zg['主格性质'] === '凶' ? '#ff6b6b'
+               : (zg['主格性质'] === '吉' ? '#7ee2b8'
+               : (zg['主格性质'] === '吉而受制' ? '#ffa502' : '#aaa'));
+      var _down = zg['降等'] || [];
+      var _dHtml = _down.slice(0, 4).map(function(s){
+        return '<div style="font-size:11px;color:#bbb;line-height:1.5;">· ' + s + '</div>';
+      }).join('') + (_down.length > 4
+        ? '<div style="font-size:11px;color:#888;">…其余 ' + (_down.length - 4) + ' 条（悬停可见）</div>' : '');
+      var _num = zg['数目'] || {}, _yr = zg['羊刃'] || {}, _extra = [];
+      if (_num['本数']) _extra.push('数目：用神' + (_num['用神'] || '') + '＝' + _num['本数']);
+      if (_yr['计数']) _extra.push('阳刃' + (_yr['支'] || '') + '×' + _yr['计数'] + '（' + (_yr['位置'] || []).join('·') + '）');
+      var _ss = d.shensha_xiang || {};
+      var _ssTxt = (((_ss['说明']) || []).slice(0, 3)).join('；');
+      body += '<div style="margin-top:8px;padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid #3a3a6a;border-radius:8px;">'
+        + '<div style="font-size:12px;font-weight:600;color:#8ea2ff;margin-bottom:4px;">⚖️ 主格裁定'
+        + ' <span style="color:#666;font-size:11px;font-weight:400;">（多格并列时按原文轻重定主格，不进评分）</span></div>'
+        + '<div style="font-size:13px;"><b style="color:' + _zgc + '">' + (zg['主格'] || '—') + '</b>'
+        + ' <span style="color:' + _zgc + ';font-size:11px;">[' + (zg['主格性质'] || '') + ']</span>'
+        + ' <span style="color:#888;font-size:11px;">倾向：' + (zg['倾向'] || '') + '</span></div>'
+        + (_down.length ? '<div style="margin-top:4px;">' + _dHtml + '</div>' : '')
+        + (_extra.length ? '<div style="margin-top:4px;font-size:11px;color:#9aa;">' + _extra.join('　｜　') + '</div>' : '')
+        + (_ssTxt ? '<div style="margin-top:4px;font-size:11px;color:#9aa;">神煞：' + _ssTxt + '</div>' : '')
+        + '</div>';
+    }
     // ── 神将类象（三传/干上/支上 天将所乘地支的类象——应属相·应物）──
     var lx = d.leixiang;
     if (lx && lx.length) {

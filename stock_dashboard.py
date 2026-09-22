@@ -3711,6 +3711,12 @@ def api_zeri_analyze():
                 result['bifa_judged'] = _jres.get('bifa_judged', {'匹配法句': [], '断法': []})
                 result['special_kege'] = _jres.get('special_kege', {'匹配课格': [], '课格详情': {}})
                 result['bianjie_kege'] = _jres.get('bianjie_kege', {'匹配变格': [], '变格详情': {}})
+                # 🆕 2026-09-22：主格裁定层 + 神煞象意层（🔴 零评分影响，仅展示）
+                result['zhuge'] = _jres.get('zhuge', {'主格': '', '主格性质': '平',
+                                                      '吉格': [], '凶格': [], '降等': [],
+                                                      '理由': [], '数目': {}, '倾向': '平'})
+                result['shensha_xiang'] = _jres.get('shensha_xiang',
+                                                    {'落点': [], '说明': [], '煞值': {}})
                 # 统一口径：毕法赋命中法句以 judge_bifa（含干上/支上神/天将/天地盘）为准
                 if isinstance(result.get('sanchuan'), dict):
                     result['sanchuan']['毕法赋命中'] = result['bifa_judged'].get('匹配法句', [])
@@ -3748,6 +3754,10 @@ def api_zeri_analyze():
                 result['bifa_judged'] = {'匹配法句': [], '断法': [], 'error': str(_e_orch)}
                 result['special_kege'] = {'匹配课格': [], '课格详情': {}, 'error': str(_e_orch)}
                 result['bianjie_kege'] = {'匹配变格': [], '变格详情': {}, 'error': str(_e_orch)}
+                result['zhuge'] = {'主格': '', '主格性质': '平', '吉格': [], '凶格': [],
+                                   '降等': [], '理由': [], '数目': {}, '倾向': '平',
+                                   'error': str(_e_orch)}
+                result['shensha_xiang'] = {'落点': [], '说明': [], '煞值': {}}
             # 知识库判断（KeKeDuanyu：古籍课课断语·仪度评分，与批量择日同源；两域隔离铁律——不用股票域训练库）
             try:
                 from kekeduanyu import KeKeDuanyu as _KDD3
