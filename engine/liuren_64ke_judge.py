@@ -622,13 +622,42 @@ def judge_guan_jue(env):
 
 
 def judge_san_guang(env):
-    """三光：用神、日辰旺相，吉神在中。"""
+    """三光：用神、日辰旺相，吉神在中。
+
+    【2026-09-22 补原文变格「三光失明」】《通解》上 L6960《订讹》明文：
+      「此课主吉，然末传亦最要紧。**若日辰居天乙后，并未因死乘凶将，
+        为三光失明之象，前有功德虚喜，后复抑塞难通**。」
+    ⇒ 三光成立后，若中／末传为月令**死神·死气**（因死）且乘**凶将**，
+      或日辰居天乙之后，判「三光失明」（凶＝前吉后塞），⛔ 不可仍作纯吉论。
+      实证：疏正疾病13·169（戊午日亥将戌时占病）中末皆午乘螣蛇、午为二月死神
+      ⇒ 三光失明，与邵公「疫气入宅、病死三人」之凶断相合；
+      旧实现只出「三光（吉）」，与原文断验相反。
+    """
     chu = env.get('chu', '')
     ri_zhi = env.get('ri_zhi', '')
     yue_jian = env.get('yue_jian', '')
     chu_tj = env.get('chu_tianjiang', '')
     if is_wang_xiang(chu, yue_jian) and is_wang_xiang(ri_zhi, yue_jian) and \
             chu_tj in ('贵人', '青龙', '六合', '太常', '天后', '太阴'):
+        # ── 三光失明（原文变格，优先于纯吉结论）──
+        zhong, mo = env.get('zhong', ''), env.get('mo', '')
+        tj = env.get('tian_jiang') or {}
+        dead, xiong = set(), ()
+        try:
+            from engine.kege_shensha import si_shen, si_qi, XIONG_JIANG  # noqa: F401
+            dead = {z for z in (si_shen(yue_jian), si_qi(yue_jian)) if z}
+            xiong = XIONG_JIANG
+        except Exception:
+            dead, xiong = set(), ()
+        bad = []
+        for pos, zz in (('中传', zhong), ('末传', mo)):
+            j = tj.get(zz, '')
+            if zz and zz in dead and j in xiong:
+                bad.append(f'{pos}{zz}乘{j}(因死乘凶将)')
+        if bad:
+            return _ref('三光失明',
+                        '三光成立而' + '、'.join(bad) + '，前有功德虚喜、后复抑塞难通',
+                        '通解上L6960 三光失明')
         return _ref('三光', f'用神日辰旺相，吉将{chu_tj}发用', '通解 三光课')
     return None
 

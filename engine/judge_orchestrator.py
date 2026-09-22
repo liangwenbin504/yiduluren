@@ -229,13 +229,65 @@ def _judge_bianjie(env: dict) -> Any:
     )
 
 
+def _judge_shensha_xiang(env: dict) -> dict:
+    """神煞象意层（2026-09-22 新增；🔴 **零评分影响**，只出象不进分）
+
+    背景：疾病13·169（戊午日亥将戌时）实证——天鬼／死神／死气／病符的值引擎**全部算对**，
+    却一个都没进判定输出 ⇒ 只剩「凶」字，没有「疫气入宅／死气死神入宅」的象。
+    原文依据：《通解》p505 死神（正月起巳顺行）／死气（正月起午顺行）、
+    p525 伏殃即天鬼（正月起酉逆行四仲）／病符（旧太岁）／丧门（岁前二辰）／吊客（岁后二辰）。
+    产出：各煞在课传**六处**（三传＋干上＋支上）的落点，供叙事层取象。
+    """
+    empty = {'落点': [], '说明': [], '煞值': {}}
+    try:
+        from engine.kege_shensha import (fu_yang, si_shen, si_qi, bing_fu,
+                                         sang_men, diao_ke)
+    except Exception as e:
+        empty['error'] = str(e)
+        return empty
+    yz = env.get('yue_zhi', '') or ''
+    nz = env.get('nian_zhi', '') or ''
+    if not yz and not nz:
+        return empty
+    sc = list(env.get('sanchuan') or [])
+    positions = [('初传', sc[0] if len(sc) > 0 else ''),
+                 ('中传', sc[1] if len(sc) > 1 else ''),
+                 ('末传', sc[2] if len(sc) > 2 else ''),
+                 ('干上', env.get('gan_shang', '')),
+                 ('支上', env.get('zhi_shang', ''))]
+    sha = {}
+    if yz:
+        sha['天鬼'] = fu_yang(yz)     # 伏殃＝天鬼煞
+        sha['死神'] = si_shen(yz)
+        sha['死气'] = si_qi(yz)
+    if nz:
+        sha['病符'] = bing_fu(nz)     # 旧太岁
+        sha['丧门'] = sang_men(nz)
+        sha['吊客'] = diao_ke(nz)
+    luo, biao = [], {}
+    for name, zhi in sha.items():
+        if not zhi:
+            continue
+        biao[name] = zhi
+        hit = [p for p, v in positions if v and v == zhi]
+        if hit:
+            luo.append({'煞': name, '支': zhi, '位置': hit})
+    out = {'落点': luo,
+           '说明': ['%s%s在%s' % (x['煞'], x['支'], '、'.join(x['位置'])) for x in luo],
+           '煞值': biao}
+    return out
+
+
 # ── 调度层：判断引擎注册表（轻量插件）──
 _JUDGERS = [
     ('keti_judged', _judge_64keti),
     ('bifa_judged', _judge_bifa),
     ('special_kege', _judge_special),
     ('bianjie_kege', _judge_bianjie),
+    # 🆕 2026-09-22：神煞象意层（天鬼/死神/死气/病符/丧吊落点）🔴 零评分影响
+    ('shensha_xiang', _judge_shensha_xiang),
 ]
+# ⛔ 若需临时摘除该层：把上行注释掉即可（下游无硬依赖）
 
 # 各引擎出错时的兜底返回
 _FALLBACK = {
@@ -243,6 +295,7 @@ _FALLBACK = {
     'bifa_judged': {'匹配法句': [], '断法': []},
     'special_kege': {'匹配课格': [], '课格详情': {}},
     'bianjie_kege': {'匹配变格': [], '变格详情': {}},
+    'shensha_xiang': {'落点': [], '说明': [], '煞值': {}},
 }
 
 
