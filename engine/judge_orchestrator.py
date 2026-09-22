@@ -356,4 +356,26 @@ def judge_all(env: dict) -> dict:
         result['guishen_xiang'] = {'象域': False, '强度': 0, '候选': [],
                                    '类象语': '', '祷所': '', '依据': [],
                                    'error': str(e)}
+    # ── 六亲象域展示层（A′，2026-09-23）──
+    #    🆕 🔴 零评分影响。**只陈述**课传各位的六亲与状态，⛔ **不预测"凶应落在谁"**
+    #    （A 原版经 218 案验证无信号：预测 27.4% < 随机 40.3%，特征扫描组合互相矛盾）。
+    #    六亲真源＝LiuQinCalculator（生产同源）。依据：下L13114 六亲定义／上L3240／中L1544
+    #    ／中L4763·L8046 生我者空亡／中L8037。
+    try:
+        from engine.liuqin_xiang_engine import suggest as _lqx
+        result['liuqin_xiang'] = _lqx(env, result)
+    except Exception as e:
+        result['liuqin_xiang'] = {'象域': False, '位': [], '类象语': '',
+                                  '原文直引': [], '依据': [], 'error': str(e)}
+    # ── 占类条件先验谱（B，2026-09-23）──
+    #    🆕 🔴 零评分影响。只说"此占类下邵公常谈哪些事因"，⛔ 不判吉凶。
+    #    数据＝data/zhanyin_prior.json（218 案严格口径统计）。
+    try:
+        from engine.zhanyin_prior import prior_for as _prior
+        result['zhanyin_prior'] = _prior(
+            str(env.get('zhanlei_code') or env.get('sec_code') or ''),
+            str(env.get('zhanlei') or ''))
+    except Exception as e:
+        result['zhanyin_prior'] = {'章': '', '占类': '', '样本': 0, '谱': [],
+                                   '语': '', '来源': '', '边界': '', 'error': str(e)}
     return result

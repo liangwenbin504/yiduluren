@@ -3724,6 +3724,15 @@ def api_zeri_analyze():
                 result['rangjie'] = _jres.get('rangjie', {'宜禳': False, '提示': [],
                                                           '禳法': [], '有救': False,
                                                           '有救理由': [], '依据': []})
+                # 🆕 2026-09-23：六亲象域展示层（A′）＋ 占类条件先验谱（B）
+                #    🔴 均零评分影响；A′ **只陈述**各位六亲与状态，⛔ 不预测归属
+                result['liuqin_xiang'] = _jres.get('liuqin_xiang', {'象域': False, '位': [],
+                                                                    '类象语': '', '原文直引': [],
+                                                                    '依据': []})
+                result['zhanyin_prior'] = _jres.get('zhanyin_prior', {'章': '', '占类': '',
+                                                                      '样本': 0, '谱': [],
+                                                                      '语': '', '来源': '',
+                                                                      '边界': ''})
                 # 🆕 2026-09-22：寺观·僧道·鬼祟 **接进类象链**
                 #    单一真源＝_jres['guishen_xiang']（judge_all 已算），此处只回注、不重算
                 #    ⛔ 不在类象链内自算：链段早于 judge_all，拿不到 幽冥煞/宜禳 ⇒ 会双真源漂移
@@ -3778,6 +3787,11 @@ def api_zeri_analyze():
                                            'error': str(_e_orch)}
                 result['rangjie'] = {'宜禳': False, '提示': [], '禳法': [], '有救': False,
                                      '有救理由': [], '依据': [], 'error': str(_e_orch)}
+                result['liuqin_xiang'] = {'象域': False, '位': [], '类象语': '',
+                                          '原文直引': [], '依据': [], 'error': str(_e_orch)}
+                result['zhanyin_prior'] = {'章': '', '占类': '', '样本': 0, '谱': [],
+                                           '语': '', '来源': '', '边界': '',
+                                           'error': str(_e_orch)}
             # 知识库判断（KeKeDuanyu：古籍课课断语·仪度评分，与批量择日同源；两域隔离铁律——不用股票域训练库）
             try:
                 from kekeduanyu import KeKeDuanyu as _KDD3
