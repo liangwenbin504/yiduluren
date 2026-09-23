@@ -32,11 +32,27 @@ from typing import Any, Dict, List
 
 _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 _JSON = os.path.join(_ROOT, 'data', 'zhanyin_prior.json')
+_JSON_LIDAI = os.path.join(_ROOT, 'data', 'zhanyin_prior_lidai.json')
 _CACHE: Dict[str, Any] = {}
+
+def _load_lidai() -> Dict[str, Any]:
+    """「历代层」谱（明清，n=129）——🔴 与邵公层**分层并存，不得混算**"""
+    if 'lidai' in _CACHE:
+        return _CACHE['lidai']
+    try:
+        with open(_JSON_LIDAI, encoding='utf-8') as f:
+            d = json.load(f)
+    except Exception:
+        d = {}
+    _CACHE['lidai'] = d
+    return d
+
 
 # lift 阈值：< 1.15 视为「背景舞台」（吉凶皆现），1.15~1.8 中等，>= 1.8 显著
 LIFT_STAGE = 1.15
 LIFT_STRONG = 1.8
+# 跨层对比：两层占比之比 < SAME_RATIO ⇒ 判「跨代一致」
+SAME_RATIO = 1.6
 
 
 def _load() -> Dict[str, Any]:
@@ -129,8 +145,63 @@ def prior_for(sec: str = '', zhanlei: str = '') -> Dict[str, Any]:
             top = [r for r in rows[:4]]
             out['语'] = '此占类下邵公常谈之事因：' + '、'.join(
                 '%s %d%%（%s）' % (r['事因'], round(r['占比']), r['定性']) for r in top)
+        # ── 历代层（明清 n=129）：与邵公层**分层并存**，带跨层标记 ──
+        out['历代'] = _prior_lidai(sec_key or ZHANLEI_TO_SEC.get(zl_key, '') or out['章'],
+                                   overall)
         out['边界'] = ('先验谱＝「此占类常谈什么」的统计参考；lift<1.15 属背景舞台，'
-                       '⛔ 不可作凶兆；纯叙事层，不进评分链')
+                       '⛔ 不可作凶兆；纯叙事层，不进评分链。'
+                       '「历代层」为明清壬家语料（与邵公层分层，不得混算）')
+        return out
+    except Exception as e:
+        out['error'] = str(e)
+        return out
+
+
+def _prior_lidai(sec: str, overall_shao: Dict[str, Any]) -> Dict[str, Any]:
+    """历代（明清）层谱：细章 → 总体；每条附「邵公占比」与跨层标记。
+
+    🔴 语义＝「**历代**壬家常谈什么」，⛔ 不是「邵公常谈什么」。
+    ⛔ 历代案无吉凶真值 ⇒ **没有 lift**，⛔ 不得判凶兆。
+    """
+    out: Dict[str, Any] = {'章': sec or '', '样本': 0, '谱': [], '来源': '', '语': ''}
+    try:
+        d = _load_lidai()
+        if not d:
+            return out
+        by_sec = d.get('分章') or {}
+        if sec and sec in by_sec:
+            sd = by_sec[sec]
+            out['样本'] = sd.get('案数', 0)
+            out['章'] = sec
+            out['来源'] = '历代分章谱（%s，n=%d）' % (sec, out['样本'])
+            raw = sd.get('谱') or []
+        else:
+            raw = d.get('总体') or []
+            out['样本'] = (d.get('_口径') or {}).get('案数', 0)
+            out['来源'] = '历代总体谱（章「%s」样本不足，n=%d）' % (sec or '—', out['样本'])
+        rows: List[Dict[str, Any]] = []
+        for r in raw:
+            sg = float((overall_shao.get(r['事因']) or {}).get('占比', 0.0) or 0.0)
+            ld = float(r.get('占比', 0.0) or 0.0)
+            if sg <= 0 and ld <= 0:
+                tag = ''
+            elif sg <= 0:
+                tag = '历代特色'
+            elif ld <= 0:
+                tag = '邵公特色'
+            elif max(sg, ld) / max(0.1, min(sg, ld)) < SAME_RATIO:
+                tag = '跨代一致'
+            elif sg > ld:
+                tag = '邵公特色'
+            else:
+                tag = '历代特色'
+            rows.append({'事因': r['事因'], '占比': ld, '案数': r.get('案数', 0),
+                         '邵公占比': round(sg, 1), '标记': tag})
+        rows.sort(key=lambda r: -r['占比'])
+        out['谱'] = rows
+        if rows:
+            out['语'] = '历代（明清）此占类常谈：' + '、'.join(
+                '%s %d%%' % (r['事因'], round(r['占比'])) for r in rows[:4])
         return out
     except Exception as e:
         out['error'] = str(e)
