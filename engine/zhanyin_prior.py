@@ -3,8 +3,18 @@
 
 【是什么】
 给定占类（章），输出「此占类下邵公常谈哪些事因」的排序谱。
-数据源＝218 案疏正真值集（凶 172／吉 34），**严格口径：仅邵公断语**，
+数据源＝218 案疏正真值集（凶 172／吉 34／平 1），**严格口径：仅邵公断语**，
 固化在 `data/zhanyin_prior.json`（由 `_冗余待删/_gen_zhanyin_prior.py` 生成）。
+
+【v2 攒案口径（2026-09-23）】
+  🔴 **建谱池＝有断语即入池（n=218），不做 label 过滤**——
+     B 层的语义是「此占类下邵公常谈什么」＝频率谱，频率**不需要吉凶标签**；
+     label 只用于算 lift 护栏。⛔ 未改动任何案的真值 label（不惊动 M3 口径）。
+     收益：分章 7 → **12 章**（补回亡盗 14／六畜走失 9／胎产子息 7／出行访谒 7／
+     行人音信 6／杂占 6），各章样本普涨（前程 55→60、宅墓 38→40、财产 8→12、官讼 9→11）。
+  🔴 **lift 护栏一条不丢**：每行仍带 `lift＝凶占比÷吉占比`，`lift<1.15` 判「吉凶皆现（非凶兆）」。
+     ⛔ 扩池**不等于**放宽判据——谱只说"常谈什么"，从不说"这是凶兆"。
+  🔴 **三级回落**：细章 `zhanlei_code` → 粗占类 `zhanlei`（生产实际传的是粗占类）→ 总体谱。
 
 【⛔ 是什么 ≠ 判据】
   · lift ≈ 1 者 ⇒ **吉案也照样出现** ⇒ 属"背景舞台"，**不可用作凶兆**
@@ -78,30 +88,40 @@ def prior_for(sec: str = '', zhanlei: str = '') -> Dict[str, Any]:
             return out
         overall = d.get('总体') or {}
         by_sec = d.get('分章') or {}
+        by_zl = d.get('分章粗') or {}
         rows: List[Dict[str, Any]] = []
-        src = ''
-        sec_key = sec or ZHANLEI_TO_SEC.get(str(zhanlei or ''), '')
+        zl_key = str(zhanlei or '')
+        sec_key = sec or ZHANLEI_TO_SEC.get(zl_key, '')
+        # 🔴 三级回落：细章 → 粗占类（生产实际传的就是粗占类）→ 总体谱
+        sd = None
         if sec_key and sec_key in by_sec:
             sd = by_sec[sec_key]
-            out['样本'] = sd.get('凶案数', 0)
             out['章'] = sec_key
-            src = '分章谱（%s，凶案 n=%d）' % (sec_key, out['样本'])
+            src = '分章谱（%s，n=%d，凶%d／吉%d）' % (
+                sec_key, sd.get('案数', 0), sd.get('凶案数', 0), sd.get('吉案数', 0))
+        elif zl_key and zl_key in by_zl:
+            sd = by_zl[zl_key]
+            out['章'] = zl_key
+            src = '粗占类谱（%s，n=%d，凶%d／吉%d）' % (
+                zl_key, sd.get('案数', 0), sd.get('凶案数', 0), sd.get('吉案数', 0))
+        if sd is not None:
+            out['样本'] = sd.get('案数', 0)
             for r in sd.get('谱') or []:
-                ov = overall.get(r['事因'], {})
-                rows.append({'事因': r['事因'], '占比': r['占比'],
-                             '案数': r.get('案数', 0),
-                             'lift': ov.get('lift'), '定性': _grade(ov.get('lift'), r['占比'])})
+                # 🔴 「是不是凶兆」只能由**总体谱的 lift** 定（吉案 34，样本够）。
+                #    ⛔ 不能用章内 lift：分章吉案常只有 1~5 例（前程仕进仅 5 吉），
+                #       某条在 5 例里 0 命中就被标成「仅见于凶案」⇒ 纯属小样本噪声。
+                lf = (overall.get(r['事因']) or {}).get('lift')
+                rows.append({'事因': r['事因'], '占比': r['占比'], '案数': r.get('案数', 0),
+                             'lift': lf, '定性': _grade(lf, r['占比'])})
         else:
-            # 🔴 案数 ≠ 各类命中数之和（一案可命中多类）：总体样本只能取**案数**本身
+            # 🔴 案数 ≠ 各类命中数之和（一案可命中多类）：样本只能取**案数**本身
             tn = (d.get('_总体样本') or {})
-            out['样本'] = tn.get('凶案数', 0)
-            src = '总体谱（分章样本不足 n<5，粗占类「%s」／章「%s」；凶案 n=%d）' % (
-                zhanlei or '—', sec or '—', out['样本'])
-            for k, v in sorted(overall.items(), key=lambda x: -x[1]['凶占比']):
-                if v['凶占比'] <= 0:
-                    continue
-                rows.append({'事因': k, '占比': v['凶占比'], '案数': v.get('凶案数', 0),
-                             'lift': v.get('lift'), '定性': _grade(v.get('lift'), v['凶占比'])})
+            out['样本'] = tn.get('案数', 0)
+            src = '总体谱（分章样本不足 n<5；粗占类「%s」／章「%s」；n=%d）' % (
+                zl_key or '—', sec or '—', out['样本'])
+            for k, v in sorted(overall.items(), key=lambda x: -x[1]['占比']):
+                rows.append({'事因': k, '占比': v['占比'], '案数': v.get('案数', 0),
+                             'lift': v.get('lift'), '定性': _grade(v.get('lift'), v['占比'])})
         rows.sort(key=lambda r: -r['占比'])
         out['谱'] = rows
         out['来源'] = src

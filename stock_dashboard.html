@@ -3713,10 +3713,12 @@ function zhugeRangjieCard(d) {
   var _zy = d.zhanyin_prior;
   if (_zy && ((_zy['谱'] || []).length)) {
     var _zyRows = (_zy['谱'] || []).slice(0, 6).map(function (r) {
-      var _isStage = (r['定性'] || '').indexOf('背景') >= 0 || (r['定性'] || '').indexOf('吉凶皆现') >= 0;
-      var _col = _isStage ? '#7b7b8f' : ((r['lift'] || 0) >= 1.8 ? '#ffd479' : '#c9c9d8');
-      return '<span title="' + _e('lift=' + (r['lift'] == null ? '仅见于凶案' : r['lift'])
-        + '　案数=' + (r['案数'] || 0)) + '" style="display:inline-block;margin:2px 5px 2px 0;'
+      var _lf = (r['lift'] == null ? null : r['lift']);
+      // 🔴 背景舞台＝lift<1.15（吉凶皆现）；lift=null（仅见于凶案）**不灰显**
+      var _isStage = (_lf != null && _lf < 1.15);
+      var _col = _isStage ? '#7b7b8f' : ((_lf == null || _lf >= 1.8) ? '#ffd479' : '#c9c9d8');
+      return '<span title="' + _e('lift=' + (_lf == null ? '仅见于凶案' : _lf)
+        + '　章内案数=' + (r['案数'] || 0)) + '" style="display:inline-block;margin:2px 5px 2px 0;'
         + 'padding:2px 7px;border-radius:10px;font-size:11.5px;color:' + _col
         + ';background:rgba(255,255,255,.04);border:1px solid #3a3a6a;cursor:help;">'
         + _e(r['事因'] || '') + ' <span style="opacity:.7;">' + (r['占比'] || 0) + '%</span>'
