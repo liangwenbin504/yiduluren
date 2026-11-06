@@ -2,7 +2,7 @@
  {
   "case_id": "§天时01·001",
   "zhanlei_code": "天时",
-  "zhanlei": "其他",
+  "zhanlei": "天时",
   "sec": "01",
   "num": "001",
   "name": "",
@@ -48,12 +48,13 @@
     "天将": "螣蛇"
    }
   ],
-  "month": 10
+  "month": 10,
+  "zhanlei_来源": "case_id门类天时"
  },
  {
   "case_id": "§天时01·002",
   "zhanlei_code": "天时",
-  "zhanlei": "其他",
+  "zhanlei": "天时",
   "sec": "01",
   "num": "002",
   "name": "",
@@ -98,12 +99,13 @@
     "天将": "六合"
    }
   ],
-  "month": 12
+  "month": 12,
+  "zhanlei_来源": "case_id门类天时"
  },
  {
   "case_id": "§天时01·003",
   "zhanlei_code": "天时",
-  "zhanlei": "其他",
+  "zhanlei": "天时",
   "sec": "01",
   "num": "003",
   "name": "",
@@ -149,7 +151,8 @@
     "天将": "勾陈"
    }
   ],
-  "month": 8
+  "month": 8,
+  "zhanlei_来源": "case_id门类天时"
  },
  {
   "case_id": "§宅墓02·004",
@@ -9241,7 +9244,7 @@
  {
   "case_id": "§六畜走失14·179",
   "zhanlei_code": "六畜走失",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "14",
   "num": "179",
   "name": "吴四公",
@@ -9285,12 +9288,13 @@
     "下神": "戌",
     "天将": "太常"
    }
-  ]
+  ],
+  "zhanlei_来源": "case_id门类六畜走失"
  },
  {
   "case_id": "§六畜走失14·180",
   "zhanlei_code": "六畜走失",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "14",
   "num": "180",
   "name": "王寺丞",
@@ -9334,12 +9338,13 @@
     "下神": "午",
     "天将": "太常"
    }
-  ]
+  ],
+  "zhanlei_来源": "case_id门类六畜走失"
  },
  {
   "case_id": "§六畜走失14·181",
   "zhanlei_code": "六畜走失",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "14",
   "num": "181",
   "name": "遂安官人",
@@ -9383,12 +9388,13 @@
     "下神": "辰",
     "天将": "天后"
    }
-  ]
+  ],
+  "zhanlei_来源": "case_id门类六畜走失"
  },
  {
   "case_id": "§六畜走失14·182",
   "zhanlei_code": "六畜走失",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "14",
   "num": "182",
   "name": "",
@@ -9432,12 +9438,13 @@
     "下神": "辰",
     "天将": "太常"
    }
-  ]
+  ],
+  "zhanlei_来源": "case_id门类六畜走失"
  },
  {
   "case_id": "§六畜走失14·183",
   "zhanlei_code": "六畜走失",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "14",
   "num": "183",
   "name": "",
@@ -9481,12 +9488,13 @@
     "下神": "未",
     "天将": "青龙"
    }
-  ]
+  ],
+  "zhanlei_来源": "case_id门类六畜走失"
  },
  {
   "case_id": "§六畜走失14·184",
   "zhanlei_code": "六畜走失",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "14",
   "num": "184",
   "name": "",
@@ -9530,12 +9538,13 @@
     "下神": "未",
     "天将": "太常"
    }
-  ]
+  ],
+  "zhanlei_来源": "case_id门类六畜走失"
  },
  {
   "case_id": "§六畜走失14·185",
   "zhanlei_code": "六畜走失",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "14",
   "num": "185",
   "name": "",
@@ -9579,12 +9588,13 @@
     "下神": "未",
     "天将": "天后"
    }
-  ]
+  ],
+  "zhanlei_来源": "case_id门类六畜走失"
  },
  {
   "case_id": "§六畜走失14·186",
   "zhanlei_code": "六畜走失",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "14",
   "num": "186",
   "name": "",
@@ -9628,12 +9638,13 @@
     "下神": "子",
     "天将": "天后"
    }
-  ]
+  ],
+  "zhanlei_来源": "case_id门类六畜走失"
  },
  {
   "case_id": "§六畜走失14·187",
   "zhanlei_code": "六畜走失",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "14",
   "num": "187",
   "name": "",
@@ -9677,12 +9688,13 @@
     "下神": "戌",
     "天将": "白虎"
    }
-  ]
+  ],
+  "zhanlei_来源": "case_id门类六畜走失"
  },
  {
   "case_id": "§亡盗15·188",
   "zhanlei_code": "亡盗",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "15",
   "num": "188",
   "name": "",
@@ -9735,7 +9747,7 @@
  {
   "case_id": "§亡盗15·189",
   "zhanlei_code": "亡盗",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "15",
   "num": "189",
   "name": "",
@@ -9788,7 +9800,7 @@
  {
   "case_id": "§亡盗15·190",
   "zhanlei_code": "亡盗",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "15",
   "num": "190",
   "name": "",
@@ -9840,7 +9852,7 @@
  {
   "case_id": "§亡盗15·191",
   "zhanlei_code": "亡盗",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "15",
   "num": "191",
   "name": "",
@@ -9891,7 +9903,7 @@
  {
   "case_id": "§亡盗15·192",
   "zhanlei_code": "亡盗",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "15",
   "num": "192",
   "name": "",
@@ -9942,7 +9954,7 @@
  {
   "case_id": "§亡盗15·193",
   "zhanlei_code": "亡盗",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "15",
   "num": "193",
   "name": "",
@@ -9994,7 +10006,7 @@
  {
   "case_id": "§亡盗15·194",
   "zhanlei_code": "亡盗",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "15",
   "num": "194",
   "name": "",
@@ -10045,7 +10057,7 @@
  {
   "case_id": "§亡盗15·195",
   "zhanlei_code": "亡盗",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "15",
   "num": "195",
   "name": "",
@@ -10098,7 +10110,7 @@
  {
   "case_id": "§亡盗15·196",
   "zhanlei_code": "亡盗",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "15",
   "num": "196",
   "name": "",
@@ -10149,7 +10161,7 @@
  {
   "case_id": "§亡盗15·197",
   "zhanlei_code": "亡盗",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "15",
   "num": "197",
   "name": "",
@@ -10201,7 +10213,7 @@
  {
   "case_id": "§亡盗15·198",
   "zhanlei_code": "亡盗",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "15",
   "num": "198",
   "name": "",
@@ -10252,7 +10264,7 @@
  {
   "case_id": "§亡盗15·199",
   "zhanlei_code": "亡盗",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "15",
   "num": "199",
   "name": "",
@@ -10303,7 +10315,7 @@
  {
   "case_id": "§亡盗15·200",
   "zhanlei_code": "亡盗",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "15",
   "num": "200",
   "name": "",
@@ -10355,7 +10367,7 @@
  {
   "case_id": "§亡盗15·201",
   "zhanlei_code": "亡盗",
-  "zhanlei": "其他",
+  "zhanlei": "寻物",
   "sec": "15",
   "num": "201",
   "name": "",

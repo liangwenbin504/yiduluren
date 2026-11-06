@@ -1083,7 +1083,24 @@ def calculate_guiren():
                 tian_pan = {}
         
         calculator = GuiRenCalculator()
-        result = calculator.arrange_gui_ren_pan(ri_gan, tian_pan, shichen)
+        # 🔴 2026-10-22 憨爷指正：「以前我就是让你以**太阳出入**定昼夜的啊」
+        #   本接口原**不传 lat/lon** ⇒ `arrange_gui_ren_pan` 走 `is_night_time()`（固定卯酉）
+        #   ⇒ 网页端天将盘在**卯/酉/戌**三辰恒错（安龙 105.5°E 比 120°E 晚约 58 分钟：
+        #     日出 6-8 时、日落 18-19.7 时）。
+        #   🔴 经纬度**固定安龙（25.1N/105.5E）是有意为之** —— 憨爷 2026-10-22：
+        #      「在外地我就不用你来起课，我人工起课就行了」⇒ ⛔ 不做自动定位/参数化。
+        from datetime import date as _date_g
+        try:
+            _d_g = _date_g(year, month, day)
+        except Exception:
+            _d_g = None
+        # 🔴 另修一个**原有 bug**：`arrange_gui_ren_pan` 读的是 `tian_pan['天地对应']`
+        #   （结构体形态），而上面 `get_tiandi_pan()` 返回的是**平铺** {地盘:天盘}。
+        #   直接传平铺 ⇒ 找不到「天地对应」⇒ 贵人落宫为空 ⇒ 天将列表空。
+        _tp_struct = tian_pan if (isinstance(tian_pan, dict) and '天地对应' in tian_pan) \
+            else {'天地对应': (tian_pan or {})}
+        result = calculator.arrange_gui_ren_pan(
+            ri_gan, _tp_struct, shichen, lat=25.1, lon=105.5, d=_d_g)
         
         return jsonify({
             'success': True,
