@@ -3580,7 +3580,17 @@ def _jiang_feng_nei_zhan(env):
     if not (jwx and z_wx and WX_KE.get(z_wx, '') == jwx):   # 神克将
         return False
     dipan_pos = next((k for k, v in tdp.items() if v == z), '')
-    return bool(dipan_pos and WX_KE.get(_wx(dipan_pos), '') == z_wx)  # 地盘克用
+    if not (dipan_pos and WX_KE.get(_wx(dipan_pos), '') == z_wx):   # 地盘克用
+        return False
+    # 🔴 2026-10-22（《壬學瑣記》p077 程树勋）：「予见**初传内战若中传得救神者仍吉**。
+    #   如**申加巳发用，三传申亥寅**，申乘六合则六合内战…**中传因有亥水可制地盘之巳火
+    #   而救申金**，且能生六合青龙之木，是以**危而得安**，不可不知」
+    #   ⇒ 救神＝**中传五行克「地盘克用之神」的五行**（制住克用者，非制天将）。
+    #   ⛔ 只对**初传路径**生效（本函数本就只看 sc[0]）；②三传日辰内战格不受影响。
+    _mid = sc[1] if len(sc) >= 2 else ''
+    if _mid and WX_KE.get(_wx(_mid), '') == _wx(dipan_pos):
+        return False                      # 中传制住克用者 ⇒ 危而得安，不判内战
+    return True
 
 
 def _ren_zhai_zuo_mu_v2(env):

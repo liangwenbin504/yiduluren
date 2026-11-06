@@ -73,7 +73,12 @@ def calc_sunset_hour(lat=25.1, lon=105.5, d=None):
     
     # 半天弧长(小时) — 从正午到日落
     lat_rad = math.radians(lat)
-    cosH = -math.tan(lat_rad) * math.tan(decl)
+    # 🔴 2026-11-04 修正：原用几何中心(h0=0)，未含大气折射与太阳视半径。
+    #    实际「见日」为上边缘切地平线（h0 = −0.833°＝−34′折射 −16′视半径），
+    #    冬春可使日出提前约 5 分钟 —— 恰是决定「卯时末刻算昼还是夜」的临界量。
+    h0 = math.radians(-0.833)
+    cosH = (math.sin(h0) - math.sin(lat_rad) * math.sin(decl)) / \
+           (math.cos(lat_rad) * math.cos(decl))
     cosH = max(-1.0, min(1.0, cosH))
     halfday = math.degrees(math.acos(cosH)) / 15.0
     
@@ -83,7 +88,12 @@ def calc_sunset_hour(lat=25.1, lon=105.5, d=None):
     
     # 真太阳时正午(分钟,北京时间)
     # 标准子午线120°E, 每1°经度差=4分钟时差
-    noon_local = 12 * 60 + 4 * (120 - lon) + eot
+    # 🔴 2026-11-04 修正：均时差符号原写 `+ eot`，实为 `- eot`。
+    #    推导：真太阳时 = 北京时间 + 4*(lon-120) + eot（见 engine/solar_time.py 注释）；
+    #    太阳正午之真太阳时恒为 12:00 ⇒ 北京时间 = 12:00 + 4*(120-lon) - eot。
+    #    原式多加了 2×eot（eot 全年 -14~+16 分）⇒ 日出/日落偏移最多 ±32 分钟，
+    #    使冬春「卯/辰时」被误判为夜（卯时判夜 → 阴贵），直接翻转天将盘顺逆。
+    noon_local = 12 * 60 + 4 * (120 - lon) - eot
     
     # 日落 = 正午 + 半天弧长
     sunset_min = noon_local + halfday * 60
@@ -101,44 +111,81 @@ def calc_sunrise_hour(lat=25.1, lon=105.5, d=None):
     decl_deg = 23.45 * math.sin(math.radians(360.0 / 365 * (284 + doy)))
     decl = math.radians(decl_deg)
     lat_rad = math.radians(lat)
-    cosH = -math.tan(lat_rad) * math.tan(decl)
+    # 🔴 2026-11-04 修正：原用几何中心(h0=0)，未含大气折射与太阳视半径。
+    #    实际「见日」为上边缘切地平线（h0 = −0.833°＝−34′折射 −16′视半径），
+    #    冬春可使日出提前约 5 分钟 —— 恰是决定「卯时末刻算昼还是夜」的临界量。
+    h0 = math.radians(-0.833)
+    cosH = (math.sin(h0) - math.sin(lat_rad) * math.sin(decl)) / \
+           (math.cos(lat_rad) * math.cos(decl))
     cosH = max(-1.0, min(1.0, cosH))
     halfday = math.degrees(math.acos(cosH)) / 15.0
     B = math.radians(360.0 / 365 * (doy - 81))
     eot = 9.87 * math.sin(2 * B) - 7.53 * math.cos(B) - 1.5 * math.sin(B)
-    noon_local = 12 * 60 + 4 * (120 - lon) + eot
+    # 🔴 2026-11-04 修正：均时差符号原写 `+ eot`，实为 `- eot`。
+    #    推导：真太阳时 = 北京时间 + 4*(lon-120) + eot（见 engine/solar_time.py 注释）；
+    #    太阳正午之真太阳时恒为 12:00 ⇒ 北京时间 = 12:00 + 4*(120-lon) - eot。
+    #    原式多加了 2×eot（eot 全年 -14~+16 分）⇒ 日出/日落偏移最多 ±32 分钟，
+    #    使冬春「卯/辰时」被误判为夜（卯时判夜 → 阴贵），直接翻转天将盘顺逆。
+    noon_local = 12 * 60 + 4 * (120 - lon) - eot
     sunrise_min = noon_local - halfday * 60
     return sunrise_min / 60.0
 
 
-def is_daytime(shi_chen_or_hour, minute=0, lat=25.1, lon=105.5, d=None):
+def equation_of_time(d=None):
+    """均时差(分钟)：真太阳时 − 平太阳时"""
+    if d is None:
+        d = date.today()
+    doy = d.timetuple().tm_yday
+    B = math.radians(360.0 / 365 * (doy - 81))
+    return 9.87 * math.sin(2 * B) - 7.53 * math.cos(B) - 1.5 * math.sin(B)
+
+
+def true_solar_offset_hours(lon, d=None):
+    """真太阳时 − 北京时间（小时）。真太阳时 = 北京时间 + 4*(lon-120)分 + eot"""
+    return (4 * (lon - 120) + equation_of_time(d)) / 60.0
+
+
+def shichen_to_beijing_hour(shichen, lon, d=None, minute=60):
+    """真太阳时的某时辰（+分钟内）→ 对应北京时间（小时小数 0-24）
+
+    2026-11-04 憨爷拍板「时辰按真太阳时划」：
+      贵阳(lon 106.62) 的卯时 = 当地真太阳时 5:00–7:00 = 北京时间约 5:50–7:50
     """
-    判断当前时刻是否为昼(精确到分钟)
-    
+    sc_h = SHI_CHEN_HOUR.get(shichen, 12)
+    now_true = sc_h + minute / 60.0
+    now_bj = now_true - true_solar_offset_hours(lon, d)
+    return now_bj % 24
+
+
+def is_daytime(shi_chen_or_hour, minute=60, lat=25.1, lon=105.5, d=None,
+               true_solar=True):
+    """
+    判断是否为昼（真太阳时口径，2026-11-04 憨爷拍板统一）
+
+    规则：**时辰按真太阳时划**，取时辰内某一时刻（默认中点 minute=60）与当地日出日落比对。
+      邵公案例四「寅月袁州卯时用夜贵」即此理：日出约 6:50，卯时(5–7)中点 6:00 尚在日出前 ⇒ 夜。
+
     用法:
-      is_daytime('酉') → 以酉时起始17:00判断
-      is_daytime('酉', 5) → 17:05判断
-      is_daytime(17, 5) → 17:05判断
-      is_daytime(19, 33) → 19:33判断
-    
-    返回: True=昼(日未落), False=夜(日已落)
+      is_daytime('卯')                 → 真太阳时卯时中点（=当地 6:00）判昼夜
+      is_daytime('卯', 0)              → 真太阳时卯时起点（当地 5:00）
+      is_daytime('卯', 120)            → 真太阳时卯时终点（当地 7:00）
+      is_daytime(17, 5)                → 传入数字时视为**北京时**17:05（兼容旧调用）
+
+    返回: True=昼(日未落)，False=夜(日已落)
     """
     if d is None:
         d = date.today()
-    
-    sunrise_h = calc_sunrise_hour(lat, lon, d)
+
+    sunrise_h = calc_sunrise_hour(lat, lon, d)   # 北京时间
     sunset_h = calc_sunset_hour(lat, lon, d)
-    
-    # 解析输入时间
+
     if isinstance(shi_chen_or_hour, str):
         sc_h = SHI_CHEN_HOUR.get(shi_chen_or_hour, 12)
+        now_true = sc_h + minute / 60.0
+        now = (now_true - true_solar_offset_hours(lon, d)) % 24 if true_solar else now_true % 24
     else:
-        sc_h = shi_chen_or_hour
-    
-    now = sc_h + minute / 60.0  # 当前时刻(小时小数)
-    if now < 0:
-        now += 24
-    
+        now = (shi_chen_or_hour + minute / 60.0) % 24
+
     return sunrise_h <= now < sunset_h  # 日出后、日落前 = 昼
 
 

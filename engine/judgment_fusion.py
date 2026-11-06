@@ -129,6 +129,22 @@ ANCIENT_LIUQIN_SCORE = {
 }
 
 
+
+# 🔴 2026-10-22（憨爷「接着做」）：**六亲吉凶按占类**
+#   病灶：ANCIENT_LIUQIN_SCORE 是"通用口径"（官鬼一律 −1），
+#     但功名占里**官鬼＝官星＝好事**，求财占里**妻财＝财＝好事**。
+#     实测：应贡元（丁丑日·三传子亥戌，原文断"阴德洪大、贵寿两全")六亲
+#     子/亥皆官鬼 ⇒ liuqin −1×4 ⇒ prob_down 0.958 ⇒ 误判凶。
+#   ⛔ 只做**功名/求财**两类（样本较足）；其余占类回退通用表，⛔ 不臆造。
+#   开关：DISABLE_LIUQIN_BY_CAT 置非空则关闭（走原通用表），便于 A/B。
+LIUQIN_BY_CAT = {
+    # 功名/仕宦：官鬼＝官星（吉）；子孙＝伤官（克官，凶）；父母＝印绶文书（吉）；
+    #             妻财＝财克印（略凶）；兄弟＝劫财（凶）
+    '功名': {'官鬼': 2, '子孙': -2, '父母': 1, '妻财': -1, '兄弟': -1},
+    # 求财：妻财＝财（吉）；兄弟＝劫财（凶）；官鬼＝耗财/官非（略凶）；余中性
+    '求财': {'妻财': 2, '兄弟': -2, '官鬼': -1, '父母': 0, '子孙': 0},
+}
+
 # ======================================================================
 # 信念质量构造
 # ======================================================================
@@ -301,10 +317,19 @@ def collect_signals(result: Dict[str, Any]) -> List[Tuple[str, float, bool, floa
     # 六亲（十神）—— 消融开关 DISABLE_LIUQIN（env 置非空则关闭该信号组）
     # 古例域用 ANCIENT_LIUQIN_SCORE（官鬼=凶），股票域用 get_liuqin_score（官鬼=+1 主力偏多）
     if not os.environ.get('DISABLE_LIUQIN'):
+        # 🔴 2026-10-22：按占类取表（仅功名/求财；其余回退通用表）
+        _zl = a.get('_zhanlei', '') or ''
+        _lq_tab = ANCIENT_LIUQIN_SCORE
+        # ⚠ 2026-10-22 实测：开启后 M3 **仍是 186/207（持平）**，混淆矩阵由
+        #   「吉→凶17 / 吉→平1」变为「吉→凶18 / 吉→平0」⇒ 一对一错相抵，**无净收益**。
+        #   ⇒ 按"零误伤但无收益不上线"的保守原则，**默认关闭**；
+        #     置环境变量 `LIUQIN_BY_CAT=1` 可开启（待功名样本≥50 时重测）。
+        if _zl in LIUQIN_BY_CAT and os.environ.get('LIUQIN_BY_CAT'):
+            _lq_tab = LIUQIN_BY_CAT[_zl]
         for it in liuqin_list:
             lq = it.get('六亲', '') if isinstance(it, dict) else ''
             if lq:
-                _lq = ANCIENT_LIUQIN_SCORE.get(lq, get_liuqin_score(lq)) if DISABLE_CAISHEN else get_liuqin_score(lq)
+                _lq = _lq_tab.get(lq, get_liuqin_score(lq)) if DISABLE_CAISHEN else get_liuqin_score(lq)
                 signals.append(('liuqin', _lq, True, BASE_CONF['liuqin']))
 
     # 旺衰
@@ -399,7 +424,12 @@ def collect_signals(result: Dict[str, Any]) -> List[Tuple[str, float, bool, floa
     # 贼盗专属：玄武乘鬼/财爻空陷（贼盗章）+ 亡盗类神寻物（失物章）
     # 触发条件放宽：zhanlei=='贼盗'（原行为）或 zhanlei=='其他' 且 result 带 leishen
     # （亡盗案零涟漪隔离：其余"其他"案与股票路径无 leishen → 不触发）。
-    if a.get('_zhanlei') == '贼盗' or (a.get('_zhanlei') == '其他' and result.get('leishen')):
+    # 🔴 2026-10-22 修字序笔误：原写 `== '贼盗'`，而 zhanlei 枚举里叫「**盗贼**」
+    #   ⇒ 该分支**从未命中过「盗贼」占类**；亡盗案因标"其他"走 or 第二支反而触发（还多 50% 提权）。
+    #   一旦把占类补成"盗贼"，两边都不匹配 ⇒ zeidao 信号全丢 ⇒ 4 例真吉案被判凶（M3 -2pp）。
+    #   现兼容两种写法（数据枚举＝盗贼；旧文作贼盗）。
+    # 🔴 2026-10-22 憨爷定「亡盗＝失物」⇒ 消费端同样认「寻物」
+    if a.get('_zhanlei') in ('贼盗', '盗贼', '寻物') or (a.get('_zhanlei') == '其他' and result.get('leishen')):
         _v = a.get('_zeidao_valence', {}) or {}
         _s = _v.get('score', 0)
         if _s != 0:
@@ -407,7 +437,9 @@ def collect_signals(result: Dict[str, Any]) -> List[Tuple[str, float, bool, floa
             # 亡盗寻得吉提权：邵师失物法以「类神在传/加日辰定见」为主断，
             # 通用八杀(破/刑/冲)在失物语境仅表物损(§199 酉破子/酉冲卯)而非寻不回。
             # 仅"其他"+leishen+吉向提权，贼盗章与凶向不受影响（零涟漪）。
-            if a.get('_zhanlei') == '其他' and _s > 0:
+            # 🔴 2026-10-22：原仅对「其他」提权（因亡盗案占类未标，靠"其他"兜）。
+            #   占类补正为「盗贼」后提权丢失 ⇒ 4 例真吉案复判凶。现两种写法同等待遇。
+            if a.get('_zhanlei') in ('其他', '贼盗', '盗贼', '寻物') and _s > 0:
                 _conf = min(1.35, _conf * 1.5)
             signals.append(('zeidao', abs(float(_s)), _s > 0, _conf))
 

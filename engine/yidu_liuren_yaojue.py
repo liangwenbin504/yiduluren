@@ -1242,7 +1242,9 @@ def analyze_yidu_full(shan: str,
                        year: int = None, month: int = None, day: int = None,
                        ben_ming: str = None, ben_ming_gan: str = None,
                        ben_ming2: str = None, ben_ming2_gan: str = None,
-                       zeri_type: str = '', kong: list = None) -> dict:
+                       zeri_type: str = '', kong: list = None,
+                       lat: float = None, lon: float = None,
+                       is_night: bool = None) -> dict:
     """
     完整的仪度六壬择日分析（2026-08-31 统一评分口径）
 
@@ -1271,6 +1273,20 @@ def analyze_yidu_full(shan: str,
 
     返回: 完整分析报告
     """
+    # 【2026-11-04 憨爷拍板「择日/占卦全用真太阳时」】注入用事地/用事日，
+    #   供内部自建的 DaLiuRenLuMaGuiRen 实例判定贵人昼夜（时辰中点 vs 当地日出）。
+    #   不传则沿用模块级上下文原值（可被上层 set_luma_context 预设）。
+    if lat is not None or lon is not None or is_night is not None:
+        from engine.daliuren_luma_guiren import set_luma_context
+        _d = None
+        if year and month and day:
+            from datetime import date as _date
+            try:
+                _d = _date(year, month, day)
+            except Exception:
+                _d = None
+        set_luma_context(lat=lat, lon=lon, d=_d, is_night=is_night)
+
     # 边界保护：四柱空值/短柱用默认值（【BUG-FIX 2026-08-18】原只保护时柱，
     # 年/月/日柱为空时 check_sizhu_tou_yuanchen 内 pillar[0] 会 IndexError）
     if not year_pillar or len(year_pillar) < 2:
@@ -1519,6 +1535,11 @@ def analyze_yidu_full(shan: str,
     # 祭主（福主）本命应福加分（2026-09-05 接入；用户拍板：本命贵人+8/柱，作禄/作马+5/项）
     #   · 本命贵人：本命支落在某柱天干之天乙贵人地支集合 → 该柱为命主贵人到位（发贵应主）
     #   · 本命作禄：命干之禄支出现在四柱地支 → 坐命禄（发财应主）；本命作马：命支之驿马支在四柱 → 坐命马
+    #  【2026-09-28 口径澄清】本加分走**四柱地支直判**，与 `score_precision_luma_guiren` 的
+    #   「本命位置（权重24）」**不是同一口径**：后者判"本命支经天盘加临是否落山家/向首"，
+    #   而本命支加临后几乎不落丑/申 ⇒ 该位置分**近乎恒零**（2026-09-28 实测：无年命 4.8、
+    #   多数年命亦 4.8；仅当年命禄支恰为向首"申"时得 5.9）。⇒ 选日排序实际由**本加分**起效，
+    #   精度层本命位形同虚设。⛔ 两者不矛盾（一为应福加分、一为到山到向评分），但不得混用报数。
     # 【2026-09-11 扩展】支持双命主：婚嫁＝男命(ben_ming)＋女命(ben_ming2)，各独立计一次，互不覆盖。
     _bm_targets = []
     if ben_ming:

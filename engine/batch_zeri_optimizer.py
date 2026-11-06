@@ -294,7 +294,9 @@ class BatchZeriOptimizer:
                  top_triple: bool = False,
                  auto_extend: bool = False,
                  min_top: int = 5,
-                 max_years: int = 30):
+                 max_years: int = 30,
+                 lat: float = None,
+                 lon: float = None):
         """
         参数:
             start_date: 起始日期
@@ -332,6 +334,11 @@ class BatchZeriOptimizer:
         self.auto_extend = auto_extend
         self.min_top = min_top
         self.max_years = max_years
+        # 【2026-11-04 憨爷拍板「择日/占卦全用真太阳时」】用事地经纬度——
+        #   用于按当地日出日落判昼夜（取时辰中点），进而定贵人阴/阳。
+        #   不传则退回默认坐标(安龙)，⛔ 不再走固定卯酉的 is_night_time。
+        self.lat = lat
+        self.lon = lon
         
         # 预计算缓存
         self._sizhu_cache: Dict[str, dict] = {}  # key: "YYYY-MM-DD"
@@ -662,8 +669,21 @@ class BatchZeriOptimizer:
             cand.sanchuan = sanchuan
 
             # 天将映射（用于龙德课等，与单课同口径）
+            # 【2026-11-04 憨爷拍板】昼夜一律真太阳时：传用事地经纬度 + 用事日，
+            #   ⛔ 不再走 is_night_time（固定卯-申为昼）。批量按**时辰中点**判昼夜，
+            #   定课阶段可按实际用事时刻再复核（见 _zeri_*_recheck）。
+            _cand_date = date.fromisoformat(cand.date_str)
+            _is_night = None
+            if self.lat is not None and self.lon is not None:
+                try:
+                    from engine.gui_ren_daynight import is_daytime as _isday
+                    _is_night = not _isday(cand.shichen, 60, self.lat, self.lon, _cand_date)
+                except Exception:
+                    _is_night = None
             _tj_map = GuiRenCalculator().arrange_gui_ren_pan(
-                cand.ri_gan, {'天地对应': tdp}, cand.shichen)
+                cand.ri_gan, {'天地对应': tdp}, cand.shichen,
+                lat=self.lat, lon=self.lon,
+                d=_cand_date, is_night=_is_night)
             tianjiang_map = _tj_map.get('天将映射', {})
 
             # 权威评分（与单课 /api/zeri/analyze 完全一致的引擎 + 公式 + 评级线）
@@ -689,6 +709,8 @@ class BatchZeriOptimizer:
                 ben_ming2_gan=self.ben_ming2_gan,
                 # 2026-09-06 方案A-L3：择日类型类神吉应（与单课同口径；空则跳过）
                 zeri_type=self.zeri_type,
+                # 2026-11-04 憨爷拍板：贵人昼夜按用事地真太阳时（时辰中点 vs 当地日出）
+                lat=self.lat, lon=self.lon, is_night=_is_night,
             )
 
             # 挂接结果
@@ -861,6 +883,14 @@ class BatchZeriOptimizer:
         for mountain, candidates in mountain_candidates.items():
             for cand in candidates:
                 checked += 1
+                # 【2026-11-04 憨爷拍板】逐候选注入用事地/日 → 禄马贵与天将同源真太阳时
+                if self._luma_engine is not None:
+                    self._luma_engine.lat = self.lat
+                    self._luma_engine.lon = self.lon
+                    try:
+                        self._luma_engine.d = date.fromisoformat(cand.date_str)
+                    except Exception:
+                        self._luma_engine.d = None
                 try:
                     yidu_total, yidu = self._score_phase3(cand)
                 except Exception as e:

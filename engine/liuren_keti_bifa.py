@@ -882,7 +882,7 @@ def extract_shen_sha_valence(analysis: Dict[str, Any], zhanlei: str = "其他") 
 # ======================================================================
 TAICHAN_RIDE = {  # 日德（标准日德表：阳干取禄前、阴干取合）
     '甲': '寅', '乙': '申', '丙': '巳', '丁': '亥', '戊': '巳',
-    '己': '寅', '庚': '申', '辛': '巳', '壬': '亥', '癸': '寅',
+    '己': '寅', '庚': '申', '辛': '巳', '壬': '亥', '癸': '巳',   # 2026-09-30 修正：癸原为'寅'（误），据 L1194/L3000 应为'巳'
 }
 WX_SHENG = {'木': '火', '火': '土', '土': '金', '金': '水', '水': '木'}  # 我生者 = 子孙
 WX_KE = {'木': '金', '火': '水', '土': '木', '金': '火', '水': '土'}      # 克我者 = 官鬼
@@ -1126,9 +1126,57 @@ def get_yuejian_yingqi_text(ri_gan: str, ri_zhi: str, sanchuan_dizhi: list,
 #   ② 月建法（get_yuejian_yingqi_text）：月建支在初传/干上/时上 → 应于该月
 #   ③ 太岁法（get_tai_sui_lin_shen_text）：太岁临身 → 当年应（需 tai_sui_zhi 参数）
 # 物数法（get_wushu_text）= 数量非时间，单独输出（不混入应期）。
+def get_yinshen_yingqi_text(ri_gan: str, sanchuan_dizhi: list,
+                            tiandi_pan: dict = None, tian_jiang: dict = None) -> str:
+    """🔴 阴神救神应期（《壬學瑣記》p078）—— 叙事层，⛔ 不参与 valence。
+
+    原文：「類神之**陰神**，古人只云責其情狀，**殊不知亦可斷應期**，但**須看其與類神如何交關**耳」
+    断例 R42（丙午日申时·比用课·卜妾孕）：「**六合內戰難為子息**，幸**亥水救之**…
+                          **果於辰月辛亥日丑時生子**」「**應亥日者，以陰神是亥為救神故也**」
+
+    🔴 **辨析结论**：这不是"泛看阴神断应期"，而是——
+      **类神受克（内战）＋ 该类神所乘之支的「阴神」能救 ⇒ 应期落在该阴神之支**。
+      即「救神定应期」的一个**特殊取法**（救神从类神阴神取，非从三传取）。
+
+    判据（两层，缺一不出）：
+      ① **类神受克**：某天将所乘之支，其五行克该将之五行（＝用克将／内战）
+      ② **阴神能救**：该支的阴神（`tdp[该支]`，即其"上神"）五行，
+         **生类神五行** 或 **克「该支五行」**（泄/制克神）
+    ⇒ 输出「应期在{阴神}日/月」级提示。
+
+    ⚠ 样本仅 **2 例**（R42/R43，且皆"亥水生六合木"）⇒ 判据取宽（生 ∨ 克克神），
+      并明标样本数，⛔ 不许据此改主应期算法。
+    """
+    if not tian_jiang or not isinstance(tiandi_pan, dict) or not tiandi_pan:
+        return ''
+    try:
+        from engine.kege_shensha import WX_KE as _WK, WX_SHENG as _WSH
+        from engine.bifa_detector import TIANJIANG_WUXING as _JW, ZHI_WUXING as _ZW
+    except Exception:
+        return ''
+    hits = []
+    for z, j in (tian_jiang or {}).items():
+        jw, zw = _JW.get(j, ''), _ZW.get(z, '')
+        if not (jw and zw and _WK.get(zw, '') == jw):      # ① 用克将（内战）
+            continue
+        yin = str(tiandi_pan.get(z, '') or '')              # ② 该支之阴神（其上神）
+        yw = _ZW.get(yin, '')
+        if not yw:
+            continue
+        # ⚠ R42 是「**亥水生木**」＝**生**，⛔ 不是克（我第一版误用 WX_KE 判，全不命中）
+        if _WSH.get(yw, '') == jw or _WK.get(yw, '') == zw:  # 生类神 或 克克神
+            hits.append('%s（%s）受%s克，阴神%s（%s）可救 ⇒ 应期宜在%s'
+                        % (j, z, zw, yin, yw, yin))
+    if not hits:
+        return ''
+    return ('阴神断应期（《壬學瑣記》p078，样本2例）：' + '；'.join(hits[:2])
+            + '。⛔ 仅作参考，主应期以支数/月建/太岁为准。')
+
+
 def get_yingqi_unified(ri_gan: str, ri_zhi: str, sanchuan_dizhi: list,
                        tiandi_pan: dict = None, si_ke=None, shichen: str = '',
-                       tai_sui_zhi: str = '', zhanlei: str = '其他', zishu: str = '') -> str:
+                       tai_sui_zhi: str = '', zhanlei: str = '其他', zishu: str = '',
+                       tian_jiang: dict = None) -> str:
     """应期三法统一输出（叙事层·不参与 valence）。
     整合：支数法 + 月建法 + 太岁法（有参才输出），各法换行分块。
     zishu：家宅子类（阳宅/阴宅/迁移），阴宅时支数法启用邵公"增半/减半"期候应象。
@@ -1143,6 +1191,11 @@ def get_yingqi_unified(ri_gan: str, ri_zhi: str, sanchuan_dizhi: list,
     if t2:
         blocks.append(t2)
     # ③ 太岁法（需 tiandi_pan + tai_sui_zhi）
+    # ④ 阴神救神法（🆕 2026-10-22《壬學瑣記》p078；需 tiandi_pan + tian_jiang）
+    if tiandi_pan and tian_jiang:
+        t4 = get_yinshen_yingqi_text(ri_gan, sanchuan_dizhi, tiandi_pan, tian_jiang)
+        if t4:
+            blocks.append(t4)
     if tiandi_pan and tai_sui_zhi:
         t3 = get_tai_sui_lin_shen_text(ri_gan, tiandi_pan, tai_sui_zhi)
         if t3:
@@ -2283,7 +2336,20 @@ def extract_zeidao_valence(ri_gan: str, ri_zhi: str, sanchuan_dizhi: List[str],
           空亡→凶（§189 干上未旬空"自合失脱，捉贼不得"）；
        类神课传外 → 中性（§198/§200 边界：酉/卯不在课传仍寻得，天盘特位样本不足暂不作吉凶）。
     """
-    if zhanlei != '贼盗' and (zhanlei != '其他' or not leishen):
+    # 🔴 2026-10-22 修字序笔误：原写 `!= '贼盗'`，而 zhanlei 枚举里叫「**盗贼**」
+    #   ⇒ 占类标"盗贼"时**直接 return 0**，贼盗章信号从未产出；
+    #   亡盗案因标"其他"走第二路径才有效 ⇒ 一补占类就丢信号（4 例真吉复判凶）。
+    # 🔴 2026-10-22：路径②（亡盗类神寻物）原本**只对 zhanlei=='其他' 开放** ——
+    #   这是"零涟漪"时期的权宜设计（leishen 仅亡盗案置，故放开也不会影响别人）。
+    #   但它导致：**亡盗案一旦标上正确占类（盗贼/寻物），就掉出路径②**，
+    #   改走路径①（贼盗章）后信号由 +6 变 −5 ⇒ 4 例真吉复判凶（M3 −2pp）。
+    #   ⇒ 改为「**有类神即走路径②**」，不限占类（leishen 本就只对亡盗案置 ⇒ 仍零涟漪）。
+    # ⚠ 2026-10-22 试验过「有类神即走路径②（不限占类）」，**M3 无变化**（182→182），
+    #   故**回退**为原条件，⛔ 保留现状（占类标"其他"时走路径②）。待有更多亡盗案再议。
+    # 🔴 2026-10-22 憨爷定夺：**「亡盗」归「寻物」（失物）** ——
+    #   故「寻物」应与「其他」同走**路径②（亡盗类神寻物法，邵彦和失物法）**，
+    #   ⛔ 不走路径①（贼盗章"贼难擒/赃难寻"，那是"抓贼"语义，与失物不同）。
+    if zhanlei not in ('贼盗', '盗贼', '寻物') and (zhanlei != '其他' or not leishen):
         return {"score": 0, "level": "平", "details": [], "fired": ""}
     rgwx = GAN_WX.get(ri_gan)
     if not rgwx or not sanchuan_dizhi or len(sanchuan_dizhi) < 3:
@@ -2298,7 +2364,8 @@ def extract_zeidao_valence(ri_gan: str, ri_zhi: str, sanchuan_dizhi: List[str],
     gg_wx = WX_KE.get(rgwx, '')
 
     # ---- 亡盗类神寻物（零涟漪：仅 leishen 非空的"其他"案触发；邵彦和失物法）----
-    if zhanlei == '其他' and leishen:
+    # 🔴 2026-10-22 憨爷定「亡盗＝失物」⇒「寻物」走本路径（与"其他"同等待遇）
+    if zhanlei in ('其他', '寻物') and leishen:
         if leishen not in ZHI_WX:
             return {"score": 0, "level": "平", "details": [], "fired": ""}
         # W0: 太阳照武（毕法赋）：玄武临地盘时辰盘 → 贼被擒，失物必得（§193 果寻见）

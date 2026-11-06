@@ -68,6 +68,33 @@ except ImportError:
             pass
 
 
+
+# === 用事地上下文（2026-11-04 憨爷拍板「择日/占卦全用真太阳时」）===
+#   贵人昼夜需按「用事地经纬度 + 用事日」的真太阳时判定。analyze_yidu_full 等函数内部
+#   会自建多个 DaLiuRenLuMaGuiRen 实例，逐一传参易漏 ⇒ 用模块级上下文统一注入。
+#   ⚠ 进程内共享，仅适用于「单次请求内串行计算」；并发服务须在请求入口设置、请求结束复位。
+_LUMA_CTX = {'lat': None, 'lon': None, 'd': None, 'is_night': None}
+
+
+def set_luma_context(lat=None, lon=None, d=None, is_night=None):
+    """设置用事地/用事日/昼夜（真太阳时判定），传 None 则保留原值
+
+    is_night: 由上层（analyze_yidu_full / BatchZeriOptimizer）按**实际用事时刻**定好的
+              昼夜结论。设置后，内部自建实例一律沿用，不再各自按时辰中点重算 ——
+              否则「外层昼占、内层夜占」两套天将盘，贵人发传必然对不上。
+    """
+    if lat is not None:
+        _LUMA_CTX['lat'] = lat
+    if lon is not None:
+        _LUMA_CTX['lon'] = lon
+    if d is not None:
+        _LUMA_CTX['d'] = d
+    _LUMA_CTX['is_night'] = is_night
+
+
+def clear_luma_context():
+    _LUMA_CTX.update({'lat': None, 'lon': None, 'd': None, 'is_night': None})
+
 class DaLiuRenLuMaGuiRen:
     """大六壬禄马贵人到山到向计算器"""
     
@@ -437,6 +464,13 @@ class DaLiuRenLuMaGuiRen:
 
     def __init__(self):
         self.gui_ren_calc = GuiRenCalculator() if GuiRenCalculator else None
+        # 【2026-11-04 憨爷拍板「择日/占卦全用真太阳时」】贵人昼夜判定的用事地与时日。
+        #   默认取模块级上下文（set_luma_context），可在实例上逐条覆盖。
+        #   ⛔ 不再走固定卯-申为昼的 is_night_time。
+        self.lat = _LUMA_CTX['lat']
+        self.lon = _LUMA_CTX['lon']
+        self.d = _LUMA_CTX['d']
+        self.is_night = _LUMA_CTX.get('is_night')
     
     def get_shan_jia(self, mountain: str) -> str:
         """获取山家（斗首体系）"""
@@ -463,7 +497,9 @@ class DaLiuRenLuMaGuiRen:
             return None
         try:
             guiren_info = self.gui_ren_calc.arrange_gui_ren_pan(
-                tian_gan, {'天地对应': tiandi_pan}, shichen
+                tian_gan, {'天地对应': tiandi_pan}, shichen,
+                lat=getattr(self, 'lat', None), lon=getattr(self, 'lon', None),
+                d=getattr(self, 'd', None), is_night=getattr(self, 'is_night', None)
             )
             tianjiang_map = guiren_info.get('天将映射', {})
             for zhi, tj in tianjiang_map.items():
@@ -660,7 +696,9 @@ class DaLiuRenLuMaGuiRen:
         if tiandi_pan and shichen and self.gui_ren_calc:
             try:
                 guiren_info = self.gui_ren_calc.arrange_gui_ren_pan(
-                    ri_gan, {'天地对应': tiandi_pan}, shichen)
+                    ri_gan, {'天地对应': tiandi_pan}, shichen,
+                    lat=getattr(self, 'lat', None), lon=getattr(self, 'lon', None),
+                    d=getattr(self, 'd', None), is_night=getattr(self, 'is_night', None))
                 tianjiang_map = guiren_info.get('天将映射', {})
                 return {c for c in chuan_list if c and tianjiang_map.get(c) == '贵人'}
             except Exception:
@@ -1635,7 +1673,9 @@ class DaLiuRenLuMaGuiRen:
             try:
                 from engine.gui_ren_engine import GuiRenCalculator
                 _tjm = GuiRenCalculator().arrange_gui_ren_pan(
-                    ri_gan, {'天地对应': tiandi_pan or {}}, shichen).get('天将映射', {})
+                    ri_gan, {'天地对应': tiandi_pan or {}}, shichen,
+                    lat=getattr(self, 'lat', None), lon=getattr(self, 'lon', None),
+                    d=getattr(self, 'd', None), is_night=getattr(self, 'is_night', None)).get('天将映射', {})
                 ctx['tianjiang_list'] = [_tjm.get(z, '') for z in ctx['sanchuan_dizhi']]
             except Exception:
                 pass

@@ -39,6 +39,9 @@ if not DIZHI or len(DIZHI) < 12:
 # 导入昼夜贵人模块
 from engine.gui_ren_daynight import get_gui_ren_pan, is_daytime, get_tianjiang_for_sanchuan
 
+# 默认坐标（安龙县）——未传经纬度时兜底用；2026-11-04 起全链统一真太阳时
+DEFAULT_LAT, DEFAULT_LON = 25.1, 105.5
+
 class GuiRenCalculator:
     """贵人计算器"""
     
@@ -128,14 +131,19 @@ class GuiRenCalculator:
         :param d: 公历日期（可选，真太阳时用，默认今天）
         :return: 贵人盘字典
         """
-        # 1. 自动判断昼夜：优先真太阳时（日出日落），否则固定卯酉
+        # 1. 自动判断昼夜：2026-11-04 憨爷拍板「择日/占卦统一真太阳时」——
+        #    一律真太阳时（时辰按真太阳时划，取时辰中点与当地日出日落比对），
+        #    ⛔ 不再走 `is_night_time`（固定卯-申为昼，与「按太阳出入」铁律相悖）。
+        #    未传经纬度时以默认坐标(安龙 25.1/105.5)兜底，并给出提示。
         if is_night is None:
-            if lat is not None and lon is not None:
-                is_night = not is_daytime(shichen, lat=lat, lon=lon, d=d)
-            elif shichen:
-                is_night = self.is_night_time(shichen)
+            _lat = lat if lat is not None else DEFAULT_LAT
+            _lon = lon if lon is not None else DEFAULT_LON
+            if shichen:
+                is_night = not is_daytime(shichen, lat=_lat, lon=_lon, d=d)
+                if lat is None or lon is None:
+                    self._used_default_coords = True
             else:
-                is_night = False  # 默认昼占
+                is_night = False  # 无时辰时默认昼占
         
         # 2. 起贵人
         gui_ren = self.get_gui_ren_by_ri_gan(ri_gan, is_night)

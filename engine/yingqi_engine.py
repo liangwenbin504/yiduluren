@@ -857,6 +857,122 @@ def _m7_category(category: str, ri_gan: str, sanchuan: List[str],
 # 主函数
 # ══════════════════════════════════════════════════════════════
 
+# ════════════════════════════════════════════════════════════════════════
+# 🆕 法0 · 仲裁链（2026-10-02 憨爷拍板：「加」层级仲裁）
+#   依据（全证 → `docs/reports/_应期速迟判据取证报告.md`）：
+#     通解_**上** L3414-3418：
+#       「**日上发用，应在旬内；辰上发用，应在一月。得岁不出岁，得月不出月，
+#         得日不出日，得时不出时，得候不出候。**」
+#       「**太岁在初传，为当年事；在末，为久远事；在中兮，方来过去。传顺年浅，传逆年深。**」
+#   ⇒ 仲裁链：**位置法定档 → 太岁在传 → 传顺逆 →（其余法：支数定数、旬空定日…）**
+#   🔴 位置法优先级**最高**（priority=-1），压倒「专用/三传/类神」等既有法。
+#   ⛔ 叙事层，不进 valence。
+# ════════════════════════════════════════════════════════════════════════
+_ZHI12 = '子丑寅卯辰巳午未申酉戌亥'
+_ZHI_WX_ = {'子': '水', '丑': '土', '寅': '木', '卯': '木', '辰': '土', '巳': '火',
+            '午': '火', '未': '土', '申': '金', '酉': '金', '戌': '土', '亥': '水'}
+_LIUHE12 = {'子': '丑', '丑': '子', '寅': '亥', '亥': '寅', '卯': '戌', '戌': '卯',
+            '辰': '酉', '酉': '辰', '巳': '申', '申': '巳', '午': '未', '未': '午'}
+
+
+def _wz_grain_map(level):
+    """位置档 → (timing, days, 粒度名)。
+    🔴 键＝**原文位名**（岁/月/日/辰/时），对应原文 L3414：
+       岁→不出岁｜月→不出月｜**日→应在旬内**｜**辰→应在一月**｜时→不出时。"""
+    return {
+        '岁': ('迟', 365, '年'),
+        '月': ('中', 30, '月'),
+        '日': ('速', 10, '旬'),      # 日上发用 ⇒ 应在旬内
+        '辰': ('中', 30, '月'),      # 辰上发用 ⇒ 应在一月
+        '时': ('速', 1, '时'),
+    }.get(level, ('中', 30, '月'))
+
+
+def _m0_weizhi_fa(sanchuan, ri_gan='', ri_zhi='', gan_shang='', zhi_shang='',
+                  tiandi_pan=None, tai_sui_zhi='', shichen='', yuejiang=''):
+    """法0·位置法 —— 通解_**上** L3414（**有原文铁证 ⇒ 仲裁链最高优先**）。
+
+    判法：**初传（发用）加临在哪一层位** ⇒ 应期就在该层。
+      岁上 → 不出岁（迟/年）｜月上 → 不出月（中/月）｜日上（干上）→ 应在旬内（速/旬）
+      ｜辰上（支上）→ 应在一月（中/月）｜时上 → 不出时（速/时）。
+    返回候选 list（0 或 1 条）。⛔ 叙事层，不进 valence。
+    """
+    if not sanchuan or not sanchuan[0]:
+        return []
+    chu = sanchuan[0]
+    tdp = tiandi_pan or {}
+    # 原文序：岁 → 月 → 日(干) → 辰(支) → 时
+    checks = []
+    if tai_sui_zhi:
+        checks.append(('岁', tdp.get(tai_sui_zhi, tai_sui_zhi), '用在岁上'))
+    yuejian = _LIUHE12.get(str(yuejiang or '').replace('将', ''), '') if yuejiang else ''
+    if yuejian:
+        checks.append(('月', tdp.get(yuejian, yuejian), '用在月上'))
+    if gan_shang:
+        checks.append(('日', gan_shang, '日上发用'))
+    if zhi_shang:
+        checks.append(('辰', zhi_shang, '辰上发用'))
+    if shichen:
+        checks.append(('时', tdp.get(shichen, shichen), '用在时上'))
+    for level, god, why in checks:
+        if god and god == chu:
+            timing, days, gname = _wz_grain_map(level)
+            _map = {'岁': '应期在岁内（不出岁）', '月': '应期在一月内（不出月）',
+                    '日': '应期在旬内', '辰': '应期在一月', '时': '应期在时内（不出时）'}
+            return [{
+                'method': '位置法(%s上)' % level,
+                'timing': timing,
+                'days': days,
+                'trigger_zhi': '',
+                'trigger_gz': '',
+                'rule_ids': ['WZ_L3414'],
+                'desc': '位置法：初传%s＝%s位上神 → %s（通解_上 L3414「日上发用应在旬内；'
+                        '辰上发用应在一月；得岁不出岁…」）' % (chu, level, _map.get(level, '')),
+                'grain': gname,
+            }]
+    return []
+
+
+def _m0_taisui_zai_chuan(sanchuan, tai_sui_zhi=''):
+    """法0·太岁在传 —— 通解_**上** L3415「太岁在初传为当年事；在末为久远事；在中兮方来过去」。"""
+    if not tai_sui_zhi or not sanchuan:
+        return None
+    sc = [z for z in sanchuan if z]
+    if tai_sui_zhi not in sc:
+        return None
+    pos = sc.index(tai_sui_zhi)
+    if pos == 0:
+        timing, days, note = '速', 365, '太岁在初传 ⇒ 为当年事'
+    elif pos == len(sc) - 1:
+        timing, days, note = '迟', 3650, '太岁在末传 ⇒ 为久远事'
+    else:
+        timing, days, note = '中', 365, '太岁在中传 ⇒ 方来过去'
+    return {'method': '太岁在传(%s)' % ('初' if pos == 0 else ('末' if pos == len(sc) - 1 else '中')),
+            'timing': timing, 'days': days, 'trigger_zhi': tai_sui_zhi, 'trigger_gz': '',
+            'rule_ids': ['WZ_L3415'], 'desc': note + '（通解_上 L3415）', 'grain': '年'}
+
+
+def _m0_chuan_shun_ni(sanchuan):
+    """法0·传顺逆 —— 通解_**上** L3415「**传顺年浅，传逆年深**」。"""
+    if not sanchuan or len([z for z in sanchuan if z]) < 3:
+        return None
+    a, b, c = sanchuan[0], sanchuan[1], sanchuan[2]
+    try:
+        i = _ZHI12.index
+        d1, d2 = (i(b) - i(a)) % 12, (i(c) - i(b)) % 12
+    except ValueError:
+        return None
+    if d1 == d2 and 1 <= d1 <= 5:
+        return {'method': '传顺(年浅)', 'timing': '中', 'days': 180, 'trigger_zhi': '',
+                'trigger_gz': '', 'rule_ids': ['WZ_L3415'],
+                'desc': '传顺 ⇒ 年浅（通解_上 L3415「传顺年浅，传逆年深」）', 'grain': '年'}
+    if d1 == d2 and 7 <= d1 <= 11:
+        return {'method': '传逆(年深)', 'timing': '迟', 'days': 1095, 'trigger_zhi': '',
+                'trigger_gz': '', 'rule_ids': ['WZ_L3415'],
+                'desc': '传逆 ⇒ 年深（通解_上 L3415「传顺年浅，传逆年深」）', 'grain': '年'}
+    return None
+
+
 def judge_yingqi(
     ri_gan: str,
     sanchuan: List[str],
@@ -872,6 +988,15 @@ def judge_yingqi(
     tianjiang: Optional[Dict[str, str]] = None,
     season: str = '',
     category: str = '',
+    # 🆕 2026-10-02 位置法/仲裁链所需（全部可选，向后兼容）
+    tiandi_pan: Optional[Dict[str, str]] = None,
+    tai_sui_zhi: str = '',
+    shichen: str = '',
+    yuejiang: str = '',
+    # 🆕 一课二事（原文 §一课二事各断式）：按本命/行年分别落点 ⇒ 输出两项应期
+    ben_ming_zhi: str = '',
+    xing_nian_zhi: str = '',
+    two_subject: bool = False,
 ) -> dict:
     """六壬应期综合判断引擎（七法合一）
 
@@ -906,6 +1031,18 @@ def judge_yingqi(
         ganzhi = ri_gan + ri_zhi
 
     candidates: List[dict] = []
+
+    # ── 🆕 法0: 仲裁链（位置法 → 太岁在传 → 传顺逆）—— 2026-10-02 憨爷拍板「加」 ──
+    #   🔴 位置法**定档**为最高优先；其余法退为「档内参考」。
+    candidates.extend(_m0_weizhi_fa(
+        sanchuan, ri_gan=ri_gan, ri_zhi=ri_zhi, gan_shang=gan_shang, zhi_shang=zhi_shang,
+        tiandi_pan=tiandi_pan, tai_sui_zhi=tai_sui_zhi, shichen=shichen, yuejiang=yuejiang))
+    _ts_r = _m0_taisui_zai_chuan(sanchuan, tai_sui_zhi)
+    if _ts_r:
+        candidates.append(_ts_r)
+    _sn_r = _m0_chuan_shun_ni(sanchuan)
+    if _sn_r:
+        candidates.append(_sn_r)
 
     # ── 法1: 三传应期 ──
     candidates.extend(_m1_sanchuan(ri_gan, sanchuan))
@@ -953,9 +1090,13 @@ def judge_yingqi(
         candidates.extend(_m7_category(category, ri_gan, sanchuan, yong_shen, gan_shang, zhi_shang))
 
     # ── 主应期选举 ──
-    # 优先级：占事专用 > 类神/神煞 > 三传/干支 > 旺相休囚
-    # 同优先级内：timing 速 > 中 > 迟 > 无期（days 升序）
+    # 优先级：🆕 仲裁链(位置法/太岁在传/传顺逆) > 占事专用 > 类神·神煞 > 三传·干支 > 旬空
+    # 🔴 2026-10-02：位置法等给 **-1**（压倒一切）—— 有原文铁证（通解上 L3414/L3415），
+    #    其余既有优先级（专用0 / 三传本支1 / …）一律不动（OR 追加，⛔ 不整体替换）。
+    # ⚠️ 同优先级内仍按 timing「速>中>迟」排 —— 该排序**仅在同档内**生效，
+    #    **主档已由位置法决定**，⛔ 不再默认乐观取速（旧「取最小」已废）。
     priority = {
+        '位置法': -1, '太岁在传': -1, '传顺': -1, '传逆': -1,
         '专用': 0,
         # 三传本支应期是《断案》默认主干，应优先于日德/日禄等神煞（2026-09-08 BUG-A）
         '三传本支': 1,
@@ -1012,6 +1153,39 @@ def judge_yingqi(
         'rule_ids': [],
     }
 
+    # ── 🆕 一课二事（2026-10-02 憨爷「可以有两项应期」）──
+    # 原文依据＝通解_**下** L9079「例十五：一课二事多断式」：同课两人两断，邵公自答
+    #   「县丞**本命寅下临长生**…**行年即是官星**…必然升迁；汪公**本命未下临魁罡**，
+    #    上得虚诞之神，**行年添一盗气**…必然败坏」⇒ **按本命/行年分别落点，各定应期**。
+    # ⛔ 两事**不合并**：输出 primary_list（第 1 项＝主事，其余＝各事主）。
+    primary_list = [primary]
+    _sc_clean = [z for z in (sanchuan or []) if z]
+    for _lbl, _zz in (('本命', ben_ming_zhi), ('行年', xing_nian_zhi)):
+        if not _zz:
+            continue
+        _up = (tiandi_pan or {}).get(_zz, '')
+        _hit = ''
+        for _cand_z in (_up, _zz):          # 上神优先，退化为该支本身
+            if _cand_z and _cand_z in _sc_clean:
+                _hit = _cand_z
+                break
+        if not _hit:
+            continue
+        _i = _sc_clean.index(_hit)
+        _posn = ['初', '中', '末'][_i] if _i < 3 else ''
+        if not _posn:
+            continue
+        _tg = {'初': ('速', 10, '旬'), '中': ('中', 30, '月'), '末': ('迟', 365, '年')}[_posn]
+        primary_list.append({
+            'method': '一课二事·%s(%s传)' % (_lbl, _posn),
+            'timing': _tg[0], 'days': _tg[1],
+            'trigger_zhi': _zz, 'trigger_gz': '',
+            'rule_ids': ['WZ_TWO_SUBJECT'],
+            'desc': '一课二事：%s(%s)上神%s入%s传 ⇒ 该事应期（原文 §一课二事各断式'
+                    '「本命/行年分别加临」各定应期，⛔ 两事不合并）' % (_lbl, _zz, _hit, _posn),
+            'grain': _tg[2],
+        })
+
     # ── 综合叙述（干支应期版：trigger_gz 优先展示，如"甲午日"）──
     narr_parts = []
     if primary.get('trigger_zhi'):
@@ -1036,6 +1210,7 @@ def judge_yingqi(
 
     return {
         'primary': primary,
+        'primary_list': primary_list,     # 🆕 一课二事：两项（含）以上应期，⛔ 不合并
         'candidates': candidates,
         'matched_rules': sorted(matched_rules),
         'narrative': '；'.join(narr_parts),

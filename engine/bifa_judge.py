@@ -44,7 +44,8 @@ def judge_bifa(sanchuan_dizhi: List[str], ri_gan: str = '', ri_zhi: str = '',
                gan_shang_shen: str = '', zhi_shang_shen: str = '',
                si_ke_info: List = None, tian_jiang: Dict = None,
                tiandi_pan: Dict = None, keti: str = '', tai_sui: str = '',
-               ben_ming_zhi: str = '', shichen: str = '') -> Dict:
+               ben_ming_zhi: str = '', shichen: str = '',
+               is_day=None) -> Dict:
     """判断课体对应毕法赋 100 法的哪一句（纯六壬断法）。
 
     返回 {
@@ -64,6 +65,7 @@ def judge_bifa(sanchuan_dizhi: List[str], ri_gan: str = '', ri_zhi: str = '',
         gan_shang_shen=gan_shang_shen, zhi_shang_shen=zhi_shang_shen,
         si_ke_info=si_ke_info, tian_jiang=tian_jiang, tiandi_pan=tiandi_pan,
         keti=keti, tai_sui=tai_sui, ben_ming_zhi=ben_ming_zhi, shichen=shichen,
+        is_day=is_day,   # 🔴 2026-10-22：昼夜按**太阳出入**（见 judge_orchestrator._judge_is_day）
     )
 
     matched = raw.get('匹配法条', []) or []

@@ -624,6 +624,7 @@ class BiFaDetector:
                tai_sui: str = '',
                ben_ming_zhi: str = '',
                shichen: str = '',
+               is_day: Optional[bool] = None,
                ) -> Dict:
         """
         检测适用的毕法赋法条
@@ -665,8 +666,17 @@ class BiFaDetector:
         if not season:
             season = _get_yue_ling_season(yuejiang)
         
-        # 昼夜（昼时：卯辰巳午未申；夜时：酉戌亥子丑寅）
-        is_day = shichen in ('卯', '辰', '巳', '午', '未', '申') if shichen else True
+        # 昼夜：**优先读 env['is_day']**（该值已按「太阳出入」判定，见
+        #   `judge_orchestrator._judge_is_day` → `gui_ren_daynight.is_daytime`，真太阳时＋赤纬＋均时差）。
+        # 🔴 2026-10-22 憨爷指正：以前一直是**以太阳出入定昼夜**，主链路却用固定「卯-申为昼」，
+        #   而安龙（105.5°E）实际日出 6-8 时、日落 18-19.7 时 ⇒ 卯/酉/戌 三辰固定判必错。
+        # ⚠ 无 env['is_day'] 时才退化固定分界（兜底，保持旧行为）。
+        # ⓘ 必须判 `is None`，⛔ 不能用 `or` —— False 是合法值（夜），用 or 会把夜翻成昼。
+        # 🔴 2026-10-22 修正：`detect()` **不接收 env dict**（形参是一堆关键字），
+        #   上一版我误写 `env.get('is_day')` ⇒ NameError ⇒ M3 218 例全被 except 跳过。
+        #   现改为**显式形参** `is_day`，由调用方（judge_orchestrator）从 env 取出传入。
+        if is_day is None:
+            is_day = shichen in ('卯', '辰', '巳', '午', '未', '申') if shichen else True
         
         # 获取旬空
         kongwang = get_xun_kong(ganzhi) if ganzhi else ('', '')
@@ -685,7 +695,13 @@ class BiFaDetector:
             _gui_ren_map = GUIREN_MAP.get(ri_gan, ('', ''))
             _yj = yuejiang.replace('将', '').strip() if yuejiang else ''
             _sike_shang = _extract_sike_shang(si_ke_info)
-            _de = ''  # 日德（如需可扩展）
+            # 【2026-11-06 图读回填·《通解》上 P?/04_gejue:3239】日德取法：
+            #   阳干德＝本干禄位（甲→寅、丙戊→巳、庚→申、壬→亥）
+            #   阴干德＝所合阳干之禄（乙合庚→申、丁合壬→亥、己合甲→寅、辛合丙→巳、癸合戊→巳）
+            #   ⚠ 现暂无谓词消费 de，仅先把字段填真（原为空串，属"赋了没人读"的假接线）
+            _DE_MAP = {'甲':'寅','乙':'申','丙':'巳','丁':'亥','戊':'巳',
+                       '己':'寅','庚':'申','辛':'巳','壬':'亥','癸':'巳'}
+            _de = _DE_MAP.get(ri_gan, '')
             # ──【2026-09-22 补】月建（当令之本）：月将亥↔寅月 ⇒ 月建=(14-月将)%12
             #    旧 _data_env 只有 yuejiang/season，**无 yue_zhi** ⇒ 读 yue_zhi 的谓词
             #    （如第13法鬼贼当时）恒取空值、静默判否（外圈 except: pass 全吞）。
@@ -1683,6 +1699,13 @@ class BiFaDetector:
             return
         lu = LU_SHEN.get(ri_gan, '')
         wang = ZHI_WANG.get(gan_shang, '')
+        # 🔴 2026-10-22 考证（憨爷「按照你建议操作」）：本条**判据正确，不要改**。
+        #   《通解》上 L4338 明确定义：「**旺禄，指的是日干禄神临于干支上者**」——**不分阴干阳干**
+        #   ⇒ `lu == gan_shang` 即触发，与主流注口径一致。
+        #   ⚠ 《壬學瑣記》p021「此惟陰干有之」是在辨「禄 vs 旺神」的**名相分际**
+        #     （阳干禄＝临官、阴干禄＝帝旺），属**术语层**，⛔ 不否定本条判据。
+        #   ⓘ 下面 `wang == gan_shang` 因 `ZHI_WANG` 是**恒等映射**而恒真（看着像判旺神，实际不起作用）；
+        #     保留它不改结果，仅此说明以免后人（或我）再误判为 bug。
         if lu and lu == gan_shang and wang == gan_shang:
             self._add_rule(7, f'干上{gan_shang}为日干{ri_gan}禄神兼旺神，旺禄临身徒妄作')
 
@@ -2748,6 +2771,11 @@ class BiFaDetector:
             jiang_wx = TIANJIANG_WUXING.get(jiang, '')
             zhi_wx = ZHI_WUXING.get(zhi, '')
             if jiang_wx and zhi_wx and _wuxing_ke(jiang_wx, zhi_wx):
+                # ⚠ 2026-10-22：**本函数是死代码** —— 第86法已迁 `data/bifa_rules.json`（谓词
+                #   `jiang_feng_nei_zhan`），调用处已被注释（见本文件 ~952 行）。
+                #   ⇒ 真正生效的实现是 `kege_atoms._jiang_feng_nei_zhan`（口径也不同：
+                #     它按《通解》L4565「地盘克用、用克天将」，本函数却是「将克支」）。
+                #   ⛔ 勿在此处改判据 —— 改了不生效，且会与真源口径混淆。
                 self._add_rule(86, f'{pos}天将{jiang}({jiang_wx})克地支{zhi}({zhi_wx})，将逢内战所谋危')
                 return
 

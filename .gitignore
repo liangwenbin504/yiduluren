@@ -105,6 +105,12 @@ training_v4_*.txt
 _*.py
 # ⛔ 例外：`_*.py` 规则过宽，曾误伤权威基线脚本（2026-09-20）
 !engine/_honest_skill_all.py
+# ⛔ 例外：`_*.py` 误伤「神煞象意层」权威闸口（2026-09-27，155 项检查）
+!_test_shensha_xiang.py
+# ⛔ 例外：`_*.py` 误伤「存量资产地图」生成器（2026-09-27，A 区 31 锚点 + B 区 350 模块）
+!_gen_asset_map.py
+# ⛔ 例外：`_*.py` 误伤「接线一致性」权威闸口（2026-09-28，11 项检查；防「假接线」复发）
+!_test_api_wiring.py
 test_*.py
 # ⛔ 例外：`test_*.py` 会误伤毕法赋回归闸口（2026-09-21，22 项检查）
 !engine/test_bifa_100.py
@@ -281,3 +287,6 @@ DATA/**/*.7z
 /engine/ancient_backtest_report.json
 /engine/ancient_backtest_details.json
 _预览_*
+
+# ── 图读临时渲染 PNG（2026-11-06 加）──
+_图读tmp/

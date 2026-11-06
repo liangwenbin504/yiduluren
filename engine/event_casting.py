@@ -354,6 +354,17 @@ def evaluate():
     results = []
     for c in st['casts']:
         ev = next((e for e in st['events'] if e.get('event_id') == c.get('event_id')), {})
+        match = 'id' if ev else None
+        # 🔴 2026-09-30 修复：`events[]` 会被 `detect_events` **重建**（id 内含时间戳 ⇒ 变），
+        #   而 casts 存的是**起课当时**的 event_id ⇒ 18 条 casts 里 17 条失配、
+        #   `direction` 恒 None ⇒ **条件基线一律算不出**（实测 12 条结算记录 baseline_pct 全 None）。
+        #   回落：按同 `date` 匹配（实测每个日期当前仅 1 条 event ⇒ 回落可靠）；
+        #   ⚠️ 若某日多事件，取 σ 最大者，并在结果里以 `event_match` 标注关联方式便于审计。
+        if not ev:
+            same_day = [e for e in st['events'] if e.get('date') == c.get('date')]
+            if same_day:
+                ev = max(same_day, key=lambda e: e.get('sigma', 0))
+                match = 'date'
         direction = ev.get('direction')
         for W in (5, 20):
             key = f'window_{W}d'
@@ -371,6 +382,7 @@ def evaluate():
                 baseline = bl[direction].get(f'{W}d')
             results.append({
                 'cast_id': c['cast_id'], 'date': c['date'], 'event_dir': direction,
+                'event_match': match,
                 'pred_trend': pred_trend, 'window': W, 'actual': actual, 'hit': hit,
                 'baseline_pct': baseline,
             })

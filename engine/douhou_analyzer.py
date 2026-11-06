@@ -183,6 +183,7 @@ class DouhouKegeAnalyzer:
                 star_counts[key] = default_star_counts[key]
         kege_result['课格格局'] = self._judge_kege_pattern(star_counts, shan_wuxing, sizhu)
         
+        self._cur_kege = kege_result
         kege_result['综合评分'] = self._calculate_score(kege_result['课格格局'], star_counts, sizhu, shan, liuxiang_analysis)
         
         kege_result['吉凶断语'] = self._generate_duanyu(kege_result['课格格局'], kege_result['综合评分'])
@@ -539,6 +540,7 @@ class DouhouKegeAnalyzer:
         # _judge_sizhu_structure_patterns 结束
 
     def _calculate_score(self, patterns: List[Dict], star_counts: Dict, sizhu: Dict, shan: str, liuxiang_analysis: Dict) -> int:
+        kege_result = getattr(self, '_cur_kege', {})
         jixiong, score, duanyu = self.liuxiang_calculator.judge_kege_jixiong(liuxiang_analysis)
         
         sizhu_liuxiang = liuxiang_analysis.get('四柱六相', {})
@@ -601,6 +603,42 @@ class DouhouKegeAnalyzer:
                 elif '三重贪官' in name:
                     score -= 8
         
+        # ═══ 【2026-11-03 憨爷定谳·以《仪度六壬选日要诀》原著为准】斗首四条禁则 ═══
+        # 原著依据（extracted_data/仪度六壬选日要诀_原著全文.txt）：
+        #   P56「廉贞年一位，生旺子孙昌」＋李佳明注「破鬼之年只得一位」
+        #   P54「贪官不见贪官，永无官司诉讼；如果贪官见贪官，则克子孙」
+        #   P54「2 个贪官 2 个廉子为贪官廉子并坐，主克子，所以四代单传」
+        #   P54「日柱和时柱不可用贪官破鬼」
+        # ⚠ 分值待憨爷确认（先偏保守，看回测再调）
+        try:
+            _guan = int(star_counts.get('贪官', 0) or 0)
+            _lian = int(star_counts.get('廉贞', 0) or 0)
+            _po   = int(star_counts.get('破鬼', 0) or 0)
+            _rz_star = ((sizhu_liuxiang.get('日柱', {}) or {}).get('六相', ''))
+            _sz_star = ((sizhu_liuxiang.get('时柱', {}) or {}).get('六相', ''))
+            _taboo = []
+            if _lian >= 2:
+                score -= 20; _taboo.append(f'廉贞重见{_lian}位(-20｜原著"廉贞一位，生旺子孙昌"，憨爷：必死人，凶课)')
+            if _guan >= 2:
+                score -= 12; _taboo.append(f'贪官见贪官{_guan}位(-12｜原著"贪官见贪官则克子孙")')
+            # 原著 P54 原文作「2 个贪官 2 个廉子，为贪官廉子并坐」⇒ 须各≥2 方算并坐
+            if _guan >= 2 and _lian >= 2:
+                score -= 12; _taboo.append(f'贪官廉子并坐(贪{_guan}廉{_lian}，-12｜原著"2个贪官2个廉子…主克子，四代单传")')
+            if _rz_star == '贪官':
+                score -= 8; _taboo.append('日柱见贪官(-8｜原著"日柱时柱不可用贪官破鬼")')
+            if _sz_star == '贪官':
+                score -= 8; _taboo.append('时柱见贪官(-8｜同上)')
+            if _rz_star == '破鬼':
+                score -= 12; _taboo.append('日柱见破鬼(-12｜同上)')
+            if _sz_star == '破鬼':
+                score -= 12; _taboo.append('时柱见破鬼(-12｜同上)')
+            if _po >= 2:
+                score -= 8; _taboo.append(f'破鬼重见{_po}位(-8｜原著注"破鬼之年只得一位")')
+            if _taboo:
+                kege_result.setdefault('斗首禁则', _taboo)
+        except Exception:
+            pass
+
         final_score = max(0, min(100, score))
         
         return final_score
