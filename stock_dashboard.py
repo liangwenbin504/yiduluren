@@ -541,6 +541,47 @@ def serve_static_file(filename):
         return jsonify({'error': 'Not found'}), 404
 
 
+@app.route('/m')
+def m_index():
+    """推广落地页（营销页）——与仪表盘完全分离的独立门面。
+    2026-10-06 新建：仪表盘是给主人自己用的深色界面，陌生人打开第一眼会当成
+    「程序员自嗨工具」；本页只讲三件事：真实课单样例 / 89.4% 对账口径 / 免费试算。
+    ⛔ 严禁在本页宣传预测力（保真度 ≠ 预测力，见 docs/reports/_择日系统推广方案.md）。"""
+    html_file = ROOT / 'landing_zeri.html'
+    if html_file.exists():
+        from flask import make_response
+        resp = make_response(send_file(str(html_file)))
+        resp.headers['Cache-Control'] = 'no-cache'
+        return resp
+    return 'landing_zeri.html not found', 404
+
+
+@app.route('/robots.txt')
+def robots_txt():
+    """放行搜索引擎抓取落地页；仪表盘(/dash 等)不予收录。"""
+    from flask import Response
+    body = ('User-agent: *\n'
+            'Allow: /m\n'
+            'Allow: /static/wenshu_gallery/\n'
+            'Disallow: /api/\n'
+            'Disallow: /dash\n'
+            'Sitemap: /sitemap.xml\n')
+    return Response(body, mimetype='text/plain')
+
+
+@app.route('/sitemap.xml')
+def sitemap_xml():
+    """极简 sitemap：只申报落地页一条（站内无其他可公开内容）。"""
+    from flask import Response
+    base = request.host_url.rstrip('/')
+    xml = ('<?xml version="1.0" encoding="UTF-8"?>\n'
+           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+           '  <url><loc>%s/m</loc><changefreq>weekly</changefreq>'
+           '<priority>1.0</priority></url>\n'
+           '</urlset>\n' % base)
+    return Response(xml, mimetype='application/xml')
+
+
 @app.route('/')
 def index():
     html_file = ROOT / 'stock_dashboard.html'
@@ -3719,7 +3760,13 @@ def api_zeri_analyze():
                                                       '吉格': [], '凶格': [], '降等': [],
                                                       '理由': [], '数目': {}, '倾向': '平'})
                 result['shensha_xiang'] = _jres.get('shensha_xiang',
-                                                    {'落点': [], '说明': [], '煞值': {}})
+                                                    {'落点': [], '说明': [], '煞值': {},
+                                                     '象义': []})
+                # 🆕 2026-10-19：六亲×神煞冲突守卫（🔴 零评分影响，仅提示）
+                #    检「凶亲配吉神」结构；案例 INC-20240426-001 即因此断吉而实大凶
+                result['liuqin_shensha_guard'] = _jres.get(
+                    'liuqin_shensha_guard',
+                    {'守卫': False, '冲突数': 0, '冲突': [], '说明': [], '依据': []})
                 # 🆕 2026-09-22：禳解／趋避提示层（🔴 零评分影响，仅展示）
                 result['rangjie'] = _jres.get('rangjie', {'宜禳': False, '提示': [],
                                                           '禳法': [], '有救': False,
@@ -3781,7 +3828,10 @@ def api_zeri_analyze():
                 result['zhuge'] = {'主格': '', '主格性质': '平', '吉格': [], '凶格': [],
                                    '降等': [], '理由': [], '数目': {}, '倾向': '平',
                                    'error': str(_e_orch)}
-                result['shensha_xiang'] = {'落点': [], '说明': [], '煞值': {}}
+                result['shensha_xiang'] = {'落点': [], '说明': [], '煞值': {}, '象义': []}
+                result['liuqin_shensha_guard'] = {'守卫': False, '冲突数': 0, '冲突': [],
+                                                  '说明': [], '依据': [],
+                                                  'error': str(_e_orch)}
                 result['guishen_xiang'] = {'象域': False, '强度': 0, '候选': [],
                                            '类象语': '', '祷所': '', '依据': [],
                                            'error': str(_e_orch)}
@@ -3892,6 +3942,31 @@ def api_zeri_analyze():
                 wangshuai_fn=_ws_yq, yuejiang=yuejiang,
             )
             result['yingqi'] = '\n'.join(x for x in (_yq_base, _yq_v2) if x)
+            # ── 🆕 2026-10-02 应期**仲裁链**（憨爷拍板「加」）──
+            # 依据：通解_**上** L3414「日上发用应在旬内；辰上发用应在一月。得岁不出岁…」
+            #       ＋ L3415「太岁在初传为当年事；在末为久远事。传顺年浅，传逆年深」。
+            # ⇒ `primary`＝位置法定档（最高优先）；`primary_list`＝一课二事多项（⛔ 不合并）。
+            # 🔴 纯叙事层，⛔ 不进 valence / 不改吉凶排序；try/except 包住，绝不炸主链路。
+            try:
+                from engine.yingqi_engine import judge_yingqi as _judge_yq
+                _sike_j = result.get('sike') or []
+                _gs_j = _sike_j[0][1] if len(_sike_j) >= 1 and len(_sike_j[0]) >= 2 else ''
+                _zs_j = _sike_j[2][1] if len(_sike_j) >= 3 and len(_sike_j[2]) >= 2 else ''
+                _jy = _judge_yq(
+                    ri_gan, _yq_sc, ri_zhi=ri_zhi, ganzhi=ri_gan + ri_zhi,
+                    gan_shang=_gs_j, zhi_shang=_zs_j, kongwang=_kw_cl,
+                    tai_sui_zhi=str(nian_zhi or ''), shichen=shichen,
+                    yuejiang=str(yuejiang or ''),
+                    tiandi_pan=result.get('tiandi_pan', {}),
+                    category=str(zhanlei or ''),
+                    ben_ming_zhi=str(ben_ming_zhi or ''),
+                    two_subject=('一课二事' in str(_zt_an or '')),
+                )
+                result['yingqi_primary'] = _jy.get('primary') or {}
+                result['yingqi_primary_list'] = _jy.get('primary_list') or []
+            except Exception:
+                result['yingqi_primary'] = {}
+                result['yingqi_primary_list'] = []
             # 2026-08-20 应期结构化（前端卡片可视化：法门/粒度/文本）
             result['yingqi_struct'] = []
             try:
@@ -4750,10 +4825,60 @@ def api_qike():
                             ben_ming_sex=sex if sex in ('男', '女') else '男',
                             y=_qy, m=_qm, d=_qd, sanchuan_tianjiang=_tj3l_q)
             _jres_q = _jall_q(_env_q)
-            _bfq = (_jres_q.get('bifa_judged') or {}).get('匹配法句', []) or []
+            _jbq = _jres_q.get('bifa_judged') or {}
+            _bfq = _jbq.get('匹配法句', []) or []
             sc['毕法赋命中'] = [x.get('name', x) if isinstance(x, dict) else x for x in _bfq]
+            # 🆕 2026-09-28：**毕法赋全量结果**也须回填（analyze 口径一致）
+            #   ⚠️ 由 `_test_api_wiring.py` 闸口抓出：此前只回填派生的「毕法赋命中」，
+            #      `断法`（含分类）等在起课链路不可见 ⇒ 同属「层算了没出口」。
+            sc['bifa_judged'] = _jbq if _jbq else {'匹配法句': [], '断法': []}
+            # 🆕 2026-09-28 憨爷「按你的建议操作」：**起课链路补齐叙事层接线**
+            #   🔴 血泪根因：此前本处**只回填 `毕法赋命中` 1 个键**，而 `judge_all` 明明已算完
+            #      24+ 层（神煞象义/鬼神祠庙/主格裁定/禳解/六亲象域/占类先验…）⇒ 全被丢弃，
+            #      运行时零报错、前端永远看不到 —— 即 MEMORY 所记「**假接线**」坑
+            #      （层算出来了、出口没赋值；**重启也无效**，因问题不在进程而在赋值）。
+            #   实测对照：`/api/zeri/analyze` L3715-3736 回填 24 键；本处曾仅 1 键。
+            #   ⛔ 口径一律对齐 analyze（同一真源 `_jres_q`，⛔ 不重算、不另立默认值）。
+            _d_q = _jres_q.get('keti_judged', [])
+            sc['keti_judged'] = _d_q
+            sc['special_kege'] = _jres_q.get('special_kege', {'匹配课格': [], '课格详情': {}})
+            sc['bianjie_kege'] = _jres_q.get('bianjie_kege', {'匹配变格': [], '变格详情': {}})
+            sc['guishen_xiang'] = _jres_q.get('guishen_xiang',
+                                              {'象域': False, '强度': 0, '候选': [],
+                                               '类象语': '', '祷所': '', '依据': []})
+            sc['zhuge'] = _jres_q.get('zhuge', {'主格': '', '主格性质': '平',
+                                                '吉格': [], '凶格': [], '降等': [],
+                                                '理由': [], '数目': {}, '倾向': '平'})
+            sc['shensha_xiang'] = _jres_q.get('shensha_xiang',
+                                              {'落点': [], '说明': [], '煞值': {}, '象义': []})
+            sc['rangjie'] = _jres_q.get('rangjie', {'宜禳': False, '提示': [], '禳法': [],
+                                                    '有救': False, '有救理由': [], '依据': []})
+            sc['liuqin_xiang'] = _jres_q.get('liuqin_xiang',
+                                             {'象域': False, '位': [], '类象语': '',
+                                              '原文直引': [], '依据': []})
+            sc['zhanyin_prior'] = _jres_q.get('zhanyin_prior',
+                                              {'章': '', '占类': '', '样本': 0, '谱': [],
+                                               '语': '', '来源': '', '边界': ''})
         except Exception as _e_bfq:
             sc['毕法赋命中'] = []
+            sc.setdefault('bifa_judged', {'匹配法句': [], '断法': []})
+            # 🔴 旧版此 except 只兜 `毕法赋命中` ⇒ 新增键在异常时静默缺失（前端 undefined）。
+            #    此处补齐全部新键的空默认值，保证**键恒在**（消费方无感）。
+            sc.setdefault('keti_judged', [])
+            sc.setdefault('special_kege', {'匹配课格': [], '课格详情': {}})
+            sc.setdefault('bianjie_kege', {'匹配变格': [], '变格详情': {}})
+            sc.setdefault('guishen_xiang', {'象域': False, '强度': 0, '候选': [],
+                                            '类象语': '', '祷所': '', '依据': []})
+            sc.setdefault('zhuge', {'主格': '', '主格性质': '平', '吉格': [], '凶格': [],
+                                    '降等': [], '理由': [], '数目': {}, '倾向': '平'})
+            sc.setdefault('shensha_xiang', {'落点': [], '说明': [], '煞值': {}, '象义': []})
+            sc.setdefault('rangjie', {'宜禳': False, '提示': [], '禳法': [],
+                                      '有救': False, '有救理由': [], '依据': []})
+            sc.setdefault('liuqin_xiang', {'象域': False, '位': [], '类象语': [],
+                                           '原文直引': [], '依据': []})
+            sc.setdefault('zhanyin_prior', {'章': '', '占类': '', '样本': 0, '谱': [],
+                                            '语': '', '来源': '', '边界': ''})
+            sc['_orchestrator_error'] = str(_e_bfq)
         _stem_list, _ganzhi_list, _liuqin_list, _kw_list = [], [], [], []
         for c in sc_list:
             try:

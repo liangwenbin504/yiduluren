@@ -3605,7 +3605,17 @@ function zhugeRangjieCard(d) {
     if (_num['本数']) _extra.push('数目：用神' + (_num['用神'] || '') + '＝' + _num['本数']);
     if (_yr['计数']) _extra.push('阳刃' + (_yr['支'] || '') + '×' + _yr['计数'] + '（' + (_yr['位置'] || []).join('·') + '）');
     var _ss = d.shensha_xiang || {};
-    var _ssTxt = (((_ss['说明']) || []).slice(0, 3)).map(_e).join('；');
+    // 🆕 2026-09-27：取用扩至「七处」后落点可达 10 条，原 slice(0,3) 会把新增位置截掉 ⇒ 放宽到 8
+    // 🆕 2026-09-27 二次放宽到 13：八妖补齐后煞表共 13 项（月煞 9 ＋ 年煞 3 ＋ 日干 1），
+    //    故「落点」条数上限 13 ⇒ 截断值必须 ≥ 13，否则又是「后端有、前端白补」。
+    // 🆕 2026-09-27 三次放宽到 16：八妖收官（补 月宿 ⇒ 煞表 14 项）＋ 天将类神煞
+    //    （青龙纸钱煞／太常孝服煞，每条最多 2 落点）⇒ 上限 14 ＋ 2 ＝ 16。
+    var _ssTxt = (((_ss['说明']) || []).slice(0, 16)).map(_e).join('；');
+    // 🆕 2026-09-27 神煞象义（愿神/飞魂/月厌/天目/飞廉/天怪/直符/月宿/青龙/太常）
+    //    —— 🔴 后端每条已附原文出处；前端**只渲染**，不自行判吉凶（单源铁律）
+    var _ssXy = ((_ss['象义']) || []).slice(0, 16).map(function (x) {
+      return _e(x['煞'] || '') + '：' + _e(x['象'] || '');
+    }).join('；');
     html += _box(
       '<div style="font-size:12px;font-weight:600;color:#8ea2ff;margin-bottom:4px;">⚖️ 主格裁定'
       + ' <span style="color:#666;font-size:11px;font-weight:400;">（多格并列时按原文轻重定主格，不进评分）</span></div>'
@@ -3614,7 +3624,8 @@ function zhugeRangjieCard(d) {
       + ' <span style="color:#888;font-size:11px;">倾向：' + _e(zg['倾向'] || '') + '</span></div>'
       + (_down.length ? '<div style="margin-top:4px;">' + _dHtml + '</div>' : '')
       + (_extra.length ? '<div style="margin-top:4px;font-size:11px;color:#9aa;">' + _extra.map(_e).join('　｜　') + '</div>' : '')
-      + (_ssTxt ? '<div style="margin-top:4px;font-size:11px;color:#9aa;">神煞：' + _ssTxt + '</div>' : ''));
+      + (_ssTxt ? '<div style="margin-top:4px;font-size:11px;color:#9aa;">神煞：' + _ssTxt + '</div>' : '')
+      + (_ssXy ? '<div style="margin-top:2px;font-size:11px;color:#d8b24a;">象义：' + _ssXy + '</div>' : ''));
   }
   // ── 🙏 禳解趋避 ──
   var _rj = d.rangjie;

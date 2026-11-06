@@ -139,7 +139,7 @@ def _yingqi_for_ancient(ri_gan: str, ri_zhi: str, sanchuan_dizhi: List[str],
 # （⛔ 禁 LLM 兜底，避免写脏 data/leishen_llm_cache.json）。
 #
 # 三档口径（实测 M3，朴素基线同为 85.5%）：
-#   auto（默认，自推）→ **89.9%**，净 +4.3pp   ← 现行
+#   auto（默认，自推）→ **89.4%**，净 +3.9pp   ← 现行（2026-11-06 实测锚定；旧记 89.9%）
 #   human（人工预填） → 91.8%，净 +6.3pp      ← 旧口径，含泄漏
 #   none（不给类神）  → 87.9%，净 +2.4pp
 # ⇒ 切换后数字下降**不是退步**，是剔掉喂答案的部分；自推净贡献 +1.9pp 为真实能力。

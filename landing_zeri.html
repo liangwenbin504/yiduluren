@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>仪度六壬择日 · 专业择吉工具 | 对账218古例·四课三传·课经有据</title>
+<meta name="description" content="仪度六壬择日系统：完整实现大六壬九宗门起课、四课三传、64课经、24山到山到向、禄马贵人。已对账《断案疏正》218例古例，还原度89.4%。提供婚嫁、安葬、立碑、入宅、开业等14类择日课单。">
+<meta name="keywords" content="择日,黄历,择吉日,婚嫁吉日,安葬吉日,入宅择日,大六壬,六壬择日,看日子,选日子,风水择日,山向择日">
+<meta property="og:title" content="仪度六壬择日 · 专业择吉工具">
+<meta property="og:description" content="对账218例古例，还原度89.4%。14类择日课单，课经有据。">
+<meta property="og:type" content="website">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;background:#f7f4ee;color:#2c2a26;line-height:1.75}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+header{background:#8c2318;color:#f7f4ee;padding:14px 0;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.12)}
+header .wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo{font-size:20px;font-weight:600;letter-spacing:2px}
+.logo span{font-size:13px;opacity:.85;font-weight:400;letter-spacing:0;margin-left:8px}
+nav{margin-left:auto;display:flex;gap:18px;flex-wrap:wrap;font-size:14px}
+nav a{color:#f7f4ee;text-decoration:none;opacity:.9}
+nav a:hover{opacity:1;text-decoration:underline}
+
+.hero{background:linear-gradient(160deg,#fdfbf6 0%,#f3ede0 100%);padding:52px 0 44px;border-bottom:1px solid #e3d9c6}
+.hero h1{font-size:34px;font-weight:600;color:#8c2318;letter-spacing:2px;line-height:1.4;margin-bottom:14px}
+.hero .sub{font-size:17px;color:#5a5348;max-width:720px;margin-bottom:12px}
+.hero .trust{font-size:14px;color:#8c2318;background:#fff;border-left:4px solid #8c2318;padding:12px 16px;border-radius:0 6px 6px 0;display:inline-block;margin:8px 0 24px}
+.hero .trust b{font-size:20px}
+.btn{display:inline-block;padding:13px 32px;font-size:16px;border-radius:6px;text-decoration:none;font-weight:500;transition:.2s}
+.btn-main{background:#8c2318;color:#fff}
+.btn-main:hover{background:#701c13}
+.btn-sub{background:#fff;color:#8c2318;border:1px solid #8c2318}
+.btn-sub:hover{background:#f3ede0}
+.hero .btns{display:flex;gap:14px;flex-wrap:wrap}
+
+.stats{background:#2c2a26;color:#f7f4ee;padding:34px 0}
+.stats .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center}
+.stat .n{font-size:32px;font-weight:600;color:#e8c88a}
+.stat .l{font-size:13px;opacity:.8;margin-top:4px}
+
+section{padding:46px 0}
+h2{font-size:25px;color:#8c2318;margin-bottom:8px;letter-spacing:1px}
+.sec-sub{color:#6b6357;font-size:15px;margin-bottom:26px}
+
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:20px}
+.card{background:#fff;border:1px solid #e3d9c6;border-radius:10px;overflow:hidden;transition:.2s;display:flex;flex-direction:column}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(140,35,24,.12);border-color:#8c2318}
+.card .thumb{background:#f3ede0;aspect-ratio:4/3;overflow:hidden;cursor:zoom-in;position:relative}
+.card .thumb img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+.card .meta{padding:12px 14px;display:flex;align-items:center;gap:8px;flex:1}
+.card .nm{font-size:16px;font-weight:500;color:#2c2a26}
+.card .dl{margin-left:auto;font-size:12px;color:#8c2318;text-decoration:none;border:1px solid #8c2318;padding:3px 10px;border-radius:4px;white-space:nowrap}
+.card .dl:hover{background:#8c2318;color:#fff}
+
+.lightbox{display:none;position:fixed;inset:0;background:rgba(20,16,12,.9);z-index:100;align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
+.lightbox.on{display:flex}
+.lightbox img{max-width:94%;max-height:94%;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.lightbox .close{position:absolute;top:20px;right:24px;color:#fff;font-size:32px;line-height:1;cursor:pointer}
+
+.calc{background:#2c2a26;color:#f7f4ee;padding:46px 0}
+.calc h2{color:#e8c88a}
+.calc .sec-sub{color:#bdb5a8}
+.calc-box{background:#3a3733;border:1px solid #4d4944;border-radius:12px;padding:26px}
+.f-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:18px}
+.f label{display:block;font-size:13px;opacity:.85;margin-bottom:5px}
+.f select,.f input{width:100%;padding:10px 12px;border-radius:6px;border:1px solid #4d4944;background:#2c2a26;color:#f7f4ee;font-size:14px}
+.calc .go{background:#8c2318;color:#fff;padding:12px 30px;border:none;border-radius:6px;font-size:15px;cursor:pointer;font-weight:500}
+.calc .go:disabled{opacity:.55;cursor:wait}
+.calc-note{font-size:13px;opacity:.75;margin-top:14px;line-height:1.7}
+.res{margin-top:22px;display:none}
+.res.on{display:block}
+.res-card{background:#f7f4ee;color:#2c2a26;border-radius:10px;padding:22px}
+.res-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;padding-bottom:14px;border-bottom:2px solid #e3d9c6;margin-bottom:16px}
+.res-score{font-size:34px;font-weight:600}
+.res-grade{font-size:18px;padding:3px 14px;border-radius:4px;color:#fff}
+.g-ji{background:#2d7a3e}.g-xu{background:#8a6d1e}.g-bu{background:#8c2318}
+.res-sum{font-size:14px;color:#5a5348;line-height:1.8;white-space:pre-wrap}
+.res-sec{margin-top:16px}
+.res-sec h4{font-size:14px;color:#8c2318;margin-bottom:8px;letter-spacing:1px}
+.res-sec table{width:100%;border-collapse:collapse;font-size:13px}
+.res-sec td{padding:6px 8px;border-bottom:1px solid #e8e0d0}
+.res-sec td:first-child{color:#6b6357;width:88px;white-space:nowrap}
+.res-pill{display:inline-block;background:#fff;border:1px solid #d4c8ae;border-radius:4px;padding:2px 9px;font-size:12px;margin:0 5px 5px 0}
+.res-more{margin-top:14px;font-size:13px}
+.res-more summary{cursor:pointer;color:#8c2318}
+
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.how .h{background:#fff;border:1px solid #e3d9c6;border-radius:10px;padding:24px}
+.how .ic{font-size:26px;margin-bottom:8px}
+.how h3{font-size:17px;color:#8c2318;margin-bottom:8px}
+.how p{font-size:14px;color:#5a5348}
+
+.faq{max-width:760px}
+.faq details{background:#fff;border:1px solid #e3d9c6;border-radius:8px;padding:14px 18px;margin-bottom:10px}
+.faq summary{cursor:pointer;font-weight:500;color:#2c2a26;font-size:15px}
+.faq .ans{padding-top:12px;font-size:14px;color:#5a5348;line-height:1.85}
+.faq .ans b{color:#8c2318}
+
+footer{background:#2c2a26;color:#a8a196;padding:34px 0;font-size:13px;line-height:1.9}
+footer b{color:#e8c88a}
+footer .disc{margin-top:14px;padding-top:14px;border-top:1px solid #4d4944;font-size:12px;opacity:.8}
+
+@media(max-width:760px){
+.hero h1{font-size:25px}
+.stats .grid{grid-template-columns:repeat(2,1fr)}
+.how{grid-template-columns:1fr}
+nav{display:none}
+}
+@media(max-width:420px){
+/* ⛔ 窄屏溢出根因：画廊 minmax(210px) 在 390 宽下 210*2+20=440 > 350 ⇒ 撑破整页，
+   导致所有元素被右侧裁掉（表现为大数字「89.4%」缺尾）。故：单列 + 兜底禁止横向滚动。*/
+body{overflow-x:hidden}
+.gallery{grid-template-columns:1fr}
+.stat .n{font-size:26px}
+.hero h1{font-size:22px}
+.hero .trust{font-size:13px;padding:10px 12px}
+.hero .trust b{font-size:17px}
+.btn{padding:12px 22px;font-size:15px}
+h2{font-size:21px}
+.calc-box{padding:18px 14px}
+.f-row{grid-template-columns:1fr 1fr;gap:10px}
+.f select,.f input{padding:9px 10px;font-size:16px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo">仪度六壬择日<span>专业择吉工具</span></div>
+    <nav>
+      <a href="#gallery">课单样例</a>
+      <a href="#calc">免费试算</a>
+      <a href="#how">原理</a>
+      <a href="#faq">常见问题</a>
+      <a href="/">进入系统</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <h1>把日子算清楚，再把它过好</h1>
+    <p class="sub">完整实现大六壬九宗门起课、四课三传、六十四课经、二十四山到山到向、禄马贵人。婚嫁、安葬、立碑、入宅、开业……14 类用事，各出一份可存档的择日课单。</p>
+    <div class="trust">
+      已对账《断案疏正》<b>218 例</b>古例，原断还原度 <b>89.4%</b> —— 不是黑箱，每一条断语都能回溯到课经与原文出处。
+    </div>
+    <div class="btns">
+      <a class="btn btn-main" href="#calc">免费试算一次</a>
+      <a class="btn btn-sub" href="#gallery">看 14 份真实课单</a>
+    </div>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="wrap grid">
+    <div class="stat"><div class="n">218</div><div class="l">古例对账样本</div></div>
+    <div class="stat"><div class="n">89.4%</div><div class="l">原断还原度</div></div>
+    <div class="stat"><div class="n">64</div><div class="l">六十四课经全配</div></div>
+    <div class="stat"><div class="n">14</div><div class="l">可用事类别</div></div>
+  </div>
+</div>
+
+<section id="gallery">
+  <div class="wrap">
+    <h2>真实课单样例</h2>
+    <p class="sec-sub">以下均为系统实算输出，非示意图。点击可放大，PDF 可直接下载留档。</p>
+    <div class="gallery" id="gal"></div>
+  </div>
+</section>
+
+<div class="calc" id="calc">
+  <div class="wrap">
+    <h2>免费试算一次</h2>
+    <p class="sec-sub">选一个日子，看系统怎么断。无需注册。</p>
+    <div class="calc-box">
+      <div class="f-row">
+        <div class="f"><label>用事类别</label><select id="fType"></select></div>
+        <div class="f"><label>日期</label><input type="date" id="fDate"></div>
+        <div class="f"><label>时辰</label><select id="fShi"></select></div>
+        <div class="f"><label>坐山</label><select id="fShan"></select></div>
+      </div>
+      <button class="go" id="btnGo">开始排盘</button>
+      <p class="calc-note" id="calcNote">每日 1 次免费不限跨度。完整择日（区间扫吉日、出具课单）需登录或付费解锁。</p>
+      <div class="res" id="res"></div>
+    </div>
+  </div>
+</div>
+
+<section id="how">
+  <div class="wrap">
+    <h2>它是怎么算的</h2>
+    <p class="sec-sub">三步，全部有据可查</p>
+    <div class="how">
+      <div class="h">
+        <div class="ic">☯</div>
+        <h3>一 · 起课天地盘</h3>
+        <p>按节气定月将，加临地盘，转天盘，据九宗门（贼克、比用、涉害、遥克、昴星、别责、八专、伏吟、返吟）发用。</p>
+      </div>
+      <div class="h">
+        <div class="ic">☷</div>
+        <h3>二 · 列四课发三传</h3>
+        <p>干阳干阴、支阳支阴各成一课，依九宗门发三传，判天将、论贵神、察神煞、辨空亡。</p>
+      </div>
+      <div class="h">
+        <div class="ic">☰</div>
+        <h3>三 · 配课经出课单</h3>
+        <p>匹配六十四课经与毕法赋条文，落到山向、禄马贵人到山到向，逐条给出断语与忌讳，成文为课单。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" style="background:#fdfbf6;border-top:1px solid #e3d9c6">
+  <div class="wrap faq">
+    <h2>常见问题</h2>
+    <details><summary>这个系统能预测事情成败吗？</summary>
+      <div class="ans"><b>不能。</b>这套系统做的是<b>还原古法</b>——把《仪度六壬选日要诀》《大六壬通解》里的择日条文按原法算出来，并列出断语依据。它不预言吉凶成败，89.4% 这个数字指的是<b>对 218 例古例原断的还原度</b>，不是预测准确率。请把它当作「专业择日计算工具」，而不是预言机。</div></details>
+    <details><summary>89.4% 是怎么来的？</summary>
+      <div class="ans">取《断案疏正》218 例有明确吉凶标注的课例，用系统重算，与原书断语逐条比对得出。这是<b>保真度</b>指标：说明「古人这么断，我们也算这么断」。</div></details>
+    <details><summary>课单里为什么写「宜安葬立碑，勿用此日」这种话？</summary>
+      <div class="ans">这是逐条匹配课经与神煞后的<b>具体忌讳</b>，会指出是哪个字、哪一课、哪一条条文推出来的，而不是笼统说「吉」或「凶」。</div></details>
+    <details><summary>我需要提供什么信息？</summary>
+      <div class="ans">最少只要<b>日子 + 时辰 + 坐山</b>。如需年命（本人或双方生辰）可补充，精度层会更细。婚嫁类建议填双方年命。</div></details>
+    <details><summary>能出纸质凭证吗？</summary>
+      <div class="ans">能。系统直接输出 PDF 课单，含四课三传、天地盘、课经依据、批语与忌讳，可打印存档或发给客户。</div></details>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div><b>仪度六壬择日</b> · 依《仪度六壬选日要诀》《大六壬通解》古法推演</div>
+    <div>课经对照：《大六壬断案疏正》218 例 · 六十四课经 · 《大六壬通解》毕法赋</div>
+    <div class="disc">
+      本系统为传统术数择日计算工具，用于还原古法条文推演，<b>不作任何形式的吉凶预测或命运断言</b>。
+      择日结果供使用者参考，重大事项请自行结合现实条件审慎决策。使用者年龄须满 18 周岁。
+    </div>
+  </div>
+</footer>
+
+<div class="lightbox" id="lb"><span class="close">&times;</span><img id="lbImg" alt="课单样例放大"></div>
+
+<script>
+var GAL=[["婚嫁","嫁娶择日 · 六壬课单"],["安葬","安人先人 · 阴宅课单"],["立碑","立碑安碑 · 山向课单"],
+["新居入宅","入住新房 · 阳宅课单"],["开业","开市开业 · 择吉课单"],["动土修造","动土兴工 · 修造课单"],
+["上梁盖屋","上梁盖屋 · 建造课单"],["安门","安门安户 · 择吉课单"],["作灶","造灶安灶 · 课单"],
+["出行","出行远行 · 择吉课单"],["安床","安床设床 · 婚育课单"],["祭祀祈福","祭祀祈福 · 课单"],
+["求嗣","求嗣求子 · 类神课单"],["签约交易","签约交易 · 契券课单"]];
+var galEl=document.getElementById('gal');
+GAL.forEach(function(g){
+  var d=document.createElement('div');d.className='card';
+  d.innerHTML='<div class="thumb"><img loading="lazy" src="/static/wenshu_gallery/'+encodeURIComponent(g[0])+'.png" alt="'+g[0]+'择日课单"></div>'+
+    '<div class="meta"><div><div class="nm">'+g[0]+'</div><div style="font-size:12px;color:#8a8275">'+g[1]+'</div></div>'+
+    '<a class="dl" href="/static/wenshu_pdf/'+encodeURIComponent('_样例_择日文书_'+g[0])+'.pdf" target="_blank" rel="noopener">下载PDF</a></div>';
+  d.querySelector('.thumb').onclick=function(){openLb(encodeURIComponent(g[0])+'.png')};
+  galEl.appendChild(d);
+});
+
+var lb=document.getElementById('lb'),lbImg=document.getElementById('lbImg');
+function openLb(src){lbImg.src='/static/wenshu_gallery/'+src;lb.classList.add('on')}
+lb.onclick=function(){lb.classList.remove('on')};
+document.addEventListener('keydown',function(e){if(e.key==='Escape')lb.classList.remove('on')});
+
+var TYPES=["立碑","安葬","婚嫁","开业","新居入宅","动土修造","阳宅动土","阴宅动土","安门","作灶","安床",
+"出行","提车","买房过户","开工","入学开学","考试","测孩子成绩","迁坟","催龙补气","召山买土",
+"祭祀祈福","求嗣","签约交易","上梁盖屋"];
+var SHICHEN=["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
+var SHAN=["壬","子","癸","丑","艮","寅","甲","卯","乙","辰","巽","巳","丙","午","丁","未","坤","申","庚","酉","辛","戌","乾","亥"];
+
+function fill(id,arr,def){
+  var s=document.getElementById(id);
+  arr.forEach(function(v){var o=document.createElement('option');o.value=v;o.textContent=v;s.appendChild(o)});
+  if(def) s.value=def;
+}
+fill('fType',TYPES,"婚嫁"); fill('fShi',SHICHEN,"午"); fill('fShan',SHAN,"壬");
+document.getElementById('fDate').value="2026-10-08";
+
+var btn=document.getElementById('btnGo'),res=document.getElementById('res');
+var GRADE_CLS={};
+function clsOf(g){if(!g)return'g-bu';if(g.indexOf('吉')>=0&&g.indexOf('不宜')!==0)return'g-ji';if(g.indexOf('不宜')>=0)return'g-bu';return'g-xu'}
+
+btn.onclick=function(){
+  var t=document.getElementById('fType').value,
+      dt=document.getElementById('fDate').value,
+      shi=document.getElementById('fShi').value,
+      shan=document.getElementById('fShan').value;
+  if(!dt){alert('请先选日期');return}
+  btn.disabled=true;btn.textContent='排盘中…';
+  res.classList.remove('on');
+  var url='/api/zeri/analyze?auto=1&date='+encodeURIComponent(dt)+'&mountain='+encodeURIComponent(shan)+
+          '&shichen='+encodeURIComponent(shi)+'&zhanlei='+encodeURIComponent(t);
+  fetch(url).then(function(r){return r.json()}).then(function(d){
+    if(d.error){throw new Error(d.error)}
+    render(d,t,dt,shi,shan);
+    res.classList.add('on');
+  }).catch(function(e){
+    res.innerHTML='<div class="res-card" style="border-left:4px solid #8c2318">排盘失败：'+
+      (e.message||'请稍后重试')+'</div>';
+    res.classList.add('on');
+  }).then(function(){
+    btn.disabled=false;btn.textContent='开始排盘';
+  });
+};
+
+function tdRow(k,v){return'<tr><td>'+k+'</td><td>'+v+'</td></tr>'}
+function esc(s){return String(s==null?'':s).replace(/[&<>]/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+
+function render(d,t,dt,shi,shan){
+  var h='';
+  h+='<div class="res-card">';
+  h+='<div class="res-head"><div class="res-score" style="color:'+(d.score>=70?'#2d7a3e':d.score>=50?'#8a6d1e':'#8c2318')+'">'+esc(d.score)+'</div>'+
+     '<div class="res-grade '+clsOf(d.grade)+'">'+esc(d.grade)+'</div>'+
+     '<div style="font-size:14px;color:#6b6357">'+esc(dt)+' '+esc(shi)+'时 · '+esc(shan)+'山 · '+esc(t)+'</div></div>';
+
+  if(d.summary) h+='<div class="res-sum">'+esc(d.summary)+'</div>';
+
+  var sc=d.sizhu||{};
+  h+='<div class="res-sec"><h4>四　柱</h4><table>'+
+     tdRow('年',esc(sc['年']))+tdRow('月',esc(sc['月']))+tdRow('日',esc(sc['日']))+tdRow('时',esc(sc['时']))+
+     tdRow('月将',esc(d.yuejiang))+'</table></div>';
+
+  if(d.sike&&d.sike.length){
+    h+='<div class="res-sec"><h4>四　课</h4><table>';
+    d.sike.forEach(function(r){
+      h+='<tr><td>'+esc(r[0])+'</td><td>'+esc(r[1])+'　'+esc(r[2])+'　'+esc(r[3])+'</td></tr>';
+    });
+    h+='</table></div>';
+  }
+
+  var s3=d.sanchuan||{};
+  if(s3['三传']){
+    h+='<div class="res-sec"><h4>三　传</h4><table>';
+    h+=tdRow('三传',s3['三传'].map(function(x){return'<span class="res-pill">'+esc(x)+'</span>'}).join(''));
+    if(s3['三传干支']) h+=tdRow('干支',s3['三传干支'].map(function(x){return'<span class="res-pill">'+esc(x)+'</span>'}).join(''));
+    if(s3['三传天将']) h+=tdRow('天将',s3['三传天将'].map(function(x){return'<span class="res-pill">'+esc(x)+'</span>'}).join(''));
+    if(s3['三传六亲']) h+=tdRow('六亲',s3['三传六亲'].map(function(x){return'<span class="res-pill">'+esc(x)+'</span>'}).join(''));
+    if(s3['课体']) h+=tdRow('课体',esc(s3['课体']));
+    h+='</table></div>';
+  }
+
+  if(s3['毕法赋命中']&&s3['毕法赋命中'].length){
+    h+='<div class="res-sec"><h4>毕法赋命中</h4><div>'+
+       s3['毕法赋命中'].map(function(x){return'<span class="res-pill">'+esc(x)+'</span>'}).join('')+'</div></div>';
+  }
+
+  if(d.shensha_xiang&&d.shensha_xiang['落点']&&d.shensha_xiang['落点'].length){
+    h+='<div class="res-sec"><h4>神煞落点</h4><div>'+
+       d.shensha_xiang['落点'].slice(0,14).map(function(x){
+         return'<span class="res-pill">'+esc(x['支'])+'　'+esc(x['煞'])+'</span>'}).join('')+'</div></div>';
+  }
+
+  if(d.yingqi_primary&&d.yingqi_primary['desc']){
+    h+='<div class="res-sec"><h4>应期参考</h4><table>'+
+       tdRow('推断',esc(d.yingqi_primary['desc']))+
+       tdRow('方法',esc(d.yingqi_primary['method']))+'</table></div>';
+  }
+
+  if(d.zhanlei_duanyu&&d.zhanlei_duanyu['duanyu_lines']&&d.zhanlei_duanyu['duanyu_lines'].length){
+    h+='<div class="res-sec"><h4>占类断语</h4><div class="res-sum">'+
+       d.zhanlei_duanyu['duanyu_lines'].map(esc).join('<br>')+'</div></div>';
+  }
+
+  h+='<div class="res-more"><details><summary>展开完整课理（天地盘 / 课体 / 变格 / 课经对照）</summary>'+
+     '<div style="margin-top:12px;font-size:13px;color:#5a5348">'+
+     '完整课理需进入系统查看，含天地盘全图、'+((d.sanchuan&&d.sanchuan['课格列表'])||[]).length+' 项课格逐条对照、变格判定与神煞全表。</div>'+
+     '</details></div>';
+  h+='<div style="margin-top:18px;padding-top:14px;border-top:1px solid #e3d9c6;font-size:13px;color:#6b6357">'+
+     '以上为系统实算结果。欲出具完整课单（PDF存档）或按日期区间批量扫吉日，'+
+     '<a href="/#calc" style="color:#8c2318">进入系统</a>。</div>';
+  h+='</div>';
+  res.innerHTML=h;
+}
+</script>
+</body>
+</html>

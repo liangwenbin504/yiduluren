@@ -4,12 +4,25 @@
   ① 旬空填实日（精确到日）——知识库 YQ_05"空亡填实/冲合"
   ② 三传合冲日（精确到日）——知识库 YQ_03"三传合住冲日方动；三传相冲合日方住"
   ③ 太岁冲合年（精确到年）——疏正25案干支年实例（"至辛亥年十月方得身动"）
-  ④ 类神速迟定性——知识库 YQ_04"类神旺相应期月内/休囚月后/死绝年外"、YQ_05"临初传速/中传中/末传迟"
+  ④ 类神速迟定性 —— 🔴 **2026-10-02 已停用**（见 `_SUCHI_ON`）
 """
 import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+# ── 🔴🔴 类神速迟法（`fa_leishen_suchi`）停用开关（2026-10-02 憨爷拍板「停用！」）──
+# 停用依据（全证 → `docs/reports/_应期速迟判据取证报告.md`）：
+#   ① **出处伪托**：原注引「《六壬大全·毕法赋》"旺相休囚死"」—— 毕法赋**无此法**；
+#      通解中「旺相休囚死」仅见 **上 L1387 注释①**（讲七处判法，属**判吉凶**维度，非应期）。
+#      真来源＝`knowledge_应期_完整规则.json` 那条，**紧邻 `stock_application`（股票口径）**。
+#   ② **218 案无实证**：旺相组长断言 7.8% vs 休囚死 9.4%（−1.6pp，n=19，不显著）；
+#      **短断言侧方向相反**（旺相 4.4% vs 休囚死 8.6%）。
+#   ③ **语义错位**：原文「旺相」＝**成事之速**（中 L3462「谋为成就而速」），**≠ 应期刻度**；
+#      上 L3510 明言旺相只是「**事虽迟延犹为小喜**」（缓解凶性，非加快）。
+#   ④ 正法＝**位置法**（通解_**上** L3414「日上发用应在旬内；辰上发用应在一月」）→ `engine/yingqi_engine.judge_yingqi`。
+# ⚠️ 置 `YINGQI_SUCHI=1` 可**临时复活**（仅供 A/B 对照，⛔ 不得用于生产结论）。
+_SUCHI_ON = os.environ.get('YINGQI_SUCHI', '0') == '1'
 
 _ZHI = '子丑寅卯辰巳午未申酉戌亥'
 _CHONG = {'子': '午', '午': '子', '丑': '未', '未': '丑', '寅': '申', '申': '寅',
@@ -109,7 +122,23 @@ def fa_taisui_chonghe(tai_sui_zhi, ben_ming_zhi='', ben_ming_age=0, sex='', text
 
 def fa_leishen_suchi(sanchuan, wangshuai_fn=None, yuejiang=''):
     """④ 类神速迟定性：初传旺相→速（月内）；休囚→中（月后）；死绝→迟（年外）。
-    初传为事发端，其旺衰定迟速（《壬归》"类神旺相则速，休囚则迟"）。"""
+
+    🔴🔴 **DEPRECATED —— 2026-10-02 憨爷拍板「停用！」（本函数默认不再被调用）**
+      · `yingqi_v2` / `yingqi_v2_struct` 中的调用已由 `_SUCHI_ON` 开关包裹（**默认关**）；
+        置 `YINGQI_SUCHI=1` 可临时复活，**仅供 A/B 对照，⛔ 不得用于生产结论**。
+      · 停用依据（全证 → `docs/reports/_应期速迟判据取证报告.md`）：
+        ① **出处伪托**：原注引「《六壬大全·毕法赋》"旺相休囚死"」—— 毕法赋**无此法**；
+           通解中「旺相休囚死」仅见 **上 L1387 注释①**（讲七处判法，属**判吉凶**维度，非应期）。
+           真来源＝`data/knowledge_应期_完整规则.json`「类神旺相休囚对应期影响」条，
+           **紧邻 `stock_application`（股票口径）** ⇒ 系后人提炼，⛔ 不宜作古法判据。
+        ② **218 案无实证**：旺相组长断言 7.8% vs 休囚死 9.4%（−1.6pp，n=19，不显著）；
+           **短断言侧方向相反**（旺相 4.4% vs 休囚死 8.6%）⇒ 与「旺相→速」相反。
+        ③ **语义错位**：原文「旺相」＝**成事之速**（中 L3462「火有气，谋为成就而速」、
+           上 L3142「长生值旺相气，则生于有力而速」、上 L6970「用神如旺相…求事多来速」），
+           **≠ 应期刻度**；上 L3510 明言旺相只是「**事虽迟延犹为小喜**」（缓解凶性，非加快）。
+        ④ **正法＝位置法**（通解_**上** L3414「日上发用应在旬内；辰上发用应在一月。得岁不出岁…」）
+           ⇒ 已落 `engine/yingqi_engine.judge_yingqi`（仲裁链最高优先）。
+    """
     if not sanchuan or not sanchuan[0]:
         return ''
     chu = sanchuan[0]
@@ -130,7 +159,7 @@ def fa_leishen_suchi(sanchuan, wangshuai_fn=None, yuejiang=''):
         speed = '初传' + chu + '休囚：事应中，月后'
     else:
         return ''
-    return speed + '（《六壬大全·旺相休囚死》"类神旺相应期在月内；休囚月后；死绝年外"）'
+    return speed + '（类神旺衰定迟速说；⚠ 出处存疑，218 案无实证支持，见取证报告）'
 
 
 def fa_wangdao_shichen(zhanlei, sanchuan, leishen='', sike=None, tdp=None):
@@ -232,9 +261,10 @@ def yingqi_v2(ri_gan, ri_zhi, sanchuan, tiandi_pan=None, si_ke=None, shichen='',
     t3 = fa_taisui_chonghe(tai_sui_zhi, ben_ming_zhi, ben_ming_age, sex=sex, text=text)
     if t3:
         blocks.append(t3)
-    t4 = fa_leishen_suchi(sanchuan, wangshuai_fn, yuejiang)
-    if t4:
-        blocks.append(t4)
+    if _SUCHI_ON:   # 🔴 2026-10-02 默认停用（出处伪托＋无实证）
+        t4 = fa_leishen_suchi(sanchuan, wangshuai_fn, yuejiang)
+        if t4:
+            blocks.append(t4)
     t5 = fa_wangdao_shichen(zhanlei, sanchuan, leishen=leishen, sike=si_ke, tdp=tiandi_pan)
     if t5:
         blocks.append(t5)
@@ -255,7 +285,8 @@ def yingqi_v2_struct(ri_gan, ri_zhi, sanchuan, tiandi_pan=None, si_ke=None, shic
     add('旬空填实', '日', fa_xunkong_tianshi(ri_gan, ri_zhi, sanchuan))
     add('三传合冲', '日', fa_sanchuan_hechong(ri_gan, ri_zhi, sanchuan))
     add('太岁行年', '年', fa_taisui_chonghe(tai_sui_zhi, ben_ming_zhi, ben_ming_age, sex=sex, text=text))
-    add('类神速迟', '速迟', fa_leishen_suchi(sanchuan, wangshuai_fn, yuejiang))
+    if _SUCHI_ON:   # 🔴 2026-10-02 默认停用（出处伪托＋无实证）
+        add('类神速迟', '速迟', fa_leishen_suchi(sanchuan, wangshuai_fn, yuejiang))
     add('失物应期', '方位', fa_wangdao_shichen(zhanlei, sanchuan, leishen=leishen, sike=si_ke, tdp=tiandi_pan))
     add('旬级应期', '旬', fa_xun_ji(ri_gan, ri_zhi, sanchuan, sike=si_ke))
     return out

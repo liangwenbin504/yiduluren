@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>真盲测看板 · 仪度六壬择日</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5f3ee;color:#26221c;line-height:1.7}
+.wrap{max-width:1040px;margin:0 auto;padding:28px 20px 60px}
+h1{font-size:21px;color:#7a2418;letter-spacing:1px;margin-bottom:4px}
+.sub{font-size:13px;color:#8a8275;margin-bottom:22px}
+.hero{background:#26221c;color:#f2efe8;border-radius:12px;padding:24px 26px;margin-bottom:20px}
+.hero .big{font-size:27px;font-weight:600;margin-bottom:6px}
+.hero .s{font-size:13.5px;color:#b8b0a2}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.kpi{background:#fff;border:1px solid #ded6c6;border-radius:10px;padding:16px 18px}
+.kpi .v{font-size:26px;font-weight:600;color:#7a2418;font-variant-numeric:tabular-nums}
+.kpi .l{font-size:12.5px;color:#8a8275;margin-top:2px}
+.kpi.warn .v{color:#c0392b}
+h2{font-size:16px;color:#7a2418;margin:26px 0 10px;padding-bottom:6px;border-bottom:2px solid #e8e0d0}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #ded6c6;border-radius:8px;overflow:hidden;font-size:13px}
+th{background:#f0ebe0;color:#6b6357;font-weight:500;font-size:12px;padding:9px 10px;text-align:left;white-space:nowrap}
+td{padding:8px 10px;border-top:1px solid #f2ede2}
+td.c{text-align:center}
+td.mono{font-variant-numeric:tabular-nums;font-family:ui-monospace,Consolas,monospace;font-size:12.5px}
+td.empty{text-align:center;color:#a89f90;padding:26px}
+.hint{background:#fdf6e8;border-left:4px solid #b8860b;padding:12px 16px;font-size:13px;color:#6b5312;border-radius:0 6px 6px 0;margin:14px 0}
+.cmd{background:#26221c;color:#d9d2c5;border-radius:8px;padding:14px 16px;font-family:ui-monospace,Consolas,monospace;font-size:12.5px;line-height:2;overflow-x:auto;margin:10px 0}
+.cmd .c{color:#7fae7f}
+.warn{background:#fcebe8;border-left:4px solid #c0392b;padding:12px 16px;font-size:13px;color:#8a2418;border-radius:0 6px 6px 0;margin-top:20px}
+.foot{margin-top:26px;font-size:12px;color:#a89f90;text-align:center}
+@media(max-width:720px){.kpis{grid-template-columns:repeat(2,1fr)}table{font-size:12px}}
+</style></head><body><div class="wrap">
+
+<h1>真盲测看板</h1>
+<div class="sub">与 218 案语料严格隔离 · 生成于 2026-11-02 09:10</div>
+
+<div class="hero">
+  <div class="big"><span style="color:#c0392b">真实样本 = 0，尚无任何可报的数字</span></div>
+  <div class="s">下面每一条「已回填」都是空的。这不是没数据，是还没开始记。</div>
+</div>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">2</div><div class="l">有效记录（非演示）</div></div>
+  <div class="kpi warn"><div class="v">0</div><div class="l">已回填结果</div></div>
+  <div class="kpi warn"><div class="v">2</div><div class="l">待回填</div></div>
+  <div class="kpi"><div class="v">—</div><div class="l">真实命中率</div></div>
+</div>
+
+<h2>一、如何记一笔真预测（结果未知时先记）</h2>
+<div class="hint">这是整个库的命门：<b>必须先表态、后见结果</b>。事后补记等于退回 218 案，失去全部意义。</div>
+<div class="cmd">
+<span class="c"># 1) 记一笔（引擎自算 + 自动记账，不用手抄课盘）</span><br>
+cd /e/仪度六壬择日/yiduluren<br>
+PYTHONHASHSEED=0 "C:/Users/Administrator/AppData/Local/Programs/Python/Python312/python.exe" \<br>
+&nbsp;&nbsp;_blind_log.py auto --event-date 2026-11-20 --shichen 辰 --mountain 寅 --zhanlei 婚嫁<br><br>
+<span class="c"># 2) 结果出来后回填</span><br>
+... _blind_log.py fill --id BT-20261120-001 --outcome 吉 --note "签约顺利"<br><br>
+<span class="c"># 3) 看哪个到期了</span><br>
+... _blind_log.py due
+</div>
+
+<h2>二、已逾期 · 需要回填</h2>
+<table><thead><tr><th>编号</th><th>用事日</th><th>占类</th><th>预测</th><th>时效</th><th>引擎 grade</th></tr></thead>
+<tbody><tr><td class="mono">BT-20261004-001</td><td>2026-09-26</td><td>怪异</td><td>平</td><td><b style="color:#c0392b">逾期 37 天</b></td><td class="mono"></td></tr></tbody></table>
+
+<h2>三、观察中 · 尚未到用事日</h2>
+<table><thead><tr><th>编号</th><th>用事日</th><th>占类</th><th>预测</th><th>时效</th><th>引擎 grade</th></tr></thead>
+<tbody><tr><td class="mono">BT-20260930-001</td><td>2027-03-15</td><td>催龙补气</td><td>吉</td><td><span style="color:#8a8275">还有 133 天</span></td><td class="mono">中吉</td></tr></tbody></table>
+
+<h2>四、全部记录</h2>
+<table><thead><tr><th>编号</th><th>类</th><th>占类</th><th>用事日</th><th>时辰</th><th>日柱</th><th>分数</th><th>预测</th><th>实际</th><th></th></tr></thead>
+<tbody><tr><td class="mono">BT-20260930-001</td><td>择日</td><td>催龙补气</td><td>2027-03-15</td><td>未时</td><td class="mono">癸巳</td><td class="mono">70.5</td><td>吉</td><td><span style="color:#b8860b">待回填</span></td><td class="c"></td></tr><tr><td class="mono">BT-20261004-001</td><td>占断</td><td>怪异</td><td>2026-09-26</td><td>午时</td><td class="mono">癸卯</td><td class="mono"></td><td>平</td><td><span style="color:#b8860b">待回填</span></td><td class="c"></td></tr></tbody></table>
+
+<div class="warn">
+<b>⛔ 三条红线（违反即失去意义）</b><br>
+1. 样本 &lt;10 时，<b>不得</b>据此修改评分链、调阈值或做 A/B 投票。<br>
+2. 不得用本库样本参与规则调参 —— 一旦参与，它就退化成第二个 218 案。<br>
+3. 古例 89.4% 是<b>保真度</b>，不得外推为本库的<b>预测力</b>。
+</div>
+
+<div class="foot">由 _live_board.py 生成 · 数据源 data/blind_test/predictions.jsonl</div>
+</div></body></html>
