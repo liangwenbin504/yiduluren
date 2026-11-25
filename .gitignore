@@ -66,7 +66,9 @@ dag.env
 .agents/
 .dsh-plugins/
 .workbuddy/*
-!.workbuddy/memory/
+# 🔴 2026-11-26：原为「!.workbuddy/memory/」放行整个记忆目录 ⇒ 83 个含真实手机号
+#    的工作记忆被提交进公开仓库。记忆含个人/家庭信息，⛔ 一律不入库。
+#    本地文件不动，仅不入库（git rm -r --cached 已摘除索引）。
 
 # ── Python 缓存 ──
 __pycache__/
