@@ -243,7 +243,17 @@ def _x_bi_gan(env, x): return _wx(x) == _wx(env['ri_gan'])
 def _zhi_sheng_zhi(env, x, y): return _zhi_sheng(x, y)
 def _zhi_ke_zhi(env, x, y): return _zhi_ke(x, y)
 
-def _x_shi_gan_mu(env, x): return bool(x) and x == WX_MU.get(_wx(env['ri_gan']), '')
+# 十干墓（《通解》十干墓：甲未乙未丙戌丁戌戊戌己丑庚丑辛丑壬辰癸辰）
+GAN_MU = {'甲': '未', '乙': '未', '丙': '戌', '丁': '戌', '戊': '戌',
+          '己': '丑', '庚': '丑', '辛': '丑', '壬': '辰', '癸': '辰'}
+
+
+def _x_shi_gan_mu(env, x):
+    """x 是否**日干之墓**（十干墓：戊墓戌・己墓丑…）。
+    【FIX 2026-11-25】旧用 WX_MU（三合五行墓，土→辰）⇒ 戊日误判辰、己日误判辰，
+    「鬼入墓」等 16 处调用误中（回验器：戊申日末传辰被当成戊之墓）。
+    ⚠️ 「传之墓」（`_chuan_mu_ru_mu`：初传五行之墓见中末）仍用五行墓，⛔ 不动。"""
+    return bool(x) and x == GAN_MU.get(env.get('ri_gan', ''), '')
 def _x_shi_zhi_mu(env, x): return bool(x) and x == WX_MU.get(_wx(env['ri_zhi']), '')
 def _x_kong(env, x): return bool(x) and x in (env.get('kongwang') or ('', ''))
 
@@ -1616,17 +1626,100 @@ def _tian_wang_zi_guo(env):
     return gs == mu
 
 
+CS_10 = {'甲': '亥', '乙': '午', '丙': '寅', '丁': '酉', '戊': '寅',
+         '己': '酉', '庚': '巳', '辛': '子', '壬': '申', '癸': '卯'}
+
+
+# 十干长生（阳顺阴逆：甲亥乙午丙寅丁酉戊寅己酉庚巳辛子壬申癸卯）
+CHANG_SHENG_10 = {'甲': '亥', '乙': '午', '丙': '寅', '丁': '酉', '戊': '寅',
+                  '己': '酉', '庚': '巳', '辛': '子', '壬': '申', '癸': '卯'}
+
+
+def _jue_shen_zuo_changsheng(env):
+    """绝神坐长生（毕法赋·第79法「干支值绝凡谋决」变格）：绝神坐长生之上事未了当。
+
+    🔴 2026-11-25 憨爷指正，**两条件**缺一不可：
+      ① **绝神现**：日干之绝须现于课传（三传＋干上＋支上＋四课上神），不在课传不论；
+      ② **坐生位**：该绝神所坐地盘须是「生位」——**日干之十干长生** 或 **绝神自身五行长生**，二者任一。
+
+    憨爷原案（甲日）：甲绝在申、申为中传（①满足），而申临地盘**辰**；
+    辰既非**亥**（甲之长生）亦非**巳**（申金长生）⇒ ②不满足 ⇒ 格不成立。
+    ⚠️ 原实现只认「绝神自身五行长生」且不判「绝神现」，两处皆漏，致 8640 课中虚增 720 课。
+    """
+    g = env.get('ri_gan', '')
+    if not g:
+        return False
+    jue = JUE_WX.get(_wx(g), '')
+    cands = [x for x in (list(jue) if isinstance(jue, (tuple, list)) else [jue]) if x]
+    if not cands:
+        return False
+    # ① 绝神须**现于发用**（初传）。🔴 2026-11-25 18:1x 憨爷二次拍板：
+    #    「两条件：绝神现 ＋ 坐生位」之「现」，口径定为**发用**（初传），非泛指课传。
+    #    （此前试过「天盘任一课传位置」，8640 课中 1212 条＝14%，过宽；憨爷一句「现于发用」定性。）
+    chu = (env.get('sanchuan') or [''])[0]
+    xian = [j for j in cands if j == chu]
+    if not xian:
+        return False
+    tdp = env.get('tiandi_pan', {}) or {}
+    seat = {t: d for d, t in tdp.items() if t}        # 天盘支 → 所坐地盘
+    gan_cs = CHANG_SHENG_10.get(g, '')                # 日干之十干长生
+    for j in xian:
+        d = seat.get(j, '')
+        if not d:
+            continue
+        cs = CHANG_SHENG.get(_wx(j), '')              # 绝神自身五行长生（土双位）
+        csl = list(cs) if isinstance(cs, (tuple, list)) else [cs]
+        if d == gan_cs or d in [x for x in csl if x]:
+            return True
+    return False
+
+
+def _changsheng_ru_mu(env):
+    """长生入墓／长生传墓入墓（毕法赋·第81法「传墓入墓分憎爱」）。
+
+    原文：「视初传类神：财禄**长生**官星不宜值中末墓……如辛未日三传巳戌卯，
+          初传巳为长生被中传戌墓、末传入戌乡，不利长上。」
+    判据：**初传＝日干长生**（先认五行长生，再认十干长生），且**初传五行之墓见于中末**。
+    🔴 2026-11-25：原「长生入墓格」「长生传墓入墓」两条均误挂 `taishen_zuo_changsheng`，改挂本谓词。
+    """
+    g = env.get('ri_gan', '')
+    sc = env.get('sanchuan', [])
+    if not g or len(sc) != 3 or not all(sc):
+        return False
+    c = sc[0]
+    cs_wx = CHANG_SHENG.get(_wx(g), '')
+    csl = list(cs_wx) if isinstance(cs_wx, (tuple, list)) else [cs_wx]
+    if c != CS_10.get(g, '') and c not in [x for x in csl if x]:
+        return False
+    mu = WX_MU.get(_wx(c), '')
+    return bool(mu) and mu in sc[1:]
+
+
 def _gui_lin_san_si(env):
     """鬼临三四：三四课（即支上）有克日干者（讼灾随）"""
     zs = env.get('zhi_shang', '')
     return bool(zs and _zhi_ke(zs, env['ri_gan']) and _wx(zs) != _wx(env['ri_gan']))
 
 
-def _bi_kou_gua(env):
-    """闭口卦：初传为旬尾或干上为旬尾"""
+def _bi_kou_gua_legacy(env):
+    """【旧判据·停用，仅供追溯】原判「初传落旬空」，与自身 docstring「初传为旬尾」不符，
+    也与原文「闭口卦体两般推」不合 ⇒ 8640 课中「占病：哑重/禁口痢/咽喉肿塞」误中 1452（16.8%）。
+    🔴 2026-11-25 憨爷令改。⛔ 不再挂表。"""
     sc = env.get('sanchuan', ['', '', ''])
     kong = env.get('kongwang', ('', ''))
     return bool(sc and len(sc) == 3 and sc[0] in kong) or _x_kong(env, '初')
+
+
+def _bi_kou_gua(env):
+    """闭口卦：**旬尾**加干上，或旬尾发用（毕法赋·第38法「闭口卦体两般推」）。
+    另一般「地盘旬首上神乘玄武」见 `_bi_kou_gua_dipan`；
+    「旬尾加旬首为用」见 `_bi_kou_gua_xunwei`。
+    【FIX 2026-11-25】旧判据＝初传落空（见 legacy），非原文义。"""
+    sc = env.get('sanchuan', ['', '', ''])
+    wei = env.get('xun_wei_zhi', '')
+    if not wei or len(sc) != 3 or not all(sc):
+        return False
+    return sc[0] == wei or env.get('gan_shang', '') == wei
 
 
 def _gan_zhi_jue(env):
@@ -1818,9 +1911,26 @@ def _hu_shi_feng_hu(env):
     return any(z and tj.get(z, '') == '白虎' for z in spots)
 
 
-def _zun_chong_san_qi(env):
-    """尊崇三奇：三奇入传"""
+def _zun_chong_san_qi_legacy(env):
+    """【旧判据·停用，仅供追溯】原「尊崇三奇」实判「初传为四孟/四仲/四季」——
+    **只要有初传即恒真**，把「五子元建三奇」「辛巳日元建三奇」两条规则变成逢课必中。
+    🔴 2026-11-25 憨爷令改（回验器实测：218 案中 120 条假命中）。⛔ 不再挂表。"""
     return _chu_ji(env) or _chu_meng(env) or _chu_zhong(env)
+
+
+def _zun_chong_san_qi(env):
+    """尊崇传内遇三奇（毕法赋·第42法）：三传之**旬遁干**成三奇。
+    三奇：天上三奇 乙丙丁 ／ 地下三奇 甲戊庚 ／ 人中三奇 辛壬癸。
+    【FIX 2026-11-25】旧判据＝初传四孟/四仲/四季（恒真）；改判遁干，与原文合。
+    注：另有 `_zun_chong_san_qi_v2`（只认甲戊庚/乙丙丁两组的旬干版本），本函数多收辛壬癸一组。"""
+    sc = env.get('sanchuan', [])
+    if len(sc) != 3 or not all(sc):
+        return False
+    gans = [_dun_gan(env, z) for z in sc]
+    if not all(gans):
+        return False
+    s = set(gans)
+    return s == {'乙', '丙', '丁'} or s == {'甲', '戊', '庚'} or s == {'辛', '壬', '癸'}
 
 
 def _yi_zai_xiong_tao(env):
@@ -3101,6 +3211,24 @@ def _tai_yang_she_zhai_v2(env):
         return False
     zhi_mu = WX_MU.get(_wx(zhi), '')
     return bool(zhi_mu and zs == zhi_mu and zs == yj)
+
+
+def _tai_yang_she_zhai_v3(env):
+    """第60法 太阳射宅（**原文口径**）：「支墓作月将」——支墓＝月将即可，
+    ⛔ 不要求「支上神＝支墓」。
+
+    原文：data/bifa_100_knowledge_base.json:1564 core_rule
+      「支墓作月将，反名太阳辉照家宅，其屋必向阳而明朗。无邀正正之旗，无击堂堂之阵。」
+    口径争议：docs/reports/bifa_复杂法扫描报告.md:28 记旧 v2 多加「支上=支墓」条件。
+    2026-11-11 憨爷拍板按原文放宽；⛔ v2 **原样保留**（绝不整体替换），
+    两处规则表（bifa_rules 第60法 / kege_bianjie_rules 变格）改引本谓词。
+    """
+    zhi = env.get('ri_zhi', '')
+    yj = (env.get('yuejiang', '') or '').replace('将', '').strip()
+    if not zhi or not yj:
+        return False
+    zhi_mu = WX_MU.get(_wx(zhi), '')
+    return bool(zhi_mu and zhi_mu == yj)
 
 
 def _zhi_cheng_mu_hu_v2(env):
@@ -5100,6 +5228,7 @@ _ATOMS = {
     'jiang_lin_siqi': _jiang_lin_siqi, 'x_dun_gan': _x_dun_gan,
     'gan_shang_dun_gui': _gan_shang_dun_gui, 'ganzhi_tong_gong': _ganzhi_tong_gong,
     'taishen_zuo_changsheng': _taishen_zuo_changsheng, 'taishen_lin_jue': _taishen_lin_jue,
+    'jue_shen_zuo_changsheng': _jue_shen_zuo_changsheng, 'changsheng_ru_mu': _changsheng_ru_mu,
     'x_zhi_wang': _x_zhi_wang,
     # ── 财/鬼谓词（2026-08-21 新增：支持毕法赋规则迁移） ──
     'x_shi_cai': _x_shi_cai, 'x_shi_gui': _x_shi_gui,
@@ -5232,6 +5361,7 @@ _ATOMS = {
     'fei_you_er_de_bu_zu_v2': _fei_you_er_de_bu_zu_v2,
     'yong_po_shen_xin': _yong_po_shen_xin,
     'tai_yang_she_zhai_v2': _tai_yang_she_zhai_v2,
+    'tai_yang_she_zhai_v3': _tai_yang_she_zhai_v3,
     'zhi_cheng_mu_hu_v2': _zhi_cheng_mu_hu_v2,
     'gan_mu_bing_guan': _gan_mu_bing_guan,
     'zhi_fen_cai_bing_v2': _zhi_fen_cai_bing_v2,

@@ -167,6 +167,28 @@ def _derive_bifa_ext_keys(env: dict) -> dict:
                     _ss.setdefault(_sha_z, set()).add(_sha_nm)
             out['shensha'] = _ss
             out['si_qi'] = _k_si_qi(_yj) if _yj else ''
+            # 【2026-11-23 憨爷命】取象层激活：按课传天将神煞汇总取象（data/xiang_biao.json）
+            # 只读、只附，不参与评分；失败不影响主链。
+            try:
+                from engine.xiang_engine import XiangEngine
+                # ⚠ 引擎 sike 约定为 (**下神, 上神**)；XiangEngine 需 (上,下)，故此处翻转。
+                _sike = [(x[1], x[0]) for x in (env.get('si_ke') or [])
+                         if isinstance(x, (list, tuple)) and len(x) >= 2]
+                _xp = {
+                    'ri_gan': env.get('ri_gan') or '',
+                    'sanchuan': list(env.get('sanchuan') or []),
+                    'si_ke': _sike,
+                    'zhi_shang': env.get('zhi_shang') or (_sike[2][1] if len(_sike) >= 3 else ''),
+                    'tian_jiang': env.get('tian_jiang') or out.get('tian_jiang') or {},
+                    'shensha': {k: set(v) for k, v in (out.get('shensha') or {}).items()},
+                    'kongwang': env.get('kongwang') or ('', ''),
+                }
+                _X = XiangEngine()
+                out['xiang_lines'] = _X.brief(_xp)
+                out['xiang'] = _X.analyze(_xp)
+            except Exception:
+                out['xiang_lines'] = []
+                out['xiang'] = {}
         except Exception:
             out['shensha'] = {}
             out['si_qi'] = ''
@@ -338,6 +360,8 @@ def _judge_special(env: dict) -> Any:
         season=env['season'],
         ben_ming_zhi=env['ben_ming_zhi'],
         xing_nian=env['xing_nian'],
+        is_day=env.get('is_day'),
+        zhanlei=env.get('zhanlei', ''),
     )
 
 
@@ -710,7 +734,13 @@ def judge_all(env: dict) -> dict:
             if key == 'keti_judged' and isinstance(res, list):
                 names = [h.get('课体') for h in res if isinstance(h, dict) and h.get('课体')]
                 if names:
-                    env['keti'] = '、'.join(names)
+                    # 🔴 2026-11-25 修：原为**覆盖**，把起课引擎判出的九宗门课体（如「昴星课」）
+                    #   冲成「六仪」⇒ 依赖 keti 含「昴星」的规则（虎视转蓬格／冬蛇掩目格／
+                    #   昴星生男・生女）与 hu_shi_feng_hu 全部**静默失效**（不报错、永不命中）。
+                    #   改为**追加**：保留既有课体，只补新判出的 54 课格。
+                    _old = str(env.get('keti') or '').strip()
+                    _add = [n for n in names if n and n not in _old]
+                    env['keti'] = '、'.join(([_old] if _old else []) + _add)
         except Exception as e:
             fb = dict(_FALLBACK[key]) if isinstance(_FALLBACK[key], dict) else _FALLBACK[key]
             if isinstance(fb, dict):
@@ -749,6 +779,15 @@ def judge_all(env: dict) -> dict:
     except Exception as e:
         result['guishen_xiang'] = {'象域': False, '强度': 0, '候选': [],
                                    '类象语': '', '祷所': '', '依据': [],
+                                   'error': str(e)}
+    # ── 天时象层（占雨／风／雷／云，2026-11-25 憨爷贴苗公达占雨课后建）──
+    #    🔴 零评分。**只在占类＝天时 输出**（其余占类一律 象域=False）——
+    #    否则就是憨爷骂的「与占类无关的格不要显示」。判据真源：《通解》中卷 P635–636「论曰」。
+    try:
+        from engine.tianshi_xiang_engine import suggest as _tsx
+        result['tianshi_xiang'] = _tsx(env, result)
+    except Exception as e:
+        result['tianshi_xiang'] = {'象域': False, '象': [], '类象语': '', '依据': [],
                                    'error': str(e)}
     # ── 六亲×神煞 冲突守卫（零评分层，2026-10-19）──
     #    🆕 🔴 零评分影响。只检「凶亲配吉神」结构并提示，⛔ 不改 score/grade/veto。

@@ -650,7 +650,8 @@ def _rich_bifa(result, ri_gan, ri_zhi, si_ke, tiandi_pan, yuejiang='', season=''
     return r, list(r.get('匹配法条', []))
 
 
-def _rich_special(result, ri_gan, ri_zhi, si_ke, tiandi_pan, yuejiang='', season=''):
+def _rich_special(result, ri_gan, ri_zhi, si_ke, tiandi_pan, yuejiang='', season='',
+                  zhanlei=''):
     """委托 SpecialKegeDetector（贵登天门/罡塞鬼户/两蛇夹墓等）；填 special_kege 死信号。
 
     yuejiang/season 透传；tian_jiang 读取兼容 股票(tianjiang_map: 地支→天将) 与 古例(tianjiang_detail: branch-keyed)。
@@ -666,6 +667,7 @@ def _rich_special(result, ri_gan, ri_zhi, si_ke, tiandi_pan, yuejiang='', season
         sanchuan_dizhi=san_chuan, ri_gan=ri_gan, ganzhi=ganzhi,
         tiandi_pan=tiandi_pan, tian_jiang=tian_jiang,
         gan_shang_shen=gan_shang, zhi_shang_shen=zhi_shang, yuejiang=yuejiang, season=season,
+        zhanlei=zhanlei,   # 2026-11-20 占类分档：贵登天门不再一刀切大吉
     )
     return r
 
@@ -722,7 +724,7 @@ def build_keti_duanyu(result: Dict[str, Any], duanyu_text: str = "", zhanlei: st
         calibrated = RICH_CALIBRATED_VALUATION if use_calibrated is None else bool(use_calibrated)
         sanchuan_kege_out, sk_names = _rich_sanchuan_kege(result, ri_gan, ri_zhi, tiandi_pan, yuejiang, season, calibrated)
         bifa_out, bifa_names = _rich_bifa(result, ri_gan, ri_zhi, si_ke, tiandi_pan, yuejiang, season, si_ke_info)
-        special_out = _rich_special(result, ri_gan, ri_zhi, si_ke, tiandi_pan, yuejiang, season)
+        special_out = _rich_special(result, ri_gan, ri_zhi, si_ke, tiandi_pan, yuejiang, season, zhanlei)
         keti_val += sum(ov.get(n, 0) for n in keti_names)
         keti_names_all = list(dict.fromkeys(keti_names + sk_names))
         result['keti'] = " ".join(keti_names_all)
@@ -933,12 +935,16 @@ def get_yingqi_text(ri_gan: str, ri_zhi: str, sanchuan_dizhi: list, si_ke=None,
     top_num, top_cnt = cnt.most_common(1)[0]
     if len(sc) == 1 or top_cnt >= 2:
         cands.append(('单支%d' % top_num, '众数/独支 %d' % top_num))
-    # ② 相加（去重支，和≤15 作年断）
+    # ② 相加（**去重支**，和≤15 作年断）
+    #    🔴 重复支不参与相加：邵公「亥四数，课中四个亥，四四一十六年」⇒ 重复走相乘/物数，
+    #       非漏加。例：三传 子9·辰5·戌5，辰戌同数5 ⇒ 去重 9+5=14（非 9+5+5）。
+    #       2026-11-11：仅在真有重复时补「(去重支…)」标记，数值/候选/排序一字不动。
     uniq_nums = sorted(set(nums), reverse=True)
+    _dup_tag = '(去重支：同数不重复计)' if len(uniq_nums) < len(nums) else ''
     if len(uniq_nums) >= 2 and sum(uniq_nums) <= 15:
-        cands.append(('相加%d' % sum(uniq_nums), '+'.join(str(n) for n in uniq_nums)))
+        cands.append(('相加%d' % sum(uniq_nums), '+'.join(str(n) for n in uniq_nums) + _dup_tag))
     elif len(uniq_nums) >= 2:
-        cands.append(('相加%d' % sum(uniq_nums), '+'.join(str(n) for n in uniq_nums) + '(和>15)'))
+        cands.append(('相加%d' % sum(uniq_nums), '+'.join(str(n) for n in uniq_nums) + _dup_tag + '(和>15)'))
     # ③ 相乘（前两支/去重两支）
     if len(uniq_nums) >= 2:
         a, b = uniq_nums[0], uniq_nums[1]

@@ -27,6 +27,21 @@ WX_KE = {'木':'土','火':'金','土':'水','金':'木','水':'火'}
 LIU_HAI = {'子':'未','未':'子','丑':'午','午':'丑','寅':'巳','巳':'寅',
            '卯':'辰','辰':'卯','申':'亥','亥':'申','酉':'戌','戌':'酉'}
 
+
+# ── 贵登天门·占类分档词表（2026-11-20 憨爷拍板「占类分档」）──
+# 依据毕法赋第三法原文（`data/tongjie_06b_zhong.md:2581`）：
+#   占科目「专视此神…试必高中」／庶人「得林下官扶持」／有官人「为休官之象」。
+# 🔴 词表对齐生产占类枚举（前端：考试/求官/求财/出行/婚嫁/新居入宅/阳宅动土/阴宅动土），
+#    另兼容古例与内部路径的「功名/科举/选举」「仕宦/赴任/升迁」。
+# ⚠ 「官事/官讼」⛔ 不入仕宦档（多指官非公事，非求官）。
+# 身份轴（士人未任／庶人／在官）口径已定 REFERENCE-铁律.md §14，**本轮未接入**（⛔ 不得从盘反推）。
+SP_ZHANLEI_KEJU = ('考试', '科举', '科场', '科试', '占试', '应试',
+                   '会试', '乡试', '殿试', '功名', '选举', '升学', '考学')
+SP_ZHANLEI_SHIHUAN = ('求官', '仕宦', '谋官', '升迁', '迁转',
+                      '除授', '保位', '任官')
+# ⚠ 「赴任」⛔ 不入本档：第3法只言「有官人占之为休官之象」，而赴任另有第4法
+#    「催官使者赴官期」（`tongjie_06b_zhong.md:2779`）专论，无据不判凶 ⇒ 归平档。
+
 # 六刑（寅巳申无恩刑、丑戌未恃势刑、子卯无礼刑、辰午酉亥自刑）
 XING = {
     '寅': ['巳'], '巳': ['申'], '申': ['寅'],
@@ -81,7 +96,9 @@ class SpecialKegeDetector:
                season: str = '',
                kongwang: tuple = ('', ''),
                ben_ming_zhi: str = '',
-               xing_nian: str = '') -> Dict:
+               xing_nian: str = '',
+               is_day: Optional[bool] = None,
+               zhanlei: str = '') -> Dict:
         """
         主入口。tiandi_pan格式: {地盘支: 天盘支}
         tian_jiang格式: {地支: 天将名} 如 {'子':'贵人','丑':'螣蛇',...}
@@ -91,7 +108,7 @@ class SpecialKegeDetector:
 
         # 盘面课格 (需tiandi_pan)
         if tiandi_pan:
-            self._guide_tianmen(ri_gan, sc, tiandi_pan)
+            self._guide_tianmen(ri_gan, sc, tiandi_pan, is_day, zhanlei)
             self._kuidu_tianmen(sc, tiandi_pan)
             self._gangsai_guihu(tiandi_pan)
             self._gui_sai_guihu(ri_gan, tiandi_pan)
@@ -129,15 +146,42 @@ class SpecialKegeDetector:
 
     # ════════════════ 盘面课格 ════════════════
 
-    def _guide_tianmen(self, ri_gan, sc, tp):
-        """贵登天门: 贵人加亥(天门)"""
+    def _guide_tianmen(self, ri_gan, sc, tp, is_day=None, zhanlei=''):
+        """贵登天门: 贵人加亥(天门)
+
+        🔴 2026-11-20 憨爷拍板「**占类分档**」，依据毕法赋第三法原文
+        （`data/tongjie_06b_zhong.md:2581`）：
+          「如占科目，专视此神…试必高中矣。凡庶人占得帘幕，得林下官扶持。
+            如有官人占得之，为休官之象。」
+        ⇒ 科目档＝大吉(涨,3)｜仕宦档＝凶(跌,3)｜其余＝平(平,0，不豫判，交主链)。
+        ⛔ 不再一刀切「大吉」；⛔ 未判占类时**不自判吉凶**（宁缺勿噪）。
+        身份轴（士人未任／庶人／在官）见 REFERENCE-铁律.md §14，本轮未接入，
+        ⛔ 不得从盘反推身份（须问事人口述）。
+        """
         if not ri_gan: return
         pair = GUIREN_MAP.get(ri_gan)
         if not pair: return
         t = tp.get('亥','')
-        if t in pair:
-            gtype = '昼贵' if t == pair[0] else '夜贵'
-            self._add('贵登天门','大吉',f'{gtype}{t}加天门亥上，无往不利','涨',3)
+        if t not in pair: return
+        gtype = '昼贵' if t == pair[0] else '夜贵'
+        note = ''
+        if is_day is not None:
+            use = pair[0] if is_day else pair[1]
+            if use != t:
+                note = '；本课%s占，用%s%s' % ('昼' if is_day else '夜',
+                                             '昼贵' if is_day else '夜贵', use)
+        zl = str(zhanlei or '')
+        if any(k in zl for k in SP_ZHANLEI_KEJU):
+            level, signal, weight = '大吉', '涨', 3
+            tail = '；占科目，主试类神，试必高中'
+        elif any(k in zl for k in SP_ZHANLEI_SHIHUAN):
+            level, signal, weight = '凶', '跌', 3
+            tail = '；占仕宦，第3法「有官人占之为休官之象」'
+        else:
+            level, signal, weight = '平', '平', 0
+            tail = '；未入科目／仕宦档，吉凶随占类，不豫判'
+        self._add('贵登天门', level,
+                  f'{gtype}{t}加天门亥上{note}{tail}', signal, weight)
 
     def _kuidu_tianmen(self, sc, tp):
         """魁度天门: 戌加亥为初传"""
@@ -419,9 +463,20 @@ class SpecialKegeDetector:
         for k in self.detected_kege:
             n = k['name']
             detail[n] = {'等级':k['level'],'描述':k['desc'],'信号':k['signal'],'权重':k['weight']}
-            scores[k['signal']] = scores.get(k['signal'],0) + k['weight']
+            # 🔴 2026-11-20 占类分档：'平' 档（贵登天门未入科目/仕宦档）权重 0，**不进票箱**。
+            #    原实现会把 '平' 新增为第 4 个键 ⇒ max() 可能选到 '平'、全 0 时误判「震荡」。
+            if k['signal'] in scores:
+                scores[k['signal']] += k['weight']
 
-        tw = sum(scores.values()) or 1
+        tw = sum(scores.values())
+        if tw <= 0:
+            # 全平（仅可能由占类分档的 0 权重档产生）⇒ 倾向「平」，不改既有非零路径
+            return {
+                '匹配课格': [k['name'] for k in self.detected_kege],
+                '课格详情': detail,
+                '信号汇总': {'倾向':'平','强度':0,
+                             '涨权重':0,'跌权重':0,'震荡权重':0},
+            }
         mx = max(scores,key=scores.get)
         mxv = scores[mx]
         # 如果最大票数不超过其他二者之和，则为震荡

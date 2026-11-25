@@ -991,7 +991,7 @@
       "条件": [
         [
           {
-            "p": "tai_yang_she_zhai_v2",
+            "p": "tai_yang_she_zhai_v3",
             "a": []
           }
         ]
@@ -1813,7 +1813,7 @@
         "id": 60,
         "migrated_at": "2026-08-21",
         "atoms_used": [
-          "tai_yang_she_zhai_v2"
+          "tai_yang_she_zhai_v3"
         ],
         "phase": "三期"
       },

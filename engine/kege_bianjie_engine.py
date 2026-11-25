@@ -69,6 +69,15 @@ def build_env(ri_gan='', ri_zhi='', sanchuan=None, gan_shang='', zhi_shang='',
               yuejiang='', season='', is_day=True, tai_sui='', ben_ming_zhi='',
               lunar_month=0, si_ke=None, fu_xing_nian_zhi='', qi_xing_nian_zhi='') -> dict:
     """构造课式环境 env（含预计算神煞：禄/德/驿马/月厌/四季神煞）。"""
+    # 🔴🔴 2026-11-22 憨爷定：**月煞按月建，不按农历月**。
+    # 依据：《通解》神煞章 3.1「月煞中首先要介绍月建……为真月建」；
+    # 断案 §宅墓02·035「九月占」死神=戌+3=丑（原文作丑，按月建）。
+    # 月将由**中气**定，月建由**节气**定，二者可错位（如五月丙子日申将：农历五月、月建巳）。
+    # 故此处以月将反推月建月（申将→四月），月煞整表取此；农历月仅留作 lunar_month_raw。
+    _YJ2YJIAN = {'亥':1,'戌':2,'酉':3,'申':4,'未':5,'午':6,'巳':7,'辰':8,'卯':9,'寅':10,'丑':11,'子':12}
+    lunar_month_raw = lunar_month
+    if yuejiang in _YJ2YJIAN:
+        lunar_month = _YJ2YJIAN[yuejiang]
     sc = sanchuan or []
     # 【BUG-FIX 2026-09-02】si_ke_shang：从 si_ke 提取四课上神列表（供 昼夜贵加求两贵/课传俱贵 谓词；
     # 原 build_env 未设该键 → _ke_chuan_ju_gui/_zhou_ye_gui_jia 取到空列表 → 判据不完整）
@@ -217,6 +226,21 @@ def build_env(ri_gan='', ri_zhi='', sanchuan=None, gan_shang='', zhi_shang='',
                 shensha.setdefault(_tianyi, set()).add('天医')
         except Exception:
             pass
+        # 【2026-11-22 憨爷批准】死神/死气（按月建）：死神＝月建顺数三位、死气＝月建顺数四位。
+        # 依据《通解》「寅月死神在巳、死气在午，顺推」；戌月验：死神丑・死气寅。
+        # 原 build_env 未注入 → 胎财死气损胎推/斫轮次吉/内外孝服格 三条规则恒假。
+        try:
+            _ys = ssc.get_yue_sha(lunar_month) if lunar_month else {}
+            _si = _ys.get('死神', '')
+            _qi = _ys.get('死气', '')
+            if _si:
+                env['si_shen'] = _si
+                shensha.setdefault(_si, set()).add('死神')
+            if _qi:
+                env['si_qi'] = _qi
+                shensha.setdefault(_qi, set()).add('死气')
+        except Exception:
+            pass
         # 【B5d 2026-09-03】天鬼（伏殃煞，正月起酉逆行四仲：酉午卯子循环，毕法赋·鬼临三四讼灾随）。
         # 原 build_env 未算入 shensha → 天鬼作日鬼格 x_shi_shensha(位,天鬼) 恒假 0 命中断链。
         if lunar_month:
@@ -255,8 +279,47 @@ def build_env(ri_gan='', ri_zhi='', sanchuan=None, gan_shang='', zhi_shang='',
             env['guiren'] = ()
     except Exception:
         pass
+    env['lunar_month_raw'] = lunar_month_raw
+    env['yuejian_month'] = lunar_month
     env['shensha'] = shensha
     return env
+
+
+# ── 展示层「占类闸门」（2026-11-25 憨爷令）──────────────────────────────
+#   憨爷原话：「父母爻现卦忧子息　平　父母爻现于三传　△ 占类：水为甲之父母，
+#              然本案占逃亡，不主忧子息。像这类无关的格就不要显示了！」
+#   故：格名里**自带占事指向**者，占类不符即**不进展示**。
+#   ⚠️ 只动展示层（`展示变格` / `主象`）；`匹配变格`/`变格详情`/`命中数` 三字段一字不动
+#      ——它们喂 bianjie_count 特征向量、CBR 检索、keti_arbitration，截断会动基线。
+#   ⚠️ 占类为空或「其他」时**不过滤**（未知占类不妄断）。
+_ZHANLEI_HINT = (
+    ('忧子息', ('胎产', '婚姻')),
+    ('占胎产', ('胎产',)),
+    ('小产', ('胎产',)),
+    ('占病', ('疾病',)),
+    ('病势', ('疾病',)),
+    ('占行人', ('出行', '寻物')),
+    ('占婚', ('婚姻',)),
+    ('词讼', ('官讼',)),
+    ('占讼', ('官讼',)),
+)
+
+
+# 格名虽含占事词、但**自称通用**者豁免（如「…占病危绝，**诸占**脱耗」「**不利占**解释忧疑、占病势弥笃」）
+_ZHANLEI_EXEMPT = ('诸占', '不利占', '占解释', '不论占')
+
+
+def _zhanlei_ok(name: str, zhanlei: str) -> bool:
+    """格名自带占事指向时，校验当前占类是否对口"""
+    if not zhanlei or zhanlei == '其他':
+        return True
+    nm = name or ''
+    if any(k in nm for k in _ZHANLEI_EXEMPT):
+        return True
+    for kw, allow in _ZHANLEI_HINT:
+        if kw in nm:
+            return zhanlei in allow
+    return True
 
 
 def detect_bianjie(ri_gan='', ri_zhi='', sanchuan=None, gan_shang='', zhi_shang='',
@@ -269,8 +332,20 @@ def detect_bianjie(ri_gan='', ri_zhi='', sanchuan=None, gan_shang='', zhi_shang=
                     tiandi_pan, kongwang, keti, yuejiang, season, is_day, tai_sui,
                     ben_ming_zhi, lunar_month, si_ke, fu_xing_nian_zhi, qi_xing_nian_zhi)
     hits = match_all(_load_rules(), env, zhanlei)
+    # 🔴 2026-11-11 表达层收敛（憨爷「每层主象 ≤3」）：
+    #   事实层三字段（匹配变格/变格详情/命中数）**一字不动** —— 它们是 bianjie_count
+    #   特征向量、CBR 检索、keti_arbitration 主格裁定的输入，截断会动基线。
+    #   「占类闸门」本就在 match_all（规则占类≠当前占类且≠通用则跳过），此处不重复设闸。
+    #   新增「主象」仅给展示层：占类专属规则优先于「通用」，同级保持规则表原序
+    #   （Python sort 稳定）。⛔ 不按吉凶重排 —— 吉凶归主链，本层不自判。
+    # 🆕 2026-11-25 展示层占类闸门：占类不符的「专用格」不进展示（事实层仍全量）
+    _shown = [h for h in hits if _zhanlei_ok(h['name'], zhanlei)]
+    _zhuxiang = sorted(_shown, key=lambda h: 0 if h['占类'] == zhanlei else 1)[:3]
     return {
         '匹配变格': [h['name'] for h in hits],
         '变格详情': {h['name']: {'等级': h['等级'], '课格': h['课格'], '占类': h['占类'], '描述': h['描述']} for h in hits},
         '命中数': len(hits),
+        '主象': [h['name'] for h in _zhuxiang],
+        # 展示用全量（已过占类闸门）；前端优先取此字段，缺失时回退「匹配变格」
+        '展示变格': [h['name'] for h in _shown],
     }

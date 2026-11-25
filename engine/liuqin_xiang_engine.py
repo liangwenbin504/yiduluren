@@ -37,6 +37,56 @@ LIUQIN_REL = {
     '财': ('我克者', '下L13114「我克者为妻财」；上L3240「我克者为财」'),
     '兄': ('同类者', '下L13114「同类者为兄弟」'),
 }
+# ── 十二长生（🆕 2026-11-25 补）
+#    起因：《断案》§疾病13·166「亥加申、巳加寅，各临长生」——该支**自身五行**的长生位在地盘。
+#    ⛔ 勿与「巳为庚之长生」（该支是**日干**的长生位）混为一谈，二者是两回事；
+#    ⛔ 更不能读成「巳去生金」——长生是「位」的关系，不是生克动作。
+#   十干长生（阳顺阴逆）：甲亥・乙午・丙寅・丁酉・戊寅・己酉・庚巳・辛子・壬申・癸卯
+#   五行长生（土双位：水土同宫申 / 火土同宫寅）：木亥・火寅・土(申,寅)・金巳・水申
+#   五行墓／绝：木未/申・火戌/亥・土辰/(巳,亥)・金丑/寅・水辰/巳
+#   ⚠️ 只在**展示层**标注，⛔ 不参与六亲判定、⛔ 不进评分链。
+CHANG_SHENG_10 = {'甲': '亥', '乙': '午', '丙': '寅', '丁': '酉', '戊': '寅',
+                  '己': '酉', '庚': '巳', '辛': '子', '壬': '申', '癸': '卯'}
+WX_CHANG_SHENG = {'木': '亥', '火': '寅', '土': ('申', '寅'), '金': '巳', '水': '申'}
+WX_MU = {'木': '未', '火': '戌', '土': '辰', '金': '丑', '水': '辰'}
+WX_JUE = {'木': '申', '火': '亥', '土': ('巳', '亥'), '金': '寅', '水': '巳'}
+
+
+def _lin_changsheng(z: str, tdp: dict) -> str:
+    """**临长生**（原文口径）：该支所临地盘 ＝ 其**自身五行**的长生位。
+    例：《通解》下卷 §疾病13·166「亥加申、巳加寅，各临长生」——
+        亥水长生在申（天盘亥临地盘申）、巳火长生在寅（天盘巳临地盘寅）⇒ 水火寒热往来之象。
+    ⚠️ 与 `_cs_jue_mu`（该支是否为**日干**之长生/墓/绝）是两回事，⛔ 不可混。"""
+    if not z:
+        return ''
+    cs = WX_CHANG_SHENG.get(ZHI_WX.get(z, ''), '')
+    cands = list(cs) if isinstance(cs, (tuple, list)) else [cs]
+    for d, t in (tdp or {}).items():
+        if t == z and d in [x for x in cands if x]:
+            return '%s加%s' % (z, d)
+    return ''
+
+
+def _cs_jue_mu(z: str, ri_gan: str) -> str:
+    """该支相对**日干**的十二长生标记：长生／墓／绝（都不是则 ''）。
+    十干长生与五行长生**两路都认**（庚金：十日干长生=巳、五行金长生=巳，二者同指）。"""
+    if not z or not ri_gan:
+        return ''
+    gwx = GAN_WX.get(ri_gan, '')
+
+    def _in(val, target):
+        if isinstance(val, (tuple, list, set)):
+            return target in val
+        return bool(val) and val == target
+    if z == CHANG_SHENG_10.get(ri_gan, '') or _in(WX_CHANG_SHENG.get(gwx, ''), z):
+        return '长生'
+    if _in(WX_MU.get(gwx, ''), z):
+        return '墓'
+    if _in(WX_JUE.get(gwx, ''), z):
+        return '绝'
+    return ''
+
+
 # 位权重（显要度，仅用于排序；⛔ 不用于预测）
 POS_W = {'初传': 5, '支上': 4, '干上': 3, '年命': 3,
          '干阴': 2, '支阴': 2, '中传': 2, '末传': 1}
@@ -115,6 +165,8 @@ def suggest(env: Dict[str, Any], judged: Dict[str, Any] = None) -> Dict[str, Any
             rows.append({
                 '位': p, '支': z, '六亲': q, '关系': rel, '天将': tj.get(z, '') or '',
                 '空亡': z in kw, '旺衰': ws, '生克': ke_note,
+                '长生': _cs_jue_mu(z, ri_gan),      # 长生／墓／绝（相对**日干**）
+                '临长生': _lin_changsheng(z, env.get('tiandi_pan') or {}),   # 临**自身五行**长生（原文口径）
                 '显': POS_W.get(p, 0), '原文': src,
             })
         if not rows:
@@ -138,6 +190,13 @@ def suggest(env: Dict[str, Any], judged: Dict[str, Any] = None) -> Dict[str, Any
                 tail.append(r['生克'])
             if tail:
                 s += '（' + '·'.join(tail) + '）'
+            # 🆕 「巳为庚之长生」这类必须能看见：读者才知道该支在日干处是「位」不是「克」
+            # 「临长生」只在**水火**两支入类象语：原文取亥、巳以象寒热往来；
+            # 其余支同样临长生时不逐一铺陈（字段里仍有，需要可查）。
+            if r.get('临长生') and ZHI_WX.get(r['支']) in ('水', '火'):
+                s += '｜%s（临长生·寒热之象）' % r['临长生']
+            if r.get('长生'):
+                s += '｜%s为%s之%s' % (r['支'], ri_gan, r['长生'])
             segs.append(s)
         out['类象语'] = '；'.join(segs)
 
@@ -150,6 +209,12 @@ def suggest(env: Dict[str, Any], judged: Dict[str, Any] = None) -> Dict[str, Any
         out['依据'].append('下L13114「同类者为兄弟，生我者为父母，我生者为子孙，'
                            '克我者为官鬼，我克者为妻财」')
         out['依据'].append('上L3240「我克者为财，有就地取财之义」／中L1544「我克者为死，克我者为囚」')
+        out['依据'].append('「临长生」＝该支所临地盘为其**自身五行**长生位'
+                           '（《通解》下卷 §疾病13·166「亥加申、巳加寅，各临长生」）；'
+                           '类象语只列水火两支以象寒热，其余支临长生同理不赘')
+        out['依据'].append('十二长生（十干：甲亥乙午丙寅丁酉戊寅己酉庚巳辛子壬申癸卯；'
+                           '五行：木亥火寅土申/寅金巳水申）—— 「长生」与「六亲」是**两个维度**，'
+                           '巳对庚金既是克我之鬼、又是金之长生，二义并存 ⛔ 不相废')
         return out
     except Exception as e:                            # 🔴 异常绝不外溢
         out['error'] = str(e)

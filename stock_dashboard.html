@@ -3700,7 +3700,10 @@ function zhugeRangjieCard(d) {
         + '<span style="color:#a5b4fc;">　' + _e(r['六亲'] || '') + '</span>'
         + '<span style="color:#888' + _qi + ';">　' + _e(r['关系'] || '')
         + (r['天将'] ? '·乘' + _e(r['天将']) : '') + (r['旺衰'] ? '·' + _e(r['旺衰']) : '')
-        + (r['生克'] ? '·' + _e(r['生克']) : '') + (r['空亡'] ? '·空' : '') + '</span></span>';
+        + (r['生克'] ? '·' + _e(r['生克']) : '') + (r['空亡'] ? '·空' : '') + '</span>'
+        // 🆕 2026-11-25：十二长生（长生/墓/绝）——「巳为庚之长生」这类必须看得见
+        + (r['长生'] ? '<span style="color:#7ee2b8;font-weight:600;">　' + _e(r['长生']) + '</span>' : '')
+        + '</span>';
     }).join('');
     var _lqYy = (_lq['原文直引'] || []).length
       ? '<div style="margin-top:5px;padding:4px 6px;background:rgba(255,159,67,.07);'
@@ -3718,6 +3721,25 @@ function zhugeRangjieCard(d) {
       + '<div style="font-size:12.5px;color:#e2e8f0;line-height:1.7;margin-bottom:5px;">'
       + _e(_lq['类象语'] || '') + '</div>'
       + '<div style="line-height:2;">' + _lqRows + '</div>' + _lqYy + _lqJ);
+  }
+  // ── 🌦 天时象（占雨/风/雷/云；🆕 2026-11-25，零评分，只在占类＝天时输出）──
+  var _ts = d.tianshi_xiang;
+  if (_ts && _ts['象域'] && ((_ts['象'] || []).length)) {
+    var _tsRows = (_ts['象'] || []).map(function (it) {
+      return '<span style="display:inline-block;margin:2px 5px 2px 0;padding:2px 7px;border-radius:6px;'
+        + 'font-size:11.5px;background:rgba(120,180,255,.06);border:1px solid #2e4a72;" title="'
+        + _clEsc(it['原文'] || '') + '">'
+        + '<b style="color:#7ec8ff;">' + _e(it['象'] || '') + '</b>'
+        + '<span style="color:#888;">　' + _e(it['位'] || '') + _e(it['支'] || '') + '</span>'
+        + '<span style="color:#c7d2fe;">　' + _e(it['断'] || '') + '</span></span>';
+    }).join('');
+    html += _box(
+      '<div style="font-size:12px;font-weight:600;color:#8ea2ff;margin-bottom:4px;">🌦 天时象'
+      + ' <span style="color:#666;font-size:11px;font-weight:400;">（雨／风／雷／云；'
+      + '⛔ 零评分，只陈述课象）</span></div>'
+      + '<div style="line-height:2;">' + _tsRows + '</div>'
+      + '<div style="margin-top:3px;font-size:10.5px;color:#6b7f9f;line-height:1.5;">'
+      + _e((_ts['依据'] || []).join('　·　')) + '</div>');
   }
   // ── 📊 占类条件先验谱（B，2026-09-23）──
   //    ⛔ 只说"此占类下邵公常谈哪些事因"，**不判吉凶**；lift<1.15 已标「吉凶皆现（非凶兆）」。
@@ -6142,21 +6164,34 @@ function openZeriModal(pai) {
     var bjg = d.bianjie_kege;
     var skgNames = (skg && skg['匹配课格']) || [];
     var skgDetail = (skg && skg['课格详情']) || {};
-    var bjNames = (bjg && bjg['匹配变格']) || [];
+    // 🆕 2026-11-25 憨爷令：「与占类无关的格不要显示」⇒ 优先用后端已过占类闸门的 `展示变格`；
+    //    旧后端无该字段时回退「匹配变格」（事实层，全量）。
+    var bjNamesAll = (bjg && (bjg['展示变格'] || bjg['匹配变格'])) || [];
     var bjDetail = (bjg && bjg['变格详情']) || {};
+    // 🔴 2026-11-11 憨爷「每层主象≤3」：引擎事实层全量列表一字不动，展示层默认只列「主象」，
+    //    其余折叠可展开（长内容折叠，不删数据）。旧后端无「主象」时兜底取前 3 条。
+    var bjMain = (bjg && bjg['主象'] && bjg['主象'].length) ? bjg['主象'] : bjNamesAll.slice(0, 3);
     var merged = [];
     skgNames.forEach(function(n){ merged.push({name:n, info: skgDetail[n] || {}}); });
-    bjNames.forEach(function(n){ merged.push({name:n, info: bjDetail[n] || {}}); });
+    bjMain.forEach(function(n){ merged.push({name:n, info: bjDetail[n] || {}}); });
     if (merged.length) {
-      var skgHtml = merged.map(function(m){
+      var chipHtml = function(m){
         var info = m.info || {};
         var lv = info['等级'] || '';
         var desc = info['描述'] || '';
         var c = (lv === '大吉' || lv === '吉' || lv === '上吉') ? '#7ee2b8' : (lv === '大凶' || lv === '凶') ? '#ff6b6b' : (lv === '生男') ? '#7ec8ff' : (lv === '生女') ? '#ff9ecb' : '#ffa502';
         return '<span style="display:inline-block;background:rgba(255,255,255,.04);border-left:3px solid ' + c + ';border-radius:4px;padding:3px 8px;margin:2px;font-size:12px;" title="' + desc + '"><b style="color:' + c + '">' + m.name + '</b>' + (lv ? ' <span style="color:#888;font-size:11px;">[' + lv + ']</span>' : '') + '</span>';
-      }).join('');
+      };
+      var skgHtml = merged.map(chipHtml).join('');
+      var bjMoreHtml = '';
+      var bjRest = bjNamesAll.filter(function(n){ return bjMain.indexOf(n) < 0; });
+      if (bjRest.length) {
+        var bjRestHtml = bjRest.map(function(n){ return chipHtml({name:n, info: bjDetail[n] || {}}); }).join('');
+        bjMoreHtml = '<div style="margin-top:4px;"><a href="javascript:void(0)" style="color:#8ea2ff;font-size:11px;" onclick="var t=this.parentNode.nextElementSibling;t.style.display=t.style.display===\'none\'?\'block\':\'none\';return false;">展开／收起其余 ' + bjRest.length + ' 条变格</a></div>' +
+                     '<div style="display:none;margin-top:4px;">' + bjRestHtml + '</div>';
+      }
       body += '<div style="margin-top:8px;padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid #3a3a6a;border-radius:8px;">' +
-        '<div style="font-size:12px;font-weight:600;color:#8ea2ff;margin-bottom:4px;">🔮 特殊课格 · 变格</div>' + skgHtml + '</div>';
+        '<div style="font-size:12px;font-weight:600;color:#8ea2ff;margin-bottom:4px;">🔮 特殊课格 · 变格（主象≤3）</div>' + skgHtml + bjMoreHtml + '</div>';
     }
     // ── 主格裁定 ＋ 禳解趋避（🆕 2026-09-22；单一真源函数，单课页与批量课单共用）──
     body += zhugeRangjieCard(d);
